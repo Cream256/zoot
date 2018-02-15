@@ -1,0 +1,14 @@
+#This is a comment and should be skipped
+
+:OtherSectionStart
+:OtherSectionEnd
+
+:SectionStart
+	cat=CatName
+	dog=DogName
+:SectionEnd
+
+:SectionStart
+	cat=Tom
+	mouse=Jerry
+:SectionEnd
