@@ -43,14 +43,22 @@ dependencies
     testCompile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
 }
 
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId 'com.zootcat.zoot'
             artifactId 'zoot-engine'
-            version '1.0'  
+            version '1.0-SNAPSHOT'  
                       
             from components.java
+            
+            artifact sourceJar {
+                classifier "sources"
+            }
         }
     }
 }

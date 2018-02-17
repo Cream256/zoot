@@ -4,12 +4,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
-public class DebugRenderController extends ControllerAdapter implements RenderController 
+public class DebugRenderController extends RenderControllerAdapter 
 {
 	private static ShapeRenderer shapeRender = null;
 	
@@ -45,13 +44,13 @@ public class DebugRenderController extends ControllerAdapter implements RenderCo
 		shapeRender.setProjectionMatrix(batch.getProjectionMatrix());
 		shapeRender.begin(ShapeType.Filled);
 		shapeRender.setColor(renderColor);
-		shapeRender.rect(actor.getX(), actor.getY(), actor.getWidth(), actor.getHeight());
+		shapeRender.rect(actor.getX() + getOffsetX(), actor.getY() + getOffsetY(), actor.getWidth(), actor.getHeight());
 		shapeRender.end();
 		
 		//draw border
 		shapeRender.begin(ShapeType.Line);
 		shapeRender.setColor(Color.BLACK);						
-		shapeRender.rect(actor.getX(), actor.getY(), actor.getWidth(), actor.getHeight());
+		shapeRender.rect(actor.getX() + getOffsetX(), actor.getY() + getOffsetY(), actor.getWidth(), actor.getHeight());
 		shapeRender.end();
 				
 		//reset

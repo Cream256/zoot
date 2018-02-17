@@ -10,13 +10,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
-public class PolygonRenderController extends ControllerAdapter implements RenderController 
+public class PolygonRenderController extends RenderControllerAdapter 
 {
 	@CtrlParam(required = true, debug = true) private String textureFile;
 	@CtrlParam(global = true) private AssetManager assetManager;
@@ -61,7 +60,7 @@ public class PolygonRenderController extends ControllerAdapter implements Render
 		
 		polyBatch.setProjectionMatrix(batch.getProjectionMatrix());
 		polyBatch.begin();
-		polygonSprite.setPosition(actor.getX(), actor.getY());
+		polygonSprite.setPosition(actor.getX() + getOffsetX(), actor.getY() + getOffsetY());
 		polygonSprite.setRotation(actor.getRotation());
 		polygonSprite.draw(polyBatch);
 		polyBatch.end();

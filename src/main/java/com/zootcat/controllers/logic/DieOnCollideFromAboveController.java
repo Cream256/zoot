@@ -11,7 +11,12 @@ public class DieOnCollideFromAboveController extends OnCollideFromAboveControlle
 	@Override
 	public void onCollidedFromAbove(ZootActor actorA, ZootActor actorB, Contact contact)
 	{		
+		killControllerActor();
+	}
+	
+	protected void killControllerActor()
+	{
 		ZootEvents.fireAndFree(getControllerActor(), ZootEventType.Dead);				
-		getControllerActor().addAction(new RemoveActorAction());
+		getControllerActor().addAction(new RemoveActorAction());		
 	}
 }

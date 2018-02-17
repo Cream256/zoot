@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 
-public class SpriteController implements RenderController
+public class SpriteController extends RenderControllerAdapter
 {
 	@CtrlParam(required = true, debug = true) private String file;
 	@CtrlParam(global = true) private AssetManager assetManager;
@@ -47,7 +47,7 @@ public class SpriteController implements RenderController
 	
 	protected void updateSprite(ZootActor actor)
 	{
-		sprite.setPosition(actor.getX(), actor.getY());
+		sprite.setPosition(actor.getX() + getOffsetX(), actor.getY() + getOffsetY());	//TODO use setbounds
 		sprite.setSize(actor.getWidth(), actor.getHeight());
 		sprite.setOriginCenter();		
 		sprite.setRotation(actor.getRotation());

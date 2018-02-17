@@ -4,18 +4,17 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
-public class TileRender extends ControllerAdapter implements RenderController
+public class TileRenderController extends RenderControllerAdapter
 {
 	@CtrlParam(global = true) private ZootScene scene;	
 	
 	private Sprite sprite;
 	private TextureRegion textureRegion;
-		
+	
 	@Override
 	public void init(ZootActor actor)
 	{
@@ -32,7 +31,7 @@ public class TileRender extends ControllerAdapter implements RenderController
 			return;
 		}
 				
-		sprite.setBounds(actor.getX(), actor.getY(), actor.getWidth(), actor.getHeight());
+		sprite.setBounds(actor.getX() + getOffsetX(), actor.getY() + getOffsetY(), actor.getWidth(), actor.getHeight());
 		sprite.setOriginCenter();
 		sprite.setRotation(actor.getRotation());
 		sprite.draw(batch);

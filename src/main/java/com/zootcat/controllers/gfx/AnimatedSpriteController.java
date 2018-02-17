@@ -21,7 +21,7 @@ import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 
-public class AnimatedSpriteController implements RenderController 
+public class AnimatedSpriteController extends RenderControllerAdapter 
 {
 	@CtrlParam(required = true, debug = true) private String file;
 	@CtrlParam(debug = true) private boolean useActorSize = true;
@@ -133,8 +133,8 @@ public class AnimatedSpriteController implements RenderController
 		Vector2 directionOffset = leftOffset ? offset.left : offset.right;
 				
 		float scale = scene.getUnitScale();
-		float x = actor.getX() + directionOffset.x * scale;
-		float y = actor.getY() + directionOffset.y * scale;
+		float x = actor.getX() + directionOffset.x * scale + getOffsetX();
+		float y = actor.getY() + directionOffset.y * scale + getOffsetY();
 		
 		ZootDirection direction = getDirection(actor);		
 		sprite.setFlip(direction == ZootDirection.Left, false);

@@ -7,4 +7,5 @@ import com.zootcat.scene.ZootActor;
 public interface RenderController extends Controller
 {
 	void onRender(Batch batch, float parentAlpha, ZootActor actor, float delta);
+	void setOffset(float x, float y);
 }
