@@ -3,16 +3,7 @@ apply plugin: 'eclipse'
 
 sourceCompatibility = 1.8
 
-//separate test and main build output
-eclipse.classpath {
-    defaultOutputDir = file('build')
-    file.withXml { n ->
-        n.asNode().classpathentry.findAll { it.@path.startsWith('src/test') }
-                .each { it.@output = 'build-test' }
-    }
-}
-
-repositories 
+repositories
 {
     mavenLocal()
     mavenCentral()
