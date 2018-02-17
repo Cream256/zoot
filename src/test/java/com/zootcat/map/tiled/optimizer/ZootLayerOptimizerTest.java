@@ -22,7 +22,7 @@ public class ZootLayerOptimizerTest
 	public void optimizeSingleVerticalTilesTest()
 	{
 		//given
-		String mapFile = ZootTestUtils.getResourcePath("testResources/tiled/SingleVerticalTiles.tmx", this);		
+		String mapFile = ZootTestUtils.getResourcePath("tiled/SingleVerticalTiles.tmx", this);		
 		ZootMap map = new ZootTiledMapLoader(new ZootAssetRecognizer()).load(mapFile);		
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayer("Layer1");
 		ZootTiledCellTileComparator comparator = new ZootTiledCellTileComparator();		
@@ -45,7 +45,7 @@ public class ZootLayerOptimizerTest
 	public void optimizeBoxTilesTest()
 	{
 		//given
-		String mapFile = ZootTestUtils.getResourcePath("testResources/tiled/BoxTiles.tmx", this);		
+		String mapFile = ZootTestUtils.getResourcePath("tiled/BoxTiles.tmx", this);		
 		ZootMap map = new ZootTiledMapLoader(new ZootAssetRecognizer()).load(mapFile);		
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayer("Layer1");
 		ZootTiledCellTileComparator comparator = new ZootTiledCellTileComparator();		
@@ -76,7 +76,7 @@ public class ZootLayerOptimizerTest
 	public void optimizeVerticalTilesTest()
 	{
 		//given
-		String mapFile = ZootTestUtils.getResourcePath("testResources/tiled/VerticalTiles.tmx", this);		
+		String mapFile = ZootTestUtils.getResourcePath("tiled/VerticalTiles.tmx", this);		
 		ZootMap map = new ZootTiledMapLoader(new ZootAssetRecognizer()).load(mapFile);		
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayer("Layer1");
 		ZootTiledCellTileComparator comparator = new ZootTiledCellTileComparator();		

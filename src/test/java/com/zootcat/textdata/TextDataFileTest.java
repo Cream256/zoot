@@ -18,7 +18,7 @@ public class TextDataFileTest
 	@Before
     public void setup()
     {
-    	String textDataFilePath = ZootTestUtils.getResourcePath("testResources/textdata/TextDataFile.txt", this);
+    	String textDataFilePath = ZootTestUtils.getResourcePath("textdata/TextDataFile.txt", this);
     	testFile = new File(  textDataFilePath);
     }
 	

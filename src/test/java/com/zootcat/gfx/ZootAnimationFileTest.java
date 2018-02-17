@@ -35,7 +35,7 @@ public class ZootAnimationFileTest
 	public void setup() throws ZootException
 	{
     	MockitoAnnotations.initMocks(this);		
-		String animationFilePath = ZootTestUtils.getResourcePath("testResources/textdata/AnimationFile.txt", this);
+		String animationFilePath = ZootTestUtils.getResourcePath("textdata/AnimationFile.txt", this);
     	anmFile = new ZootAnimationFile(new File(animationFilePath));
 	}
 	
