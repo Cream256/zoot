@@ -10,7 +10,7 @@ public class CountingController extends ControllerAdapter
 	@Override
 	public void onAdd(ZootActor actor) 
 	{
-		count = actor.getControllers().size();
+		count = actor.getAllControllers().size();
 	}
 	
 	public int getControllersCountOnAdd()
