@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.scene.ZootActor;
 
-//TODO add test
 public class RenderControllerAdapter extends ControllerAdapter implements RenderController
 {
 	private float offsetX = 0.0f;

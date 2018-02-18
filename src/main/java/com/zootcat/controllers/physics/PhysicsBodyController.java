@@ -117,7 +117,6 @@ public class PhysicsBodyController implements Controller
 		body.setLinearVelocity(setX ? vx : velocity.x, setY ? vy : velocity.y);	
 	}
 	
-	//TODO add test for this
 	public Fixture addFixture(FixtureDef fixtureDef, ZootActor actor)
 	{
 		Fixture fixture = body.createFixture(fixtureDef);
@@ -146,7 +145,6 @@ public class PhysicsBodyController implements Controller
 		body.applyLinearImpulse(vx, vy, cx, cy, true);
 	}
 	
-	//TODO this is not full working, add tests
 	public void scale(PhysicsBodyScale bodyScale)
 	{
 		fixtures.forEach(f ->
@@ -273,7 +271,6 @@ public class PhysicsBodyController implements Controller
 		return height == 0.0f ? actor.getHeight() : height * scene.getUnitScale();
 	}
 	
-	//TODO add test for this
 	protected void assignUserData(ZootActor actor, Body body, List<Fixture> fixtures)
 	{
 		body.setUserData(actor);
