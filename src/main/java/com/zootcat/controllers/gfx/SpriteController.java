@@ -46,9 +46,8 @@ public class SpriteController extends RenderControllerAdapter
 	}
 	
 	protected void updateSprite(ZootActor actor)
-	{
-		sprite.setPosition(actor.getX() + getOffsetX(), actor.getY() + getOffsetY());	//TODO use setbounds
-		sprite.setSize(actor.getWidth(), actor.getHeight());
+	{		
+		sprite.setBounds(actor.getX() + getOffsetX(), actor.getY() + getOffsetY(), actor.getWidth(), actor.getHeight());
 		sprite.setOriginCenter();		
 		sprite.setRotation(actor.getRotation());
 	}
