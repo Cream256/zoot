@@ -76,4 +76,9 @@ public class ZootInputManager extends InputAdapter
 	{
 		multiplexer.removeProcessor(inputProcessor);
 	}
+	
+	public void clear()
+	{
+		multiplexer.clear();
+	}
 }

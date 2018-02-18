@@ -132,6 +132,7 @@ public class ZootSceneScreen implements Screen
 	
 	protected void deassignInput()
 	{
+		inputManager.clear();		
 		Gdx.input.setInputProcessor(null);
 	}
 }
