@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.ChangeListenerController;
@@ -19,6 +21,13 @@ import com.zootcat.controllers.gfx.RenderController;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.fsm.ZootStateMachine;
 
+/**
+ * ZootScene actor. Extends from LibGdx {@link Actor}. It exends 
+ * the base actor class so that it could use {@link Controller}'s. 
+ * @author Cream
+ * @see ZootScene
+ *
+ */
 public class ZootActor extends Actor
 {
 	public static final String DEFAULT_NAME = "Unnamed Actor";
@@ -95,6 +104,11 @@ public class ZootActor extends Actor
 		}
 	}
 	
+	public <T extends Controller> void controllersOfTypeAction(Class<T> clazz, Consumer<T> action)
+	{
+		getControllersOfType(clazz).forEach(action);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <T extends Controller> boolean controllerCondition(Class<T> clazz, Function<T, Boolean> func)
 	{		
@@ -130,18 +144,16 @@ public class ZootActor extends Actor
 		controllers.clear();
 	}
 	
-	public List<Controller> getControllers()
+	public List<Controller> getAllControllers()
 	{
 		return new ArrayList<Controller>(controllers);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public <T extends Controller> T tryGetController(Class<T> controllerClass)
 	{
 		try
 		{
-			Controller result = getController(controllerClass);
-			return (T) result;
+			return (T) getController(controllerClass);
 		}
 		catch(RuntimeZootException e)
 		{
@@ -154,14 +166,18 @@ public class ZootActor extends Actor
 	{
 		Controller result = controllers.stream()
 				  .filter(ctrl -> ClassReflection.isInstance(controllerClass, ctrl))
-				  .findFirst()
-				  .orElse(null);
-		
-		if(result == null)
-		{
-			throw new RuntimeZootException("Controller " + controllerClass + " not found for " + this);
-		}
+				  .reduce((u, v) -> { throw new RuntimeZootException("More than one controllers found for " + controllerClass);})
+				  .orElseThrow(() -> new RuntimeZootException("Controller " + controllerClass + " not found for " + this));
 		return (T)result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends Controller> List<T> getControllersOfType(Class<T> controllerClass)
+	{
+		List<Controller> result = controllers.stream()
+						 .filter(ctrl -> ClassReflection.isInstance(controllerClass, ctrl))
+						 .collect(Collectors.toList());		
+		return (List<T>)result;
 	}
 	
 	public float getOpacity() 
@@ -171,7 +187,7 @@ public class ZootActor extends Actor
 	
 	public void setOpacity(float value)
 	{
-		this.opacity = value;
+		this.opacity = MathUtils.clamp(value, 0.0f, 1.0f);
 	}
 	    
     public void addType(String newType)
@@ -214,14 +230,14 @@ public class ZootActor extends Actor
 		return gid;
 	}
     
+	public ZootStateMachine getStateMachine()
+	{
+		return stateMachine;
+	}
+	
     @Override
     public String toString()
     {
     	return getName();
     }
-
-	public ZootStateMachine getStateMachine()
-	{
-		return stateMachine;
-	}
 }

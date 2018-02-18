@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -26,6 +26,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.zootcat.controllers.ChangeListenerController;
 import com.zootcat.controllers.Controller;
 import com.zootcat.controllers.factory.mocks.CountingController;
+import com.zootcat.controllers.factory.mocks.MockBaseController;
+import com.zootcat.controllers.factory.mocks.MockDerivedController;
 import com.zootcat.controllers.factory.mocks.SimpleController;
 import com.zootcat.controllers.gfx.RenderController;
 import com.zootcat.exceptions.RuntimeZootException;
@@ -57,7 +59,7 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void ctorTest()
+	public void shouldCreateProperDefaultValuesAfterConstruction()
 	{
 		ZootActor actor = new ZootActor();
 		assertEquals("Should have default name", ZootActor.DEFAULT_NAME, actor.getName());
@@ -67,7 +69,7 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void actShouldUpdateControllersAndStateMachineTest()
+	public void shouldUpdateControllersAndStateMachineTest()
 	{
 		//given
 		Controller ctrl1 = mock(Controller.class);
@@ -85,7 +87,7 @@ public class ZootActorTest
 	}
 	
     @Test
-    public void addAndRemoveTypeTest()
+    public void shouldProperlyAddAndRemoveActorTypes()
     {
         //given
         ZootActor actor = new ZootActor();
@@ -117,20 +119,20 @@ public class ZootActorTest
     }
 	
 	@Test
-	public void addControllerTest()
+	public void shouldProperlyAddController()
 	{
 		ZootActor actor = new ZootActor();
-		assertEquals("After creation controller list should be empty", 0, actor.getControllers().size());
+		assertEquals("After creation controller list should be empty", 0, actor.getAllControllers().size());
 		
 		actor.addController(mockCtrl1);
-		assertEquals("Controller should be added immediatelly", 1, actor.getControllers().size());
+		assertEquals("Controller should be added immediatelly", 1, actor.getAllControllers().size());
 				
 		actor.addController(mockCtrl2);
-		assertEquals("Controllers should  be added immediatelly", 2, actor.getControllers().size());
+		assertEquals("Controllers should  be added immediatelly", 2, actor.getAllControllers().size());
 	}
 	
 	@Test
-	public void addControllerShouldCreateDuplicatesIfInsertedTest()
+	public void shouldAddDuplicateControllerInstances()
 	{
 		ZootActor actor = new ZootActor();
 		actor.addController(mockCtrl1);
@@ -139,14 +141,14 @@ public class ZootActorTest
 		actor.addController(mockCtrl2);
 		actor.act(0.0f);
 		
-		List<Controller> actual = actor.getControllers();
+		List<Controller> actual = actor.getAllControllers();
 		List<Controller> expected = Arrays.asList(mockCtrl1, mockCtrl2, mockCtrl1, mockCtrl2);
 		
 		assertEquals(expected, actual);
 	}
 	
 	@Test
-	public void removeControllerTest()
+	public void shouldProperlyRemoveControllers()
 	{
 		//given
 		ZootActor actor = new ZootActor();
@@ -156,37 +158,37 @@ public class ZootActorTest
 		actor.addController(mockCtrl2);
 		
 		//then
-		assertEquals(2, actor.getControllers().size());
+		assertEquals(2, actor.getAllControllers().size());
 		
 		//when, then
 		actor.removeController(mockCtrl1);
-		assertEquals(1, actor.getControllers().size());
+		assertEquals(1, actor.getAllControllers().size());
 
 		//when, then
-		assertEquals(1, actor.getControllers().size());
-		assertEquals(mockCtrl2, actor.getControllers().get(0));
+		assertEquals(1, actor.getAllControllers().size());
+		assertEquals(mockCtrl2, actor.getAllControllers().get(0));
 		
 		//when, then		
 		actor.removeController(mockCtrl2);
-		assertEquals(0, actor.getControllers().size());
+		assertEquals(0, actor.getAllControllers().size());
 	}	
 	
 	@Test
-	public void removeControllerOnEmptyControllerListTest()
+	public void shouldDoNothingWhenRemovingControllersFromActorWithNoControllers()
 	{
 		ZootActor actor = new ZootActor();
-		assertEquals(0, actor.getControllers().size());
+		assertEquals(0, actor.getAllControllers().size());
 		
 		actor.removeController(mockCtrl1);
 		actor.removeController(mockCtrl2);
-		assertEquals(0, actor.getControllers().size());
+		assertEquals(0, actor.getAllControllers().size());
 		
 		actor.act(0.0f);
-		assertEquals(0, actor.getControllers().size());
+		assertEquals(0, actor.getAllControllers().size());
 	}
 	
 	@Test
-	public void removeControllerShouldRemoveProperControllerAmongDuplicatesTest()
+	public void shouldRemoveAllControllersWithGivenType()
 	{
 		//given
 		ZootActor actor = new ZootActor();
@@ -200,19 +202,19 @@ public class ZootActorTest
 		actor.addController(mockCtrl3);
 		
 		//then
-		assertEquals(6, actor.getControllers().size());
+		assertEquals(6, actor.getAllControllers().size());
 		
 		//when
 		actor.removeController(mockCtrl1);
 		
 		//then
 		List<Controller> expected = Arrays.asList(mockCtrl2, mockCtrl3, mockCtrl2, mockCtrl3);
-		assertEquals(4, actor.getControllers().size());
-		assertEquals(expected, actor.getControllers());
+		assertEquals(4, actor.getAllControllers().size());
+		assertEquals(expected, actor.getAllControllers());
 	}
 	
 	@Test
-	public void addControllerShouldInvokeOnAddMethodTest()
+	public void shouldInvokeControllerOnAddMethodWhenAddingControllerToActor()
 	{
 		//given
 		ZootActor actor = new ZootActor();
@@ -231,7 +233,7 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void removeControllerShouldInvokeOnRemoveMethodTest()
+	public void shouldInvokeControllerOnRemoveMethodWhenRemovingControllersFromActor()
 	{
 		//given
 		ZootActor actor = new ZootActor();
@@ -251,8 +253,8 @@ public class ZootActorTest
 		verify(mockCtrl2, times(1)).onRemove(actor);
 	}
 	
-	@Test
-	public void changeListenerControllerShouldBeNotifiedWhenActorChangesTest()
+	@Test	
+	public void shouldNotifyChangeListenerWhenActorChanges()
 	{
 		//given
 		ZootActor actor = new ZootActor();
@@ -280,7 +282,7 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void drawShouldExecuteAllRenderControllersTest()
+	public void shouldExecuteAllRenderControllersOnDraw()
 	{
 		//given
 		final float parentAlpha = 1.0f;
@@ -317,7 +319,7 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void getStateMachineTest()
+	public void shouldReturnStateMachine()
 	{
 		//when
 		ZootActor actor = new ZootActor();
@@ -328,7 +330,7 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void getControllerTest()
+	public void shouldReturnController()
 	{
 		//given
 		Controller ctrl = new SimpleController();
@@ -342,14 +344,31 @@ public class ZootActorTest
 	}
 	
 	@Test(expected = RuntimeZootException.class)
-	public void getControllerShouldThrowWhenControllerDoesNotExistTest()
+	public void shouldThrowIfMoreThanOneInstanceOfControllerIsAvaiable()
+	{
+		//given
+		Controller ctrl1 = new MockBaseController();
+		Controller ctrl2 = new MockDerivedController();
+		
+		ZootActor actor = new ZootActor();
+
+		//when
+		actor.addController(ctrl1);
+		actor.addController(ctrl2);
+		
+		//then
+		actor.getController(MockBaseController.class);		
+	}
+		
+	@Test(expected = RuntimeZootException.class)
+	public void shuoldThrowIfControllerIsNotFound()
 	{
 		ZootActor actor = new ZootActor();
 		actor.getController(SimpleController.class);
 	}
 	
 	@Test
-	public void tryGetControllerTest()
+	public void shouldReturnControllerAndNotThrow()
 	{
 		//given
 		Controller ctrl = new SimpleController();
@@ -363,21 +382,21 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void tryGetControllerShouldReturnNullWhenControllerDoesNotExistTest()
+	public void shouldReturnNullAndNotThrow()
 	{
 		ZootActor actor = new ZootActor();
 		assertNull(actor.tryGetController(SimpleController.class));
 	}
-	
+		
 	@Test
-	public void controllerActionShouldNotThrowIfControllerIsNotFoundTest()
+	public void shouldNotThrowOnControllerActionIfControllerIsNotFoundTest()
 	{
 		ZootActor actor = new ZootActor();
 		actor.controllerAction(SimpleController.class, (ctrl) -> {});
 	}
 	
 	@Test
-	public void controllerActionTest()
+	public void shouldExecuteControllerAction()
 	{
 		//given
 		ZootActor actor = new ZootActor();		
@@ -392,7 +411,7 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void controllerConditionTest()
+	public void shouldReturnProperControllerCondition()
 	{
 		//given
 		ZootActor actor = new ZootActor();		
@@ -408,14 +427,14 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void controllerConditionShouldReturnFalseIfControllerIsNotFoundTest()
+	public void shouldReturnFalseIfControllerIsNotFoundForControllerCondition()
 	{
 		ZootActor actor = new ZootActor();
 		assertFalse(actor.controllerCondition(SimpleController.class, (c) -> true));
 	}
 	
 	@Test
-	public void addControllersShouldAddFirstThenInvokeOnAddMethodsTest()
+	public void shouldAddControllersFirstAndThenInvokeOnAddMethodsTest()
 	{
 		//given
 		CountingController ctrl1 = new CountingController();
@@ -433,24 +452,24 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void removeTest()
+	public void shouldRemoveAllControllersWhenRemovingActor()
 	{
 		//given
 		ZootActor actor = new ZootActor();
 		actor.addControllers(Arrays.asList(mockCtrl1, mockCtrl2, mockCtrl3));
 		
 		//when
-		actor.remove();		
+		actor.remove();
 		
 		//then
 		verify(mockCtrl1, times(1)).onRemove(actor);
 		verify(mockCtrl2, times(1)).onRemove(actor);
 		verify(mockCtrl3, times(1)).onRemove(actor);
-		assertEquals(0, actor.getControllers().size());
+		assertEquals(0, actor.getAllControllers().size());
 	}
 	
 	@Test
-	public void removeAllControllersTest()
+	public void shouldRemoveAllControllers()
 	{
 		//given
 		ZootActor actor = new ZootActor();
@@ -463,11 +482,11 @@ public class ZootActorTest
 		verify(mockCtrl1, times(1)).onRemove(actor);
 		verify(mockCtrl2, times(1)).onRemove(actor);
 		verify(mockCtrl3, times(1)).onRemove(actor);
-		assertEquals(0, actor.getControllers().size());
+		assertEquals(0, actor.getAllControllers().size());
 	}
 	
 	@Test
-	public void setIdTest()
+	public void shouldSetId()
 	{
 		ZootActor actor = new ZootActor();
 		assertEquals(0, actor.getId());
@@ -477,7 +496,7 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void setGidTest()
+	public void shouldSetGid()
 	{
 		ZootActor actor = new ZootActor();
 		assertEquals(-1, actor.getGid());
@@ -485,4 +504,69 @@ public class ZootActorTest
 		actor.setGid(1);
 		assertEquals(1, actor.getGid());		
 	}
+	
+	@Test
+	public void shuouldSetOpacity()
+	{
+		ZootActor actor = new ZootActor();
+		assertEquals(1.0f, actor.getOpacity(), 0.0f);
+		
+		actor.setOpacity(0.5f);
+		assertEquals(0.5f, actor.getOpacity(), 0.0f);
+		
+		actor.setOpacity(0.0f);
+		assertEquals(0.0f, actor.getOpacity(), 0.0f);
+		
+		actor.setOpacity(-1.0f);
+		assertEquals(0.0f, actor.getOpacity(), 0.0f);
+		
+		actor.setOpacity(1.1f);
+		assertEquals(1.0f, actor.getOpacity(), 0.0f);
+	}
+	
+	@Test
+	public void shouldReturnAllControllersOfGivenType()
+	{
+		//given
+		ZootActor actor = new ZootActor();
+		MockBaseController baseCtrl = new MockBaseController();
+		MockDerivedController derivedCtrl = new MockDerivedController();
+		SimpleController simpleCtrl = new SimpleController();
+				
+		//when
+		actor.addController(baseCtrl);
+		actor.addController(derivedCtrl);
+		actor.addController(simpleCtrl);
+		
+		//then
+		List<MockBaseController> ctrls = actor.getControllersOfType(MockBaseController.class);
+		assertNotNull(ctrls);
+		assertEquals(2, ctrls.size());
+		assertTrue(ctrls.contains(baseCtrl));
+		assertTrue(ctrls.contains(derivedCtrl));
+		assertFalse(ctrls.contains(simpleCtrl));
+	}
+	
+	@Test
+	public void shouldInvokeActionOnAllControllersOfGivenType()
+	{
+		//given
+		ZootActor actor = new ZootActor();
+		MockBaseController ctrl1 = mock(MockBaseController.class);
+		MockDerivedController ctrl2 = mock(MockDerivedController.class);		
+		SimpleController ctrl3 = mock(SimpleController.class);
+		
+		//when
+		actor.addController(ctrl1);
+		actor.addController(ctrl2);
+		actor.addController(ctrl3);
+		actor.controllersOfTypeAction(MockBaseController.class, ctrl -> ctrl.getBaseParam());
+		
+		//then
+		verify(ctrl1).getBaseParam();
+		verify(ctrl2).getBaseParam();
+		verify(ctrl3).onAdd(actor);
+		verifyNoMoreInteractions(ctrl3);
+	}
+	
 }

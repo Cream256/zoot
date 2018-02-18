@@ -90,7 +90,7 @@ public class ZootDebugWindow extends Window
 
 	private void addControllerInfo()
 	{
-		for(Controller ctrl : actor.getControllers())
+		for(Controller ctrl : actor.getAllControllers())
 		{
 			ZootPropertiesTree tree = new ZootPropertiesTree(ctrl.getClass().getSimpleName(), getSkin(), this);			
 			for(Field field : ControllerAnnotations.getControllerDebugFields(ctrl))

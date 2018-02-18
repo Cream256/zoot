@@ -35,7 +35,7 @@ public class HoverInAirTest
 	public void onUpdateWithNoPhysicsCtrlShouldNotThrowTest()
 	{
 		actor.removeController(physicsCtrl);
-		assertTrue(actor.getControllers().isEmpty());		
+		assertTrue(actor.getAllControllers().isEmpty());		
 		ctrl.onUpdate(0.0f, actor);
 		//ok
 	}
