@@ -1,33 +1,35 @@
 package com.zootcat.controllers.logic;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.ControllerAnnotations;
+import com.zootcat.events.ActorEventCounterListener;
+import com.zootcat.events.ZootEvent;
+import com.zootcat.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
 public class SwitchControllerTest
 {
-	private SwitchController ctrl;
-	private int triggerCount;
-	private boolean wasActiveWhenTriggered;
+	private SwitchController ctrl;	
+	private ZootActor ctrlActor;
+	private ActorEventCounterListener eventCounter;
 	
 	@Before
 	public void setup()
-	{
-		triggerCount = 0;
-		wasActiveWhenTriggered = false;
-		ctrl = new SwitchController(){
-			@Override
-			public void trigger(boolean active)
-			{
-				++triggerCount;
-				wasActiveWhenTriggered = active;
-			}};
+	{		
+		ctrlActor = new ZootActor();		
+		eventCounter = new ActorEventCounterListener();
+		ctrlActor.addListener(eventCounter);
+		
+		ctrl = new SwitchController();
+		ctrl.init(ctrlActor);
 	}
 
 	@Test
@@ -37,8 +39,19 @@ public class SwitchControllerTest
 		ctrl.onAdd(mock(ZootActor.class));
 		
 		//then
-		assertEquals("Switch was not triggered", 1, triggerCount);
-		assertFalse("Should be triggered as not active", wasActiveWhenTriggered);
+		assertEquals("Switch was not triggered", 1, eventCounter.getCount());
+		assertEquals("Should be triggered as not active", ZootEventType.SwitchOff, ((ZootEvent)eventCounter.getLastEvent()).getType());
+	}
+	
+	@Test
+	public void shouldHaveControllerActorInEvent()
+	{
+		//when
+		ctrl.onAdd(mock(ZootActor.class));
+		
+		//then
+		assertEquals("Switch was not triggered", 1, eventCounter.getCount());
+		assertEquals(ctrlActor, ((ZootEvent)eventCounter.getLastEvent()).getUserObject(ZootActor.class));
 	}
 	
 	@Test
@@ -51,8 +64,8 @@ public class SwitchControllerTest
 		ctrl.onAdd(mock(ZootActor.class));
 		
 		//then
-		assertEquals("Switch was not triggered", 1, triggerCount);
-		assertTrue("Should be triggered as active", wasActiveWhenTriggered);
+		assertEquals("Switch was not triggered", 1, eventCounter.getCount());
+		assertEquals("Should be triggered as active", ZootEventType.SwitchOn, ((ZootEvent)eventCounter.getLastEvent()).getType());
 	}
 	
 	@Test
@@ -80,15 +93,15 @@ public class SwitchControllerTest
 		ctrl.setActive(true);
 		
 		//then
-		assertEquals("Switch was not triggered", 1, triggerCount);
-		assertTrue(wasActiveWhenTriggered);
+		assertEquals("Switch was not triggered", 1, eventCounter.getCount());
+		assertEquals("Should be triggered as active", ZootEventType.SwitchOn, ((ZootEvent)eventCounter.getLastEvent()).getType());
 		
 		//when
 		ctrl.setActive(false);
 		
 		//then
-		assertEquals("Switch was not triggered", 2, triggerCount);
-		assertFalse(wasActiveWhenTriggered);
+		assertEquals("Switch was not triggered", 2, eventCounter.getCount());
+		assertEquals("Should be triggered as not active", ZootEventType.SwitchOff, ((ZootEvent)eventCounter.getLastEvent()).getType());
 	}
 	
 	@Test
@@ -101,7 +114,7 @@ public class SwitchControllerTest
 		ctrl.setActive(false);
 		
 		//then
-		assertEquals("Switch should not be triggered", 0, triggerCount);
+		assertEquals("Switch should not be triggered", 0, eventCounter.getCount());
 	}
 	
 	@Test
@@ -118,9 +131,9 @@ public class SwitchControllerTest
 			ctrl.switchState();
 			
 			//then
-			assertEquals(active, ctrl.isActive());
-			assertEquals(i, triggerCount);
-			assertEquals(active, wasActiveWhenTriggered);
+			assertEquals(active, ctrl.isActive());			
+			assertEquals("Switch was not triggered", i, eventCounter.getCount());
+			assertEquals(active ? ZootEventType.SwitchOn : ZootEventType.SwitchOff, ((ZootEvent)eventCounter.getLastEvent()).getType());
 		}
 	}
 	
@@ -134,15 +147,15 @@ public class SwitchControllerTest
 		ctrl.onEnter(mock(ZootActor.class), mock(ZootActor.class), mock(Contact.class));
 		
 		//then
-		assertEquals("Switch was not triggered", 1, triggerCount);
-		assertTrue(wasActiveWhenTriggered);
+		assertEquals("Switch was not triggered", 1, eventCounter.getCount());
+		assertEquals("Should be triggered as active", ZootEventType.SwitchOn, ((ZootEvent)eventCounter.getLastEvent()).getType());
 		
 		//when
 		ctrl.onEnter(mock(ZootActor.class), mock(ZootActor.class), mock(Contact.class));
 		
 		//then
-		assertEquals("Switch was not triggered proper amount of times", 2, triggerCount);
-		assertFalse(wasActiveWhenTriggered);
+		assertEquals("Switch was not triggered", 2, eventCounter.getCount());
+		assertEquals("Should be triggered as not active", ZootEventType.SwitchOff, ((ZootEvent)eventCounter.getLastEvent()).getType());
 	}
 	
 }
