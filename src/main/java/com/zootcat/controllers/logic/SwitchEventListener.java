@@ -3,8 +3,14 @@ package com.zootcat.controllers.logic;
 import com.zootcat.events.ZootEvent;
 import com.zootcat.scene.ZootActor;
 
-//TODO add test
-//TODO add doc
+/**
+ * Zoot Event listener controller that catches the SwitchOn/SwitchOff
+ * {@link ZootEvent}'s. Override it's turnOn/turnOff methods to implement
+ * behaviour when switch changes state.
+ * 
+ * @author Cream
+ * @see SwitchController
+ */
 public abstract class SwitchEventListener extends ZootEventListenerController
 {
 	@Override
@@ -26,5 +32,6 @@ public abstract class SwitchEventListener extends ZootEventListenerController
 	}
 
 	public abstract void turnOn(ZootActor switchActor);
+	
 	public abstract void turnOff(ZootActor switchActor);
 }
