@@ -1,5 +1,6 @@
 package com.zootcat.controllers.logic;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -7,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
+import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.events.ZootEvent;
 import com.zootcat.events.ZootEventType;
 import com.zootcat.events.ZootEvents;
@@ -68,6 +70,12 @@ public class ZootEventListenerControllerTest
 		assertFalse("Should handle only zoot events", ctrl.handle(null));
 		assertFalse("Should handle only zoot events", ctrl.handle(new Event()));
 		assertFalse("Should handle only zoot events", ctrl.handle(new ZootCollisionEvent()));		
+	}
+	
+	@Test
+	public void shouldHaveHigherPriority()
+	{
+		assertEquals(ControllerPriority.High, ctrl.getPriority());
 	}
 	
 }
