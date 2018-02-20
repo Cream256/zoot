@@ -128,14 +128,10 @@ public class ZootTiledMapActorFactory
 			{
 				String controllerParams = actorProperties.get(ctrlName, String.class);
 				Controller controller = controllerFactory.create(ctrlName, controllerParams);
-				controller.init(actor);		//initialize first, then assign
 				createdControllers.add(controller);
 			}
-		});
-		
+		});		
 		addControllersToActor(actor, createdControllers);
-		
-		
 	}
 			
 	protected String getPropertyOrDefault(MapObject mapObject, String key, String defaultValue)
