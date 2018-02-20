@@ -49,8 +49,8 @@ public class ControllerAdapterTest
 	}
 	
 	@Test
-	public void shouldReturnZeroPriority()
+	public void shouldReturnNormalPriority()
 	{
-		assertEquals(0, ctrl.getPriority());
+		assertEquals(ControllerPriority.Normal, ctrl.getPriority());
 	}
 }

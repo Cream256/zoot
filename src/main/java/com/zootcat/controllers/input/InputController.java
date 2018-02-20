@@ -29,10 +29,4 @@ public class InputController extends InputListener implements Controller
 	{
 		//noop
 	}
-	
-	@Override
-	public int getPriority()
-	{
-		return 0;
-	}
 }

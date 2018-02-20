@@ -1,6 +1,7 @@
 package com.zootcat.controllers.factory.mocks.inner;
 
 import com.zootcat.controllers.Controller;
+import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
@@ -35,8 +36,8 @@ public class Mock3Controller implements Controller
 	}
 
 	@Override
-	public int getPriority()
+	public ControllerPriority getPriority()
 	{
-		return 0;
+		return ControllerPriority.Normal;
 	}
 }

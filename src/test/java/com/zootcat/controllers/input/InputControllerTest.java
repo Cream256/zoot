@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 
+import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.scene.ZootActor;
 
 
@@ -74,10 +75,10 @@ public class InputControllerTest
 	}
 	
 	@Test
-	public void shouldReturnZeroPriority()
+	public void shouldReturnNormalPriority()
 	{
 		InputController ctrl = new InputController();
-		assertEquals(0, ctrl.getPriority());
+		assertEquals(ControllerPriority.Normal, ctrl.getPriority());
 	}
 	
 }

@@ -16,5 +16,9 @@ public interface Controller
 	void onAdd(ZootActor actor);
 	void onRemove(ZootActor actor);	
 	void onUpdate(float delta, ZootActor actor);
-	int getPriority();
+	
+	default ControllerPriority getPriority() 
+	{ 
+		return ControllerPriority.Normal; 
+	}
 }

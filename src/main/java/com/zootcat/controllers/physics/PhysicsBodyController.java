@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.zootcat.controllers.Controller;
+import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.exceptions.RuntimeZootException;
@@ -87,9 +88,9 @@ public class PhysicsBodyController implements Controller
 	}
 	
 	@Override
-	public int getPriority()
+	public ControllerPriority getPriority()
 	{
-		return 0;
+		return ControllerPriority.High;
 	}
 		
 	public Body getBody()

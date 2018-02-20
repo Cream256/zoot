@@ -9,11 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public class ControllerComparatorTest
-{
-	private static final int HIGHEST = 100;
-	private static final int MEDIUM = 50;
-	private static final int LOWEST = 0;
-	
+{	
 	@Mock private Controller ctrl1;
 	@Mock private Controller ctrl2;
 	@Mock private Controller ctrl3;
@@ -22,9 +18,9 @@ public class ControllerComparatorTest
 	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);
-		when(ctrl1.getPriority()).thenReturn(HIGHEST);
-		when(ctrl2.getPriority()).thenReturn(MEDIUM);
-		when(ctrl3.getPriority()).thenReturn(LOWEST);
+		when(ctrl1.getPriority()).thenReturn(ControllerPriority.High);
+		when(ctrl2.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(ctrl3.getPriority()).thenReturn(ControllerPriority.Low);
 	}
 	
 	@Test
@@ -45,6 +41,4 @@ public class ControllerComparatorTest
 		assertTrue(ControllerComparator.Instance.compare(ctrl2, ctrl2) == 0);
 		assertTrue(ControllerComparator.Instance.compare(ctrl3, ctrl3) == 0);
 	}
-	
-	
 }

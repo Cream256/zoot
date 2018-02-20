@@ -29,6 +29,7 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.zootcat.controllers.ChangeListenerController;
 import com.zootcat.controllers.Controller;
+import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.mocks.CountingController;
 import com.zootcat.controllers.factory.mocks.MockBaseController;
 import com.zootcat.controllers.factory.mocks.MockDerivedController;
@@ -60,6 +61,9 @@ public class ZootActorTest
 		mockCtrl1 = mock(Controller.class);
 		mockCtrl2 = mock(Controller.class);
 		mockCtrl3 = mock(Controller.class);	
+		when(mockCtrl1.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(mockCtrl2.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(mockCtrl3.getPriority()).thenReturn(ControllerPriority.Normal);
 	}
 	
 	@Test
@@ -462,9 +466,9 @@ public class ZootActorTest
 		Controller ctrl1 = mock(Controller.class);
 		Controller ctrl2 = mock(Controller.class);
 		Controller ctrl3 = mock(Controller.class);
-		when(ctrl1.getPriority()).thenReturn(100);
-		when(ctrl2.getPriority()).thenReturn(50);
-		when(ctrl3.getPriority()).thenReturn(0);		
+		when(ctrl1.getPriority()).thenReturn(ControllerPriority.High);
+		when(ctrl2.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(ctrl3.getPriority()).thenReturn(ControllerPriority.Low);		
 		ZootActor actor = new ZootActor();
 		
 		//when
