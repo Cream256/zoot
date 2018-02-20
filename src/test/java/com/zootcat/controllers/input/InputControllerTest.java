@@ -73,4 +73,11 @@ public class InputControllerTest
 		assertFalse(actor.getListeners().contains(ctrl, true));
 	}
 	
+	@Test
+	public void shouldReturnZeroPriority()
+	{
+		InputController ctrl = new InputController();
+		assertEquals(0, ctrl.getPriority());
+	}
+	
 }

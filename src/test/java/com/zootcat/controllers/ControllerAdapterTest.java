@@ -1,5 +1,6 @@
 package com.zootcat.controllers;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 import org.junit.Before;
@@ -20,30 +21,36 @@ public class ControllerAdapterTest
 	}
 	
 	@Test
-	public void initTest()
+	public void shouldDoNothingOnInit()
 	{
 		ctrl.init(actor);
 		verifyZeroInteractions(actor);
 	}
 	
 	@Test
-	public void onAddTest()
+	public void shouldDoNothingOnTest()
 	{
 		ctrl.onAdd(actor);
 		verifyZeroInteractions(actor);
 	}
 	
 	@Test
-	public void onRemoveTest()
+	public void shouldDoNothingOnRemove()
 	{
 		ctrl.onRemove(actor);
 		verifyZeroInteractions(actor);
 	}
 	
 	@Test
-	public void onUpdateTest()
+	public void shouldDoNothingOnUpdate()
 	{
 		ctrl.onUpdate(1.0f, actor);
 		verifyZeroInteractions(actor);
+	}
+	
+	@Test
+	public void shouldReturnZeroPriority()
+	{
+		assertEquals(0, ctrl.getPriority());
 	}
 }

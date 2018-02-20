@@ -11,11 +11,15 @@ import com.zootcat.scene.ZootActor;
  * Switch Controller - used for actors that are switches. When collision
  * happens, the switch changes it's state and fires the SwitchOn/SwitchOff
  * {@link ZootEvent}.
- * 
+ * <br/><br/>
  * If you want to react when the switch changes it's state, you should
  * listen to SwitchOn/SwitchOff events. This can be done by implementing
  * the {@link SwitchEventListener} class.
- * 
+ * <br/><br/>
+ * WARNING - when using switch controller, the switch will automatically
+ * fire SwitchOn/SwitchOff event on initialization. It might override
+ * the default behaviour set for the object connected with the switch.
+ * <br/><br/>
  * @author Cream
  * @see OnCollideController
  */

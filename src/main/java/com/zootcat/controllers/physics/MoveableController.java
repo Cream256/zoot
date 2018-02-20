@@ -1,13 +1,13 @@
 package com.zootcat.controllers.physics;
 
-import com.zootcat.controllers.Controller;
+import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.utils.ZootUtils;
 
-public class MoveableController implements Controller
+public class MoveableController extends ControllerAdapter
 {
 	@CtrlParam(debug = true) private float walkForce = 1.0f;
 	@CtrlParam(debug = true) private float runForce = 2.0f;
@@ -18,12 +18,6 @@ public class MoveableController implements Controller
 	private PhysicsBodyController physicsCtrl;
 	private DetectGroundController groundCtrl;
 	
-	@Override
-	public void init(ZootActor actor)
-	{
-		//noop
-	}
-
 	@Override
 	public void onAdd(ZootActor actor)
 	{

@@ -33,4 +33,10 @@ public class Mock3Controller implements Controller
 	{
 		//noop
 	}
+
+	@Override
+	public int getPriority()
+	{
+		return 0;
+	}
 }

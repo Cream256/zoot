@@ -85,6 +85,12 @@ public class PhysicsBodyController implements Controller
 		velocityX = velocity.x;
 		velocityY = velocity.y;
 	}
+	
+	@Override
+	public int getPriority()
+	{
+		return 0;
+	}
 		
 	public Body getBody()
 	{

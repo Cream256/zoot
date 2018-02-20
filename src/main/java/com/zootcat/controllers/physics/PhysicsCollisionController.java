@@ -29,4 +29,10 @@ public abstract class PhysicsCollisionController extends ZootCollisionListener i
 	{
 		//noop
 	}
+	
+	@Override
+	public int getPriority()
+	{
+		return 0;
+	}
 }
