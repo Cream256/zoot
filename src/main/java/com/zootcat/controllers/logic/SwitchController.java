@@ -26,12 +26,27 @@ import com.zootcat.scene.ZootActor;
 public class SwitchController extends OnCollideController
 {
 	@CtrlParam(debug = true) private boolean active = false;
-			
+		
+	private boolean firstTriggerDone;
+	private boolean firstTriggerState;
+	
 	@Override
 	public void onAdd(ZootActor actor) 
 	{
 		super.onAdd(actor);
-		trigger(active);
+		firstTriggerDone = false;
+		firstTriggerState = active;
+	}
+	
+	@Override
+	public void onUpdate(float delta, ZootActor actor)
+	{
+		super.onUpdate(delta, actor);
+		if(!firstTriggerDone)
+		{
+			trigger(firstTriggerState);
+			firstTriggerDone = true;
+		}
 	}
 	
 	@Override

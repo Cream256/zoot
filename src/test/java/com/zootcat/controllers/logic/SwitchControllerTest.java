@@ -36,7 +36,8 @@ public class SwitchControllerTest
 	public void shouldPerformFirstTriggerOnFalseByDefault()
 	{		
 		//when
-		ctrl.onAdd(mock(ZootActor.class));
+		ctrl.onAdd(ctrlActor);
+		ctrl.onUpdate(0.0f, ctrlActor);
 		
 		//then
 		assertEquals("Switch was not triggered", 1, eventCounter.getCount());
@@ -47,7 +48,8 @@ public class SwitchControllerTest
 	public void shouldHaveControllerActorInEvent()
 	{
 		//when
-		ctrl.onAdd(mock(ZootActor.class));
+		ctrl.onAdd(ctrlActor);
+		ctrl.onUpdate(0.0f, ctrlActor);
 		
 		//then
 		assertEquals("Switch was not triggered", 1, eventCounter.getCount());
@@ -61,7 +63,8 @@ public class SwitchControllerTest
 		ControllerAnnotations.setControllerParameter(ctrl, "active", true);
 		
 		//when
-		ctrl.onAdd(mock(ZootActor.class));
+		ctrl.onAdd(ctrlActor);
+		ctrl.onUpdate(0.0f, ctrlActor);
 		
 		//then
 		assertEquals("Switch was not triggered", 1, eventCounter.getCount());
