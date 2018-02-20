@@ -8,9 +8,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +22,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.InOrder;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
@@ -434,7 +438,7 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void shouldAddControllersFirstAndThenInvokeOnAddMethodsTest()
+	public void shouldAddControllersFirstAndThenInvokeOnAddMethods()
 	{
 		//given
 		CountingController ctrl1 = new CountingController();
@@ -449,6 +453,28 @@ public class ZootActorTest
 		assertEquals(3, ctrl1.getControllersCountOnAdd());
 		assertEquals(3, ctrl2.getControllersCountOnAdd());
 		assertEquals(3, ctrl3.getControllersCountOnAdd());
+	}
+	
+	@Test
+	public void shouldAddControllersInPriorityOrder()
+	{
+		//given
+		Controller ctrl1 = mock(Controller.class);
+		Controller ctrl2 = mock(Controller.class);
+		Controller ctrl3 = mock(Controller.class);
+		when(ctrl1.getPriority()).thenReturn(100);
+		when(ctrl2.getPriority()).thenReturn(50);
+		when(ctrl3.getPriority()).thenReturn(0);		
+		ZootActor actor = new ZootActor();
+		
+		//when
+		InOrder inOrder = inOrder(ctrl1, ctrl2, ctrl3);
+		actor.addControllers(Arrays.asList(ctrl2, ctrl3, ctrl1));
+		
+		//then
+		inOrder.verify(ctrl1).onAdd(actor);
+		inOrder.verify(ctrl2).onAdd(actor);
+		inOrder.verify(ctrl3).onAdd(actor);
 	}
 	
 	@Test

@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.ChangeListenerController;
 import com.zootcat.controllers.Controller;
+import com.zootcat.controllers.ControllerComparator;
 import com.zootcat.controllers.gfx.RenderController;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.fsm.ZootStateMachine;
@@ -122,8 +123,12 @@ public class ZootActor extends Actor
 	
 	public void addControllers(Collection<Controller> newControllers)
 	{
+		//firstly all controllers must be added to actor
 		newControllers.forEach((ctrl) -> controllers.add(ctrl));
-		newControllers.forEach((ctrl) -> ctrl.onAdd(this));
+		
+		//secondly, they must be invoked in proper order
+		newControllers.stream().sorted(ControllerComparator.Instance)
+							   .forEach((ctrl) -> ctrl.onAdd(this));
 	}
 	
 	public void addController(Controller controller)

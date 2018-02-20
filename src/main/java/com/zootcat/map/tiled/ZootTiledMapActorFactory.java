@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.Controller;
+import com.zootcat.controllers.ControllerComparator;
 import com.zootcat.controllers.factory.ControllerFactory;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.map.tiled.optimizer.ZootLayerRegion;
@@ -132,7 +133,9 @@ public class ZootTiledMapActorFactory
 			}
 		});
 		
-		actor.addControllers(createdControllers);
+		addControllersToActor(actor, createdControllers);
+		
+		
 	}
 			
 	protected String getPropertyOrDefault(MapObject mapObject, String key, String defaultValue)
@@ -148,5 +151,11 @@ public class ZootTiledMapActorFactory
 			throw new RuntimeZootException("Object property missing: " + key + " for object with name: " + getNameOrDefault(mapObject));
 		}
 		return mapObject.getProperties().get(key).toString();
+	}
+	
+	private void addControllersToActor(ZootActor actor, List<Controller> createdControllers)
+	{
+		createdControllers.stream().sorted(ControllerComparator.Instance).forEach(ctrl -> ctrl.init(actor));		
+		actor.addControllers(createdControllers);
 	}
 }
