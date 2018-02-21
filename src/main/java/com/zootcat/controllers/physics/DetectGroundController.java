@@ -41,9 +41,8 @@ public class DetectGroundController extends PhysicsCollisionController
 	private Fixture feet;
 	private ZootActor actorWithSensor;
 	private PhysicsBodyController physicsCtrl;
-	private Set<Contact> allContacts = new HashSet<Contact>();
-	private Set<Contact> disabledContacts = new HashSet<Contact>();
-
+	private Set<Fixture> collidedFixtures = new HashSet<Fixture>();
+	
 	@Override
 	public void onAdd(ZootActor actor)
 	{
@@ -66,6 +65,7 @@ public class DetectGroundController extends PhysicsCollisionController
 	public void onRemove(ZootActor actor)
 	{
 		super.onRemove(actor);
+		collidedFixtures.clear();
 		physicsCtrl.removeFixture(feet);
 		physicsCtrl = null;
 	}
@@ -73,7 +73,7 @@ public class DetectGroundController extends PhysicsCollisionController
 	@Override
 	public void onUpdate(float delta, ZootActor actor)
 	{
-		isOnGround = allContacts.size() > disabledContacts.size();
+		isOnGround = collidedFixtures.size() > 0;
 		if(isOnGround)
 		{
 			ZootEvents.fireAndFree(actorWithSensor, ZootEventType.Ground);
@@ -83,7 +83,10 @@ public class DetectGroundController extends PhysicsCollisionController
 	@Override
 	public void beginContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
-		if(isContactWithGroundSensor(actorA, actorB, contact)) allContacts.add(contact);
+		if(isContactWithGroundSensor(actorA, actorB, contact))
+		{
+			collidedFixtures.add(getOtherFixture(contact));
+		}
 	}
 
 	@Override
@@ -91,16 +94,14 @@ public class DetectGroundController extends PhysicsCollisionController
 	{
 		if(isContactWithGroundSensor(actorA, actorB, contact)) 
 		{
-			allContacts.remove(contact);
-			disabledContacts.remove(contact);
+			collidedFixtures.remove(getOtherFixture(contact));
 		}
 	}
-
+		
 	@Override
 	public void preSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
 	{
-		if(!contact.isEnabled()) disabledContacts.add(contact);		
-		else disabledContacts.remove(contact);
+		if(!contact.isEnabled()) collidedFixtures.remove(getOtherFixture(contact));		
 	}
 
 	@Override
@@ -159,5 +160,10 @@ public class DetectGroundController extends PhysicsCollisionController
 			def.filter.groupIndex = existingFilter.groupIndex;
 		}
 		return def;
+	}
+	
+	private Fixture getOtherFixture(Contact contact)
+	{
+		return contact.getFixtureA() == feet ? contact.getFixtureB() : contact.getFixtureA();		
 	}
 }
