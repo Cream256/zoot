@@ -4,6 +4,7 @@ import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
+//TODO add tests
 public class MovingPlatformSwitchController extends SwitchEventListener
 {
 	@CtrlParam(debug = true, required = true) private String platformActorName;
