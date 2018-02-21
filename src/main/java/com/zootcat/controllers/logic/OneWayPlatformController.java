@@ -105,15 +105,15 @@ public class OneWayPlatformController extends PhysicsCollisionController
 		//noop
 	}
 	
+	protected ZootActor getOtherActor(ZootActor actorA, ZootActor actorB)
+	{
+		return actorA == platform ? actorB : actorA;
+	}
+	
 	private float getPlatformFixtureFrontFace(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		Fixture platformFixture = contact.getFixtureA().getBody().getUserData() == platform ? contact.getFixtureA() : contact.getFixtureB(); 
 		BoundingBox bbox = ZootBoundingBoxFactory.create(platformFixture);
 		return bbox.getHeight() / 2.0f;
-	}
-	
-	private ZootActor getOtherActor(ZootActor actorA, ZootActor actorB)
-	{
-		return actorA == platform ? actorB : actorA;
 	}
 }
