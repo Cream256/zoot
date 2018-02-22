@@ -1,6 +1,7 @@
 package com.zootcat.controllers.logic;
 
 import com.zootcat.controllers.ControllerAdapter;
+import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
@@ -15,5 +16,11 @@ public class SizeController extends ControllerAdapter
 	public void init(ZootActor actor) 
 	{
 		actor.setSize(width * scene.getUnitScale(), height * scene.getUnitScale());
+	}
+	
+	@Override	//TODO add test + test if this is called before physicsctrl
+	public ControllerPriority getPriority() 
+	{ 
+		return ControllerPriority.Critical; 
 	}
 }

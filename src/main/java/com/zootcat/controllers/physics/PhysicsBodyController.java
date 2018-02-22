@@ -217,6 +217,7 @@ public class PhysicsBodyController implements Controller
 		return fixtureDefs;
 	}
 	
+	//TODO!!! extract to separate class and test
 	protected Shape createShape(ZootActor actor, ZootBodyShape shape)
 	{		
 		if(shape == ZootBodyShape.BOX)
@@ -230,6 +231,31 @@ public class PhysicsBodyController implements Controller
 			CircleShape circle = new CircleShape();
 			circle.setRadius(getBodyWidth(actor));
 			return circle;
+		}
+		else if(shape == ZootBodyShape.SLOPE_LEFT || shape == ZootBodyShape.SLOPE_RIGHT)
+		{
+			PolygonShape slope = new PolygonShape();
+			
+			float width = getBodyWidth(actor);
+			float height = getBodyHeight(actor);
+			float x = -width / 2.0f;
+			float y = -height / 2.0f;
+			
+			Vector2[] vertices = new Vector2[3];
+			if(shape == ZootBodyShape.SLOPE_LEFT)
+			{
+				vertices[0] = new Vector2(x, y);
+				vertices[1] = new Vector2(x + width, y);
+				vertices[2] = new Vector2(x + width, y + height);
+			} 
+			else
+			{
+				vertices[0] = new Vector2(x, y);
+				vertices[1] = new Vector2(x + width, y);
+				vertices[2] = new Vector2(x, y + height);
+			}
+			slope.set(vertices);			
+			return slope;			
 		}
 		else if(shape == ZootBodyShape.POLYGON)
 		{			
