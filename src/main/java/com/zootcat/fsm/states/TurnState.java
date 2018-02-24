@@ -36,9 +36,13 @@ public class TurnState extends AnimationBasedState
 	@Override
 	public boolean handle(ZootEvent event)
 	{
-		if(ZootStateUtils.isJumpEvent(event))
-		{
+		if(event.getType() == ZootEventType.JumpUp)
+		{		
 			changeState(event, JumpState.ID);
+		}
+		else if(event.getType() == ZootEventType.JumpForward)
+		{
+			changeState(event, JumpForwardState.ID);
 		}	
 		else if(event.getType() == ZootEventType.Hurt)
 		{

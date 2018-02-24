@@ -10,10 +10,13 @@ import com.zootcat.scene.ZootDirection;
 
 public class JumpState extends BasicState
 {
-	public static final int ID = JumpState.class.hashCode();	
+	public static final int ID = JumpState.class.hashCode();
+			
+	public JumpState(String name)
+	{
+		super(name);
+	}
 	
-	private ZootDirection forwardJumpDirection = ZootDirection.None;
-		
 	public JumpState()
 	{
 		super("Jump");
@@ -21,18 +24,9 @@ public class JumpState extends BasicState
 	
 	@Override
 	public void onEnter(ZootActor actor, ZootEvent event)
-	{
-		setAnimationBasedOnStateName(actor);
-		
-		if(event.getType() == ZootEventType.JumpUp)
-		{		
-			actor.controllerAction(MoveableController.class, (ctrl) -> ctrl.jumpUp());
-		}
-		else if(event.getType() == ZootEventType.JumpForward)
-		{
-			actor.controllerAction(DirectionController.class, (ctrl) -> forwardJumpDirection = ctrl.getDirection());
-			actor.controllerAction(MoveableController.class, (ctrl) -> ctrl.jumpForward(forwardJumpDirection));
-		}
+	{		
+		super.setAnimationBasedOnStateName(actor);
+		actor.controllerAction(MoveableController.class, (ctrl) -> ctrl.jumpUp());
 	}
 	
 	@Override

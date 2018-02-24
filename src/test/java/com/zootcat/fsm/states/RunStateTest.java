@@ -88,7 +88,7 @@ public class RunStateTest extends ZootStateTestCase
 	public void handleJumpForwardEventTest()
 	{
 		assertTrue(runState.handle(createEvent(ZootEventType.JumpForward)));
-		assertEquals(JumpState.ID, actor.getStateMachine().getCurrentState().getId());
+		assertEquals(JumpForwardState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test

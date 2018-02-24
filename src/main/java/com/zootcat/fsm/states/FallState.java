@@ -10,6 +10,11 @@ import com.zootcat.scene.ZootDirection;
 public class FallState extends BasicState
 {
 	public static final int ID = FallState.class.hashCode();
+
+	public FallState(String name)
+	{
+		super(name);
+	}
 	
 	public FallState()
 	{
