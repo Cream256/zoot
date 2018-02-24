@@ -25,8 +25,7 @@ public class MoveableControllerTest
 	private static final float JUMP_UP_VEL = 25.0f;
 	private static final float JUMP_FORWARD_VEL_X = 50.0f;
 	private static final float JUMP_FORWARD_VEL_Y = 30.0f;
-	private static final float IN_AIR_FORCE = 12.0f;
-	private static final float MAX_IN_AIR_FORCE = IN_AIR_FORCE * 2;		
+	private static final float IN_AIR_VEL_X = 12.0f;		
 	private static final int JUMP_TIMEOUT = 100;
 		
 	private ZootActor actor;
@@ -52,8 +51,7 @@ public class MoveableControllerTest
 		ControllerAnnotations.setControllerParameter(ctrl, "jumpForwardVelX", JUMP_FORWARD_VEL_X);
 		ControllerAnnotations.setControllerParameter(ctrl, "jumpForwardVelY", JUMP_FORWARD_VEL_Y);
 		ControllerAnnotations.setControllerParameter(ctrl, "jumpTimeout", JUMP_TIMEOUT);
-		ControllerAnnotations.setControllerParameter(ctrl, "inAirVel", IN_AIR_FORCE);
-		ControllerAnnotations.setControllerParameter(ctrl, "maxInAirVel", MAX_IN_AIR_FORCE);
+		ControllerAnnotations.setControllerParameter(ctrl, "inAirVelX", IN_AIR_VEL_X);
 	}
 	
 	@Test(expected = RuntimeZootException.class)
@@ -248,7 +246,7 @@ public class MoveableControllerTest
 		ctrl.moveInAir(ZootDirection.Right);
 		
 		//then
-		verify(physicsCtrl).setVelocity(IN_AIR_FORCE, 0.0f, true, false);
+		verify(physicsCtrl).setVelocity(IN_AIR_VEL_X, 0.0f, true, false);
 	}
 	
 	@Test
@@ -261,32 +259,19 @@ public class MoveableControllerTest
 		ctrl.moveInAir(ZootDirection.Left);
 		
 		//then
-		verify(physicsCtrl).setVelocity(-IN_AIR_FORCE, 0.0f, true, false);
+		verify(physicsCtrl).setVelocity(-IN_AIR_VEL_X, 0.0f, true, false);
 	}
 	
 	@Test
-	public void shouldNotExceedMaximumInAirForceWhenMovingInAirToTheRight()
+	public void shouldNotClipToNormalInAirVelocityIfAlreadyMovingFasterToTheRight()
 	{
 		//when
-		when(physicsCtrl.getVelocity()).thenReturn(new Vector2(MAX_IN_AIR_FORCE, 0.0f));
+		when(physicsCtrl.getVelocity()).thenReturn(new Vector2(JUMP_FORWARD_VEL_X, 0.0f));
 		ctrl.onAdd(actor);
 		ctrl.onUpdate(1.0f, actor);
 		ctrl.moveInAir(ZootDirection.Right);
 		
 		//then
-		verify(physicsCtrl).setVelocity(MAX_IN_AIR_FORCE, 0.0f, true, false);
-	}
-	
-	@Test
-	public void shouldNotExceedMaximumInAirForceWhenMovingInAirToTheLeft()
-	{
-		//when
-		when(physicsCtrl.getVelocity()).thenReturn(new Vector2(-MAX_IN_AIR_FORCE, 0.0f));
-		ctrl.onAdd(actor);
-		ctrl.onUpdate(1.0f, actor);
-		ctrl.moveInAir(ZootDirection.Left);
-		
-		//then
-		verify(physicsCtrl).setVelocity(-MAX_IN_AIR_FORCE, 0.0f, true, false);
+		verify(physicsCtrl).setVelocity(JUMP_FORWARD_VEL_X, 0.0f, true, false);
 	}
 }
