@@ -1,13 +1,19 @@
 package com.zootcat.controllers.logic;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.ControllerAnnotations;
+import com.zootcat.controllers.physics.CharacterBodyController;
+import com.zootcat.controllers.physics.DynamicBodyController;
+import com.zootcat.controllers.physics.PhysicsBodyController;
+import com.zootcat.controllers.physics.StaticBodyController;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
@@ -34,7 +40,7 @@ public class SizeControllerTest
 	}
 	
 	@Test
-	public void initShouldSetActorSizeTest()
+	public void shouldSetActorSizeOnInit()
 	{
 		//when
 		ctrl.init(actor);
@@ -45,7 +51,7 @@ public class SizeControllerTest
 	}
 	
 	@Test
-	public void initShouldSetActorSizeScaledBySceneScaleTest()
+	public void shouldSetActorSizeOnInitScaledBySceneScale()
 	{
 		//given
 		final float scale = 0.5f;		
@@ -57,5 +63,20 @@ public class SizeControllerTest
 		//then
 		assertEquals("Wrong width", WIDTH * scale, actor.getWidth(), 0.0f);
 		assertEquals("Wrong height", HEIGHT * scale, actor.getHeight(), 0.0f);
+	}
+	
+	@Test
+	public void shouldReturnHighestPriority()
+	{
+		assertEquals(ControllerPriority.Critical, ctrl.getPriority());
+	}
+	
+	@Test
+	public void shouldHaveHigherPriorityThanPhysicsBodyControllers()
+	{
+		assertTrue(ctrl.getPriority().getValue() > new PhysicsBodyController().getPriority().getValue());
+		assertTrue(ctrl.getPriority().getValue() > new DynamicBodyController().getPriority().getValue());
+		assertTrue(ctrl.getPriority().getValue() > new StaticBodyController().getPriority().getValue());
+		assertTrue(ctrl.getPriority().getValue() > new CharacterBodyController().getPriority().getValue());
 	}
 }

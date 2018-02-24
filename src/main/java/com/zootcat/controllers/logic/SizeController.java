@@ -18,7 +18,7 @@ public class SizeController extends ControllerAdapter
 		actor.setSize(width * scene.getUnitScale(), height * scene.getUnitScale());
 	}
 	
-	@Override	//TODO add test + test if this is called before physicsctrl
+	@Override
 	public ControllerPriority getPriority() 
 	{ 
 		return ControllerPriority.Critical; 
