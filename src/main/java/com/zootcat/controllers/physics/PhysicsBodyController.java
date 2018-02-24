@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -24,6 +23,7 @@ import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.physics.ZootBodyShape;
+import com.zootcat.physics.ZootShapeFactory;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
@@ -217,80 +217,26 @@ public class PhysicsBodyController implements Controller
 		return fixtureDefs;
 	}
 	
-	//TODO!!! extract to separate class and test
 	protected Shape createShape(ZootActor actor, ZootBodyShape shape)
 	{		
-		if(shape == ZootBodyShape.BOX)
+		switch(shape)
 		{
-			PolygonShape boxPoly = new PolygonShape();
-			boxPoly.setAsBox(getBodyWidth(actor) / 2, getBodyHeight(actor) / 2);			
-			return boxPoly;
-		}
-		else if(shape == ZootBodyShape.CIRCLE)
-		{
-			CircleShape circle = new CircleShape();
-			circle.setRadius(getBodyWidth(actor));
-			return circle;
-		}
-		else if(shape == ZootBodyShape.SLOPE_LEFT || shape == ZootBodyShape.SLOPE_RIGHT)
-		{
-			PolygonShape slope = new PolygonShape();
+		case BOX:
+			return ZootShapeFactory.createBox(getBodyWidth(actor), getBodyHeight(actor));
 			
-			float width = getBodyWidth(actor);
-			float height = getBodyHeight(actor);
-			float x = -width / 2.0f;
-			float y = -height / 2.0f;
+		case CIRCLE:
+			return ZootShapeFactory.createCircle(getBodyWidth(actor));
 			
-			Vector2[] vertices = new Vector2[3];
-			if(shape == ZootBodyShape.SLOPE_LEFT)
-			{
-				vertices[0] = new Vector2(x, y);
-				vertices[1] = new Vector2(x + width, y);
-				vertices[2] = new Vector2(x + width, y + height);
-			} 
-			else
-			{
-				vertices[0] = new Vector2(x, y);
-				vertices[1] = new Vector2(x + width, y);
-				vertices[2] = new Vector2(x, y + height);
-			}
-			slope.set(vertices);			
-			return slope;			
-		}
-		else if(shape == ZootBodyShape.POLYGON)
-		{			
+		case SLOPE_LEFT:
+		case SLOPE_RIGHT:
+			return ZootShapeFactory.createSlope(getBodyWidth(actor), getBodyHeight(actor), shape == ZootBodyShape.SLOPE_LEFT);
+			
+		case POLYGON:
 			PolygonMapObject polygonObj = (PolygonMapObject) scene.getMap().getObjectById(actor.getId());
+			return ZootShapeFactory.createPolygon(polygonObj.getPolygon(), actor.getX(), actor.getY(), scene.getUnitScale());
 			
-			Rectangle boundingRect = polygonObj.getPolygon().getBoundingRectangle();
-			float polyWidth = boundingRect.getWidth() * scene.getUnitScale();
-			float polyHeight = boundingRect.getHeight() * scene.getUnitScale();
-									
-			float[] polygonVertices = polygonObj.getPolygon().getTransformedVertices();			
-			float[] vertices = new float[polygonVertices.length];
-			System.arraycopy(polygonVertices, 0, vertices, 0, vertices.length);			
-			
-			for(int i = 0; i < vertices.length; ++i)
-			{								
-				//scale to world
-				vertices[i] *= scene.getUnitScale();
-				
-				//translate by actor position
-				boolean isX = i % 2 == 0;
-				if(isX) vertices[i] -= actor.getX();
-				else vertices[i] -= actor.getY();
-								
-				//translate by actor half size
-				if(isX) vertices[i] -= polyWidth / 2;
-				else vertices[i] -= polyHeight / 2;
-			}
-						
-			PolygonShape polygonShape = new PolygonShape();
-			polygonShape.set(vertices);
-			return polygonShape;
-		}
-		else 
-		{
-			throw new RuntimeZootException("Unknown fixture type for for actor: " + actor);
+		default:
+			throw new RuntimeZootException("Unknown fixture shape type for for actor: " + actor);
 		}
 	}
 	
