@@ -11,6 +11,8 @@ public class JumpState extends BasicState
 {
 	public static final int ID = JumpState.class.hashCode();
 		
+	private ZootDirection forwardJumpDirection = ZootDirection.None;
+	
 	public JumpState()
 	{
 		super("Jump");
@@ -20,7 +22,16 @@ public class JumpState extends BasicState
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{
 		setAnimationBasedOnStateName(actor);
-		actor.controllerAction(MoveableController.class, (ctrl) -> ctrl.jumpUp());
+		
+		if(event.getType() == ZootEventType.JumpUp)
+		{		
+			actor.controllerAction(MoveableController.class, (ctrl) -> ctrl.jumpUp());
+		}
+		else if(event.getType() == ZootEventType.JumpForward)
+		{
+			actor.controllerAction(DirectionController.class, (ctrl) -> forwardJumpDirection = ctrl.getDirection());
+			actor.controllerAction(MoveableController.class, (ctrl) -> ctrl.jumpForward(forwardJumpDirection));
+		}
 	}
 	
 	@Override
@@ -43,7 +54,7 @@ public class JumpState extends BasicState
 		else if(ZootStateUtils.isMoveEvent(event))
 		{
 			ZootDirection dir = ZootStateUtils.getDirectionFromEvent(event);
-			event.getTargetZootActor().controllerAction(MoveableController.class, (ctrl) -> ctrl.walk(dir));
+			event.getTargetZootActor().controllerAction(MoveableController.class, (ctrl) -> ctrl.moveInAir(dir));
 			event.getTargetZootActor().controllerAction(DirectionController.class, (ctrl) -> ctrl.setDirection(dir));
 		}
 		else if(event.getType() == ZootEventType.Hurt)

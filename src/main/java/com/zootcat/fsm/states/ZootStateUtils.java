@@ -20,6 +20,19 @@ public class ZootStateUtils
 		}
 	}
 	
+	public static boolean isJumpEvent(ZootEvent event)
+	{
+		switch(event.getType())
+		{
+		case JumpUp:
+		case JumpForward:
+			return true;
+			
+		default:
+			return false;		
+		}		
+	}
+	
 	public static boolean isRunEvent(ZootEvent event)
 	{
 		switch(event.getType())

@@ -78,9 +78,16 @@ public class RunStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void handleJumpEventTest()
+	public void handleJumpUpEventTest()
 	{
-		assertTrue(runState.handle(createEvent(ZootEventType.Jump)));
+		assertTrue(runState.handle(createEvent(ZootEventType.JumpUp)));
+		assertEquals(JumpState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleJumpForwardEventTest()
+	{
+		assertTrue(runState.handle(createEvent(ZootEventType.JumpForward)));
 		assertEquals(JumpState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	

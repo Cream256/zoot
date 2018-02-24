@@ -38,7 +38,7 @@ public class IdleState extends BasicState
 			int nextStateId = turn ? TurnState.ID : (ZootStateUtils.isRunEvent(event) ? RunState.ID : WalkState.ID);
 			changeState(event, nextStateId);
 		}
-		else if(event.getType() == ZootEventType.Jump)
+		else if(ZootStateUtils.isJumpEvent(event))
 		{		
 			changeState(event, JumpState.ID);
 		}

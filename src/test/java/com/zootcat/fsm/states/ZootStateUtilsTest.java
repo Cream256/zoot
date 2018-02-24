@@ -13,7 +13,26 @@ import com.zootcat.scene.ZootDirection;
 public class ZootStateUtilsTest
 {
 	@Test
-	public void isMoveEventTest()
+	public void shouldRecognizeJumpEvent()
+	{
+		assertTrue(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.JumpUp)));
+		assertTrue(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.JumpForward)));
+		assertFalse(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.WalkLeft)));
+		assertFalse(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.WalkRight)));
+		assertFalse(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.RunLeft)));
+		assertFalse(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.RunRight)));
+		assertFalse(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.Attack)));
+		assertFalse(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.Collide)));
+		assertFalse(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.Dead)));
+		assertFalse(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.Fall)));
+		assertFalse(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.Ground)));
+		assertFalse(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.None)));
+		assertFalse(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.Stop)));
+		assertFalse(ZootStateUtils.isJumpEvent(new ZootEvent(ZootEventType.Update)));
+	}
+	
+	@Test
+	public void shouldRecognizeMoveEvent()
 	{
 		assertTrue(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.WalkLeft)));
 		assertTrue(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.WalkRight)));
@@ -23,7 +42,7 @@ public class ZootStateUtilsTest
 		assertFalse(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.Collide)));
 		assertFalse(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.Dead)));
 		assertFalse(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.Fall)));
-		assertFalse(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.Jump)));
+		assertFalse(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.JumpUp)));
 		assertFalse(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.Ground)));
 		assertFalse(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.None)));
 		assertFalse(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.Stop)));
@@ -31,7 +50,7 @@ public class ZootStateUtilsTest
 	}
 	
 	@Test
-	public void getDirectionFromEventTest()
+	public void shouldReturnProperDirectionFromEvent()
 	{
 		assertEquals(ZootDirection.Left, ZootStateUtils.getDirectionFromEvent(new ZootEvent(ZootEventType.WalkLeft)));
 		assertEquals(ZootDirection.Left, ZootStateUtils.getDirectionFromEvent(new ZootEvent(ZootEventType.RunLeft)));
@@ -41,7 +60,7 @@ public class ZootStateUtilsTest
 		assertEquals(ZootDirection.None, ZootStateUtils.getDirectionFromEvent(new ZootEvent(ZootEventType.Collide)));
 		assertEquals(ZootDirection.None, ZootStateUtils.getDirectionFromEvent(new ZootEvent(ZootEventType.Dead)));
 		assertEquals(ZootDirection.None, ZootStateUtils.getDirectionFromEvent(new ZootEvent(ZootEventType.Fall)));
-		assertEquals(ZootDirection.None, ZootStateUtils.getDirectionFromEvent(new ZootEvent(ZootEventType.Jump)));
+		assertEquals(ZootDirection.None, ZootStateUtils.getDirectionFromEvent(new ZootEvent(ZootEventType.JumpUp)));
 		assertEquals(ZootDirection.None, ZootStateUtils.getDirectionFromEvent(new ZootEvent(ZootEventType.Ground)));
 		assertEquals(ZootDirection.None, ZootStateUtils.getDirectionFromEvent(new ZootEvent(ZootEventType.None)));
 		assertEquals(ZootDirection.None, ZootStateUtils.getDirectionFromEvent(new ZootEvent(ZootEventType.Stop)));
@@ -49,7 +68,7 @@ public class ZootStateUtilsTest
 	}
 	
 	@Test
-	public void isRunEventTest()
+	public void shouldRecognizeRunEvent()
 	{
 		assertTrue(ZootStateUtils.isRunEvent(new ZootEvent(ZootEventType.RunLeft)));
 		assertTrue(ZootStateUtils.isRunEvent(new ZootEvent(ZootEventType.RunRight)));

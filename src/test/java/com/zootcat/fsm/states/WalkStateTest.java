@@ -78,9 +78,16 @@ public class WalkStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void handleJumpEventTest()
+	public void handleJumpUpEventTest()
 	{
-		assertTrue(walkState.handle(createEvent(ZootEventType.Jump)));
+		assertTrue(walkState.handle(createEvent(ZootEventType.JumpUp)));
+		assertEquals(JumpState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleJumpForwardEventTest()
+	{
+		assertTrue(walkState.handle(createEvent(ZootEventType.JumpForward)));
 		assertEquals(JumpState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	

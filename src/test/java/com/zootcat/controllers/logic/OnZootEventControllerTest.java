@@ -83,7 +83,7 @@ public class OnZootEventControllerTest
 		OnZootEventController ctrl = new OnZootEventController(Arrays.asList(ZootEventType.Attack), false);
 		
 		assertFalse(ctrl.handleZootEvent(ZootEvents.get(ZootEventType.None)));
-		assertFalse(ctrl.handleZootEvent(ZootEvents.get(ZootEventType.Jump)));
+		assertFalse(ctrl.handleZootEvent(ZootEvents.get(ZootEventType.JumpUp)));
 		assertTrue(ctrl.handleZootEvent(ZootEvents.get(ZootEventType.Attack)));
 		assertFalse(ctrl.isDone());
 	}

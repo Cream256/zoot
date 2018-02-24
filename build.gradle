@@ -63,9 +63,16 @@ publishing {
     }
 }
 
+task assembleAndInstall() {
+	doLast {
+		printf "Zoot Engine assembled and installed."
+	}	
+}
+assembleAndInstall.dependsOn assemble, publishToMavenLocal
+
 task deploy() {
 	doLast {
-		printf "Zoot Engine installed in local repo." 
+		printf "Zoot Engine deployed." 
 	}
 }
 deploy.dependsOn build, publishToMavenLocal
