@@ -20,7 +20,7 @@ public class JumpState extends BasicState
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{
 		setAnimationBasedOnStateName(actor);
-		actor.controllerAction(MoveableController.class, (ctrl) -> ctrl.jump());
+		actor.controllerAction(MoveableController.class, (ctrl) -> ctrl.jumpUp());
 	}
 	
 	@Override

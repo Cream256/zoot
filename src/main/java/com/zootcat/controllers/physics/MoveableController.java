@@ -11,7 +11,8 @@ public class MoveableController extends ControllerAdapter
 {
 	@CtrlParam(debug = true) private float walkForce = 1.0f;
 	@CtrlParam(debug = true) private float runForce = 2.0f;
-	@CtrlParam(debug = true) private float jumpForce = 1.0f;
+	@CtrlParam(debug = true) private float jumpUpForce = 1.0f;
+	@CtrlParam(debug = true) private float jumpForwardForce = 1.0f;
 	@CtrlParam(debug = true) private int jumpTimeout = 0;
 	@CtrlDebug private int timeout = 0;
 	
@@ -21,6 +22,7 @@ public class MoveableController extends ControllerAdapter
 	@Override
 	public void onAdd(ZootActor actor)
 	{
+		timeout = 0;
 		physicsCtrl = actor.getController(PhysicsBodyController.class);
 		groundCtrl = actor.getController(DetectGroundController.class);
 	}
@@ -38,24 +40,39 @@ public class MoveableController extends ControllerAdapter
 		timeout = Math.max(0, timeout - ZootUtils.trunc(delta * 1000));
 	}
 	
-	public void jump()
+	public void jumpUp()
 	{
-		if(timeout > 0) return;
-		if(!groundCtrl.isOnGround()) return;
+		if(!canJump()) return;
 		
-		physicsCtrl.setVelocity(0.0f, jumpForce, false, true);
-		timeout = jumpTimeout;
+		physicsCtrl.setVelocity(0.0f, jumpUpForce, false, true);
+		setJumpTimeout();
+	}
+	
+	public void jumpForward(ZootDirection direction)
+	{
+		if(!canJump()) return;
+		
+		physicsCtrl.setVelocity(jumpForwardForce * direction.getHorizontalValue(), jumpUpForce, true, true);
+		setJumpTimeout();
 	}
 	
 	public void walk(ZootDirection direction)
-	{
-		float vx = direction == ZootDirection.Right ? walkForce : -walkForce;		
-		physicsCtrl.setVelocity(vx, 0.0f, true, false);
+	{		
+		physicsCtrl.setVelocity(walkForce * direction.getHorizontalValue(), 0.0f, true, false);
 	}
 
 	public void run(ZootDirection direction)
 	{
-		float vx = direction == ZootDirection.Right ? runForce : -runForce;
-		physicsCtrl.setVelocity(vx, 0.0f, true, false);
+		physicsCtrl.setVelocity(runForce * direction.getHorizontalValue(), 0.0f, true, false);
+	}
+	
+	protected boolean canJump()
+	{
+		return timeout == 0 && groundCtrl.isOnGround();
+	}
+	
+	protected void setJumpTimeout()
+	{
+		timeout = jumpTimeout;
 	}
 }

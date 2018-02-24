@@ -40,7 +40,7 @@ public class JumpStateTest extends ZootStateTestCase
 	public void onEnterShouldPerformJumpTest()
 	{
 		jumpState.onEnter(actor, null);
-		verify(moveableCtrlMock).jump();
+		verify(moveableCtrlMock).jumpUp();
 	}
 	
 	@Test
