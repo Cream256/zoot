@@ -42,6 +42,7 @@ public class DetectGroundController extends PhysicsCollisionController
 	private ZootActor actorWithSensor;
 	private PhysicsBodyController physicsCtrl;
 	private Set<Fixture> collidedFixtures = new HashSet<Fixture>();
+	private Set<Fixture> ignoredFixtures = new HashSet<Fixture>();
 	
 	@Override
 	public void onAdd(ZootActor actor)
@@ -59,13 +60,14 @@ public class DetectGroundController extends PhysicsCollisionController
 		
 		//cleanup
 		feetShape.dispose();
+		collidedFixtures.clear();
+		ignoredFixtures.clear();
 	}
 
 	@Override
 	public void onRemove(ZootActor actor)
 	{
 		super.onRemove(actor);
-		collidedFixtures.clear();
 		physicsCtrl.removeFixture(feet);
 		physicsCtrl = null;
 	}
@@ -73,7 +75,7 @@ public class DetectGroundController extends PhysicsCollisionController
 	@Override
 	public void onUpdate(float delta, ZootActor actor)
 	{
-		isOnGround = collidedFixtures.size() > 0;
+		isOnGround = collidedFixtures.size() - ignoredFixtures.size() > 0;
 		if(isOnGround)
 		{
 			ZootEvents.fireAndFree(actorWithSensor, ZootEventType.Ground);
@@ -94,14 +96,23 @@ public class DetectGroundController extends PhysicsCollisionController
 	{
 		if(isContactWithGroundSensor(actorA, actorB, contact)) 
 		{
-			collidedFixtures.remove(getOtherFixture(contact));
+			Fixture otherFixture = getOtherFixture(contact);
+			collidedFixtures.remove(otherFixture);
+			ignoredFixtures.remove(otherFixture);
 		}
 	}
 		
 	@Override
 	public void preSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
 	{
-		if(!contact.isEnabled()) collidedFixtures.remove(getOtherFixture(contact));		
+		if(!contact.isEnabled()) 
+		{
+			ignoredFixtures.add(getOtherFixture(contact));
+		}
+		else
+		{
+			ignoredFixtures.remove(getOtherFixture(contact));
+		}
 	}
 
 	@Override

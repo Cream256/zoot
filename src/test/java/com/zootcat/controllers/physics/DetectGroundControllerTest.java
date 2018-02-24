@@ -1,6 +1,9 @@
 package com.zootcat.controllers.physics;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -281,7 +284,38 @@ public class DetectGroundControllerTest
 	}
 	
 	@Test
-	public void multipleContactsShouldBeProperlyHandled()
+	public void shouldDetectGroundWhenBodySuddenlyBecomesCollidable()
+	{
+		//given
+		Fixture fixtureB = mock(Fixture.class);
+		Contact contactMock = mock(Contact.class);
+		when(contactMock.getFixtureB()).thenReturn(fixtureB);
+		
+		//when
+		groundCtrl.init(actor);
+		groundCtrl.onAdd(actor);
+		
+		Fixture groundSensorFixture = physicsCtrl.getFixtures().get(1);		
+		when(contactMock.getFixtureA()).thenReturn(groundSensorFixture);
+		when(contactMock.isEnabled()).thenReturn(false);
+		
+		//then
+		groundCtrl.beginContact(actor, otherActor, contactMock);
+		groundCtrl.preSolve(actor, otherActor, contactMock, mock(Manifold.class));
+		groundCtrl.onUpdate(1.0f, actor);
+		assertFalse("Should not detect contact", groundCtrl.isOnGround());
+		
+		//when
+		when(contactMock.isEnabled()).thenReturn(true);
+		
+		//then
+		groundCtrl.preSolve(actor, otherActor, contactMock, mock(Manifold.class));
+		groundCtrl.onUpdate(1.0f, actor);
+		assertTrue("Should detect contact", groundCtrl.isOnGround()); 
+	}
+	
+	@Test
+	public void shouldProperlyHandleMultiplyContacts()
 	{
 		//given
 		groundCtrl.init(actor);
