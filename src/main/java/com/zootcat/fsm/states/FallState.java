@@ -32,7 +32,7 @@ public class FallState extends BasicState
 		else if(ZootStateUtils.isMoveEvent(event))
 		{
 			ZootDirection dir = ZootStateUtils.getDirectionFromEvent(event);
-			event.getTargetZootActor().controllerAction(MoveableController.class, (ctrl) -> ctrl.walk(dir));
+			event.getTargetZootActor().controllerAction(MoveableController.class, (ctrl) -> ctrl.moveInAir(dir));
 			event.getTargetZootActor().controllerAction(DirectionController.class, (ctrl) -> ctrl.setDirection(dir));
 		}
 		else if(event.getType() == ZootEventType.Hurt)

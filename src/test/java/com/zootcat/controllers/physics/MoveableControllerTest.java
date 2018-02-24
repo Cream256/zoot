@@ -20,14 +20,15 @@ import com.zootcat.scene.ZootDirection;
 
 public class MoveableControllerTest
 {
-	private static final float WALK_FORCE = 5.0f;
-	private static final float RUN_FORCE = 10.0f;
-	private static final float JUMP_UP_FORCE = 25.0f;
-	private static final float JUMP_FORWARD_FORCE = 50.0f;
+	private static final float WALK_VEL = 5.0f;
+	private static final float RUN_VEL = 10.0f;
+	private static final float JUMP_UP_VEL = 25.0f;
+	private static final float JUMP_FORWARD_VEL_X = 50.0f;
+	private static final float JUMP_FORWARD_VEL_Y = 30.0f;
 	private static final float IN_AIR_FORCE = 12.0f;
-	private static final float MAX_IN_AIR_FORCE = IN_AIR_FORCE * 2;	
+	private static final float MAX_IN_AIR_FORCE = IN_AIR_FORCE * 2;		
 	private static final int JUMP_TIMEOUT = 100;
-	
+		
 	private ZootActor actor;
 	@Mock private PhysicsBodyController physicsCtrl;
 	@Mock private DetectGroundController groundCtrl;
@@ -45,13 +46,14 @@ public class MoveableControllerTest
 		when(groundCtrl.isOnGround()).thenReturn(true);
 		
 		ctrl = new MoveableController();
-		ControllerAnnotations.setControllerParameter(ctrl, "walkForce", WALK_FORCE);
-		ControllerAnnotations.setControllerParameter(ctrl, "runForce", RUN_FORCE);
-		ControllerAnnotations.setControllerParameter(ctrl, "jumpUpForce", JUMP_UP_FORCE);
-		ControllerAnnotations.setControllerParameter(ctrl, "jumpForwardForce", JUMP_FORWARD_FORCE);
+		ControllerAnnotations.setControllerParameter(ctrl, "walkVel", WALK_VEL);
+		ControllerAnnotations.setControllerParameter(ctrl, "runVel", RUN_VEL);
+		ControllerAnnotations.setControllerParameter(ctrl, "jumpUpVel", JUMP_UP_VEL);
+		ControllerAnnotations.setControllerParameter(ctrl, "jumpForwardVelX", JUMP_FORWARD_VEL_X);
+		ControllerAnnotations.setControllerParameter(ctrl, "jumpForwardVelY", JUMP_FORWARD_VEL_Y);
 		ControllerAnnotations.setControllerParameter(ctrl, "jumpTimeout", JUMP_TIMEOUT);
-		ControllerAnnotations.setControllerParameter(ctrl, "inAirForce", IN_AIR_FORCE);
-		ControllerAnnotations.setControllerParameter(ctrl, "maxInAirForce", MAX_IN_AIR_FORCE);
+		ControllerAnnotations.setControllerParameter(ctrl, "inAirVel", IN_AIR_FORCE);
+		ControllerAnnotations.setControllerParameter(ctrl, "maxInAirVel", MAX_IN_AIR_FORCE);
 	}
 	
 	@Test(expected = RuntimeZootException.class)
@@ -93,7 +95,7 @@ public class MoveableControllerTest
 		ctrl.walk(ZootDirection.Right);
 		
 		//then
-		verify(physicsCtrl).setVelocity(WALK_FORCE, 0.0f, true, false);
+		verify(physicsCtrl).setVelocity(WALK_VEL, 0.0f, true, false);
 	}
 	
 	@Test
@@ -104,7 +106,7 @@ public class MoveableControllerTest
 		ctrl.walk(ZootDirection.Left);
 		
 		//then
-		verify(physicsCtrl).setVelocity(-WALK_FORCE, 0.0f, true, false);		
+		verify(physicsCtrl).setVelocity(-WALK_VEL, 0.0f, true, false);		
 	}
 	
 	@Test
@@ -115,7 +117,7 @@ public class MoveableControllerTest
 		ctrl.run(ZootDirection.Right);
 		
 		//then
-		verify(physicsCtrl).setVelocity(RUN_FORCE, 0.0f, true, false);
+		verify(physicsCtrl).setVelocity(RUN_VEL, 0.0f, true, false);
 	}
 	
 	@Test
@@ -126,7 +128,7 @@ public class MoveableControllerTest
 		ctrl.run(ZootDirection.Left);
 		
 		//then
-		verify(physicsCtrl).setVelocity(-RUN_FORCE, 0.0f, true, false);
+		verify(physicsCtrl).setVelocity(-RUN_VEL, 0.0f, true, false);
 	}
 	
 	@Test
@@ -137,7 +139,7 @@ public class MoveableControllerTest
 		ctrl.jumpUp();
 		
 		//then
-		verify(physicsCtrl).setVelocity(0.0f, JUMP_UP_FORCE, false, true);
+		verify(physicsCtrl).setVelocity(0.0f, JUMP_UP_VEL, false, true);
 	}
 	
 	@Test
@@ -149,7 +151,7 @@ public class MoveableControllerTest
 		ctrl.jumpUp();
 		
 		//then
-		verify(physicsCtrl, never()).setVelocity(0.0f, JUMP_UP_FORCE, false, true);		
+		verify(physicsCtrl, never()).setVelocity(0.0f, JUMP_UP_VEL, false, true);		
 	}
 	
 	@Test
@@ -160,21 +162,21 @@ public class MoveableControllerTest
 		ctrl.jumpUp();
 		
 		//then
-		verify(physicsCtrl).setVelocity(0.0f, JUMP_UP_FORCE, false, true);
+		verify(physicsCtrl).setVelocity(0.0f, JUMP_UP_VEL, false, true);
 		
 		//when half timeout is reached
 		ctrl.onUpdate(JUMP_TIMEOUT / 2000.0f, actor);
 		ctrl.jumpUp();
 		
 		//then can't jump
-		verify(physicsCtrl, times(1)).setVelocity(0.0f, JUMP_UP_FORCE, false, true);
+		verify(physicsCtrl, times(1)).setVelocity(0.0f, JUMP_UP_VEL, false, true);
 		
 		//when timeout is reached
 		ctrl.onUpdate(JUMP_TIMEOUT / 2000.0f, actor);
 		ctrl.jumpUp();	
 		
 		//then can jump
-		verify(physicsCtrl, times(2)).setVelocity(0.0f, JUMP_UP_FORCE, false, true);
+		verify(physicsCtrl, times(2)).setVelocity(0.0f, JUMP_UP_VEL, false, true);
 	}
 	
 	@Test
@@ -185,7 +187,7 @@ public class MoveableControllerTest
 		ctrl.jumpForward(ZootDirection.Right);
 		
 		//then
-		verify(physicsCtrl).setVelocity(JUMP_FORWARD_FORCE, JUMP_UP_FORCE, true, true);
+		verify(physicsCtrl).setVelocity(JUMP_FORWARD_VEL_X, JUMP_FORWARD_VEL_Y, true, true);
 	}
 	
 	@Test
@@ -196,7 +198,7 @@ public class MoveableControllerTest
 		ctrl.jumpForward(ZootDirection.Left);
 		
 		//then
-		verify(physicsCtrl).setVelocity(-JUMP_FORWARD_FORCE, JUMP_UP_FORCE, true, true);
+		verify(physicsCtrl).setVelocity(-JUMP_FORWARD_VEL_X, JUMP_FORWARD_VEL_Y, true, true);
 	}
 	
 	@Test
@@ -208,7 +210,7 @@ public class MoveableControllerTest
 		ctrl.jumpForward(ZootDirection.Right);
 		
 		//then
-		verify(physicsCtrl, never()).setVelocity(JUMP_FORWARD_FORCE, JUMP_UP_FORCE, true, true);
+		verify(physicsCtrl, never()).setVelocity(JUMP_FORWARD_VEL_X, JUMP_UP_VEL, true, true);
 	}
 	
 	@Test
@@ -219,21 +221,21 @@ public class MoveableControllerTest
 		ctrl.jumpForward(ZootDirection.Right);
 		
 		//then
-		verify(physicsCtrl).setVelocity(JUMP_FORWARD_FORCE, JUMP_UP_FORCE, true, true);
+		verify(physicsCtrl).setVelocity(JUMP_FORWARD_VEL_X, JUMP_FORWARD_VEL_Y, true, true);
 		
 		//when half timeout is reached
 		ctrl.onUpdate(JUMP_TIMEOUT / 2000.0f, actor);
 		ctrl.jumpForward(ZootDirection.Right);
 		
 		//then can't jump
-		verify(physicsCtrl, times(1)).setVelocity(JUMP_FORWARD_FORCE, JUMP_UP_FORCE, true, true);
+		verify(physicsCtrl, times(1)).setVelocity(JUMP_FORWARD_VEL_X, JUMP_FORWARD_VEL_Y, true, true);
 		
 		//when timeout is reached
 		ctrl.onUpdate(JUMP_TIMEOUT / 2000.0f, actor);
 		ctrl.jumpForward(ZootDirection.Right);	
 		
 		//then can jump
-		verify(physicsCtrl, times(2)).setVelocity(JUMP_FORWARD_FORCE, JUMP_UP_FORCE, true, true);
+		verify(physicsCtrl, times(2)).setVelocity(JUMP_FORWARD_VEL_X, JUMP_FORWARD_VEL_Y, true, true);
 	}
 	
 	@Test

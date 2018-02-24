@@ -11,24 +11,26 @@ import com.zootcat.utils.ZootUtils;
 /**
  * Controller used to move physicall body around the scene.
  * 
- * @ctrlParam walkForce - horitontal force that will be set during walking
- * @ctrlParam runForce - horizontal force that will be set during running
- * @ctrlParam jumpUpForce - vertical force that will be set when jumping up
- * @ctrlParam jumpForwardForce - horizontal force that will be set when jumping forward
- * @ctrlParam inAirForce - horizontal force that will be used to move actor in air
- * @ctrlParam maxInAirForce - maximum allowed horizontal force when moving in air
+ * @ctrlParam walkVel - horitontal velocity that will be set during walking
+ * @ctrlParam runVel - horizontal velocity that will be set during running
+ * @ctrlParam jumpUpVel - vertical velocity that will be set when jumping up
+ * @ctrlParam jumpForwardVelX - horizontal velocity that will be set when jumping forward
+ * @ctrlParam jumpForwardVelY - vertical velocity that will be set when jumping forward
+ * @ctrlParam inAirVel - horizontal velocity that will be used to move actor in air
+ * @ctrlParam maxInAirVel - maximum allowed horizontal velocity when moving in air
  * @ctrlParam jumpTimeout - timeout in ms after which actor can try to jump again, default 100
  * @author Cream
  *
  */
 public class MoveableController extends ControllerAdapter
 {
-	@CtrlParam(debug = true) private float walkForce = 1.0f;
-	@CtrlParam(debug = true) private float runForce = 2.0f;
-	@CtrlParam(debug = true) private float jumpUpForce = 1.0f;
-	@CtrlParam(debug = true) private float jumpForwardForce = 1.0f;
-	@CtrlParam(debug = true) private float inAirForce = 1.0f;
-	@CtrlParam(debug = true) private float maxInAirForce = 1.0f;		
+	@CtrlParam(debug = true) private float walkVel = 1.0f;
+	@CtrlParam(debug = true) private float runVel = 2.0f;
+	@CtrlParam(debug = true) private float jumpUpVel = 1.0f;
+	@CtrlParam(debug = true) private float jumpForwardVelX = 1.0f;
+	@CtrlParam(debug = true) private float jumpForwardVelY = 1.0f;	
+	@CtrlParam(debug = true) private float inAirVel = 1.0f;
+	@CtrlParam(debug = true) private float maxInAirVel = 1.0f;			
 	@CtrlParam(debug = true) private int jumpTimeout = 100;
 	@CtrlDebug private int timeout = 0;
 	
@@ -63,7 +65,7 @@ public class MoveableController extends ControllerAdapter
 	{
 		if(!canJump()) return;
 		
-		physicsCtrl.setVelocity(0.0f, jumpUpForce, false, true);
+		physicsCtrl.setVelocity(0.0f, jumpUpVel, false, true);
 		setJumpTimeout();
 	}
 	
@@ -71,28 +73,28 @@ public class MoveableController extends ControllerAdapter
 	{
 		if(!canJump()) return;
 		
-		physicsCtrl.setVelocity(jumpForwardForce * direction.getHorizontalValue(), jumpUpForce, true, true);
+		physicsCtrl.setVelocity(jumpForwardVelX * direction.getHorizontalValue(), jumpForwardVelY, true, true);
 		setJumpTimeout();
 	}
 	
 	public void moveInAir(ZootDirection direction)
 	{
-		float vx = physicsCtrl.getVelocity().x + inAirForce * direction.getHorizontalValue() * lastDelta;		
+		float vx = physicsCtrl.getVelocity().x + inAirVel * direction.getHorizontalValue() * lastDelta;		
 		
 		boolean moveToRight = direction == ZootDirection.Right;
-		vx = MathUtils.clamp(vx, moveToRight ? 0.0f : -maxInAirForce, moveToRight ? maxInAirForce : 0.0f);	
+		vx = MathUtils.clamp(vx, moveToRight ? 0.0f : -maxInAirVel, moveToRight ? maxInAirVel : 0.0f);	
 	
 		physicsCtrl.setVelocity(vx, 0.0f, true, false);
 	}
 	
 	public void walk(ZootDirection direction)
 	{		
-		physicsCtrl.setVelocity(walkForce * direction.getHorizontalValue(), 0.0f, true, false);
+		physicsCtrl.setVelocity(walkVel * direction.getHorizontalValue(), 0.0f, true, false);
 	}
 
 	public void run(ZootDirection direction)
 	{
-		physicsCtrl.setVelocity(runForce * direction.getHorizontalValue(), 0.0f, true, false);
+		physicsCtrl.setVelocity(runVel * direction.getHorizontalValue(), 0.0f, true, false);
 	}
 	
 	protected boolean canJump()
