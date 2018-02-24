@@ -4,13 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -20,8 +21,12 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.events.ActorEventCounterListener;
+import com.zootcat.events.ZootEvent;
+import com.zootcat.events.ZootEventType;
 import com.zootcat.physics.ZootPhysics;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
@@ -32,11 +37,15 @@ public class DetectGroundControllerTest
 	private static final float ACTOR_HEIGHT = 10.0f;
 	private static final float SCENE_UNIT_SCALE = 1.0f;
 	
-	private ZootActor actor;
+	@Mock private ZootScene scene;
+	@Mock private Contact contact;
+	@Mock private Manifold manifold;
+	@Mock private Fixture otherFixture;
+	@Mock private ContactImpulse contactImpulse;
+	
+	private ZootActor ctrlActor;
 	private ZootActor otherActor;
 	private PhysicsBodyController otherActorPhysicsCtrl;
-	
-	private ZootScene sceneMock;
 	private ZootPhysics physics;
 	private PhysicsBodyController physicsCtrl;
 	private DetectGroundController groundCtrl;
@@ -49,36 +58,36 @@ public class DetectGroundControllerTest
 		physics = new ZootPhysics();
 		
 		//create scene
-		sceneMock = mock(ZootScene.class);
-		when(sceneMock.getPhysics()).thenReturn(physics);
-		when(sceneMock.getUnitScale()).thenReturn(SCENE_UNIT_SCALE);		
+		MockitoAnnotations.initMocks(this);
+		when(scene.getPhysics()).thenReturn(physics);
+		when(scene.getUnitScale()).thenReturn(SCENE_UNIT_SCALE);		
 		
 		//create main actor
-		actor = new ZootActor();
-		actor.setSize(ACTOR_WIDTH, ACTOR_HEIGHT);
+		ctrlActor = new ZootActor();
+		ctrlActor.setSize(ACTOR_WIDTH, ACTOR_HEIGHT);
 		
 		eventCounter = new ActorEventCounterListener();
-		actor.addListener(eventCounter);
+		ctrlActor.addListener(eventCounter);
 		
 		physicsCtrl = new PhysicsBodyController();
-		ControllerAnnotations.setControllerParameter(physicsCtrl, "scene", sceneMock);
+		ControllerAnnotations.setControllerParameter(physicsCtrl, "scene", scene);
 		
-		physicsCtrl.init(actor);		
-		actor.addController(physicsCtrl);
+		physicsCtrl.init(ctrlActor);		
+		ctrlActor.addController(physicsCtrl);
 		
 		//create other actor
 		otherActor = new ZootActor();
 		otherActor.setSize(ACTOR_WIDTH, ACTOR_HEIGHT);
 		
 		otherActorPhysicsCtrl = new PhysicsBodyController();
-		ControllerAnnotations.setControllerParameter(otherActorPhysicsCtrl, "scene", sceneMock);
+		ControllerAnnotations.setControllerParameter(otherActorPhysicsCtrl, "scene", scene);
 		
-		otherActorPhysicsCtrl.init(actor);
+		otherActorPhysicsCtrl.init(ctrlActor);
 		otherActor.addController(otherActorPhysicsCtrl);
 		
 		//create ground detector controller
 		groundCtrl = new DetectGroundController();
-		ControllerAnnotations.setControllerParameter(groundCtrl, "scene", sceneMock);	
+		ControllerAnnotations.setControllerParameter(groundCtrl, "scene", scene);	
 	}
 	
 	@After
@@ -89,36 +98,56 @@ public class DetectGroundControllerTest
 	}
 		
 	@Test
-	public void shouldAddFeetFixture()
+	public void shouldAddFeetFixtureToPhysicsBodyCtrl()
 	{
-		//given
-		assertEquals("Should have only body fixture", 1, physicsCtrl.getFixtures().size());
-		
 		//when
-		groundCtrl.init(actor);
-		groundCtrl.onAdd(actor);
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);
+		
+		//then
+		assertTrue(physicsCtrl.getFixtures().contains(groundCtrl.getFeetFixture()));
+	}
+	
+	@Test
+	public void shouldRemoveFeetFixtureFromPhysicsBodyCtrl()
+	{
+		//when
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);
+		groundCtrl.onRemove(ctrlActor);
+		
+		//then
+		assertFalse("Sensor fixture should be removed", physicsCtrl.getFixtures().contains(groundCtrl.getFeetFixture()));
+		assertFalse("Actor should have deregistered ground detector listener", ctrlActor.getListeners().contains(groundCtrl, true));
+	}
+	
+	@Test
+	public void shouldCreateFeetFixture()
+	{		
+		//when
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);
 
 		//then
 		assertEquals("Sensor fixture should be present", 2, physicsCtrl.getFixtures().size());
 		
-		Fixture sensorFixture = physicsCtrl.getFixtures().get(1);
-		assertTrue("Fixture should be a sensor", sensorFixture.isSensor());		
-		assertEquals("Fixture should be assigned to proper body", physicsCtrl.getBody(), sensorFixture.getBody());
-		assertEquals("Fixture shape should be polygon", Type.Polygon, sensorFixture.getShape().getType());
-		
-		assertTrue("Actor should have registered ground detector listener", actor.getListeners().contains(groundCtrl, true));
+		Fixture feetFixture = groundCtrl.getFeetFixture();
+		assertTrue("Fixture should be a sensor", feetFixture.isSensor());		
+		assertEquals("Fixture should be assigned to proper body", physicsCtrl.getBody(), feetFixture.getBody());
+		assertEquals("Fixture shape should be polygon", Type.Polygon, feetFixture.getShape().getType());		
+		assertTrue("Actor should have registered ground detector listener", ctrlActor.getListeners().contains(groundCtrl, true));
 	}
 	
 	@Test
-	public void shouldCreateFixtureUsingCustomWidth()
+	public void shouldCreateFeetFixtureUsingCustomWidth()
 	{
 		//when
 		final int customWidth = 128;
 		ControllerAnnotations.setControllerParameter(groundCtrl, "sensorWidth", customWidth);
 		
-		groundCtrl.init(actor);
-		groundCtrl.onAdd(actor);
-		PolygonShape fixtureShape = (PolygonShape)physicsCtrl.getFixtures().get(1).getShape();
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);
+		PolygonShape fixtureShape = (PolygonShape)groundCtrl.getFeetFixture().getShape();
 		
 		//then
 		Vector2 vertex1 = new Vector2();
@@ -133,12 +162,12 @@ public class DetectGroundControllerTest
 	}
 	
 	@Test
-	public void shouldCreateFixtureUsingActorWidthWhenWidthIsSetToZero()
+	public void shouldCreateFeetFixtureUsingActorWidthWhenWidthIsSetToZero()
 	{
 		//when
-		groundCtrl.init(actor);
-		groundCtrl.onAdd(actor);
-		PolygonShape fixtureShape = (PolygonShape)physicsCtrl.getFixtures().get(1).getShape();
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);
+		PolygonShape fixtureShape = (PolygonShape)groundCtrl.getFeetFixture().getShape();
 		
 		//then
 		Vector2 vertex1 = new Vector2();
@@ -153,178 +182,170 @@ public class DetectGroundControllerTest
 	}
 	
 	@Test
-	public void shouldRemoveFeetFixture()
-	{
-		//when
-		groundCtrl.init(actor);
-		groundCtrl.onAdd(actor);
-		groundCtrl.onRemove(actor);
-		
-		//then
-		assertEquals("Sensor fixture should be removed", 1, physicsCtrl.getFixtures().size());
-		assertFalse("Actor should have deregistered ground detector listener", actor.getListeners().contains(groundCtrl, true));
-	}
-	
-	@Test
-	public void shouldProperlyDetectContacts()
+	public void shouldNotDetectGroundByDefault()
 	{
 		//given
-		Fixture fixtureB = mock(Fixture.class);
-		Contact contactMock = mock(Contact.class);
-		when(contactMock.getFixtureB()).thenReturn(fixtureB);
-		when(contactMock.isEnabled()).thenReturn(true);
-		
-		//when
-		groundCtrl.init(actor);
-		groundCtrl.onAdd(actor);
-		
-		Fixture groundSensorFixture = physicsCtrl.getFixtures().get(1);		
-		when(contactMock.getFixtureA()).thenReturn(groundSensorFixture);
-		
-		//then
-		groundCtrl.beginContact(actor, otherActor, contactMock);
-		groundCtrl.onUpdate(1.0f, actor);
-		assertTrue("Should detect contact", groundCtrl.isOnGround());
-		groundCtrl.endContact(actor, otherActor, contactMock);
-		
-		groundCtrl.beginContact(otherActor, otherActor, contactMock);
-		groundCtrl.onUpdate(1.0f, actor);
-		assertFalse("Should not detect contact between invalid actors", groundCtrl.isOnGround()); 
-				
-		//when
-		when(fixtureB.isSensor()).thenReturn(true);
-		
-		//then
-		groundCtrl.beginContact(actor, otherActor, contactMock);
-		groundCtrl.onUpdate(1.0f, actor);
-		assertFalse("Should not detect contact between two sensors", groundCtrl.isOnGround()); 
-	}
-		
-	@Test
-	public void shouldProperlyReturnOnGroundProperty()
-	{
-		//given
-		groundCtrl.init(actor);
-		groundCtrl.onAdd(actor);
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);
 		
 		//then
 		assertFalse("Should not be on ground by default", groundCtrl.isOnGround());
-		
+	}
+	
+	@Test
+	public void shouldCreateFeetFixtureWithTheSameCollisionFilterAsForControllerActor()
+	{
 		//given
-		Fixture fixtureB = mock(Fixture.class);
-		Contact contactMock = mock(Contact.class);
-		when(contactMock.getFixtureB()).thenReturn(fixtureB);
-		Fixture groundSensorFixture = physicsCtrl.getFixtures().get(1);		
-		when(contactMock.getFixtureA()).thenReturn(groundSensorFixture);
-		when(contactMock.isEnabled()).thenReturn(true);
+		Filter expectedFilter = mock(Filter.class);
+		expectedFilter.categoryBits = 1;
+		expectedFilter.maskBits = 2;
+		expectedFilter.groupIndex = 3;
+		
+		CollisionFilterController filterCtrl = mock(CollisionFilterController.class);
+		when(filterCtrl.getCollisionFilter()).thenReturn(expectedFilter);
 		
 		//when
-		groundCtrl.beginContact(actor, otherActor, contactMock);
-		groundCtrl.onUpdate(1.0f, actor);
+		ctrlActor.addController(filterCtrl);
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);
 		
-		//then
-		assertTrue("Ground should be detected", groundCtrl.isOnGround());
-		assertEquals("Event should be sent to actor", 1, eventCounter.getCount());
-		
-		//when
-		groundCtrl.endContact(actor, otherActor, contactMock);
-	    groundCtrl.beginContact(actor, otherActor, contactMock);
-		groundCtrl.onUpdate(1.0f, actor);
-		
-		//then
-		assertTrue("Ground still should be detected", groundCtrl.isOnGround());
-		assertEquals("Event should be sent", 2, eventCounter.getCount());
-		
-		//when
-		groundCtrl.endContact(actor, otherActor, contactMock);
-		groundCtrl.onUpdate(1.0f, actor);
-		
-		//then
-		assertFalse("Ground should not be detected", groundCtrl.isOnGround());
-		assertEquals("No event should be sent", 2, eventCounter.getCount());
-		
-		//when
-		groundCtrl.beginContact(actor, otherActor, contactMock);
-		groundCtrl.onUpdate(1.0f, actor);
-		
-		//then
-		assertTrue("Ground should be detected", groundCtrl.isOnGround());
-		assertEquals("Event should be sent", 3, eventCounter.getCount());
-		
-		//when contact is disabled
-		when(contactMock.isEnabled()).thenReturn(false);
-		groundCtrl.beginContact(actor, otherActor, contactMock);
-		groundCtrl.preSolve(actor, otherActor, contactMock, mock(Manifold.class));
-		groundCtrl.onUpdate(1.0f, actor);
-		
-		//then
-		assertFalse("Ground should not be detected", groundCtrl.isOnGround());
-		assertEquals("No event should be sent", 3, eventCounter.getCount());
-		
-		//when contact is enabled
-		when(contactMock.isEnabled()).thenReturn(true);
-		groundCtrl.beginContact(actor, otherActor, contactMock);
-		groundCtrl.preSolve(actor, otherActor, contactMock, mock(Manifold.class));
-		groundCtrl.onUpdate(1.0f, actor);
-		
-		//then
-		assertTrue("Ground should be detected", groundCtrl.isOnGround());
-		assertEquals("Event should be sent", 4, eventCounter.getCount());
+		//then		
+		Filter feetFilter = groundCtrl.getFeetFixture().getFilterData();
+		assertNotNull(feetFilter);
+		assertEquals(expectedFilter.categoryBits, feetFilter.categoryBits);
+		assertEquals(expectedFilter.maskBits, feetFilter.maskBits);
+		assertEquals(expectedFilter.groupIndex, feetFilter.groupIndex);
 	}
 		
 	@Test
-	public void shouldDoNothingOnPostSolve()
+	public void shouldProperlyDetectGroundForNormalFixture()
+	{		
+		//when
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);		
+		when(contact.getFixtureA()).thenReturn(groundCtrl.getFeetFixture());
+		when(contact.getFixtureB()).thenReturn(otherFixture);
+		when(contact.isEnabled()).thenReturn(true);
+		
+		groundCtrl.beginContact(ctrlActor, otherActor, contact);
+		groundCtrl.preSolve(ctrlActor, otherActor, contact, manifold);
+		groundCtrl.postSolve(ctrlActor, otherActor, contactImpulse);
+		groundCtrl.onUpdate(0.0f, ctrlActor);
+		
+		//then
+		assertTrue("Should detect ground", groundCtrl.isOnGround());
+		assertTrue("Ground event should be sent to actor", isGroundEvent(eventCounter.getLastEvent()));
+		
+		//when
+		groundCtrl.endContact(ctrlActor, otherActor, contact);
+		
+		//then
+		assertTrue("Should not detect ground when fixture is not colliding", groundCtrl.isOnGround());
+		assertEquals("Should send only 1 event", 1, eventCounter.getCount());
+	}
+	
+	@Test
+	public void shouldFireEventsOnlyWhenGroundIsDetected()
 	{
-		ZootActor actorA = mock(ZootActor.class);
-		ZootActor actorB = mock(ZootActor.class);
-		ContactImpulse contactImpulse = mock(ContactImpulse.class);
+		//when
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);		
+		when(contact.getFixtureA()).thenReturn(groundCtrl.getFeetFixture());
+		when(contact.getFixtureB()).thenReturn(otherFixture);
+		when(contact.isEnabled()).thenReturn(true);
+		
+		groundCtrl.beginContact(ctrlActor, otherActor, contact);
+		groundCtrl.preSolve(ctrlActor, otherActor, contact, manifold);
+		groundCtrl.postSolve(ctrlActor, otherActor, contactImpulse);
+		
+		for(int i = 0; i < 10; ++i) groundCtrl.onUpdate(0.0f, ctrlActor);
+		
+		//then
+		assertTrue("Should detect ground", groundCtrl.isOnGround());
+		assertEquals("Should send 10 events", 10, eventCounter.getCount());
+		assertTrue("Should send events of Ground type", isGroundEvent(eventCounter.getLastEvent()));
+		
+		//when
+		groundCtrl.endContact(ctrlActor, otherActor, contact);
+		groundCtrl.onUpdate(0.0f, ctrlActor);
+		
+		//then
+		assertFalse("Should not detect ground when fixture is not colliding", groundCtrl.isOnGround());
+		assertEquals("Should send only 10 events", 10, eventCounter.getCount());
+	}
+		
+	@Test
+	public void shouldProperlyDetectGroundWhenContactIsDisabledAndReenabled()
+	{
+		//when
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);
+		when(contact.getFixtureA()).thenReturn(groundCtrl.getFeetFixture());
+		when(contact.getFixtureB()).thenReturn(otherFixture);
+		when(contact.isEnabled()).thenReturn(false);
+		
+		groundCtrl.beginContact(ctrlActor, otherActor, contact);
+		groundCtrl.preSolve(ctrlActor, otherActor, contact, manifold);
+		groundCtrl.postSolve(ctrlActor, otherActor, contactImpulse);
+		groundCtrl.onUpdate(0.0f, ctrlActor);
+		
+		//then
+		assertFalse("Should not detect ground when contact was disabled", groundCtrl.isOnGround());
+		assertEquals("No event should be sent", 0, eventCounter.getCount());
+		
+		//when
+		when(contact.isEnabled()).thenReturn(true);
+		groundCtrl.preSolve(ctrlActor, otherActor, contact, manifold);
+		groundCtrl.postSolve(ctrlActor, otherActor, contactImpulse);
+		groundCtrl.onUpdate(0.0f, ctrlActor);
+		
+		//then
+		assertTrue("Should detect ground", groundCtrl.isOnGround());
+		assertTrue("Ground event should be sent to actor", isGroundEvent(eventCounter.getLastEvent()));
+	}
+	
+	@Test
+	public void shouldProperlyDetectGroundWhenCollidingWithSensorFixtures()
+	{
+		//when
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);		
+		when(contact.getFixtureA()).thenReturn(groundCtrl.getFeetFixture());
+		when(contact.getFixtureB()).thenReturn(otherFixture);
+		when(contact.isEnabled()).thenReturn(true);
+		when(otherFixture.isSensor()).thenReturn(true);
+		
+		groundCtrl.beginContact(ctrlActor, otherActor, contact);
+		groundCtrl.preSolve(ctrlActor, otherActor, contact, manifold);
+		groundCtrl.postSolve(ctrlActor, otherActor, contactImpulse);
+		groundCtrl.onUpdate(0.0f, ctrlActor);
+		
+		//then
+		assertFalse("Should not detect ground between sensors", groundCtrl.isOnGround());
+		assertEquals("No event should not be sent to actor", 0, eventCounter.getCount());
+		
+		//when
+		when(otherFixture.isSensor()).thenReturn(false);
+		groundCtrl.preSolve(ctrlActor, otherActor, contact, manifold);
+		groundCtrl.postSolve(ctrlActor, otherActor, contactImpulse);
+		groundCtrl.onUpdate(0.0f, ctrlActor);
+		
+		//then
+		assertTrue("Should detect ground when fixture is no longer a sensor", groundCtrl.isOnGround());
+		assertTrue("Ground event should be sent to actor", isGroundEvent(eventCounter.getLastEvent()));
+	}
 				
-		groundCtrl.postSolve(actorA, actorB, contactImpulse);
-		verifyZeroInteractions(actorA, actorB, contactImpulse);
-	}
-	
-	@Test
-	public void shouldDetectGroundWhenBodySuddenlyBecomesCollidable()
-	{
-		//given
-		Fixture fixtureB = mock(Fixture.class);
-		Contact contactMock = mock(Contact.class);
-		when(contactMock.getFixtureB()).thenReturn(fixtureB);
-		
-		//when
-		groundCtrl.init(actor);
-		groundCtrl.onAdd(actor);
-		
-		Fixture groundSensorFixture = physicsCtrl.getFixtures().get(1);		
-		when(contactMock.getFixtureA()).thenReturn(groundSensorFixture);
-		when(contactMock.isEnabled()).thenReturn(false);
-		
-		//then
-		groundCtrl.beginContact(actor, otherActor, contactMock);
-		groundCtrl.preSolve(actor, otherActor, contactMock, mock(Manifold.class));
-		groundCtrl.onUpdate(1.0f, actor);
-		assertFalse("Should not detect contact", groundCtrl.isOnGround());
-		
-		//when
-		when(contactMock.isEnabled()).thenReturn(true);
-		
-		//then
-		groundCtrl.preSolve(actor, otherActor, contactMock, mock(Manifold.class));
-		groundCtrl.onUpdate(1.0f, actor);
-		assertTrue("Should detect contact", groundCtrl.isOnGround()); 
-	}
-	
 	@Test
 	public void shouldProperlyHandleMultiplyContacts()
 	{
-		//given
-		groundCtrl.init(actor);
-		groundCtrl.onAdd(actor);
+		//when
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);
 		
 		Fixture fixtureB = mock(Fixture.class);
 		Fixture fixtureC = mock(Fixture.class);
 		Fixture fixtureD = mock(Fixture.class);
-		Fixture groundSensorFixture = physicsCtrl.getFixtures().get(1);
+		Fixture groundSensorFixture = groundCtrl.getFeetFixture();
 			
 		Contact contact1 = mock(Contact.class);
 		when(contact1.getFixtureA()).thenReturn(groundSensorFixture);
@@ -342,13 +363,13 @@ public class DetectGroundControllerTest
 		when(contact3.isEnabled()).thenReturn(true);
 		
 		//when
-		groundCtrl.beginContact(actor, otherActor, contact1);
-		groundCtrl.beginContact(actor, otherActor, contact2);
-		groundCtrl.beginContact(actor, otherActor, contact3);
-		groundCtrl.preSolve(actor, otherActor, contact1, mock(Manifold.class));
-		groundCtrl.preSolve(actor, otherActor, contact2, mock(Manifold.class));
-		groundCtrl.preSolve(actor, otherActor, contact3, mock(Manifold.class));			
-		groundCtrl.onUpdate(1.0f, actor);
+		groundCtrl.beginContact(ctrlActor, otherActor, contact1);
+		groundCtrl.beginContact(ctrlActor, otherActor, contact2);
+		groundCtrl.beginContact(ctrlActor, otherActor, contact3);
+		groundCtrl.preSolve(ctrlActor, otherActor, contact1, mock(Manifold.class));
+		groundCtrl.preSolve(ctrlActor, otherActor, contact2, mock(Manifold.class));
+		groundCtrl.preSolve(ctrlActor, otherActor, contact3, mock(Manifold.class));			
+		groundCtrl.onUpdate(1.0f, ctrlActor);
 		
 		//then
 		assertTrue("Ground should be detected", groundCtrl.isOnGround());
@@ -357,15 +378,15 @@ public class DetectGroundControllerTest
 		//when only one contact is left enabled
 		when(contact2.isEnabled()).thenReturn(false);
 		when(contact3.isEnabled()).thenReturn(false);
-		groundCtrl.preSolve(actor, otherActor, contact1, mock(Manifold.class));
-		groundCtrl.preSolve(actor, otherActor, contact2, mock(Manifold.class));
-		groundCtrl.preSolve(actor, otherActor, contact3, mock(Manifold.class));			
+		groundCtrl.preSolve(ctrlActor, otherActor, contact1, mock(Manifold.class));
+		groundCtrl.preSolve(ctrlActor, otherActor, contact2, mock(Manifold.class));
+		groundCtrl.preSolve(ctrlActor, otherActor, contact3, mock(Manifold.class));			
 
 		//this is required to simulate box2d behaviour, all contacts are reenabled after postsolve
 		when(contact2.isEnabled()).thenReturn(true);
 		when(contact3.isEnabled()).thenReturn(true);
 
-		groundCtrl.onUpdate(1.0f, actor);
+		groundCtrl.onUpdate(1.0f, ctrlActor);
 		
 		//then
 		assertTrue("Ground should be detected", groundCtrl.isOnGround());
@@ -375,16 +396,16 @@ public class DetectGroundControllerTest
 		when(contact1.isEnabled()).thenReturn(false);
 		when(contact2.isEnabled()).thenReturn(false);
 		when(contact3.isEnabled()).thenReturn(false);
-		groundCtrl.preSolve(actor, otherActor, contact1, mock(Manifold.class));
-		groundCtrl.preSolve(actor, otherActor, contact2, mock(Manifold.class));
-		groundCtrl.preSolve(actor, otherActor, contact3, mock(Manifold.class));			
+		groundCtrl.preSolve(ctrlActor, otherActor, contact1, mock(Manifold.class));
+		groundCtrl.preSolve(ctrlActor, otherActor, contact2, mock(Manifold.class));
+		groundCtrl.preSolve(ctrlActor, otherActor, contact3, mock(Manifold.class));			
 		
 		//this is required to simulate box2d behaviour, all contacts are reenabled after postsolve
 		when(contact1.isEnabled()).thenReturn(true);
 		when(contact2.isEnabled()).thenReturn(true);
 		when(contact3.isEnabled()).thenReturn(true);
 		
-		groundCtrl.onUpdate(1.0f, actor);
+		groundCtrl.onUpdate(1.0f, ctrlActor);
 		
 		//then
 		assertFalse("Ground should not be detected", groundCtrl.isOnGround());
@@ -392,27 +413,22 @@ public class DetectGroundControllerTest
 	}
 	
 	@Test
-	public void feetFixtureShouldHaveTheSameCollisionFilterAsActor()
+	public void shouldDoNothingOnPostSolve()
 	{
-		//given
-		Filter expectedFilter = mock(Filter.class);
-		expectedFilter.categoryBits = 1;
-		expectedFilter.maskBits = 2;
-		expectedFilter.groupIndex = 3;
-		
-		CollisionFilterController filterCtrl = mock(CollisionFilterController.class);
-		when(filterCtrl.getCollisionFilter()).thenReturn(expectedFilter);
-		
-		//when
-		actor.addController(filterCtrl);
-		groundCtrl.init(actor);
-		groundCtrl.onAdd(actor);
-		
-		//then		
-		Filter feetFilter = physicsCtrl.getFixtures().get(1).getFilterData();
-		assertNotNull(feetFilter);
-		assertEquals(expectedFilter.categoryBits, feetFilter.categoryBits);
-		assertEquals(expectedFilter.maskBits, feetFilter.maskBits);
-		assertEquals(expectedFilter.groupIndex, feetFilter.groupIndex);
+		ZootActor actorA = mock(ZootActor.class);
+		ZootActor actorB = mock(ZootActor.class);
+		ContactImpulse contactImpulse = mock(ContactImpulse.class);
+				
+		groundCtrl.postSolve(actorA, actorB, contactImpulse);
+		verifyZeroInteractions(actorA, actorB, contactImpulse);
+	}
+	
+	private boolean isGroundEvent(Event event)
+	{
+		if(ClassReflection.isInstance(ZootEvent.class, event))
+		{
+			return ((ZootEvent)event).getType() == ZootEventType.Ground;
+		}
+		return false;
 	}
 }

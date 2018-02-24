@@ -38,7 +38,7 @@ public class DetectGroundController extends PhysicsCollisionController
 	@CtrlParam(global = true) private ZootScene scene;
 	@CtrlDebug private boolean isOnGround = false;
 	
-	private Fixture feet;
+	private Fixture feetSensor;
 	private ZootActor actorWithSensor;
 	private PhysicsBodyController physicsCtrl;
 	private Set<Fixture> collidedFixtures = new HashSet<Fixture>();
@@ -56,7 +56,7 @@ public class DetectGroundController extends PhysicsCollisionController
 		
 		//create fixture
 		FixtureDef feetDef = createFeetSensorFixtureDef(physicsCtrl.getBody(), actor, feetShape);		
-		feet = physicsCtrl.addFixture(feetDef, actor);
+		feetSensor = physicsCtrl.addFixture(feetDef, actor);
 		
 		//cleanup
 		feetShape.dispose();
@@ -68,7 +68,9 @@ public class DetectGroundController extends PhysicsCollisionController
 	public void onRemove(ZootActor actor)
 	{
 		super.onRemove(actor);
-		physicsCtrl.removeFixture(feet);
+		collidedFixtures.clear();
+		ignoredFixtures.clear();
+		physicsCtrl.removeFixture(feetSensor);
 		physicsCtrl = null;
 	}
 
@@ -85,7 +87,7 @@ public class DetectGroundController extends PhysicsCollisionController
 	@Override
 	public void beginContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
-		if(isContactWithGroundSensor(actorA, actorB, contact))
+		if(isContactWithFeetSensor(actorA, actorB, contact))
 		{
 			collidedFixtures.add(getOtherFixture(contact));
 		}
@@ -94,9 +96,9 @@ public class DetectGroundController extends PhysicsCollisionController
 	@Override
 	public void endContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
-		if(isContactWithGroundSensor(actorA, actorB, contact)) 
+		if(isContactWithFeetSensor(actorA, actorB, contact))
 		{
-			Fixture otherFixture = getOtherFixture(contact);
+			Fixture otherFixture = getOtherFixture(contact);			
 			collidedFixtures.remove(otherFixture);
 			ignoredFixtures.remove(otherFixture);
 		}
@@ -104,14 +106,17 @@ public class DetectGroundController extends PhysicsCollisionController
 		
 	@Override
 	public void preSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
-	{
-		if(!contact.isEnabled()) 
-		{
-			ignoredFixtures.add(getOtherFixture(contact));
-		}
-		else
-		{
-			ignoredFixtures.remove(getOtherFixture(contact));
+	{	
+		Fixture otherFixture = getOtherFixture(contact);
+		boolean shouldFilter = shouldFilter(contact, otherFixture);
+		
+		if(shouldFilter && !ignoredFixtures.contains(otherFixture) && collidedFixtures.contains(otherFixture)) 
+		{			
+			ignoredFixtures.add(otherFixture);
+		}		
+		else if(!shouldFilter && ignoredFixtures.contains(otherFixture))
+		{	
+			ignoredFixtures.remove(otherFixture);
 		}
 	}
 
@@ -126,14 +131,23 @@ public class DetectGroundController extends PhysicsCollisionController
 		return isOnGround;
 	}
 
-	private boolean isContactWithGroundSensor(ZootActor actorA, ZootActor actorB, Contact contact)
-	{		
-		boolean contactWithFeet = contact.getFixtureA() == feet || contact.getFixtureB() == feet;
-		boolean contactWithActor = actorA == actorWithSensor || actorB == actorWithSensor;
-		boolean notSensors = !contact.getFixtureA().isSensor() || !contact.getFixtureB().isSensor();		
-		return contactWithFeet && contactWithActor && notSensors;
+	public Fixture getFeetFixture()
+	{
+		return feetSensor;
 	}
-
+	
+	private boolean shouldFilter(Contact contact, Fixture otherFixture)
+	{
+		boolean contactNotEnabled = !contact.isEnabled();
+		boolean fixtureIsSensor = otherFixture.isSensor();	
+		return contactNotEnabled || fixtureIsSensor;
+	}
+	
+	private boolean isContactWithFeetSensor(ZootActor actorA, ZootActor actorB, Contact contact)
+	{
+		return contact.getFixtureA() == feetSensor || contact.getFixtureB() == feetSensor;		
+	}
+	
 	private float calculateWidth(ZootActor actor)
 	{
 		if(sensorWidth == 0)
@@ -175,6 +189,6 @@ public class DetectGroundController extends PhysicsCollisionController
 	
 	private Fixture getOtherFixture(Contact contact)
 	{
-		return contact.getFixtureA() == feet ? contact.getFixtureB() : contact.getFixtureA();		
+		return contact.getFixtureA() == feetSensor ? contact.getFixtureB() : contact.getFixtureA();		
 	}
 }
