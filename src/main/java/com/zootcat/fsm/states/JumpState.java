@@ -2,6 +2,7 @@ package com.zootcat.fsm.states;
 
 import com.zootcat.controllers.logic.DirectionController;
 import com.zootcat.controllers.physics.MoveableController;
+import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.events.ZootEvent;
 import com.zootcat.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
@@ -9,10 +10,10 @@ import com.zootcat.scene.ZootDirection;
 
 public class JumpState extends BasicState
 {
-	public static final int ID = JumpState.class.hashCode();
-		
-	private ZootDirection forwardJumpDirection = ZootDirection.None;
+	public static final int ID = JumpState.class.hashCode();	
 	
+	private ZootDirection forwardJumpDirection = ZootDirection.None;
+		
 	public JumpState()
 	{
 		super("Jump");
@@ -49,7 +50,8 @@ public class JumpState extends BasicState
 		}		
 		else if(event.getType() == ZootEventType.Ground)
 		{
-			changeState(event, IdleState.ID);
+			boolean falling = event.getTargetZootActor().controllerCondition(PhysicsBodyController.class, ctrl -> ctrl.getVelocity().y <= 0.0f);
+			if(falling)	changeState(event, IdleState.ID);
 		}
 		else if(ZootStateUtils.isMoveEvent(event))
 		{
