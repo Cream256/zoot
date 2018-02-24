@@ -3,7 +3,7 @@ package com.zootcat.fsm.states;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.events.ZootEventType;
+import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootStateTestCase;
 
@@ -51,6 +52,14 @@ public class JumpStateTest extends ZootStateTestCase
 		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Right);
 		jumpState.onEnter(actor, createEvent(ZootEventType.JumpForward));
 		verify(moveableCtrlMock).jumpForward(ZootDirection.Right);
+	}
+	
+	@Test
+	public void shouldNotInteractWithActorOnUpdate()
+	{
+		ZootActor actor = mock(ZootActor.class);				
+		jumpState.onUpdate(actor, 1.0f);
+		verifyZeroInteractions(actor);
 	}
 	
 	@Test
