@@ -6,10 +6,12 @@ import com.zootcat.scene.ZootActor;
 
 public abstract class PhysicsCollisionController extends ZootCollisionListener implements Controller 
 {
+	private ZootActor controllerActor;
+	
 	@Override
-	public void init(ZootActor actor)
+	public void init(ZootActor actor)	
 	{
-		//noop
+		controllerActor = actor;
 	}
 
 	@Override
@@ -28,5 +30,10 @@ public abstract class PhysicsCollisionController extends ZootCollisionListener i
 	public void onUpdate(float delta, ZootActor actor) 
 	{
 		//noop
+	}
+	
+	public ZootActor getControllerActor()
+	{
+		return controllerActor;
 	}
 }

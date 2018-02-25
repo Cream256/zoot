@@ -43,15 +43,14 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	@CtrlParam(debug = true) private boolean collideWithSensors = true;
 	
 	private Filter filter;
-	private ZootActor controllerActor;
 	private Set<ZootActor> collidingActors = new HashSet<ZootActor>();
 		
 	@Override
 	public void init(ZootActor actor)
 	{		
-		controllerActor = actor;						
-		collidingActors.clear();
+		super.init(actor);
 		
+		collidingActors.clear();		
 		filter = new Filter();	
 		filter.maskBits = BitMaskConverter.Instance.fromString(mask);
 		if(category != null && !category.isEmpty())
@@ -93,29 +92,24 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	{
 		//noop
 	}
-		
-	public ZootActor getControllerActor()
-	{
-		return controllerActor;
-	}
-	
+			
 	public abstract void onEnter(ZootActor actorA, ZootActor actorB, Contact contact);
 	
 	public abstract void onLeave(ZootActor actorA, ZootActor actorB, Contact contact);
 	
 	protected ZootActor getOtherActor(ZootActor actorA, ZootActor actorB)
 	{
-		return actorA == controllerActor ? actorB : actorA;
+		return actorA == getControllerActor() ? actorB : actorA;
 	}
 	
 	protected Fixture getOtherFixture(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
-		return (actorA == controllerActor) ? contact.getFixtureB() : contact.getFixtureA();
+		return (actorA == getControllerActor()) ? contact.getFixtureB() : contact.getFixtureA();
 	}
 	
 	protected Fixture getControllerActorFixture(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
-		return (actorA == controllerActor) ? contact.getFixtureA() : contact.getFixtureB();
+		return (actorA == getControllerActor()) ? contact.getFixtureA() : contact.getFixtureB();
 	}
 	
 	private boolean collides(ZootActor actorA, ZootActor actorB, Contact contact)

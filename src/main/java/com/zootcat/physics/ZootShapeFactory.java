@@ -11,7 +11,14 @@ public class ZootShapeFactory
 	public static PolygonShape createBox(float width, float height)
 	{
 		PolygonShape boxPoly = new PolygonShape();
-		boxPoly.setAsBox(width / 2.0f, height / 2.0f);			
+		boxPoly.setAsBox(width / 2.0f, height / 2.0f);
+		return boxPoly;
+	}
+	
+	public static PolygonShape createBox(float width, float height, float x, float y)
+	{
+		PolygonShape boxPoly = new PolygonShape();
+		boxPoly.setAsBox(width / 2.0f, height / 2.0f, new Vector2(x, y), 0.0f);
 		return boxPoly;
 	}
 	

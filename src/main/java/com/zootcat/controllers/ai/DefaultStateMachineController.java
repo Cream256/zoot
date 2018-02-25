@@ -3,6 +3,7 @@ package com.zootcat.controllers.ai;
 import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.fsm.ZootStateMachine;
 import com.zootcat.fsm.states.AttackState;
+import com.zootcat.fsm.states.ClimbState;
 import com.zootcat.fsm.states.CrouchState;
 import com.zootcat.fsm.states.DeadState;
 import com.zootcat.fsm.states.DownState;
@@ -36,5 +37,6 @@ public class DefaultStateMachineController extends ControllerAdapter
 		sm.addState(new DeadState());
 		sm.addState(new DownState());
 		sm.addState(new CrouchState());
+		sm.addState(new ClimbState());
 	}
 }

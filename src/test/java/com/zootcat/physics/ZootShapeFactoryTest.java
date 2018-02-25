@@ -26,6 +26,8 @@ public class ZootShapeFactoryTest
 	private static final float POLY_WIDTH = 5.0f;
 	private static final float POLY_HEIGHT = 10.0f;
 	private static final float[] POLY_VERTICES = {0.0f, 0.0f, POLY_WIDTH, POLY_HEIGHT, POLY_WIDTH, 0.0f};
+	private static final float OFFSET_X = 33.0f;
+	private static final float OFFSET_Y = 44.0f;
 	
 	@BeforeClass
 	public static void setupClass()
@@ -60,6 +62,35 @@ public class ZootShapeFactoryTest
 		box.getVertex(3, vertex);
 		assertEquals(BOX_WIDTH / -2.0f, vertex.x, 0.0f);
 		assertEquals(BOX_HEIGHT / 2.0f, vertex.y, 0.0f);
+	}
+	
+	@Test
+	public void shuoldReturnBoxShapeWithOffset()
+	{
+		//when
+		Vector2 vertex = new Vector2();
+		PolygonShape box = ZootShapeFactory.createBox(BOX_WIDTH, BOX_HEIGHT, OFFSET_X, OFFSET_Y); 
+				
+		//then
+		assertNotNull(box);
+		assertEquals(4, box.getVertexCount());
+		assertEquals(Type.Polygon, box.getType());
+						
+		box.getVertex(0, vertex);
+		assertEquals(BOX_WIDTH / -2.0f + OFFSET_X, vertex.x, 0.0f);
+		assertEquals(BOX_HEIGHT / -2.0f + OFFSET_Y, vertex.y, 0.0f);
+		
+		box.getVertex(1, vertex);
+		assertEquals(BOX_WIDTH / 2.0f + OFFSET_X, vertex.x, 0.0f);
+		assertEquals(BOX_HEIGHT / -2.0f + OFFSET_Y, vertex.y, 0.0f);
+		
+		box.getVertex(2, vertex);
+		assertEquals(BOX_WIDTH / 2.0f + OFFSET_X, vertex.x, 0.0f);
+		assertEquals(BOX_HEIGHT / 2.0f + OFFSET_Y, vertex.y, 0.0f);
+		
+		box.getVertex(3, vertex);
+		assertEquals(BOX_WIDTH / -2.0f + OFFSET_X, vertex.x, 0.0f);
+		assertEquals(BOX_HEIGHT / 2.0f + OFFSET_Y, vertex.y, 0.0f);
 	}
 	
 	@Test
