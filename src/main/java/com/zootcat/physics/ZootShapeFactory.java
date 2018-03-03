@@ -15,10 +15,10 @@ public class ZootShapeFactory
 		return boxPoly;
 	}
 	
-	public static PolygonShape createBox(float width, float height, float x, float y)
+	public static PolygonShape createBox(float width, float height, float centerX, float centerY)
 	{
 		PolygonShape boxPoly = new PolygonShape();
-		boxPoly.setAsBox(width / 2.0f, height / 2.0f, new Vector2(x, y), 0.0f);
+		boxPoly.setAsBox(width / 2.0f, height / 2.0f, new Vector2(centerX, centerY), 0.0f);
 		return boxPoly;
 	}
 	
