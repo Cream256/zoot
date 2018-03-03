@@ -13,7 +13,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.logic.DieOnCollideFromAboveAfterTimeController;
-import com.zootcat.events.ActorEventCounterListener;
+import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 
 public class DieOnCollideFromAboveAfterTimeControllerTest
@@ -45,7 +45,7 @@ public class DieOnCollideFromAboveAfterTimeControllerTest
 	public void shouldKillActorAfterTimeHasPassed()
 	{
 		//given
-		ActorEventCounterListener eventCounter = new ActorEventCounterListener();		
+		ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();		
 		ctrlActor.addListener(eventCounter);
 		ctrl.init(ctrlActor);
 		
@@ -73,7 +73,7 @@ public class DieOnCollideFromAboveAfterTimeControllerTest
 	public void shouldNotKillActorBeforeTimeHasPassed()
 	{
 		//given
-		ActorEventCounterListener eventCounter = new ActorEventCounterListener();		
+		ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();		
 		ctrlActor.addListener(eventCounter);
 		ctrl.init(ctrlActor);
 		

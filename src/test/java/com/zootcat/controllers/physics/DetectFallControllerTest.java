@@ -12,7 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.zootcat.events.ActorEventCounterListener;
+import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.scene.ZootActor;
 
@@ -22,7 +22,7 @@ public class DetectFallControllerTest
 	private static final Vector2 DOWN_VELOCITY = new Vector2(0.0f, -10.0f);
 	
 	private ZootActor actor;
-	private ActorEventCounterListener eventCounter;
+	private ZootActorEventCounterListener eventCounter;
 	private DetectFallController ctrl;
 	@Mock private Body bodyMock;
 	@Mock private DetectGroundController groundCtrlMock;
@@ -38,7 +38,7 @@ public class DetectFallControllerTest
 		actor.addController(groundCtrlMock);
 		actor.addController(physicsCtrlMock);
 		
-		eventCounter = new ActorEventCounterListener();
+		eventCounter = new ZootActorEventCounterListener();
 		actor.addListener(eventCounter);
 		
 		ctrl = new DetectFallController();		

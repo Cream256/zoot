@@ -44,6 +44,10 @@ public class FallState extends BasicState
 		{
 			changeState(event, HurtState.ID);
 		}
+		else if(event.getType() == ZootEventType.Climb)
+		{
+			changeState(event, ClimbState.ID);
+		}
 		
 		return true;
 	}

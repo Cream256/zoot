@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.zootcat.events.ActorEventCounterListener;
+import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.events.ZootEvent;
 import com.zootcat.events.ZootEventType;
 import com.zootcat.exceptions.RuntimeZootException;
@@ -63,7 +63,7 @@ public class DetectInAirControllerTest
 		ZootActor actor = new ZootActor();
 		actor.addController(groundCtrl);
 		
-		ActorEventCounterListener eventCounter = new ActorEventCounterListener();
+		ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();
 		actor.addListener(eventCounter);
 		
 		//when
@@ -84,7 +84,7 @@ public class DetectInAirControllerTest
 		ZootActor actor = new ZootActor();
 		actor.addController(groundCtrl);
 		
-		ActorEventCounterListener eventCounter = new ActorEventCounterListener();
+		ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();
 		actor.addListener(eventCounter);
 		
 		//when

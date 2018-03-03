@@ -69,4 +69,11 @@ public class FallStateTest extends ZootStateTestCase
 		assertEquals("State should not change", currentStateId, actor.getStateMachine().getCurrentState().getId());
 		verify(moveableCtrlMock, times(2)).moveInAir(ZootDirection.Left);
 	}
+	
+	@Test
+	public void handleClimbEvent()
+	{
+		assertTrue(fallState.handle(createEvent(ZootEventType.Climb)));
+		assertEquals(ClimbState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
 }

@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
-import com.zootcat.events.ActorEventCounterListener;
+import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 
 public class DieOnCollideControllerTest
@@ -19,7 +19,7 @@ public class DieOnCollideControllerTest
 		//given
 		ZootActor actorThatShouldDie = new ZootActor();
 		ZootActor actorThatShouldLive = mock(ZootActor.class);
-		ActorEventCounterListener eventCounter = new ActorEventCounterListener();		
+		ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();		
 		actorThatShouldDie.addListener(eventCounter);
 				
 		DieOnCollideController ctrl = new DieOnCollideController();

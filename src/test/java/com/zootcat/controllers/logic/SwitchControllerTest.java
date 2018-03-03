@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.ControllerAnnotations;
-import com.zootcat.events.ActorEventCounterListener;
+import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.events.ZootEvent;
 import com.zootcat.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
@@ -19,13 +19,13 @@ public class SwitchControllerTest
 {
 	private SwitchController ctrl;	
 	private ZootActor ctrlActor;
-	private ActorEventCounterListener eventCounter;
+	private ZootActorEventCounterListener eventCounter;
 	
 	@Before
 	public void setup()
 	{		
 		ctrlActor = new ZootActor();		
-		eventCounter = new ActorEventCounterListener();
+		eventCounter = new ZootActorEventCounterListener();
 		ctrlActor.addListener(eventCounter);
 		
 		ctrl = new SwitchController();

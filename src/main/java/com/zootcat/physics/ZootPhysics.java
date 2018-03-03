@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.ContactFilter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -86,5 +87,20 @@ public class ZootPhysics implements Disposable
 	public World getWorld() 
 	{
 		return world;
-	}	
+	}
+
+	public List<Fixture> getFixturesInArea(float x, float y, float width, float height)
+	{
+		List<Fixture> result = new ArrayList<Fixture>();		
+		world.QueryAABB(new QueryCallback()
+		{			
+			@Override
+			public boolean reportFixture(Fixture fixture)
+			{
+				result.add(fixture);
+				return true;
+			}
+		}, x, y, x + width, y + height);				
+		return result;
+	}
 }

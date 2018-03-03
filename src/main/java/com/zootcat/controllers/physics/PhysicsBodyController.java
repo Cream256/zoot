@@ -145,6 +145,11 @@ public class PhysicsBodyController implements Controller
 		body.setAwake(true);
 	}
 	
+	public float getGravityScale()
+	{
+		return body.getGravityScale();
+	}
+	
 	public void applyImpulse(float vx, float vy)
 	{
 		float cx = body.getPosition().x;

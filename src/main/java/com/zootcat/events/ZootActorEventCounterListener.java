@@ -4,7 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 
-public class ActorEventCounterListener implements EventListener
+public class ZootActorEventCounterListener implements EventListener
 {
 	private int count = 0;
 	private Event lastEvent = null;
@@ -28,5 +28,14 @@ public class ActorEventCounterListener implements EventListener
 	public Event getLastEvent()
 	{
 		return lastEvent;
+	}
+	
+	public ZootEvent getLastZootEvent()
+	{
+		if(ClassReflection.isInstance(ZootEvent.class, lastEvent))
+		{
+			return (ZootEvent) lastEvent;
+		}
+		return null;
 	}
 }

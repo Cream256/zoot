@@ -24,7 +24,7 @@ import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.factory.ControllerAnnotations;
-import com.zootcat.events.ActorEventCounterListener;
+import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.events.ZootEvent;
 import com.zootcat.events.ZootEventType;
 import com.zootcat.physics.ZootPhysics;
@@ -49,7 +49,7 @@ public class DetectGroundControllerTest
 	private ZootPhysics physics;
 	private PhysicsBodyController physicsCtrl;
 	private DetectGroundController groundCtrl;
-	private ActorEventCounterListener eventCounter;
+	private ZootActorEventCounterListener eventCounter;
 	
 	@Before
 	public void setup()
@@ -66,7 +66,7 @@ public class DetectGroundControllerTest
 		ctrlActor = new ZootActor();
 		ctrlActor.setSize(ACTOR_WIDTH, ACTOR_HEIGHT);
 		
-		eventCounter = new ActorEventCounterListener();
+		eventCounter = new ZootActorEventCounterListener();
 		ctrlActor.addListener(eventCounter);
 		
 		physicsCtrl = new PhysicsBodyController();

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.zootcat.controllers.factory.ControllerAnnotations;
-import com.zootcat.events.ActorEventCounterListener;
+import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 
 public class DieOnTimerControllerTest
@@ -15,7 +15,7 @@ public class DieOnTimerControllerTest
 	public void shouldKillActorAfterTimerIsOutTest()
 	{
 		//given
-		ActorEventCounterListener eventCounter = new ActorEventCounterListener();
+		ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();
 		ZootActor actor = new ZootActor();
 		actor.addListener(eventCounter);
 		DieOnTimerController ctrl = new DieOnTimerController();
