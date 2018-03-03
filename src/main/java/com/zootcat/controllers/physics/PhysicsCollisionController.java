@@ -1,6 +1,7 @@
 package com.zootcat.controllers.physics;
 
 import com.zootcat.controllers.Controller;
+import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.physics.ZootCollisionListener;
 import com.zootcat.scene.ZootActor;
 
@@ -34,6 +35,10 @@ public abstract class PhysicsCollisionController extends ZootCollisionListener i
 	
 	public ZootActor getControllerActor()
 	{
+		if(controllerActor == null)	//TODO add test
+		{
+			throw new RuntimeZootException("PhysicsCollisionController::init() was not called.");
+		}
 		return controllerActor;
 	}
 }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.zootcat.controllers.ControllerPriority;
+import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.scene.ZootActor;
 
 public class PhysicsCollisionControllerTest
@@ -51,8 +52,8 @@ public class PhysicsCollisionControllerTest
 		};
 	}
 	
-	@Test
-	public void shouldReturnNullControllerActorWhenNotInitialized()
+	@Test(expected = RuntimeZootException.class)
+	public void shouldThrowWhenControllerIsNotInitialized()
 	{
 		assertNull(ctrl.getControllerActor());
 	}

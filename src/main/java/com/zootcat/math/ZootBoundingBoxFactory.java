@@ -9,23 +9,32 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.zootcat.exceptions.RuntimeZootException;
 
 public class ZootBoundingBoxFactory
-{
+{	
 	public static BoundingBox create(Fixture fixture)
+	{
+		BoundingBox box = new BoundingBox();
+		createAtRef(fixture, box);
+		return box;
+	}
+	
+	public static BoundingBox createAtRef(Fixture fixture, BoundingBox out)
 	{
 		switch(fixture.getShape().getType())
 		{
 		case Polygon:
-			return getPolygonBoundingBox((PolygonShape) fixture.getShape());
+			setPolygonBoundingBox((PolygonShape) fixture.getShape(), out);
+			return out;
 			
 		case Circle:
-			return getCircleBoundingBox((CircleShape) fixture.getShape());
+			setCircleBoundingBox((CircleShape) fixture.getShape(), out);
+			return out;
 			
 		default:
 			throw new RuntimeZootException("BoundingBox not implemented for shape: " + fixture.getShape());
 		}
 	}
 	
-	private static BoundingBox getPolygonBoundingBox(PolygonShape polygon)
+	private static void setPolygonBoundingBox(PolygonShape polygon, BoundingBox out)
 	{		
 		Vector3 min = new Vector3();
 		Vector3 max = new Vector3();
@@ -39,16 +48,18 @@ public class ZootBoundingBoxFactory
 			max.x = Math.max(max.x, vertex.x);
 			max.y = Math.max(max.y, vertex.y);
 		}		
-		return new BoundingBox(min, max);
+				
+		out.set(min, max);
 	}
 
-	private static BoundingBox getCircleBoundingBox(CircleShape circle)
+	private static void setCircleBoundingBox(CircleShape circle, BoundingBox out)
 	{
 		float radius = circle.getRadius();
 		Vector2 pos = circle.getPosition();
 		
 		Vector3 min = new Vector3(pos.x - radius, pos.y - radius, 0.0f);
 		Vector3 max = new Vector3(pos.x + radius, pos.y + radius, 0.0f);		
-		return new BoundingBox(min, max);
+		
+		out.set(min, max);
 	}
 }
