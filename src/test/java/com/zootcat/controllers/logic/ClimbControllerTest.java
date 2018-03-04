@@ -179,26 +179,7 @@ public class ClimbControllerTest
 		//then
 		assertFalse(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));
 	}
-	
-	@Test
-	public void shouldNotBeAbleToGrabWhenOtherFixturesAreOnTop()
-	{
-		//given
-		Fixture sensor = mock(Fixture.class);
-		Fixture fixtureToGrab = mock(Fixture.class);		
-		ZootPhysics physics = mock(ZootPhysics.class);
 		
-		//when
-		when(sensor.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
-		when(fixtureToGrab.isSensor()).thenReturn(false);
-		when(fixtureToGrab.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
-		when(scene.getPhysics()).thenReturn(physics);
-		when(physics.getFixturesInArea(anyFloat(), anyFloat(), anyFloat(), anyFloat())).thenReturn(Arrays.asList(mock(Fixture.class)));
-		
-		//then
-		assertFalse(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));		
-	}
-	
 	@Test
 	public void shouldNotBeAbleToGrabFixtureIfNotCollidingWithFixtureTop()
 	{
