@@ -15,16 +15,16 @@ import com.zootcat.utils.BitMaskConverter;
 
 /**
  * OnCollide Controller - abstract class used to do some action when 
- * collision begins and ends. 
- * 
+ * collision begins and ends.<br/> 
+ * <br/>
  * OnEnter and OnLeave will be executed per actor, so even if Box2D 
  * uses collision on fixture level, OnEnter/OnLeave will be executed 
  * only once even if actor has different fixtures assigned to single
- * box2d body.
- * 
- * Override:
- * onEnter - will be executed when collision begins
- * onLeave - will be executed when collision ends
+ * box2d body.<br/>
+ * <br/>
+ * Override:<br/><br/>
+ * onEnter - will be executed when collision begins<br/>
+ * onLeave - will be executed when collision ends<br/>
  * 
  * @ctrlParam category - category name for collision detection,
  * if nothing is given a default value will be used
