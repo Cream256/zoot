@@ -21,10 +21,9 @@ import com.zootcat.utils.BitMaskConverter;
  * uses collision on fixture level, OnEnter/OnLeave will be executed 
  * only once even if actor has different fixtures assigned to single
  * box2d body.<br/>
- * <br/>
- * Override:<br/><br/>
- * onEnter - will be executed when collision begins<br/>
- * onLeave - will be executed when collision ends<br/>
+ * 
+ * @override onEnter - will be executed when collision begins<br/>
+ * @override onLeave - will be executed when collision ends<br/>
  * 
  * @ctrlParam category - category name for collision detection,
  * if nothing is given a default value will be used

@@ -64,7 +64,7 @@ public class OnCollideWithSensorControllerTest
 				
 		//physics body ctrl
 		physicsCtrl = new PhysicsBodyController();
-		ControllerAnnotations.setControllerParameter(physicsCtrl, "scene", scene);
+		ControllerAnnotations.setControllerParameter(physicsCtrl, "scene", scene);		
 		physicsCtrl.init(ctrlActor);
 		ctrlActor.addController(physicsCtrl);
 				
@@ -72,12 +72,13 @@ public class OnCollideWithSensorControllerTest
 		positiveResultsCount = 0;
 		ctrl = new OnCollideWithSensorController() {
 			@Override
-			protected boolean onCollideWithSensor(Fixture fixture)
+			protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
 			{
 				fixture.testPoint(0.0f, 0.0f);	//required to check for interactions with fixture				
-				return --positiveResultsCount > 0;
+				return --positiveResultsCount > 0 ? SensorCollisionResult.ProcessNext : SensorCollisionResult.StopProcessing;
 			}};
-	
+		ControllerAnnotations.setControllerParameter(ctrl, "scene", scene);
+						
 		//bitmask converter cleanup
 		BitMaskConverter.Instance.clear();
 	}
@@ -110,7 +111,7 @@ public class OnCollideWithSensorControllerTest
 		Fixture sensor = ctrl.getSensor();
 		
 		//then
-		assertNotNull("Climb sensor not created", sensor);
+		assertNotNull("Sensor should be created", sensor);
 		assertEquals("Should be polygon fixture", Type.Polygon, sensor.getType());
 		
 		//when
@@ -161,13 +162,13 @@ public class OnCollideWithSensorControllerTest
 		
 		ctrl.init(ctrlActor);
 		ctrl.onAdd(ctrlActor);
-		Fixture climbSensorFixture = ctrl.getSensor();
+		Fixture sensor = ctrl.getSensor();
 		
 		//then
-		assertNotNull("Climb sensor not created", climbSensorFixture);
-		assertEquals("Should have default category", 1, climbSensorFixture.getFilterData().categoryBits);
-		assertEquals("Should have default group", 0, climbSensorFixture.getFilterData().groupIndex);
-		assertEquals("Should have suplied mask", suppliedMaskBits, climbSensorFixture.getFilterData().maskBits);
+		assertNotNull("Sensor should be created", sensor);
+		assertEquals("Should have default category", 1, sensor.getFilterData().categoryBits);
+		assertEquals("Should have default group", 0, sensor.getFilterData().groupIndex);
+		assertEquals("Should have suplied mask", suppliedMaskBits, sensor.getFilterData().maskBits);
 	}
 	
 	@Test

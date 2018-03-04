@@ -2,7 +2,6 @@ package com.zootcat.controllers.logic;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Mockito.mock;
@@ -16,16 +15,11 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.zootcat.controllers.factory.ControllerAnnotations;
-import com.zootcat.controllers.physics.CollisionFilterController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.events.ZootEventType;
@@ -43,11 +37,13 @@ public class ClimbControllerTest
 	private static final float CTRL_ACTOR_HEIGHT = 50.0f;
 	private static final float MAX_CLIMB_VELOCITY = 12.0f;
 	private static final float CLIMB_TIMEOUT = 2.0f;
+	private static final float TRESHOLD = 5.0f;
 	
 	@Mock private ZootScene scene;
 	@Mock private Contact contact;
 	@Mock private Manifold manifold;
 	@Mock private Fixture otherFixture;
+	@Mock private ZootActor otherActor;
 	@Mock private ContactImpulse contactImpulse;
 		
 	private ClimbController ctrl;
@@ -84,136 +80,14 @@ public class ClimbControllerTest
 		ctrl = new ClimbController();
 		ControllerAnnotations.setControllerParameter(ctrl, "scene", scene);
 		ControllerAnnotations.setControllerParameter(ctrl, "timeout", CLIMB_TIMEOUT);
+		ControllerAnnotations.setControllerParameter(ctrl, "treshold", TRESHOLD);
 		ControllerAnnotations.setControllerParameter(ctrl, "maxVelocity", MAX_CLIMB_VELOCITY);
 		
 		//bitmask converter cleanup
 		BitMaskConverter.Instance.clear();
 	}
 	
-	@Test
-	public void shouldCreateClimbSensorFixture()
-	{
-		//when
-		ctrl.init(ctrlActor);
-		ctrl.onAdd(ctrlActor);		
-		Fixture climbSensorFixture = ctrl.getClimbSensor();
-		
-		//then
-		assertNotNull("Climb sensor not created", climbSensorFixture);
-		assertTrue("Should be sensor", climbSensorFixture.isSensor());
-		assertEquals("Should point to controller actor", ctrlActor, climbSensorFixture.getUserData());
-		assertEquals("Should point to controller actor", ctrlActor, climbSensorFixture.getBody().getUserData());
-	}
-	
-	@Test
-	public void shouldCreateClimbSensorFixtureWithProperShape()
-	{
-		//when
-		ctrl.init(ctrlActor);
-		ctrl.onAdd(ctrlActor);		
-		Fixture climbSensorFixture = ctrl.getClimbSensor();
-		
-		//then
-		assertNotNull("Climb sensor not created", climbSensorFixture);
-		assertEquals("Should be polygon fixture", Type.Polygon, climbSensorFixture.getType());
-		
-		//when
-		PolygonShape fixtureShape = (PolygonShape) climbSensorFixture.getShape();
-		
-		//then
-		assertEquals("Should have 4 vertices", 4, fixtureShape.getVertexCount());
-				
-		//when
-		Vector2 vertex1 = new Vector2();
-		Vector2 vertex2 = new Vector2();
-		Vector2 vertex3 = new Vector2();
-		fixtureShape.getVertex(0, vertex1);
-		fixtureShape.getVertex(1, vertex2);
-		fixtureShape.getVertex(2, vertex3);
-		
-		//then
-		assertEquals("Should have actor width", CTRL_ACTOR_WIDTH, vertex2.x - vertex1.x , 0.0f);
-		assertEquals("Should have 20% of actor height", CTRL_ACTOR_HEIGHT * 0.2f, vertex3.y - vertex1.y, 0.0f);
-	}
-	
-	@Test
-	public void shouldCreateClimbSensorFixtureWithDefaultFilterIfControllerActorHasNone()
-	{
-		//when
-		ctrl.init(ctrlActor);
-		ctrl.onAdd(ctrlActor);
-		Fixture climbSensorFixture = ctrl.getClimbSensor();
-		
-		//then
-		assertNotNull("Climb sensor not created", climbSensorFixture);
-		assertEquals("Should have default category", 1, climbSensorFixture.getFilterData().categoryBits);
-		assertEquals("Should have default group", 0, climbSensorFixture.getFilterData().groupIndex);
-		assertEquals("Should have default mask", BitMaskConverter.MASK_COLLIDE_WITH_ALL, climbSensorFixture.getFilterData().maskBits);
-	}
-	
-	@Test
-	public void shouldCreateClimbSensorFixtureWithDefaultFilterAndSuppliedMask()
-	{
-		//given
-		String suppliedMask = "STATIC";
-		int suppliedMaskBits = BitMaskConverter.Instance.fromString(suppliedMask); 
-		
-		//when
-		ControllerAnnotations.setControllerParameter(ctrl, "mask", suppliedMask);
-		
-		ctrl.init(ctrlActor);
-		ctrl.onAdd(ctrlActor);
-		Fixture climbSensorFixture = ctrl.getClimbSensor();
-		
-		//then
-		assertNotNull("Climb sensor not created", climbSensorFixture);
-		assertEquals("Should have default category", 1, climbSensorFixture.getFilterData().categoryBits);
-		assertEquals("Should have default group", 0, climbSensorFixture.getFilterData().groupIndex);
-		assertEquals("Should have suplied mask", suppliedMaskBits, climbSensorFixture.getFilterData().maskBits);
-	}
-	
-	@Test
-	public void shouldCreateClimbSensorFixtureWithControllerActorFilterAndSuppliedMask()
-	{		
-		//given supplied mask
-		String suppliedMask = "STATIC | SOLID";
-		int suppliedMaskBits = BitMaskConverter.Instance.fromString(suppliedMask); 
-	
-		//given filter
-		Filter filter = new Filter();
-		filter.categoryBits = 2;
-		filter.groupIndex = 3;
-		filter.maskBits = 0;
-		
-		CollisionFilterController collisionFilterCtrl = mock(CollisionFilterController.class);
-		when(collisionFilterCtrl.getCollisionFilter()).thenReturn(filter);		
-		ctrlActor.addController(collisionFilterCtrl);
-		
-		//when
-		ControllerAnnotations.setControllerParameter(ctrl, "mask", suppliedMask);
-		
-		ctrl.init(ctrlActor);
-		ctrl.onAdd(ctrlActor);
-		Fixture climbSensorFixture = ctrl.getClimbSensor();
-		
-		//then
-		assertNotNull("Climb sensor not created", climbSensorFixture);
-		assertEquals("Should have filter category", filter.categoryBits, climbSensorFixture.getFilterData().categoryBits);
-		assertEquals("Should have filter group", filter.groupIndex, climbSensorFixture.getFilterData().groupIndex);
-		assertEquals("Should have suplied mask", suppliedMaskBits, climbSensorFixture.getFilterData().maskBits);
-	}
-	
-	@Test
-	public void shouldRegisterClimbControllerAsListener()
-	{
-		//when
-		ctrl.init(ctrlActor);
-		ctrl.onAdd(ctrlActor);
-		
-		//then
-		assertTrue("Listener not registered", ctrlActor.getListeners().contains(ctrl, true));
-	}
-	
+
 	@Test
 	public void shouldReturnTrueIfActorIsInClimbingState()
 	{
@@ -288,57 +162,81 @@ public class ClimbControllerTest
 		//then
 		assertTrue(ctrl.canActorClimb(ctrlActor));
 	}
-	/*
+	
 	@Test
-	public void shouldNotBeAbleToGrabSensorFixture()
+	public void shouldNotBeAbleToGrabFixtureWhenFixtureIsSensor()
 	{
 		//given
-		Fixture fixture = mock(Fixture.class);
+		Fixture sensor = mock(Fixture.class);
+		Fixture fixtureToGrab = mock(Fixture.class);
 		ZootPhysics physics = mock(ZootPhysics.class);
 		
 		//when
-		when(fixture.isSensor()).thenReturn(true);
-		when(fixture.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
+		when(sensor.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
+		when(fixtureToGrab.isSensor()).thenReturn(true);
+		when(fixtureToGrab.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
 		when(scene.getPhysics()).thenReturn(physics);
 		when(physics.getFixturesInArea(anyFloat(), anyFloat(), anyFloat(), anyFloat())).thenReturn(Collections.emptyList());
 		
 		//then
-		assertFalse(ctrl.canGrabFixture(ctrlActor, fixture));
+		assertFalse(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));
 	}
 	
 	@Test
 	public void shouldNotBeAbleToGrabWhenOtherFixturesAreOnTop()
 	{
 		//given
-		Fixture fixture = mock(Fixture.class);
+		Fixture sensor = mock(Fixture.class);
+		Fixture fixtureToGrab = mock(Fixture.class);		
 		ZootPhysics physics = mock(ZootPhysics.class);
 		
 		//when
-		when(fixture.isSensor()).thenReturn(false);
-		when(fixture.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
+		when(sensor.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
+		when(fixtureToGrab.isSensor()).thenReturn(false);
+		when(fixtureToGrab.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
 		when(scene.getPhysics()).thenReturn(physics);
 		when(physics.getFixturesInArea(anyFloat(), anyFloat(), anyFloat(), anyFloat())).thenReturn(Arrays.asList(mock(Fixture.class)));
 		
 		//then
-		assertFalse(ctrl.canGrabFixture(ctrlActor, fixture));		
-	}*/
+		assertFalse(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));		
+	}
 	
 	@Test
-	public void shouldBeAbleToGrab()
+	public void shouldNotBeAbleToGrabFixtureIfNotCollidingWithFixtureTop()
 	{
 		//given
+		Fixture sensor = mock(Fixture.class);
 		Fixture fixtureToGrab = mock(Fixture.class);
 		ZootPhysics physics = mock(ZootPhysics.class);
 		
 		//when
+		when(sensor.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT, 0.0f, TRESHOLD + 0.1f));
 		when(fixtureToGrab.isSensor()).thenReturn(false);
 		when(fixtureToGrab.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
 		when(scene.getPhysics()).thenReturn(physics);
 		when(physics.getFixturesInArea(anyFloat(), anyFloat(), anyFloat(), anyFloat())).thenReturn(Collections.emptyList());
 		
+		//then
+		assertFalse(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));
+	}
+	
+	@Test
+	public void shouldBeAbleToGrabFixture()
+	{
+		//given
+		Fixture sensor = mock(Fixture.class);
+		Fixture fixtureToGrab = mock(Fixture.class);
+		ZootPhysics physics = mock(ZootPhysics.class);
+		
+		//when
+		when(sensor.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
+		when(fixtureToGrab.isSensor()).thenReturn(false);
+		when(fixtureToGrab.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
+		when(scene.getPhysics()).thenReturn(physics);
+		when(physics.getFixturesInArea(anyFloat(), anyFloat(), anyFloat(), anyFloat())).thenReturn(Collections.emptyList());
 		
 		//then
-		assertTrue(ctrl.canGrabFixture(ctrlActor, fixtureToGrab));
+		assertTrue(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));
 	}
 	
 	@Test
@@ -351,9 +249,7 @@ public class ClimbControllerTest
 		ctrl.grab(ctrlActor, climbableFixture);
 		
 		//then
-		assertEquals("Should send event", 1, eventCounter.getCount());
+		assertEquals("Should send Climb event", 1, eventCounter.getCount());
 		assertEquals(ZootEventType.Climb, eventCounter.getLastZootEvent().getType());
 	}
-	
-	
 }
