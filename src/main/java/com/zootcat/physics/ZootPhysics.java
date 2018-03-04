@@ -10,6 +10,8 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.ContactFilter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Joint;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
@@ -89,7 +91,7 @@ public class ZootPhysics implements Disposable
 		return world;
 	}
 
-	public List<Fixture> getFixturesInArea(float x, float y, float width, float height)
+	public List<Fixture> getFixturesInArea(float lowerX, float lowerY, float upperX, float upperY)
 	{
 		List<Fixture> result = new ArrayList<Fixture>();		
 		world.QueryAABB(new QueryCallback()
@@ -100,7 +102,17 @@ public class ZootPhysics implements Disposable
 				result.add(fixture);
 				return true;
 			}
-		}, x, y, x + width, y + height);				
+		}, lowerX, lowerY, upperX, upperY);				
 		return result;
+	}
+
+	public Joint createJoint(JointDef jointDef)
+	{
+		return world.createJoint(jointDef);
+	}
+
+	public void destroyJoint(Joint joint)
+	{
+		world.destroyJoint(joint);
 	}
 }

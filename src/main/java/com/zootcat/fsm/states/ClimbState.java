@@ -1,6 +1,6 @@
 package com.zootcat.fsm.states;
 
-import com.zootcat.controllers.physics.PhysicsBodyController;
+import com.zootcat.controllers.logic.ClimbController;
 import com.zootcat.events.ZootEvent;
 import com.zootcat.scene.ZootActor;
 
@@ -8,9 +8,7 @@ import com.zootcat.scene.ZootActor;
 public class ClimbState extends AnimationBasedState
 {
 	public static final int ID = ClimbState.class.hashCode();
-	
-	private float oldGravity;
-	
+		
 	public ClimbState()
 	{
 		super("Climb");
@@ -21,33 +19,28 @@ public class ClimbState extends AnimationBasedState
 	{		
 		super.onEnter(actor, event);
 		
-		actor.controllerAction(PhysicsBodyController.class, ctrl -> 
-		{
-			oldGravity = ctrl.getGravityScale();
-			ctrl.setGravityScale(0.0f);
-			ctrl.setVelocity(0.0f, 0.0f);
-		});
+		actor.controllerAction(ClimbController.class, ctrl -> ctrl.grab());
 	}
-	
-	@Override
-	public void onLeave(ZootActor actor, ZootEvent event)
-	{
-		actor.controllerAction(PhysicsBodyController.class, ctrl ->
-		{
-			ctrl.setGravityScale(oldGravity);
-		});
-	}
-	
+		
 	@Override
 	public boolean handle(ZootEvent event)
 	{
+		ZootActor actor = event.getTargetZootActor();
 		switch(event.getType())
 		{
 		case Hurt:
 			changeState(event, HurtState.ID);
 			return true;
 			
-		case Down:
+		case Up:
+			actor.controllerAction(ClimbController.class, ctrl -> 
+			{
+				if(ctrl.climb()) changeState(event, IdleState.ID);
+			});
+			return true;
+		
+		case Down:	//TODO add test			
+			actor.controllerAction(ClimbController.class, ctrl -> ctrl.letGo());			
 			changeState(event, FallState.ID);
 			return true;
 		

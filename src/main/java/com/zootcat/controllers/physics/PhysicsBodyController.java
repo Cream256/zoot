@@ -157,6 +157,16 @@ public class PhysicsBodyController implements Controller
 		body.applyLinearImpulse(vx, vy, cx, cy, true);
 	}
 	
+	public void setPosition(float x, float y)
+	{
+		body.setTransform(x, y, body.getAngle());
+	}
+	
+	public Vector2 getCenterPositionRef()
+	{
+		return body.getPosition();
+	}
+	
 	public void scale(PhysicsBodyScale bodyScale)
 	{
 		fixtures.forEach(f ->

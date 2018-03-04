@@ -1,6 +1,5 @@
 package com.zootcat.controllers.logic;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyFloat;
@@ -22,7 +21,6 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.events.ZootActorEventCounterListener;
-import com.zootcat.events.ZootEventType;
 import com.zootcat.fsm.states.ClimbState;
 import com.zootcat.fsm.states.IdleState;
 import com.zootcat.physics.ZootPhysics;
@@ -237,19 +235,5 @@ public class ClimbControllerTest
 		
 		//then
 		assertTrue(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));
-	}
-	
-	@Test
-	public void shouldSendClimbEventWhenGrabbing()
-	{
-		//given
-		Fixture climbableFixture = mock(Fixture.class);
-		
-		//when		
-		ctrl.grab(ctrlActor, climbableFixture);
-		
-		//then
-		assertEquals("Should send Climb event", 1, eventCounter.getCount());
-		assertEquals(ZootEventType.Climb, eventCounter.getLastZootEvent().getType());
 	}
 }
