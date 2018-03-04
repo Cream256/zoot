@@ -30,6 +30,8 @@ public class ClimbController extends OnCollideWithSensorController
 	@CtrlParam(debug = true) private float treshold = 0.15f;
 	
 	@CtrlDebug private float climbTimeout;
+	private BoundingBox actorBoxCache = new BoundingBox();
+	private BoundingBox fixtureBoxCache = new BoundingBox();
 	
 	@Override
 	public void onAdd(ZootActor actor)
@@ -97,10 +99,10 @@ public class ClimbController extends OnCollideWithSensorController
 	
 	private boolean isCollidingWithFixtureTop(Fixture actorFixture, Fixture edgeFixture)
 	{
-		BoundingBox actorBox = ZootBoundingBoxFactory.create(actorFixture);
-		BoundingBox edgeBox = ZootBoundingBoxFactory.create(edgeFixture);
+		ZootBoundingBoxFactory.createAtRef(actorFixture, actorBoxCache);
+		ZootBoundingBoxFactory.createAtRef(edgeFixture, fixtureBoxCache);
 		
-		float diff = actorBox.max.y - edgeBox.max.y;		
+		float diff = actorBoxCache.max.y - fixtureBoxCache.max.y;		
 		return 0.0f <= diff && diff <= treshold;
 	}
 
