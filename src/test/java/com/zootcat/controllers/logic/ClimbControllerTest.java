@@ -2,17 +2,16 @@ package com.zootcat.controllers.logic;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -160,20 +159,25 @@ public class ClimbControllerTest
 		assertTrue(ctrl.canActorClimb(ctrlActor));
 	}
 	
+	private Fixture createFixture(boolean isSensor, Vector2 position, float width, float height)
+	{
+		Fixture fixture = mock(Fixture.class);
+		Body body = mock(Body.class);
+		
+		when(fixture.isSensor()).thenReturn(isSensor);
+		when(fixture.getBody()).thenReturn(body);
+		when(fixture.getShape()).thenReturn(ZootShapeFactory.createBox(width, height));		
+		when(body.getPosition()).thenReturn(position);
+		
+		return fixture;
+	}
+	
 	@Test
 	public void shouldNotBeAbleToGrabFixtureWhenFixtureIsSensor()
 	{
-		//given
-		Fixture sensor = mock(Fixture.class);
-		Fixture fixtureToGrab = mock(Fixture.class);
-		ZootPhysics physics = mock(ZootPhysics.class);
-		
 		//when
-		when(sensor.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
-		when(fixtureToGrab.isSensor()).thenReturn(true);
-		when(fixtureToGrab.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
-		when(scene.getPhysics()).thenReturn(physics);
-		when(physics.getFixturesInArea(anyFloat(), anyFloat(), anyFloat(), anyFloat())).thenReturn(Collections.emptyList());
+		Fixture sensor = createFixture(true, new Vector2(), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
+		Fixture fixtureToGrab = createFixture(true, new Vector2(), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
 		
 		//then
 		assertFalse(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));
@@ -182,18 +186,10 @@ public class ClimbControllerTest
 	@Test
 	public void shouldNotBeAbleToGrabFixtureIfNotCollidingWithFixtureTop()
 	{
-		//given
-		Fixture sensor = mock(Fixture.class);
-		Fixture fixtureToGrab = mock(Fixture.class);
-		ZootPhysics physics = mock(ZootPhysics.class);
-		
 		//when
-		when(sensor.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT, 0.0f, TRESHOLD + 0.1f));
-		when(fixtureToGrab.isSensor()).thenReturn(false);
-		when(fixtureToGrab.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
-		when(scene.getPhysics()).thenReturn(physics);
-		when(physics.getFixturesInArea(anyFloat(), anyFloat(), anyFloat(), anyFloat())).thenReturn(Collections.emptyList());
-		
+		Fixture sensor = createFixture(true, new Vector2(), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
+		Fixture fixtureToGrab = createFixture(false, new Vector2(0.0f, TRESHOLD + 0.1f), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
+				
 		//then
 		assertFalse(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));
 	}
@@ -201,18 +197,10 @@ public class ClimbControllerTest
 	@Test
 	public void shouldBeAbleToGrabFixture()
 	{
-		//given
-		Fixture sensor = mock(Fixture.class);
-		Fixture fixtureToGrab = mock(Fixture.class);
-		ZootPhysics physics = mock(ZootPhysics.class);
-		
 		//when
-		when(sensor.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
-		when(fixtureToGrab.isSensor()).thenReturn(false);
-		when(fixtureToGrab.getShape()).thenReturn(ZootShapeFactory.createBox(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT));
-		when(scene.getPhysics()).thenReturn(physics);
-		when(physics.getFixturesInArea(anyFloat(), anyFloat(), anyFloat(), anyFloat())).thenReturn(Collections.emptyList());
-		
+		Fixture sensor = createFixture(true, new Vector2(), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
+		Fixture fixtureToGrab = createFixture(false, new Vector2(), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
+				
 		//then
 		assertTrue(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));
 	}

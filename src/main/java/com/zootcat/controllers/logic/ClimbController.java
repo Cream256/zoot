@@ -172,13 +172,16 @@ public class ClimbController extends OnCollideWithSensorController
 		return notSensor && collidingWithFixtureTop;
 	}
 	
-	private boolean isCollidingWithFixtureTop(Fixture actorFixture, Fixture edgeFixture)
+	private boolean isCollidingWithFixtureTop(Fixture actorSensorFixture, Fixture platformFixture)
 	{
-		ZootBoundingBoxFactory.createAtRef(actorFixture, actorBoxCache);
-		ZootBoundingBoxFactory.createAtRef(edgeFixture, fixtureBoxCache);
+		ZootBoundingBoxFactory.createAtRef(actorSensorFixture, actorBoxCache);
+		float actorTop = actorSensorFixture.getBody().getPosition().y + actorBoxCache.getHeight() / 2.0f;
 		
-		float diff = actorBoxCache.max.y - fixtureBoxCache.max.y;	
-		return 0.0f <= diff && diff <= treshold * getScene().getUnitScale();
+		ZootBoundingBoxFactory.createAtRef(platformFixture, fixtureBoxCache);
+		float platformTop = platformFixture.getBody().getPosition().y + fixtureBoxCache.getHeight() / 2.0f;
+		
+		float diff = actorTop - platformTop;		
+		return Math.abs(diff) <= treshold * getScene().getUnitScale();
 	}
 		
 	private void destroyGrabJoint()
