@@ -153,6 +153,18 @@ public class MoveableControllerTest
 	}
 	
 	@Test
+	public void shouldJumpUpEvenWhenNotTouchingGround()
+	{
+		//when
+		when(groundCtrl.isOnGround()).thenReturn(false);
+		ctrl.onAdd(actor);
+		ctrl.jumpUp(false);
+		
+		//then
+		verify(physicsCtrl).setVelocity(0.0f, JUMP_UP_VEL, false, true);		
+	}
+	
+	@Test
 	public void shouldNotJumpUpWhenJumpTimeoutIsExceeded()
 	{
 		//when
@@ -209,6 +221,18 @@ public class MoveableControllerTest
 		
 		//then
 		verify(physicsCtrl, never()).setVelocity(JUMP_FORWARD_VEL_X, JUMP_UP_VEL, true, true);
+	}
+	
+	@Test
+	public void shouldJumpForwardEvenWhenNotTouchingGround()
+	{
+		//when
+		when(groundCtrl.isOnGround()).thenReturn(false);
+		ctrl.onAdd(actor);
+		ctrl.jumpForward(ZootDirection.Right, false);
+		
+		//then
+		verify(physicsCtrl).setVelocity(JUMP_FORWARD_VEL_X, JUMP_FORWARD_VEL_Y, true, true);
 	}
 	
 	@Test

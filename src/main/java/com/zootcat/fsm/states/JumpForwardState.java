@@ -23,7 +23,7 @@ public class JumpForwardState extends JumpState
 	{	
 		super.setAnimationBasedOnStateName(actor);
 		actor.controllerAction(DirectionController.class, (ctrl) -> forwardJumpDirection = ctrl.getDirection());
-		actor.controllerAction(MoveableController.class, (ctrl) -> ctrl.jumpForward(forwardJumpDirection));
+		actor.controllerAction(MoveableController.class, (ctrl) -> ctrl.jumpForward(forwardJumpDirection, false));
 	}
 	
 	@Override
