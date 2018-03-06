@@ -41,7 +41,7 @@ public class JumpForwardStateTest extends ZootStateTestCase
 	{
 		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Right);
 		jumpForwardState.onEnter(actor, createEvent(ZootEventType.JumpForward));
-		verify(moveableCtrlMock).jumpForward(ZootDirection.Right);
+		verify(moveableCtrlMock).jumpForward(ZootDirection.Right, false);
 	}
 	
 	@Test
