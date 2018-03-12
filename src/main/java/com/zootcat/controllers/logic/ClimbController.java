@@ -16,7 +16,9 @@ import com.zootcat.events.ZootEventType;
 import com.zootcat.events.ZootEvents;
 import com.zootcat.fsm.states.ClimbState;
 import com.zootcat.math.ZootBoundingBoxFactory;
+import com.zootcat.physics.ZootPhysicsUtils;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.scene.ZootDirection;
 
 /**
  * Climb Controller - used to enable actor to climb on platforms and ledges.
@@ -28,20 +30,29 @@ import com.zootcat.scene.ZootActor;
  */
 public class ClimbController extends OnCollideWithSensorController
 {		
-	@CtrlParam(debug = true) private float timeout = 1.0f;
-	@CtrlParam(debug = true) private float maxVelocity = 1.0f;
-	@CtrlParam(debug = true) private float treshold = 0.15f;
+	@CtrlParam(debug = true) protected float timeout = 1.0f;
+	@CtrlParam(debug = true) protected float maxVelocity = 1.0f;
+	@CtrlParam(debug = true) protected float treshold = 0.15f;
 	
 	private Joint grabJoint;
 	private float climbTimeout;
 	private Fixture climbableFixture;
 	private BoundingBox actorBoxCache = new BoundingBox();
 	private BoundingBox fixtureBoxCache = new BoundingBox();
+	private ZootDirection sensorPosition = ZootDirection.None;
 		
 	@Override
 	public void onAdd(ZootActor actor)
 	{
+		//override parent values
+		sensorX = 0.0f;
+		sensorY = 0.0f;
+		
+		//create sensor and set default position
 		super.onAdd(actor);
+		setSensorPosition(ZootDirection.Up);
+		
+		//setup
 		climbTimeout = 0.0f;
 		destroyGrabJoint();
 		climbableFixture = null;
@@ -64,22 +75,22 @@ public class ClimbController extends OnCollideWithSensorController
 	protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
 	{
 		ZootActor controllerActor = getControllerActor(); 
-		if(!canActorClimb(controllerActor))
+		if(!canActorGrab(controllerActor))
 		{
 			return SensorCollisionResult.StopProcessing;
 		}
 				
-		if(canGrabFixture(controllerActor, getSensor(), fixture))
+		if(isFixtureGrabbable(controllerActor, getSensor(), fixture))
 		{
 			climbableFixture = fixture;
-			ZootEvents.fireAndFree(controllerActor, ZootEventType.Grab);			
+			ZootEvents.fireAndFree(controllerActor, this.sensorPosition == ZootDirection.Up ? ZootEventType.Grab : ZootEventType.GrabSide);			
 			return SensorCollisionResult.StopProcessing;
 		}
 		
 		return SensorCollisionResult.ProcessNext;
 	}
 		
-	public boolean canActorClimb(ZootActor actor)
+	public boolean canActorGrab(ZootActor actor)
 	{
 		boolean timeoutOk = climbTimeout == 0;
 		boolean enoughVelocityToClimb = actor.getController(PhysicsBodyController.class).getVelocity().y <= maxVelocity;
@@ -106,7 +117,35 @@ public class ClimbController extends OnCollideWithSensorController
 		def.localAnchorA.y = actor.getHeight() / 2.0f;
 		def.localAnchorB.x = actorBody.getPosition().x - climbableFixture.getBody().getPosition().x;
 		
-		grabJoint = getScene().getPhysics().createJoint(def);			
+		grabJoint = scene.getPhysics().createJoint(def);			
+	}
+	
+	public ZootDirection getSensorPosition()
+	{
+		return sensorPosition;
+	}
+	
+	public void setSensorPosition(ZootDirection position)
+	{
+		if(position == sensorPosition)
+		{
+			return;
+		}		
+		
+		sensorPosition = position;		
+		ZootActor ctrlActor = getControllerActor();
+		if(position == ZootDirection.Right)
+		{			
+			ZootPhysicsUtils.setFixturePosition(getSensor(), ctrlActor.getWidth() / 2.0f, ctrlActor.getHeight() / 2.0f);
+		}
+		else if(position == ZootDirection.Left)
+		{
+			ZootPhysicsUtils.setFixturePosition(getSensor(), -ctrlActor.getWidth() / 2.0f, ctrlActor.getHeight() / 2.0f);
+		}
+		else if(position == ZootDirection.Up)
+		{
+			ZootPhysicsUtils.setFixturePosition(getSensor(), 0, ctrlActor.getHeight() / 2.0f);
+		}
 	}
 	
 	public boolean climb()
@@ -118,13 +157,28 @@ public class ClimbController extends OnCollideWithSensorController
 		}
 			
 		destroyGrabJoint();
-		actor.controllerAction(PhysicsBodyController.class, ctrl -> 
+		actor.controllerAction(PhysicsBodyController.class, physCtrl -> 
 		{				
-			Vector2 pos = ctrl.getCenterPositionRef();				
-			ctrl.setPosition(pos.x, pos.y + actor.getHeight()); 
-			ctrl.setVelocity(0.0f, 0.0f);				
+			Vector2 pos = physCtrl.getCenterPositionRef();
+			float mx = getClimbHorizontalOffset(actor); 
+			
+			physCtrl.setPosition(pos.x + mx, pos.y + actor.getHeight()); 
+			physCtrl.setVelocity(0.0f, 0.0f);				
 		});
 		return true;
+	}
+	
+	private float getClimbHorizontalOffset(ZootActor actor)
+	{
+		switch(sensorPosition)
+		{
+		case Left:
+		case Right:
+			return actor.getWidth() * sensorPosition.getHorizontalValue();
+		
+		default:
+			return 0.0f;
+		}		
 	}
 	
 	private boolean isEnoughSpaceToClimb(ZootActor climbingActor)
@@ -133,15 +187,16 @@ public class ClimbController extends OnCollideWithSensorController
 		float actorHeight = climbingActor.getHeight();
 		
 		Vector2 actorCenter = climbingActor.getController(PhysicsBodyController.class).getCenterPositionRef();
-		float actorLeftBorder = actorCenter.x - actorWidth / 2.0f;
+		float actorLeftBorder = (actorCenter.x - actorWidth / 2.0f) + getClimbHorizontalOffset(climbingActor);
 		
 		ZootBoundingBoxFactory.createAtRef(climbableFixture, fixtureBoxCache);		
 		float platformTop = climbableFixture.getBody().getPosition().y + fixtureBoxCache.getHeight() / 2.0f;
 		
 		float precisionPatch = 0.15f;
-		List<Fixture> found = getScene().getPhysics().getFixturesInArea(actorLeftBorder + precisionPatch, 
+		List<Fixture> found = scene.getPhysics().getFixturesInArea(
+				actorLeftBorder + precisionPatch, 
 				platformTop + precisionPatch, 
-				actorLeftBorder + actorWidth - precisionPatch, 
+				actorLeftBorder + actorWidth + precisionPatch, 
 				platformTop + actorHeight - precisionPatch);		
 				
 		List<Fixture> filtered = found.stream()
@@ -165,7 +220,7 @@ public class ClimbController extends OnCollideWithSensorController
 		return actor.getStateMachine().getCurrentState().getId() == ClimbState.ID;
 	}
 	
-	public boolean canGrabFixture(ZootActor actor, Fixture sensorFixture, Fixture grabbableFixture)
+	public boolean isFixtureGrabbable(ZootActor actor, Fixture sensorFixture, Fixture grabbableFixture)
 	{
 		boolean notSensor = !grabbableFixture.isSensor();
 		boolean collidingWithFixtureTop = isCollidingWithFixtureTop(sensorFixture, grabbableFixture);
@@ -181,14 +236,14 @@ public class ClimbController extends OnCollideWithSensorController
 		float platformTop = platformFixture.getBody().getPosition().y + fixtureBoxCache.getHeight() / 2.0f;
 		
 		float diff = actorTop - platformTop;		
-		return Math.abs(diff) <= treshold * getScene().getUnitScale();
+		return Math.abs(diff) <= treshold * scene.getUnitScale();
 	}
 		
 	private void destroyGrabJoint()
 	{
 		if(grabJoint != null)
 		{
-			getScene().getPhysics().destroyJoint(grabJoint);
+			scene.getPhysics().destroyJoint(grabJoint);
 			grabJoint = null;
 		}
 	}

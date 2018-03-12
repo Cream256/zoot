@@ -91,9 +91,16 @@ public class JumpStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void handleClimbEvent()
+	public void handleGrabEvent()
 	{
 		assertTrue(jumpState.handle(createEvent(ZootEventType.Grab)));
+		assertEquals(ClimbState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleGrabSideEvent()
+	{
+		assertTrue(jumpState.handle(createEvent(ZootEventType.GrabSide)));
 		assertEquals(ClimbState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	

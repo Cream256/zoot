@@ -21,9 +21,10 @@ public class JumpForwardState extends JumpState
 	@Override
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{	
+		//no super
 		super.setAnimationBasedOnStateName(actor);
-		actor.controllerAction(DirectionController.class, (ctrl) -> forwardJumpDirection = ctrl.getDirection());
-		actor.controllerAction(MoveableController.class, (ctrl) -> ctrl.jumpForward(forwardJumpDirection, false));
+		actor.controllerAction(DirectionController.class, ctrl -> forwardJumpDirection = ctrl.getDirection());
+		actor.controllerAction(MoveableController.class, ctrl -> ctrl.jumpForward(forwardJumpDirection, false));
 	}
 	
 	@Override

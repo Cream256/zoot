@@ -35,7 +35,7 @@ public abstract class PhysicsCollisionController extends ZootCollisionListener i
 	
 	public ZootActor getControllerActor()
 	{
-		if(controllerActor == null)	//TODO add test
+		if(controllerActor == null)
 		{
 			throw new RuntimeZootException("PhysicsCollisionController::init() was not called.");
 		}

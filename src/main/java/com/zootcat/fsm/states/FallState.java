@@ -3,6 +3,7 @@ package com.zootcat.fsm.states;
 import java.util.Arrays;
 import java.util.List;
 
+import com.zootcat.controllers.logic.ClimbController;
 import com.zootcat.controllers.logic.DirectionController;
 import com.zootcat.controllers.physics.MoveableController;
 import com.zootcat.events.ZootEvent;
@@ -55,14 +56,15 @@ public class FallState extends BasicState
 		else if(ZootStateUtils.isMoveEvent(event))
 		{
 			ZootDirection dir = ZootStateUtils.getDirectionFromEvent(event);
-			event.getTargetZootActor().controllerAction(MoveableController.class, (ctrl) -> ctrl.moveInAir(dir));
-			event.getTargetZootActor().controllerAction(DirectionController.class, (ctrl) -> ctrl.setDirection(dir));
+			event.getTargetZootActor().controllerAction(MoveableController.class, ctrl -> ctrl.moveInAir(dir));
+			event.getTargetZootActor().controllerAction(DirectionController.class, ctrl -> ctrl.setDirection(dir));
+			event.getTargetZootActor().controllerAction(ClimbController.class, ctrl -> ctrl.setSensorPosition(dir));
 		}
 		else if(event.getType() == ZootEventType.Hurt)
 		{
 			changeState(event, HurtState.ID);
 		}
-		else if(event.getType() == ZootEventType.Grab)
+		else if(event.getType() == ZootEventType.Grab || event.getType() == ZootEventType.GrabSide)
 		{
 			changeState(event, ClimbState.ID);
 		}

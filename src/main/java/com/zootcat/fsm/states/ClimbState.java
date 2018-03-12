@@ -1,12 +1,16 @@
 package com.zootcat.fsm.states;
 
+import com.zootcat.controllers.gfx.AnimatedSpriteController;
 import com.zootcat.controllers.logic.ClimbController;
 import com.zootcat.events.ZootEvent;
+import com.zootcat.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
-//TODO add test
-public class ClimbState extends AnimationBasedState
+public class ClimbState extends BasicState
 {
+	public static final String CLIMB_SIDE_ANIMATION = "ClimbSide";
+	public static final String CLIMB_ANIMATION = "Climb";
+	
 	public static final int ID = ClimbState.class.hashCode();
 		
 	public ClimbState()
@@ -16,9 +20,12 @@ public class ClimbState extends AnimationBasedState
 	
 	@Override
 	public void onEnter(ZootActor actor, ZootEvent event)
-	{		
-		super.onEnter(actor, event);
-		
+	{				
+		actor.controllerAction(AnimatedSpriteController.class, ctrl -> 
+		{
+			String usedAnimation = event.getType() == ZootEventType.GrabSide ? CLIMB_SIDE_ANIMATION : CLIMB_ANIMATION; 			
+			ctrl.setAnimation(usedAnimation);
+		});
 		actor.controllerAction(ClimbController.class, ctrl -> ctrl.grab());
 	}
 		
@@ -35,11 +42,12 @@ public class ClimbState extends AnimationBasedState
 		case Up:
 			actor.controllerAction(ClimbController.class, ctrl -> 
 			{
-				if(ctrl.climb()) changeState(event, IdleState.ID);
+				if(ctrl.climb()) 
+					changeState(event, IdleState.ID);
 			});
 			return true;
 		
-		case Down:	//TODO add test			
+		case Down:			
 			actor.controllerAction(ClimbController.class, ctrl -> ctrl.letGo());			
 			changeState(event, FallState.ID);
 			return true;
@@ -47,12 +55,6 @@ public class ClimbState extends AnimationBasedState
 		default:
 			return true;		
 		}
-	}
-	
-	@Override
-	public void onUpdate(ZootActor actor, float delta)
-	{
-		//noop
 	}
 	
 	@Override

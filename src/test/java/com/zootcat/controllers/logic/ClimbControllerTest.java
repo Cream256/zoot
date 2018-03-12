@@ -1,5 +1,6 @@
 package com.zootcat.controllers.logic;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -24,6 +25,7 @@ import com.zootcat.fsm.states.IdleState;
 import com.zootcat.physics.ZootPhysics;
 import com.zootcat.physics.ZootShapeFactory;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.utils.BitMaskConverter;
 
@@ -112,7 +114,7 @@ public class ClimbControllerTest
 		physicsCtrl.setVelocity(0.0f, MAX_CLIMB_VELOCITY);
 				
 		//then
-		assertTrue(ctrl.canActorClimb(ctrlActor));
+		assertTrue(ctrl.canActorGrab(ctrlActor));
 	}
 	
 	@Test
@@ -122,7 +124,7 @@ public class ClimbControllerTest
 		physicsCtrl.setVelocity(0.0f, MAX_CLIMB_VELOCITY + 0.1f);
 		
 		//then
-		assertFalse(ctrl.canActorClimb(ctrlActor));
+		assertFalse(ctrl.canActorGrab(ctrlActor));
 	}
 	
 	@Test
@@ -132,7 +134,7 @@ public class ClimbControllerTest
 		ctrlActor.getStateMachine().changeState(new ClimbState(), null);
 		
 		//then
-		assertFalse(ctrl.canActorClimb(ctrlActor));
+		assertFalse(ctrl.canActorGrab(ctrlActor));
 	}
 	
 	@Test
@@ -143,20 +145,20 @@ public class ClimbControllerTest
 		ctrl.onUpdate(0.0f, ctrlActor);
 		
 		//then
-		assertFalse(ctrl.canActorClimb(ctrlActor));
+		assertFalse(ctrl.canActorGrab(ctrlActor));
 		
 		//when timeout is half way through and actor no longer climbing
 		ctrlActor.getStateMachine().changeState(new IdleState(), null);
 		ctrl.onUpdate(CLIMB_TIMEOUT / 2.0f, ctrlActor);
 		
 		//then
-		assertFalse(ctrl.canActorClimb(ctrlActor));
+		assertFalse(ctrl.canActorGrab(ctrlActor));
 		
 		//when timeout is reached
 		ctrl.onUpdate(CLIMB_TIMEOUT / 2.0f, ctrlActor);
 		
 		//then
-		assertTrue(ctrl.canActorClimb(ctrlActor));
+		assertTrue(ctrl.canActorGrab(ctrlActor));
 	}
 	
 	private Fixture createFixture(boolean isSensor, Vector2 position, float width, float height)
@@ -180,7 +182,7 @@ public class ClimbControllerTest
 		Fixture fixtureToGrab = createFixture(true, new Vector2(), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
 		
 		//then
-		assertFalse(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));
+		assertFalse(ctrl.isFixtureGrabbable(ctrlActor, sensor, fixtureToGrab));
 	}
 		
 	@Test
@@ -191,7 +193,7 @@ public class ClimbControllerTest
 		Fixture fixtureToGrab = createFixture(false, new Vector2(0.0f, TRESHOLD + 0.1f), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
 				
 		//then
-		assertFalse(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));
+		assertFalse(ctrl.isFixtureGrabbable(ctrlActor, sensor, fixtureToGrab));
 	}
 	
 	@Test
@@ -202,6 +204,36 @@ public class ClimbControllerTest
 		Fixture fixtureToGrab = createFixture(false, new Vector2(), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
 				
 		//then
-		assertTrue(ctrl.canGrabFixture(ctrlActor, sensor, fixtureToGrab));
+		assertTrue(ctrl.isFixtureGrabbable(ctrlActor, sensor, fixtureToGrab));
+	}
+	
+	@Test
+	public void shouldReturnNoneDirectionByDefault()
+	{
+		assertEquals(ZootDirection.None, ctrl.getSensorPosition());
+	}
+	
+	@Test
+	public void shouldSetUpSensorPositionAfterAddingToActor()
+	{
+		ctrl.init(ctrlActor);
+		ctrl.onAdd(ctrlActor);
+		assertEquals(ZootDirection.Up, ctrl.getSensorPosition());
+	}
+	
+	@Test
+	public void shouldSetClimbSensorFixtureToDifferentPlaces()
+	{
+		ctrl.init(ctrlActor);
+		ctrl.onAdd(ctrlActor);		
+		
+		ctrl.setSensorPosition(ZootDirection.Right);
+		assertEquals(ZootDirection.Right, ctrl.getSensorPosition());
+		
+		ctrl.setSensorPosition(ZootDirection.Left);
+		assertEquals(ZootDirection.Left, ctrl.getSensorPosition());
+		
+		ctrl.setSensorPosition(ZootDirection.Up);
+		assertEquals(ZootDirection.Up, ctrl.getSensorPosition());
 	}
 }

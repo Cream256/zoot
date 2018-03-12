@@ -30,11 +30,11 @@ import com.zootcat.scene.ZootScene;
  */
 public abstract class OnCollideWithSensorController extends OnCollideController
 {
-	@CtrlParam(debug = true) private float sensorWidth = 1.0f;
-	@CtrlParam(debug = true) private float sensorHeight = 1.0f;
-	@CtrlParam(debug = true) private float sensorX = 0.0f;
-	@CtrlParam(debug = true) private float sensorY = 0.0f;
-	@CtrlParam(global = true) private ZootScene scene;
+	@CtrlParam(debug = true) protected float sensorWidth = 1.0f;
+	@CtrlParam(debug = true) protected float sensorHeight = 1.0f;
+	@CtrlParam(debug = true) protected float sensorX = 0.0f;
+	@CtrlParam(debug = true) protected float sensorY = 0.0f;
+	@CtrlParam(global = true) protected ZootScene scene;
 	
 	public enum SensorCollisionResult { ProcessNext, StopProcessing };
 	
@@ -89,21 +89,16 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	}	
 	
 	protected abstract SensorCollisionResult onCollideWithSensor(Fixture fixture);
-	
-	protected ZootScene getScene()
-	{
-		return scene;
-	}
-	
+		
 	private boolean collidedWithSensor(Contact contact)
 	{
 		return contact.getFixtureA() == sensor || contact.getFixtureB() == sensor;
 	}
 	
-	private FixtureDef createSensorFixtureDef(ZootActor actor, Shape climbSensorShape)
+	private FixtureDef createSensorFixtureDef(ZootActor actor, Shape sensorShape)
 	{
 		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = climbSensorShape;
+		fixtureDef.shape = sensorShape;
 		fixtureDef.isSensor = true;
 		fixtureDef.filter.categoryBits = getFilter().categoryBits;
 		fixtureDef.filter.maskBits = getFilter().maskBits;
