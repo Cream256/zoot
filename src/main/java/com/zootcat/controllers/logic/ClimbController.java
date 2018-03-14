@@ -101,8 +101,8 @@ public class ClimbController extends OnCollideWithSensorController
 	public void grab()
 	{		
 		//setup
-		ZootActor actor = getControllerActor();
-		Body actorBody = actor.getController(PhysicsBodyController.class).getBody();
+		ZootActor grabbingActor = getControllerActor();
+		Body actorBody = grabbingActor.getController(PhysicsBodyController.class).getBody();
 		
 		//timeout
 		climbTimeout = timeout;
@@ -114,8 +114,15 @@ public class ClimbController extends OnCollideWithSensorController
 		def.bodyA = actorBody;
 		def.bodyB = climbableFixture.getBody();
 		def.collideConnected = false;		
-		def.localAnchorA.y = actor.getHeight() / 2.0f;
-		def.localAnchorB.x = actorBody.getPosition().x - climbableFixture.getBody().getPosition().x;
+		
+		//actor anchor
+		float halfClimbOffset = getClimbHorizontalOffset(grabbingActor) / 2.0f;
+		def.localAnchorA.y = grabbingActor.getHeight() / 2.0f;
+		def.localAnchorA.x = halfClimbOffset;	
+		
+		//climabable fixture anchor		
+		def.localAnchorB.x = actorBody.getPosition().x - climbableFixture.getBody().getPosition().x + halfClimbOffset;
+		def.localAnchorB.y = ZootBoundingBoxFactory.create(climbableFixture).getHeight() / 2.0f;
 		
 		grabJoint = scene.getPhysics().createJoint(def);			
 	}

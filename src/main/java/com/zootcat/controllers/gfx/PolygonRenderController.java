@@ -15,7 +15,7 @@ import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
-//TODO use box2d utility class for rendering polygon
+//TODO use box2d utility class for rendering polygon (https://bitbucket.org/dermetfan/libgdx-utils/wiki/Home)
 public class PolygonRenderController extends RenderControllerAdapter 
 {
 	@CtrlParam(required = true, debug = true) private String textureFile;
