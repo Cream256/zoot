@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -44,9 +45,14 @@ public class ZootHud implements Disposable
 		stage.draw();
 	}
 	
-	public void addElement(Actor actor)
+	public void addElement(Actor element)
 	{
-		stage.addActor(actor);
+		stage.addActor(element);
+	}
+	
+	public void removeElement(Actor element)
+	{
+		element.addAction(Actions.removeActor(element));
 	}
 	
 	public InputProcessor getInputProcessor()
