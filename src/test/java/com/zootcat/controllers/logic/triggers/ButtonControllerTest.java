@@ -1,4 +1,4 @@
-package com.zootcat.controllers.logic;
+package com.zootcat.controllers.logic.triggers;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,6 +8,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.zootcat.controllers.logic.triggers.ButtonController;
+import com.zootcat.controllers.logic.triggers.TriggerEventListener;
 import com.zootcat.scene.ZootActor;
 
 public class ButtonControllerTest
@@ -19,7 +21,7 @@ public class ButtonControllerTest
 	private int offCount;
 	private ZootActor ctrlActor;	
 	private ButtonController ctrl;	
-	private SwitchEventListener listener;
+	private TriggerEventListener listener;
 	
 	@Before
 	public void setup()
@@ -28,15 +30,15 @@ public class ButtonControllerTest
 		
 		onCount = 0;
 		offCount = 0;		
-		listener = new SwitchEventListener() {
+		listener = new TriggerEventListener() {
 			@Override
-			public void turnOn(ZootActor switchActor)
+			public void triggerOn(ZootActor switchActor)
 			{
 				++onCount;
 			}
 
 			@Override
-			public void turnOff(ZootActor switchActor)
+			public void triggerOff(ZootActor switchActor)
 			{
 				++offCount;
 			}}; 

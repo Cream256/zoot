@@ -1,13 +1,15 @@
 package com.zootcat.controllers.logic;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import org.junit.Test;
 
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.zootcat.actions.ZootKillActorAction;
 import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 
@@ -16,7 +18,7 @@ public class DieOnCollideControllerTest
 	@Test
 	public void shouldKillActorAfterTimerIsOutTest()
 	{
-		//given
+		//given	
 		ZootActor actorThatShouldDie = new ZootActor();
 		ZootActor actorThatShouldLive = mock(ZootActor.class);
 		ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();		
@@ -28,10 +30,9 @@ public class DieOnCollideControllerTest
 		//when
 		ctrl.onEnter(actorThatShouldDie, actorThatShouldLive, mock(Contact.class));
 		
-		//then	
-		assertEquals("Dead event should be send", 1, eventCounter.getCount());
-		assertEquals("Remove actor action should be present", 1, actorThatShouldDie.getActions().size);
-		assertEquals(RemoveActorAction.class, actorThatShouldDie.getActions().get(0).getClass());
+		//then
+		assertEquals(1, actorThatShouldDie.getActions().size);
+		assertTrue(ClassReflection.isInstance(ZootKillActorAction.class, actorThatShouldDie.getActions().get(0)));		
 		verifyZeroInteractions(actorThatShouldLive);
 	}
 	

@@ -1,4 +1,4 @@
-package com.zootcat.controllers.logic;
+package com.zootcat.controllers.logic.triggers;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.CtrlParam;
@@ -8,22 +8,22 @@ import com.zootcat.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
 
 /**
- * Switch Controller - used for actors that are switches. When collision
- * happens, the switch changes it's state and fires the SwitchOn/SwitchOff
+ * Trigger Controller - used for actors that are triggers. When collision
+ * happens, the trigger changes it's state and fires the SwitchOn/SwitchOff
  * {@link ZootEvent}.
  * <br/><br/>
- * If you want to react when the switch changes it's state, you should
+ * If you want to react when the trigger changes it's state, you should
  * listen to SwitchOn/SwitchOff events. This can be done by implementing
- * the {@link SwitchEventListener} class.
+ * the {@link TriggerEventListener} class.
  * <br/><br/>
- * WARNING - when using switch controller, the switch will automatically
- * fire SwitchOn/SwitchOff event on initialization. It might override
- * the default behaviour set for the object connected with the switch.
+ * WARNING - when using trigger controller, the trigger will automatically
+ * fire TriggerOn/TriggerOff event on initialization. It might override
+ * the default behaviour set for the object connected with the trigger.
  * <br/><br/>
  * @author Cream
  * @see OnCollideController
  */
-public class SwitchController extends OnCollideController
+public class TriggerController extends OnCollideController
 {
 	@CtrlParam(debug = true) private boolean active = false;
 		
@@ -79,6 +79,6 @@ public class SwitchController extends OnCollideController
 	
 	private void trigger(boolean active)
 	{
-		ZootEvents.fireAndFree(getControllerActor(), active ? ZootEventType.SwitchOn : ZootEventType.SwitchOff, getControllerActor());
+		ZootEvents.fireAndFree(getControllerActor(), active ? ZootEventType.TriggerOn : ZootEventType.TriggerOff, getControllerActor());
 	}
 }

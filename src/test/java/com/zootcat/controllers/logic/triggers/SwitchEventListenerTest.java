@@ -1,4 +1,4 @@
-package com.zootcat.controllers.logic;
+package com.zootcat.controllers.logic.triggers;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.zootcat.controllers.logic.triggers.TriggerEventListener;
 import com.zootcat.events.ZootEventType;
 import com.zootcat.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
@@ -14,22 +15,22 @@ import com.zootcat.scene.ZootActor;
 public class SwitchEventListenerTest
 {
 	private boolean isOn;
-	private SwitchEventListener eventListener;
+	private TriggerEventListener eventListener;
 		
 	@Before
 	public void setup()
 	{
 		isOn = false;
-		eventListener = new SwitchEventListener()
+		eventListener = new TriggerEventListener()
 		{
 			@Override
-			public void turnOn(ZootActor switchActor)
+			public void triggerOn(ZootActor switchActor)
 			{
 				isOn = true;		
 			}
 			
 			@Override
-			public void turnOff(ZootActor switchActor)
+			public void triggerOff(ZootActor switchActor)
 			{
 				isOn = false;
 			}
@@ -39,16 +40,16 @@ public class SwitchEventListenerTest
 	@Test
 	public void shouldReturnTrueOnSwitchEvents()
 	{
-		assertTrue(eventListener.handleZootEvent(ZootEvents.get(ZootEventType.SwitchOn)));
-		assertTrue(eventListener.handleZootEvent(ZootEvents.get(ZootEventType.SwitchOn)));
+		assertTrue(eventListener.handleZootEvent(ZootEvents.get(ZootEventType.TriggerOn)));
+		assertTrue(eventListener.handleZootEvent(ZootEvents.get(ZootEventType.TriggerOn)));
 	}
 	
 	@Test
 	public void shouldReturnFalseOnNonSwitchEvents()
 	{
 		Arrays.stream(ZootEventType.values())
-			  .filter(type -> type != ZootEventType.SwitchOn)
-			  .filter(type -> type != ZootEventType.SwitchOff)
+			  .filter(type -> type != ZootEventType.TriggerOn)
+			  .filter(type -> type != ZootEventType.TriggerOff)
 			  .forEach(eventType -> assertFalse(eventListener.handleZootEvent(ZootEvents.get(eventType))));
 	}
 	
@@ -59,7 +60,7 @@ public class SwitchEventListenerTest
 		assertFalse(isOn);
 		
 		//when
-		eventListener.handleZootEvent(ZootEvents.get(ZootEventType.SwitchOn));
+		eventListener.handleZootEvent(ZootEvents.get(ZootEventType.TriggerOn));
 		
 		//then
 		assertTrue(isOn);
@@ -73,7 +74,7 @@ public class SwitchEventListenerTest
 		assertTrue(isOn);
 		
 		//when
-		eventListener.handleZootEvent(ZootEvents.get(ZootEventType.SwitchOff));
+		eventListener.handleZootEvent(ZootEvents.get(ZootEventType.TriggerOff));
 		
 		//then
 		assertFalse(isOn);		

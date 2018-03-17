@@ -1,4 +1,4 @@
-package com.zootcat.controllers.logic;
+package com.zootcat.controllers.logic.triggers;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.scene.ZootActor;
@@ -8,9 +8,9 @@ import com.zootcat.scene.ZootActor;
  * When button is stepped on it emits SwitchOn event. If there is no other
  * actors on button, it emits SwitchOff event.
  * @author Cream
- * @see SwitchController
+ * @see TriggerController
  */
-public class ButtonController extends SwitchController
+public class ButtonController extends TriggerController
 {
 	private int count;
 	
