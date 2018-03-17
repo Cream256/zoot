@@ -17,7 +17,6 @@ public interface ZootScene extends Disposable
 	void update(float delta);
 	void render(float delta);
 	void resize(int width, int height);
-	void reload();
 	
 	void addActor(ZootActor actor);
 	void removeActor(ZootActor actor);	

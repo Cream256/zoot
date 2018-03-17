@@ -164,7 +164,29 @@ public class ZootTiledScene implements ZootScene
 	@Override
 	public void dispose() 
 	{
-		disposeSceneResources();
+		if(mapRender != null)
+		{
+			mapRender.dispose();
+			mapRender = null;
+		}
+		
+		if(stage != null)
+		{
+			stage.dispose();
+			stage = null;
+		}
+		
+		if(debugRender != null)
+		{
+			debugRender.dispose();
+			debugRender = null;
+		}
+		
+		if(physics != null)
+		{
+			physics.dispose();
+			physics = null;
+		}
 		
 		if(map != null)
 		{
@@ -226,14 +248,7 @@ public class ZootTiledScene implements ZootScene
 	{
 		return unitScale;
 	}
-	
-	@Override
-	public void reload()
-	{
-		disposeSceneResources();
-		createScene();
-	}
-	
+		
 	private void createScene()
 	{
 		//physics
@@ -266,32 +281,5 @@ public class ZootTiledScene implements ZootScene
 		//debug
 		isDebugMode = false;
 		debugRender = new Box2DDebugRenderer();
-	}
-	
-	private void disposeSceneResources()
-	{
-		if(mapRender != null)
-		{
-			mapRender.dispose();
-			mapRender = null;
-		}
-		
-		if(stage != null)
-		{
-			stage.dispose();
-			stage = null;
-		}
-		
-		if(debugRender != null)
-		{
-			debugRender.dispose();
-			debugRender = null;
-		}
-		
-		if(physics != null)
-		{
-			physics.dispose();
-			physics = null;
-		}
 	}
 }

@@ -17,10 +17,9 @@ public class ZootLoadingScreen implements Screen
 	private AssetManager assetManager;
 	private LinkedList<Consumer<AssetManager>> loadTasks = new LinkedList<Consumer<AssetManager>>();
 	
-	//fields are public so could be used like events
-	public Consumer<ZootGame> onFinishLoading;
-	public Consumer<Float> onRenderWhileLoading;
-	public Consumer<Float> onRenderAfterLoading;
+	private Consumer<ZootGame> onFinishLoading;
+	private Consumer<Float> onRenderWhileLoading;
+	private Consumer<Float> onRenderAfterLoading;
 	
 	public ZootLoadingScreen(ZootGame game)
 	{
@@ -112,6 +111,21 @@ public class ZootLoadingScreen implements Screen
 	public void dispose()
 	{
 		//noop
+	}
+	
+	public void onFinishLoading(Consumer<ZootGame> consumer)
+	{
+		onFinishLoading = consumer;
+	}
+	
+	public void onRenderAfterLoading(Consumer<Float> consumer)
+	{
+		onRenderAfterLoading = consumer;
+	}
+	
+	public void onRenderWhileLoading(Consumer<Float> consumer)
+	{
+		onRenderWhileLoading = consumer;
 	}
 		
 	private void doFinishLoading()

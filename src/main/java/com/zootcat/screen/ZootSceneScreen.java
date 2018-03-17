@@ -2,6 +2,7 @@ package com.zootcat.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.zootcat.game.ZootGame;
 import com.zootcat.hud.ZootDebugHud;
 import com.zootcat.hud.ZootDebugWindowListener;
 import com.zootcat.input.ZootInputManager;
@@ -9,13 +10,15 @@ import com.zootcat.scene.ZootScene;
 
 public class ZootSceneScreen implements Screen
 {
-	private ZootScene scene;
+	private ZootGame game;
+	private ZootScene scene;	
 	private ZootDebugHud debugHud;
 	private boolean paused = false;
 	private ZootInputManager inputManager;
 	
-	public ZootSceneScreen(ZootScene scene)
+	public ZootSceneScreen(ZootGame game, ZootScene scene)
 	{
+		this.game = game;
 		this.scene = scene;
 		debugHud = new ZootDebugHud();
 		inputManager = new ZootInputManager();
@@ -78,6 +81,11 @@ public class ZootSceneScreen implements Screen
         onRender(delta);
 	}
 	
+	public ZootGame getGame()
+	{
+		return game;
+	}
+	
 	public void onRender(float delta)
 	{
 		scene.render(delta);
@@ -104,14 +112,7 @@ public class ZootSceneScreen implements Screen
 	{
 		return paused;
 	}
-	
-	public void reloadScene()
-	{
-		deassignInput();
-		scene.reload();
-		assignInput();
-	}
-	
+		
 	public ZootInputManager getInputManager()
 	{
 		return inputManager;

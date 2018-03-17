@@ -55,7 +55,7 @@ public class ZootLoadingScreenTest
 	public void onRenderWhileLoadingTest()
 	{
 		//given
-		screen.onRenderWhileLoading = (dt) -> { success = true; };
+		screen.onRenderWhileLoading((dt) -> { success = true; });
 		screen.addTask(task);
 		screen.addTask(task);
 		
@@ -85,7 +85,7 @@ public class ZootLoadingScreenTest
 	public void onRenderAfterLoadingTest()
 	{
 		//given
-		screen.onRenderAfterLoading = (dt) -> { success = true; };
+		screen.onRenderAfterLoading((dt) -> { success = true; });
 		screen.addTask(task);
 		screen.addTask(task);
 		
@@ -115,7 +115,7 @@ public class ZootLoadingScreenTest
 	public void onFinishLoadingTest()
 	{
 		//given
-		screen.onFinishLoading = (game) -> { success = true; };		
+		screen.onFinishLoading((game) -> { success = true; });		
 		screen.addTask(task);
 		screen.addTask(task);
 		
