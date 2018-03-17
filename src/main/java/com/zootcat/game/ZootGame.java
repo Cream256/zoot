@@ -61,7 +61,7 @@ public abstract class ZootGame extends Game
     	currentLevelPath = levelFile;
     	
     	ZootLoadingScreen loadingScreen = loadingScreenSupplier.apply(this); 	
-    	loadingScreen.addTask((Void) -> getAssetManager().load(levelFile, ZootTiledMap.class));
+    	loadingScreen.addTask((assetManager) -> assetManager.load(levelFile, ZootTiledMap.class));
     	
     	loadingScreen.onFinishLoading((game) -> 
     	{

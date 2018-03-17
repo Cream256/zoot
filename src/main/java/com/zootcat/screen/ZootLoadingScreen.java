@@ -72,9 +72,9 @@ public class ZootLoadingScreen implements Screen
 		return assetManager;
 	}
 	
-	public void addTask(Consumer<Void> loadTask)
+	public void addTask(Consumer<AssetManager> loadTask)
 	{
-		loadTasks.add((assetManager) -> loadTask.accept(null));
+		loadTasks.add(loadTask);
 	}
 	
 	public float getProgress()

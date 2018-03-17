@@ -19,7 +19,7 @@ public class ZootLoadingScreenTest
 {
 	@Mock private ZootGame game;
 	@Mock private AssetManager assetManager;	
-	@Mock private Consumer<Void> task;
+	@Mock private Consumer<AssetManager> task;
 	
 	private boolean success;
 	private ZootLoadingScreen screen;
