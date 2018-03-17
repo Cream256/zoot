@@ -12,8 +12,8 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.testing.ZootActorEventCounterListener;
 
 public class CollectOnCollideControllerTest
 {

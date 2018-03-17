@@ -8,8 +8,8 @@ import static org.mockito.Mockito.mock;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.testing.ZootActorEventCounterListener;
 
 public class LifeControllerTest
 {
