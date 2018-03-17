@@ -26,7 +26,7 @@ public class ButtonController extends TriggerController
 	{
 		if(++count == 1)
 		{
-			setActive(true);
+			press();
 		}
 	}
 
@@ -35,7 +35,17 @@ public class ButtonController extends TriggerController
 	{
 		if(--count == 0)
 		{		
-			setActive(false);
+			unpress();
 		}
+	}
+	
+	protected void press()
+	{
+		setActive(true);
+	}
+	
+	protected void unpress()
+	{
+		setActive(false);
 	}
 }
