@@ -17,6 +17,16 @@ public class ZootMoveActorAction extends ZootAction
 	{
 		my = value;
 	}
+	
+	public float getMovementX()
+	{
+		return mx;
+	}
+	
+	public float getMovementY()
+	{
+		return my;
+	}
 		
 	@Override
 	public boolean act(float delta)

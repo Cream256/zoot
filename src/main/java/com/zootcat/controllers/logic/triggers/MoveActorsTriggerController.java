@@ -5,7 +5,6 @@ import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
-//TODO add test
 public class MoveActorsTriggerController extends TriggerEventListener
 {
 	@CtrlParam(debug = true, required = true) private String actorName;

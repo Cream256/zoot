@@ -24,12 +24,12 @@ import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.factory.ControllerAnnotations;
-import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.events.ZootEvent;
 import com.zootcat.events.ZootEventType;
 import com.zootcat.physics.ZootPhysics;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.testing.ZootActorEventCounterListener;
 
 public class DetectGroundControllerTest
 {		

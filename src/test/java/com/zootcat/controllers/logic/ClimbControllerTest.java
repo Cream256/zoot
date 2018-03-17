@@ -19,7 +19,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.physics.PhysicsBodyController;
-import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.fsm.states.ClimbState;
 import com.zootcat.fsm.states.IdleState;
 import com.zootcat.physics.ZootPhysics;
@@ -27,6 +26,7 @@ import com.zootcat.physics.ZootShapeFactory;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.testing.ZootActorEventCounterListener;
 import com.zootcat.utils.BitMaskConverter;
 
 public class ClimbControllerTest 

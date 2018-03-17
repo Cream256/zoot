@@ -8,43 +8,25 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.zootcat.controllers.logic.triggers.ButtonController;
-import com.zootcat.controllers.logic.triggers.TriggerEventListener;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.testing.ZootTriggerEventCounterListener;
 
 public class ButtonControllerTest
 {
 	@Mock private Contact contact;
 	@Mock private ZootActor otherActor;
 	
-	private int onCount;
-	private int offCount;
 	private ZootActor ctrlActor;	
 	private ButtonController ctrl;	
-	private TriggerEventListener listener;
+	private ZootTriggerEventCounterListener triggerCounter;
 	
 	@Before
 	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);
-		
-		onCount = 0;
-		offCount = 0;		
-		listener = new TriggerEventListener() {
-			@Override
-			public void triggerOn(ZootActor switchActor)
-			{
-				++onCount;
-			}
-
-			@Override
-			public void triggerOff(ZootActor switchActor)
-			{
-				++offCount;
-			}}; 
-		
+		triggerCounter = new ZootTriggerEventCounterListener();		
 		ctrlActor = new ZootActor();
-		ctrlActor.addListener(listener);
+		ctrlActor.addListener(triggerCounter);
 			
 		ctrl = new ButtonController();
 		ctrl.init(ctrlActor);
@@ -54,13 +36,13 @@ public class ButtonControllerTest
 	public void shouldActivateOnlyOnFirstContact()
 	{
 		ctrl.onEnter(ctrlActor, otherActor, contact);
-		assertEquals(1, onCount);
+		assertEquals(1, triggerCounter.onCount);
 		
 		ctrl.onEnter(ctrlActor, otherActor, contact);
-		assertEquals(1, onCount);
+		assertEquals(1, triggerCounter.onCount);
 		
 		ctrl.onEnter(ctrlActor, otherActor, contact);
-		assertEquals(1, onCount);
+		assertEquals(1, triggerCounter.onCount);
 	}
 	
 	@Test
@@ -69,15 +51,15 @@ public class ButtonControllerTest
 		ctrl.onEnter(ctrlActor, otherActor, contact);
 		ctrl.onEnter(ctrlActor, otherActor, contact);
 		ctrl.onEnter(ctrlActor, otherActor, contact);
-		assertEquals(0, offCount);
+		assertEquals(0, triggerCounter.offCount);
 		
 		ctrl.onLeave(ctrlActor, otherActor, contact);
-		assertEquals(0, offCount);
+		assertEquals(0, triggerCounter.offCount);
 		
 		ctrl.onLeave(ctrlActor, otherActor, contact);
-		assertEquals(0, offCount);
+		assertEquals(0, triggerCounter.offCount);
 		
 		ctrl.onLeave(ctrlActor, otherActor, contact);
-		assertEquals(1, offCount);
+		assertEquals(1, triggerCounter.offCount);
 	}
 }

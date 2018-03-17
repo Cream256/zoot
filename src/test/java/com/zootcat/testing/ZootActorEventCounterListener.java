@@ -1,8 +1,9 @@
-package com.zootcat.events;
+package com.zootcat.testing;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.zootcat.events.ZootEvent;
 
 public class ZootActorEventCounterListener implements EventListener
 {

@@ -5,7 +5,6 @@ import com.zootcat.controllers.logic.MovingPlatformController;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
-//TODO add tests
 public class MovingPlatformTriggerController extends TriggerEventListener
 {
 	@CtrlParam(debug = true, required = true) private String platformActorName;

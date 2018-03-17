@@ -4,7 +4,6 @@ import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 
-//TODO add test
 public class TimedButtonController extends ButtonController
 {
 	@CtrlParam(debug = true, required = true) private float revertAfter;
