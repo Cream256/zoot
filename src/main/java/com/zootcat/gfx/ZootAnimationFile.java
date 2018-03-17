@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.exceptions.ZootException;
 import com.zootcat.textdata.TextDataFile;
 import com.zootcat.textdata.TextDataSection;
@@ -51,8 +52,13 @@ public class ZootAnimationFile
 
 	private Texture getSpriteSheet(Map<String, Texture> spriteSheets, TextDataSection data)
 	{
-		String sheetName = data.get("sheet");				
-		return spriteSheets.get(sheetName != null ? sheetName : "default");
+		String sheetName = data.contains("sheet") ? data.get("sheet") : "default";				
+		Texture spriteSheet = spriteSheets.get(sheetName); 
+		if(spriteSheet == null)
+		{
+			throw new RuntimeZootException("No sprite sheet found for name: " + sheetName);
+		}		
+		return spriteSheet;
 	}
 
 	private ZootAnimationOffset[] buildOffsets(TextDataSection data, TextureRegion[] frames)

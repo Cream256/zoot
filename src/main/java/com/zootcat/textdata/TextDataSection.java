@@ -39,10 +39,15 @@ public class TextDataSection
     {
         values.put(key.toLowerCase(), value);
     }
-    
+        
     public String get(String key)
     {
     	return values.get(key.toLowerCase());
+    }
+    
+    public boolean contains(String key)
+    {
+    	return get(key) != null;
     }
     
     public String getString(String key, String defaultValue)

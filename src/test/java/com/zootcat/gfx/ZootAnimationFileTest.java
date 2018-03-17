@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.math.Vector2;
+import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.exceptions.ZootException;
 import com.zootcat.testing.ZootTestUtils;
 
@@ -40,7 +41,7 @@ public class ZootAnimationFileTest
 	}
 	
 	@Test
-	public void getSpriteSheetFileNamesTest() throws ZootException
+	public void shouldGetSpriteSheetFileNames() throws ZootException
 	{
 		Map<String, String> spriteSheets = anmFile.getSpriteSheets();
 		assertEquals(3, spriteSheets.size());
@@ -48,8 +49,20 @@ public class ZootAnimationFileTest
 		assertEquals(SECOND_SPRITE_SHEET, spriteSheets.get(SECOND_SPRITE_SHEET_NAME));
 	}
 	
+	@Test(expected = RuntimeZootException.class)
+	public void shouldThrowIfSpriteSheetWasNotFound() throws ZootException
+	{		
+		//given
+		Map<String, Texture> spriteSheets = new HashMap<String, Texture>();
+		
+		//when
+		anmFile.createAnimations(spriteSheets);
+		
+		//then should throw
+	}
+	
 	@Test
-	public void createAnimationsTest()
+	public void shouldCreateAnimations()
 	{
 		//given
 		Map<String, Texture> spriteSheets = new HashMap<String, Texture>();

@@ -10,9 +10,9 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zootcat.camera.ZootCamera;
@@ -111,12 +111,24 @@ public class ZootTiledScene implements ZootScene
 	}
 	
 	@Override
-	public List<ZootActor> getActors(Predicate<Actor> filter) 
+	public List<ZootActor> getActors(Predicate<ZootActor> filter) 
 	{				
 		return StreamSupport.stream(stage.getActors().spliterator(), false)
+							 .filter(act -> ClassReflection.isInstance(ZootActor.class, act))
+							 .map(act -> (ZootActor)act)							 
 							 .filter(filter)
-							 .map((act) -> (ZootActor)act)
 							 .collect(Collectors.toList());
+	}
+	
+	@Override
+	public ZootActor getFirstActor(Predicate<ZootActor> filter)
+	{
+		return StreamSupport.stream(stage.getActors().spliterator(), false)
+				 .filter(act -> ClassReflection.isInstance(ZootActor.class, act))
+				 .map(act -> (ZootActor)act)							 
+				 .filter(filter)
+				 .findFirst()
+				 .orElse(null);
 	}
 	
 	@Override

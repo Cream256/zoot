@@ -2,6 +2,7 @@ package com.zootcat.textdata;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -51,6 +52,20 @@ public class TextDataSectionTest
     	assertEquals("str", section.get("MyString"));
     	assertEquals("str", section.get("MYSTRING"));
     	assertEquals("str", section.get("mystring"));
+    }
+    
+    @Test
+    public void containsTest()
+    {
+    	assertFalse(section.contains("MyString"));
+    	assertFalse(section.contains("MYSTRING"));
+    	assertFalse(section.contains("mystring"));
+    	
+    	section.set("MyString", "str");
+    	
+    	assertTrue(section.contains("MyString"));
+    	assertTrue(section.contains("MYSTRING"));
+    	assertTrue(section.contains("mystring"));
     }
     
     @Test
