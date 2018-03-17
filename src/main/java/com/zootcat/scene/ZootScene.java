@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zootcat.camera.ZootCamera;
 import com.zootcat.gfx.ZootRender;
+import com.zootcat.hud.ZootHud;
 import com.zootcat.map.ZootMap;
 import com.zootcat.physics.ZootPhysics;
 
@@ -30,6 +31,8 @@ public interface ZootScene extends Disposable
 	ZootMap getMap();
 	InputProcessor getInputProcessor();
 	Viewport getViewport();
+	
+	ZootHud getHud();
 	
 	boolean isDebugMode();
 	void setDebugMode(boolean debug);

@@ -3,16 +3,13 @@ package com.zootcat.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.zootcat.game.ZootGame;
-import com.zootcat.hud.ZootDebugHud;
-import com.zootcat.hud.ZootDebugWindowListener;
 import com.zootcat.input.ZootInputManager;
 import com.zootcat.scene.ZootScene;
 
 public class ZootSceneScreen implements Screen
 {
 	private ZootGame game;
-	private ZootScene scene;	
-	private ZootDebugHud debugHud;
+	private ZootScene scene;
 	private boolean paused = false;
 	private ZootInputManager inputManager;
 	
@@ -20,25 +17,23 @@ public class ZootSceneScreen implements Screen
 	{
 		this.game = game;
 		this.scene = scene;
-		debugHud = new ZootDebugHud();
 		inputManager = new ZootInputManager();
 	}
 			
 	@Override
-	public void resize (int width, int height) 
+	public void resize(int width, int height) 
 	{
 		scene.resize(width, height);
-		debugHud.resize(width, height);
 	}
     
 	@Override
-	public void pause () 
+	public void pause() 
 	{
 		paused = true;
 	}
 
 	@Override
-	public void resume () 
+	public void resume() 
 	{
 		paused = false;
 	}
@@ -56,9 +51,15 @@ public class ZootSceneScreen implements Screen
 	@Override
 	public void show()
 	{			
+		createHud();
 		assignInput();
 	}
 	
+	protected void createHud()
+	{
+		//noop
+	}
+
 	@Override
 	public void hide()
 	{
@@ -89,7 +90,6 @@ public class ZootSceneScreen implements Screen
 	public void onRender(float delta)
 	{
 		scene.render(delta);
-    	debugHud.render(delta);
 	}
 
 	public void onUpdate(float delta)
@@ -117,17 +117,9 @@ public class ZootSceneScreen implements Screen
 	{
 		return inputManager;
 	}
-	
-	public ZootDebugHud getDebugHud()
-	{
-		return debugHud;
-	}
-	
+		
 	protected void assignInput()
 	{
-		inputManager.addProcessor(getDebugHud().getInputProcessor());
-		scene.addListener(new ZootDebugWindowListener(debugHud));
-		
 		Gdx.input.setInputProcessor(inputManager);
 	}
 	

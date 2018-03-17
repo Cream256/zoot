@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zootcat.camera.ZootCamera;
 import com.zootcat.controllers.factory.ControllerFactory;
 import com.zootcat.gfx.ZootRender;
+import com.zootcat.hud.ZootHud;
 import com.zootcat.map.ZootMap;
 import com.zootcat.map.tiled.ZootTiledMap;
 import com.zootcat.map.tiled.ZootTiledMapActorFactory;
@@ -42,7 +43,8 @@ public class ZootTiledScene implements ZootScene
 	private AssetManager assetManager;
 	private ZootCamera camera;
 	private ZootTiledMapRender mapRender;
-	private ControllerFactory ctrlFactory;	
+	private ControllerFactory ctrlFactory;
+	private ZootHud hud;
 	
 	private float unitScale;
 	private float worldUnitPerTile;
@@ -61,8 +63,45 @@ public class ZootTiledScene implements ZootScene
     	this.viewportHeight = viewportHeight;
     	this.assetManager = assetManager;
     	this.ctrlFactory = factory;
-    	this.map = map;    	
+    	this.map = map;
     	createScene();
+	}
+	
+	private void createScene()
+	{
+		//hud
+		this.hud = new ZootHud();
+		
+		//physics
+    	physics = new ZootPhysics();
+    	
+		//render
+    	ZootTiledMapRenderConfig renderConfig = new ZootTiledMapRenderConfig();
+		renderConfig.renderRectangleObjects = false;
+		renderConfig.renderTextureObjects = false;	
+		renderConfig.unitScale = unitScale;
+		mapRender = new ZootTiledMapRender(map, renderConfig);
+				
+		//stage
+		camera = new ZootCamera(map.getMapWidth() * worldUnitPerTile, map.getMapHeight() * worldUnitPerTile);		
+		Viewport viewport = new StretchViewport(viewportWidth, viewportHeight, camera);
+		stage = new Stage(viewport);
+		
+		//cell actors
+    	ZootTiledMapActorFactory actorFactory = new ZootTiledMapActorFactory(this, ctrlFactory, assetManager);		
+    	TiledMapTileLayer collisionLayer = map.getLayer(ZootTiledMap.COLLISION_LAYER_NAME);
+    	
+    	List<ZootLayerRegion> cellRegions = ZootLayerOptimizer.optimize(collisionLayer, new ZootTiledCellTileComparator());			
+		List<ZootActor> cellActors = actorFactory.createFromLayerRegions(cellRegions);		
+		cellActors.forEach(cellActor -> stage.addActor(cellActor));
+		
+		//object actors
+		List<ZootActor> actors = actorFactory.createFromMapObjects(map.getAllObjects());		
+		actors.forEach(actor -> stage.addActor(actor));
+		
+		//debug
+		isDebugMode = false;
+		debugRender = new Box2DDebugRenderer();
 	}
 	
 	@Override
@@ -142,6 +181,7 @@ public class ZootTiledScene implements ZootScene
 			timeAccumulator -= FIXED_TIME_STEP;
 		}
 		camera.update(delta, true);
+		hud.update(delta);
 	}
 	
 	@Override
@@ -159,6 +199,8 @@ public class ZootTiledScene implements ZootScene
 			debugRender.setDrawJoints(true);
 			debugRender.render(physics.getWorld(), getCamera().combined);
 		}
+		
+		hud.render();
 	}
 
 	@Override
@@ -193,6 +235,12 @@ public class ZootTiledScene implements ZootScene
 			map.dispose();
 			map = null;
 		}
+		
+		if(hud != null)
+		{
+			hud.dispose();
+			hud = null;
+		}
 	}
 
 	@Override
@@ -216,7 +264,7 @@ public class ZootTiledScene implements ZootScene
 	@Override
 	public void resize(int width, int height) 
 	{		
-		//noop
+		hud.resize(width, height);
 	}
 
 	@Override
@@ -249,37 +297,9 @@ public class ZootTiledScene implements ZootScene
 		return unitScale;
 	}
 		
-	private void createScene()
+	@Override
+	public ZootHud getHud()
 	{
-		//physics
-    	physics = new ZootPhysics();
-    	
-		//render
-    	ZootTiledMapRenderConfig renderConfig = new ZootTiledMapRenderConfig();
-		renderConfig.renderRectangleObjects = false;
-		renderConfig.renderTextureObjects = false;	
-		renderConfig.unitScale = unitScale;
-		mapRender = new ZootTiledMapRender(map, renderConfig);
-				
-		//stage
-		camera = new ZootCamera(map.getMapWidth() * worldUnitPerTile, map.getMapHeight() * worldUnitPerTile);		
-		Viewport viewport = new StretchViewport(viewportWidth, viewportHeight, camera);
-		stage = new Stage(viewport);
-		
-		//cell actors
-    	ZootTiledMapActorFactory actorFactory = new ZootTiledMapActorFactory(this, ctrlFactory, assetManager);		
-    	TiledMapTileLayer collisionLayer = map.getLayer(ZootTiledMap.COLLISION_LAYER_NAME);
-    	
-    	List<ZootLayerRegion> cellRegions = ZootLayerOptimizer.optimize(collisionLayer, new ZootTiledCellTileComparator());			
-		List<ZootActor> cellActors = actorFactory.createFromLayerRegions(cellRegions);		
-		cellActors.forEach(cellActor -> stage.addActor(cellActor));
-		
-		//object actors
-		List<ZootActor> actors = actorFactory.createFromMapObjects(map.getAllObjects());		
-		actors.forEach(actor -> stage.addActor(actor));
-		
-		//debug
-		isDebugMode = false;
-		debugRender = new Box2DDebugRenderer();
+		return hud;
 	}
 }

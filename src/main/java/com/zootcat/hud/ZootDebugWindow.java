@@ -62,7 +62,7 @@ public class ZootDebugWindow extends Window
 		clearChildren();		
 		addActorInfoToWindow();
 	}
-		
+				
 	private void addActorInfoToWindow()
 	{
 		if(actor == null)
@@ -96,7 +96,7 @@ public class ZootDebugWindow extends Window
 			for(Field field : ControllerAnnotations.getControllerDebugFields(ctrl))
 			{								
 				field.setAccessible(true);
-				tree.addProperty(field.getName(), new ZootDynamicLabel(getSkin(), () -> getFieldValue(field, ctrl).toString()));
+				tree.addProperty(field.getName(), new ZootDynamicLabel(getSkin(), () -> getFieldValue(field, ctrl)));
 			}
 			
 			add(tree).align(Align.topLeft);
@@ -107,13 +107,14 @@ public class ZootDebugWindow extends Window
 	private Object getFieldValue(Field field, Controller ctrl)
 	{
 		try
-		{
-			return field.get(ctrl);
+		{			
+			Object value = field.get(ctrl);
+			return String.valueOf(value);
 		} 
 		catch (IllegalArgumentException | IllegalAccessException e)
 		{
 			return e.getMessage();
-		}		
+		}
 	}
 	
 	private void addBasicInfo()

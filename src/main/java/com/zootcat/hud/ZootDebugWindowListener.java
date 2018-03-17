@@ -9,11 +9,11 @@ import com.zootcat.scene.ZootActor;
 
 public class ZootDebugWindowListener extends InputListener
 {
-	private ZootDebugHud debugHud;
+	private ZootDebugWindow debugWindow;
 
-	public ZootDebugWindowListener(ZootDebugHud debugHud)
+	public ZootDebugWindowListener(ZootDebugWindow debugWindow)
 	{
-		this.debugHud = debugHud;
+		this.debugWindow = debugWindow;
 	}
 	
 	@Override
@@ -21,17 +21,16 @@ public class ZootDebugWindowListener extends InputListener
 	{
 		if(button == Input.Buttons.RIGHT)
 		{
-			debugHud.setDebugActor(null);
+			debugWindow.setDebugActor(null);
 			return true;
 		}
 		
 		Actor actor = event.getTarget();			
 		if(ClassReflection.isInstance(ZootActor.class, actor))
 		{
-			debugHud.setDebugActor((ZootActor) actor);
+			debugWindow.setDebugActor((ZootActor) actor);
 			return true;
 		}
 		return false;
 	}
-	
 }
