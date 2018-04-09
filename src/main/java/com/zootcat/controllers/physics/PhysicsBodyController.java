@@ -36,6 +36,8 @@ public class PhysicsBodyController implements Controller
 	@CtrlParam(debug = true) protected float linearDamping = 0.0f;
 	@CtrlParam(debug = true) protected float angularDamping = 0.0f;	
 	@CtrlParam(debug = true) protected float gravityScale = 1.0f;
+	@CtrlParam(debug = true) protected float shapeOffsetX = 0.0f;
+	@CtrlParam(debug = true) protected float shapeOffsetY = 0.0f;
 	@CtrlParam(debug = true) protected float width = 0.0f;
 	@CtrlParam(debug = true) protected float height = 0.0f;
 	@CtrlParam(debug = true) protected boolean sensor = false;	
@@ -237,7 +239,11 @@ public class PhysicsBodyController implements Controller
 		switch(shape)
 		{
 		case BOX:
-			return ZootShapeFactory.createBox(getBodyWidth(actor), getBodyHeight(actor));
+			return ZootShapeFactory.createBox(
+					getBodyWidth(actor), 
+					getBodyHeight(actor), 
+					shapeOffsetX * scene.getUnitScale(), 
+					shapeOffsetY * scene.getUnitScale());
 			
 		case CIRCLE:
 			return ZootShapeFactory.createCircle(getBodyWidth(actor));

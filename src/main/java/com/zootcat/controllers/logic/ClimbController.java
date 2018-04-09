@@ -94,7 +94,7 @@ public class ClimbController extends OnCollideWithSensorController
 	{
 		boolean timeoutOk = climbTimeout == 0;
 		boolean enoughVelocityToClimb = actor.getController(PhysicsBodyController.class).getVelocity().y <= maxVelocity;
-		boolean notClimbingNow = !isActorClimbing(actor);
+		boolean notClimbingNow = !isActorClimbing(actor);		
 		return timeoutOk && enoughVelocityToClimb && notClimbingNow;
 	}
 
@@ -134,13 +134,14 @@ public class ClimbController extends OnCollideWithSensorController
 	
 	public void setSensorPosition(ZootDirection position)
 	{
-		if(position == sensorPosition)
+		ZootActor ctrlActor = getControllerActor();
+		if(position == sensorPosition || isActorClimbing(ctrlActor))
 		{
 			return;
-		}		
+		}
 		
 		sensorPosition = position;		
-		ZootActor ctrlActor = getControllerActor();
+		
 		if(position == ZootDirection.Right)
 		{			
 			ZootPhysicsUtils.setFixturePosition(getSensor(), ctrlActor.getWidth() / 2.0f, ctrlActor.getHeight() / 2.0f);
@@ -193,17 +194,17 @@ public class ClimbController extends OnCollideWithSensorController
 		float actorWidth = climbingActor.getWidth();
 		float actorHeight = climbingActor.getHeight();
 		
-		Vector2 actorCenter = climbingActor.getController(PhysicsBodyController.class).getCenterPositionRef();
-		float actorLeftBorder = (actorCenter.x - actorWidth / 2.0f) + getClimbHorizontalOffset(climbingActor);
+		Vector2 climbingActorCenter = climbingActor.getController(PhysicsBodyController.class).getCenterPositionRef();
+		float climbingActorLeftBorder = (climbingActorCenter.x - actorWidth / 2.0f) + getClimbHorizontalOffset(climbingActor) / 2.0f;
 		
-		ZootBoundingBoxFactory.createAtRef(climbableFixture, fixtureBoxCache);		
+		ZootBoundingBoxFactory.createAtRef(climbableFixture, fixtureBoxCache);
 		float platformTop = climbableFixture.getBody().getPosition().y + fixtureBoxCache.getHeight() / 2.0f;
 		
 		float precisionPatch = 0.15f;
 		List<Fixture> found = scene.getPhysics().getFixturesInArea(
-				actorLeftBorder + precisionPatch, 
+				climbingActorLeftBorder + precisionPatch, 
 				platformTop + precisionPatch, 
-				actorLeftBorder + actorWidth + precisionPatch, 
+				climbingActorLeftBorder + actorWidth + precisionPatch, 
 				platformTop + actorHeight - precisionPatch);		
 				
 		List<Fixture> filtered = found.stream()
@@ -212,6 +213,7 @@ public class ClimbController extends OnCollideWithSensorController
 							   .filter(fix -> fix != climbableFixture)
 							   .filter(fix -> !fix.isSensor())
 							   .collect(Collectors.toList());		
+				
 		return filtered.isEmpty();					   
 	}
 	

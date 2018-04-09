@@ -236,4 +236,18 @@ public class ClimbControllerTest
 		ctrl.setSensorPosition(ZootDirection.Up);
 		assertEquals(ZootDirection.Up, ctrl.getSensorPosition());
 	}
+	
+	@Test
+	public void shouldNotSetClimbSensorFixtureToDifferentPlacesWhenActorIsClimbing()
+	{
+		ctrl.init(ctrlActor);
+		ctrl.onAdd(ctrlActor);
+		ctrlActor.getStateMachine().changeState(new ClimbState(), null);
+		
+		ctrl.setSensorPosition(ZootDirection.Right);
+		assertEquals(ZootDirection.Up, ctrl.getSensorPosition());
+		
+		ctrl.setSensorPosition(ZootDirection.Left);
+		assertEquals(ZootDirection.Up, ctrl.getSensorPosition());		
+	}
 }
