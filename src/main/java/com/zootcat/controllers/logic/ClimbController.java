@@ -36,7 +36,7 @@ public class ClimbController extends OnCollideWithSensorController
 	
 	private Joint grabJoint;
 	private float climbTimeout;
-	private Fixture climbableFixture;
+	private Fixture climbingFixture;
 	private BoundingBox actorBoxCache = new BoundingBox();
 	private BoundingBox fixtureBoxCache = new BoundingBox();
 	private ZootDirection sensorPosition = ZootDirection.None;
@@ -55,7 +55,7 @@ public class ClimbController extends OnCollideWithSensorController
 		//setup
 		climbTimeout = 0.0f;
 		destroyGrabJoint();
-		climbableFixture = null;
+		climbingFixture = null;
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class ClimbController extends OnCollideWithSensorController
 				
 		if(isFixtureGrabbable(controllerActor, getSensor(), fixture))
 		{
-			climbableFixture = fixture;
+			climbingFixture = fixture;
 			ZootEvents.fireAndFree(controllerActor, this.sensorPosition == ZootDirection.Up ? ZootEventType.Grab : ZootEventType.GrabSide);			
 			return SensorCollisionResult.StopProcessing;
 		}
@@ -112,7 +112,7 @@ public class ClimbController extends OnCollideWithSensorController
 		def.length = 0.0f;
 		def.dampingRatio = 1.0f;
 		def.bodyA = actorBody;
-		def.bodyB = climbableFixture.getBody();
+		def.bodyB = climbingFixture.getBody();
 		def.collideConnected = false;		
 		
 		//actor anchor
@@ -121,8 +121,8 @@ public class ClimbController extends OnCollideWithSensorController
 		def.localAnchorA.x = halfClimbOffset;	
 		
 		//climabable fixture anchor		
-		def.localAnchorB.x = actorBody.getPosition().x - climbableFixture.getBody().getPosition().x + halfClimbOffset;
-		def.localAnchorB.y = ZootBoundingBoxFactory.create(climbableFixture).getHeight() / 2.0f;
+		def.localAnchorB.x = actorBody.getPosition().x - climbingFixture.getBody().getPosition().x + halfClimbOffset;
+		def.localAnchorB.y = ZootBoundingBoxFactory.create(climbingFixture).getHeight() / 2.0f;
 		
 		grabJoint = scene.getPhysics().createJoint(def);			
 	}
@@ -197,8 +197,8 @@ public class ClimbController extends OnCollideWithSensorController
 		Vector2 climbingActorCenter = climbingActor.getController(PhysicsBodyController.class).getCenterPositionRef();
 		float climbingActorLeftBorder = (climbingActorCenter.x - actorWidth / 2.0f) + getClimbHorizontalOffset(climbingActor) / 2.0f;
 		
-		ZootBoundingBoxFactory.createAtRef(climbableFixture, fixtureBoxCache);
-		float platformTop = climbableFixture.getBody().getPosition().y + fixtureBoxCache.getHeight() / 2.0f;
+		ZootBoundingBoxFactory.createAtRef(climbingFixture, fixtureBoxCache);
+		float platformTop = climbingFixture.getBody().getPosition().y + fixtureBoxCache.getHeight() / 2.0f;
 		
 		float precisionPatch = 0.15f;
 		List<Fixture> found = scene.getPhysics().getFixturesInArea(
@@ -206,21 +206,29 @@ public class ClimbController extends OnCollideWithSensorController
 				platformTop + precisionPatch, 
 				climbingActorLeftBorder + actorWidth + precisionPatch, 
 				platformTop + actorHeight - precisionPatch);		
-				
+
 		List<Fixture> filtered = found.stream()
 							   .filter(fix -> fix != getSensor())
 							   .filter(fix -> fix.getUserData() != getSensor().getUserData())
-							   .filter(fix -> fix != climbableFixture)
+							   .filter(fix -> fix != climbingFixture)
 							   .filter(fix -> !fix.isSensor())
+							   .filter(fix -> !isFixtureOneWayPlatform(fix))
 							   .collect(Collectors.toList());		
 				
 		return filtered.isEmpty();					   
 	}
 	
+	private boolean isFixtureOneWayPlatform(Fixture fix)
+	{
+		ZootActor fixtureActor = (ZootActor) fix.getUserData();
+		if(fixtureActor == null) return false;
+		return fixtureActor.tryGetController(OneWayPlatformController.class) != null;
+	}
+	
 	public void letGo()
 	{
 		destroyGrabJoint();
-		climbableFixture = null;
+		climbingFixture = null;
 		getControllerActor().controllerAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(0.0f, 0.0f));
 	}
 		
