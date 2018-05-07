@@ -97,7 +97,7 @@ public class ZootTiledScene implements ZootScene
 		
 		//object actors
 		List<ZootActor> actors = actorFactory.createFromMapObjects(map.getAllObjects());		
-		actors.forEach(actor -> stage.addActor(actor));
+		actors.forEach(actor -> addActor(actor));
 		
 		//debug
 		isDebugMode = false;
@@ -129,9 +129,10 @@ public class ZootTiledScene implements ZootScene
 	}
 	
 	@Override
-	public void addActor(ZootActor zootActor)
+	public void addActor(ZootActor actor)
 	{
-		stage.addActor(zootActor);
+		stage.addActor(actor);
+		actor.setScene(this);
 	}
 	
 	@Override
@@ -140,6 +141,7 @@ public class ZootTiledScene implements ZootScene
 		if(actor.getParent().equals(stage))
 		{
 			actor.remove();
+			actor.setScene(null);
 		}
 	}
 

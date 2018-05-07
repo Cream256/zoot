@@ -38,6 +38,7 @@ public class ZootActor extends Actor
 	private float opacity = 1.0f;
 	private int id = 0;
 	private int gid = -1;
+	private ZootScene scene;
 	private ZootStateMachine stateMachine = new ZootStateMachine();
 
 	public ZootActor()
@@ -245,4 +246,14 @@ public class ZootActor extends Actor
     {
     	return getName();
     }
+
+	public void setScene(ZootScene scene)
+	{
+		this.scene = scene;
+	}
+	
+	public ZootScene getScene()
+	{
+		return scene;
+	}
 }
