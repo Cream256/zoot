@@ -2,12 +2,14 @@ package com.zootcat.actions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.zootcat.controllers.Controller;
 import com.zootcat.scene.ZootActor;
 
 public class ZootActionsTest
@@ -37,6 +39,16 @@ public class ZootActionsTest
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(mx, action.getMovementX(), 0.0f);
 		assertEquals(my, action.getMovementY(), 0.0f);
+		assertNotNull(action.getPool());
+	}
+	
+	@Test
+	public void shouldCreateAddControllerAction()
+	{
+		Controller ctrl = mock(Controller.class);
+		ZootAddControllerAction action = ZootActions.addControllerAction(actor, ctrl);		
+		assertEquals(actor, action.getTargetZootActor());
+		assertEquals(ctrl, action.getController());
 		assertNotNull(action.getPool());
 	}
 }

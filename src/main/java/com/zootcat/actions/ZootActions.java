@@ -2,6 +2,7 @@ package com.zootcat.actions;
 
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
+import com.zootcat.controllers.Controller;
 import com.zootcat.scene.ZootActor;
 
 public class ZootActions
@@ -29,5 +30,14 @@ public class ZootActions
 		moveAction.setMovementY(my);
 		moveAction.setTarget(actor);
 		return moveAction;
+	}
+	
+	public static ZootAddControllerAction addControllerAction(ZootActor actor, Controller ctrl)
+	{
+		ZootAddControllerAction addCtrlAction = zootAction(ZootAddControllerAction.class);
+		addCtrlAction.setController(ctrl);
+		addCtrlAction.setTarget(actor);
+		return addCtrlAction;
+		
 	}
 }
