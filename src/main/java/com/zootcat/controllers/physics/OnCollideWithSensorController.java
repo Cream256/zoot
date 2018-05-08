@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.zootcat.controllers.factory.CtrlParam;
+import com.zootcat.physics.ZootPhysicsUtils;
 import com.zootcat.physics.ZootShapeFactory;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
@@ -83,10 +84,28 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 		}
 	}
 
+	public void setSensorParameters(float width, float height, float x, float y)
+	{
+		sensorX = x;
+		sensorY = y;
+		sensorWidth = width;
+		sensorHeight = height;		
+	}
+	
+	public void setSensorPosition(float x, float y)
+	{
+		ZootPhysicsUtils.setFixturePosition(sensor, x * scene.getUnitScale(), y * scene.getUnitScale());
+	}
+	
 	public Fixture getSensor()
 	{
 		return sensor;
 	}	
+	
+	public void setScene(ZootScene scene)
+	{
+		this.scene = scene;
+	}
 	
 	protected abstract SensorCollisionResult onCollideWithSensor(Fixture fixture);
 		
