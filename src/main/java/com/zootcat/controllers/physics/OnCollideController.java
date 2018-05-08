@@ -92,6 +92,16 @@ public abstract class OnCollideController extends PhysicsCollisionController
 		//noop
 	}
 			
+	public void setCategory(String category)
+	{
+		this.category = category;
+	}
+	
+	public void setMask(String mask)
+	{
+		this.mask = mask;
+	}
+	
 	public abstract void onEnter(ZootActor actorA, ZootActor actorB, Contact contact);
 	
 	public abstract void onLeave(ZootActor actorA, ZootActor actorB, Contact contact);
