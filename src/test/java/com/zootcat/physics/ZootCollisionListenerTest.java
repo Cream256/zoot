@@ -14,9 +14,9 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.zootcat.events.ZootEventType;
-import com.zootcat.events.ZootEvents;
 import com.zootcat.exceptions.RuntimeZootException;
+import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.physics.ZootCollisionEvent.Type;
 import com.zootcat.scene.ZootActor;
 

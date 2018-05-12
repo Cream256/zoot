@@ -1,4 +1,4 @@
-package com.zootcat.events;
+package com.zootcat.fsm.events;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;

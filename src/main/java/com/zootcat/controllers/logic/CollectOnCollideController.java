@@ -3,8 +3,8 @@ package com.zootcat.controllers.logic;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.zootcat.controllers.physics.OnCollideController;
-import com.zootcat.events.ZootEventType;
-import com.zootcat.events.ZootEvents;
+import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
 
 public abstract class CollectOnCollideController extends OnCollideController

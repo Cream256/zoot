@@ -9,8 +9,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.zootcat.events.ZootEventType;
-import com.zootcat.events.ZootEvents;
+import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvents;
 
 public class OnZootEventControllerTest
 {

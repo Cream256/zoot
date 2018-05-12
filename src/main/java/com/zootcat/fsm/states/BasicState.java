@@ -2,9 +2,9 @@ package com.zootcat.fsm.states;
 
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.gfx.AnimatedSpriteController;
-import com.zootcat.events.ZootEvent;
 import com.zootcat.fsm.ZootState;
 import com.zootcat.fsm.ZootStateMachine;
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.scene.ZootActor;
 
 public class BasicState implements ZootState

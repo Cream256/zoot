@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.zootcat.events.ZootEvent;
-import com.zootcat.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
 public class OnZootEventController extends ZootEventListenerController

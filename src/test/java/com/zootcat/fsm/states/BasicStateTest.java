@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 import org.junit.Test;
 
-import com.zootcat.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.scene.ZootActor;
 
 public class BasicStateTest

@@ -1,4 +1,4 @@
-package com.zootcat.events;
+package com.zootcat.fsm.events;
 
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;

@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.actions.ZootKillActorAction;
-import com.zootcat.events.ZootActorEventCounterListener;
+import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 
 public class DieOnCollideControllerTest

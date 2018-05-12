@@ -11,9 +11,9 @@ import org.junit.Test;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.logic.triggers.TriggerController;
-import com.zootcat.events.ZootActorEventCounterListener;
-import com.zootcat.events.ZootEvent;
-import com.zootcat.events.ZootEventType;
+import com.zootcat.fsm.events.ZootActorEventCounterListener;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
 public class TriggerControllerTest

@@ -8,9 +8,9 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.zootcat.events.ZootEvent;
-import com.zootcat.events.ZootEventType;
-import com.zootcat.events.ZootEvents;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
 
 public class OnDieEventControllerTest

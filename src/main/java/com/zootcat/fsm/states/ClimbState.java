@@ -2,8 +2,8 @@ package com.zootcat.fsm.states;
 
 import com.zootcat.controllers.gfx.AnimatedSpriteController;
 import com.zootcat.controllers.logic.ClimbController;
-import com.zootcat.events.ZootEvent;
-import com.zootcat.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
 public class ClimbState extends BasicState
@@ -33,28 +33,31 @@ public class ClimbState extends BasicState
 	public boolean handle(ZootEvent event)
 	{
 		ZootActor actor = event.getTargetZootActor();
-		switch(event.getType())
+		
+		if(event.getType() == ZootEventType.Hurt)
 		{
-		case Hurt:
 			changeState(event, HurtState.ID);
 			return true;
-			
-		case Up:
+		}
+		
+		if(event.getType() == ZootEventType.Up)
+		{
 			actor.controllerAction(ClimbController.class, ctrl -> 
 			{
 				if(ctrl.climb()) 
 					changeState(event, IdleState.ID);
 			});
 			return true;
+		}
 		
-		case Down:			
+		if(event.getType() == ZootEventType.Down)
+		{			
 			actor.controllerAction(ClimbController.class, ctrl -> ctrl.letGo());			
 			changeState(event, FallState.ID);
 			return true;
-		
-		default:
-			return true;		
 		}
+		
+		return true;
 	}
 	
 	@Override

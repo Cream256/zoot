@@ -10,8 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.zootcat.events.ZootEvent;
-import com.zootcat.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.testing.ZootStateTestCase;
 

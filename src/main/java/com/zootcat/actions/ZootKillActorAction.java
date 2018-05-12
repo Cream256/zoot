@@ -1,8 +1,8 @@
 package com.zootcat.actions;
 
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
-import com.zootcat.events.ZootEventType;
-import com.zootcat.events.ZootEvents;
+import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvents;
 
 public class ZootKillActorAction extends ZootAction
 {

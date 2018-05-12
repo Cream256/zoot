@@ -15,8 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
-import com.zootcat.events.ZootEvent;
 import com.zootcat.exceptions.RuntimeZootException;
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.states.BasicState;
 import com.zootcat.fsm.states.NullState;
 import com.zootcat.scene.ZootActor;

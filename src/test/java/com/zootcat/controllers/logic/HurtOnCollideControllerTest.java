@@ -17,7 +17,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.factory.ControllerAnnotations;
-import com.zootcat.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.scene.ZootActor;
 
 public class HurtOnCollideControllerTest

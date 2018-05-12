@@ -13,7 +13,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.logic.DieOnCollideFromAboveAfterTimeController;
-import com.zootcat.events.ZootActorEventCounterListener;
+import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 
 public class DieOnCollideFromAboveAfterTimeControllerTest

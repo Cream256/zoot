@@ -2,8 +2,8 @@ package com.zootcat.controllers.logic;
 
 import java.util.Arrays;
 
-import com.zootcat.events.ZootEvent;
-import com.zootcat.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
 public abstract class OnDieEventController extends OnZootEventController

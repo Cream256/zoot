@@ -10,8 +10,8 @@ import com.zootcat.controllers.logic.DirectionController;
 import com.zootcat.controllers.logic.LifeController;
 import com.zootcat.controllers.physics.MoveableController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
-import com.zootcat.events.ZootEvent;
-import com.zootcat.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
 public class ZootStateTestCase

@@ -6,9 +6,9 @@ import java.util.List;
 import com.zootcat.controllers.logic.ClimbController;
 import com.zootcat.controllers.logic.DirectionController;
 import com.zootcat.controllers.physics.MoveableController;
-import com.zootcat.events.ZootEvent;
-import com.zootcat.events.ZootEventType;
 import com.zootcat.fsm.ZootState;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 

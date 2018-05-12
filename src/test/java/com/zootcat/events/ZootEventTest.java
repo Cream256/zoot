@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
 public class ZootEventTest

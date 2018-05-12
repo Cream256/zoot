@@ -9,9 +9,9 @@ import org.junit.Test;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.zootcat.controllers.ControllerPriority;
-import com.zootcat.events.ZootEvent;
-import com.zootcat.events.ZootEventType;
-import com.zootcat.events.ZootEvents;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.physics.ZootCollisionEvent;
 import com.zootcat.scene.ZootActor;
 

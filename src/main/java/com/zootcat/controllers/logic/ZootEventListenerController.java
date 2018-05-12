@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.ControllerPriority;
-import com.zootcat.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.scene.ZootActor;
 
 public abstract class ZootEventListenerController extends ControllerAdapter implements EventListener

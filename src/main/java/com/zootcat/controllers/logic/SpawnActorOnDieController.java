@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.controllers.physics.PhysicsBodyController;
-import com.zootcat.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootSceneActorSpawner;
 

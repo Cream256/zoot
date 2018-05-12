@@ -1,65 +1,50 @@
 package com.zootcat.fsm.states;
 
-import com.zootcat.events.ZootEvent;
+import java.util.Arrays;
+import java.util.List;
+
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEventTypeEnum;
 import com.zootcat.scene.ZootDirection;
 
 public class ZootStateUtils
 {
+	private static final List<ZootEventType> MOVE_EVENTS = Arrays.asList(ZootEventType.WalkRight, 
+			ZootEventType.WalkLeft, ZootEventType.RunLeft, ZootEventType.RunRight);
+
+	private static final List<ZootEventType> RUN_EVENTS = Arrays.asList(ZootEventType.RunRight, ZootEventType.RunLeft);
+	
+	private static final List<ZootEventType> JUMP_EVENTS = Arrays.asList(ZootEventType.JumpUp, ZootEventType.JumpForward);
+	
 	public static boolean isMoveEvent(ZootEvent event)
 	{
-		switch(event.getType())
-		{
-		case WalkRight:
-		case WalkLeft:
-		case RunRight:
-		case RunLeft:
-			return true;
-		
-		default:
-			return false;
-		}
+		return MOVE_EVENTS.contains(event.getType());
 	}
 	
 	public static boolean isJumpEvent(ZootEvent event)
 	{
-		switch(event.getType())
-		{
-		case JumpUp:
-		case JumpForward:
-			return true;
-			
-		default:
-			return false;		
-		}		
+		return JUMP_EVENTS.contains(event.getType());
 	}
 	
 	public static boolean isRunEvent(ZootEvent event)
 	{
-		switch(event.getType())
-		{
-		case RunRight:
-		case RunLeft:
-			return true;
-		
-		default:
-			return false;
-		}	
+		return RUN_EVENTS.contains(event.getType());
 	}
 	
 	public static ZootDirection getDirectionFromEvent(ZootEvent event)
 	{
-		switch(event.getType())
+		ZootEventTypeEnum eventType = event.getType();
+		if(eventType == ZootEventType.RunRight || eventType == ZootEventType.WalkRight)
 		{
-		case RunRight:
-		case WalkRight:		
-			return ZootDirection.Right;
-			
-		case RunLeft:
-		case WalkLeft:
-			return ZootDirection.Left;
-				
-		default:
-			return ZootDirection.None;
+			return ZootDirection.Right; 
 		}
+		
+		if(eventType == ZootEventType.RunLeft || eventType == ZootEventType.WalkLeft)
+		{
+			return ZootDirection.Left;
+		}
+
+		return ZootDirection.None;
 	}
 }

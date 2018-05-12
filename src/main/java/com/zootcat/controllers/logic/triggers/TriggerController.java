@@ -3,8 +3,8 @@ package com.zootcat.controllers.logic.triggers;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.controllers.physics.OnCollideController;
-import com.zootcat.events.ZootEventType;
-import com.zootcat.events.ZootEvents;
+import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
 
 /**

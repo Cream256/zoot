@@ -1,4 +1,4 @@
-package com.zootcat.events;
+package com.zootcat.fsm.events;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -8,14 +8,14 @@ import com.zootcat.scene.ZootActor;
 public class ZootEvent extends Event
 {
 	private Object userObject;
-	private ZootEventType type;
+	private ZootEventTypeEnum type;
 		
 	public ZootEvent()
 	{
 		this(ZootEventType.None);
 	}
 	
-	public ZootEvent(ZootEventType type)
+	public ZootEvent(ZootEventTypeEnum type)
 	{
 		this.type = type;
 		this.userObject = null;
@@ -27,12 +27,12 @@ public class ZootEvent extends Event
 		this.userObject = event.userObject;		
 	}
 		
-	public ZootEventType getType()
+	public ZootEventTypeEnum getType()
 	{
 		return type;
 	}
 	
-	public void setType(ZootEventType type)
+	public void setType(ZootEventTypeEnum type)
 	{
 		this.type = type;
 	}

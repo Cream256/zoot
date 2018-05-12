@@ -8,9 +8,9 @@ import java.util.Set;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.zootcat.events.ZootEvent;
-import com.zootcat.events.ZootEventType;
 import com.zootcat.exceptions.RuntimeZootException;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.NullState;
 import com.zootcat.scene.ZootActor;
 

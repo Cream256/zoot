@@ -1,7 +1,7 @@
 package com.zootcat.fsm.states;
 
 import com.zootcat.controllers.gfx.AnimatedSpriteController;
-import com.zootcat.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.scene.ZootActor;
 

@@ -2,8 +2,8 @@ package com.zootcat.fsm.states;
 
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.controllers.physics.PhysicsBodyScale;
-import com.zootcat.events.ZootEvent;
-import com.zootcat.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
 public class CrouchState extends WalkState

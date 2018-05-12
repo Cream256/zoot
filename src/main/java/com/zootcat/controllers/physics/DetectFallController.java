@@ -3,8 +3,8 @@ package com.zootcat.controllers.physics;
 import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
-import com.zootcat.events.ZootEventType;
-import com.zootcat.events.ZootEvents;
+import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
 
 public class DetectFallController extends ControllerAdapter

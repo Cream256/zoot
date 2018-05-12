@@ -1,6 +1,6 @@
-package com.zootcat.events;
+package com.zootcat.fsm.events;
 
-public enum ZootEventType
+public enum ZootEventType implements ZootEventTypeEnum
 {
 	None, 
 	InitEvent, 

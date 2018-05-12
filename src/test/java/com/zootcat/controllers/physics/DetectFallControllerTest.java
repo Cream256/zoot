@@ -12,8 +12,8 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.zootcat.events.ZootActorEventCounterListener;
 import com.zootcat.exceptions.RuntimeZootException;
+import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 
 public class DetectFallControllerTest

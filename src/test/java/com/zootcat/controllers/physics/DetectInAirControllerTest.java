@@ -9,10 +9,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.zootcat.events.ZootActorEventCounterListener;
-import com.zootcat.events.ZootEvent;
-import com.zootcat.events.ZootEventType;
 import com.zootcat.exceptions.RuntimeZootException;
+import com.zootcat.fsm.events.ZootActorEventCounterListener;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
 public class DetectInAirControllerTest

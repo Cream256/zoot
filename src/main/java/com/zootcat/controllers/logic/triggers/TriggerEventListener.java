@@ -1,7 +1,8 @@
 package com.zootcat.controllers.logic.triggers;
 
 import com.zootcat.controllers.logic.ZootEventListenerController;
-import com.zootcat.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
 /**
@@ -17,19 +18,18 @@ public abstract class TriggerEventListener extends ZootEventListenerController
 	@Override
 	public boolean handleZootEvent(ZootEvent event)
 	{
-		switch(event.getType())
+		if(event.getType() == ZootEventType.TriggerOn)
 		{
-		case TriggerOn:
 			triggerOn(event.getUserObject(ZootActor.class));
 			return true;
-			
-		case TriggerOff:
+		}
+		else if(event.getType() == ZootEventType.TriggerOff)
+		{
 			triggerOff(event.getUserObject(ZootActor.class));
 			return true;
-		
-		default:
-			return false;		
 		}
+		
+		return false;
 	}
 
 	public abstract void triggerOn(ZootActor switchActor);

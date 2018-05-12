@@ -1,6 +1,6 @@
 package com.zootcat.fsm.states;
 
-import com.zootcat.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.scene.ZootActor;
 
 public class FallForwardState extends FallState

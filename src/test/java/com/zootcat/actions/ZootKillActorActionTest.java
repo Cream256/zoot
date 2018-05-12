@@ -8,8 +8,8 @@ import org.junit.Test;
 
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.zootcat.events.ZootActorEventCounterListener;
-import com.zootcat.events.ZootEventType;
+import com.zootcat.fsm.events.ZootActorEventCounterListener;
+import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
 public class ZootKillActorActionTest
