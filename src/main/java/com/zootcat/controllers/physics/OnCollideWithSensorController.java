@@ -42,6 +42,19 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	private Fixture sensor;
 	private Set<Fixture> collisions = new LinkedHashSet<Fixture>();
 	
+	public OnCollideWithSensorController()
+	{
+		//noop
+	}
+
+	public OnCollideWithSensorController(float sensorWidth, float sensorHeight, float sensorX, float sensorY)
+	{
+		this.sensorX = sensorX;
+		this.sensorY = sensorY;
+		this.sensorWidth = sensorWidth;
+		this.sensorHeight = sensorHeight;
+	}
+	
 	@Override
 	public void onAdd(ZootActor actor)
 	{
@@ -83,20 +96,12 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 			}
 		}
 	}
-
-	public void setSensorParameters(float width, float height, float x, float y)
-	{
-		sensorX = x;
-		sensorY = y;
-		sensorWidth = width;
-		sensorHeight = height;		
-	}
 	
 	public void setSensorPosition(float x, float y)
 	{
 		ZootPhysicsUtils.setFixturePosition(sensor, x * scene.getUnitScale(), y * scene.getUnitScale());
 	}
-	
+		
 	public Fixture getSensor()
 	{
 		return sensor;
