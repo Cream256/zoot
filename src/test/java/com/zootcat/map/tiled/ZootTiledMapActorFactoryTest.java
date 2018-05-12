@@ -27,7 +27,7 @@ import com.zootcat.controllers.factory.mocks.SimpleController;
 import com.zootcat.controllers.factory.mocks.inner.Mock3Controller;
 import com.zootcat.controllers.physics.StaticBodyController;
 import com.zootcat.exceptions.RuntimeZootException;
-import com.zootcat.map.tiled.ZootTiledMapActorFactory;
+import com.zootcat.map.tiled.ZootTiledSceneActorFactory;
 import com.zootcat.map.tiled.ZootTiledMapCell;
 import com.zootcat.map.tiled.optimizer.ZootLayerRegion;
 import com.zootcat.physics.ZootPhysics;
@@ -57,7 +57,7 @@ public class ZootTiledMapActorFactoryTest
 	@Mock private TiledMapTile tile;
 	@Mock private Cell innerCell;
 	private MapProperties tileProperties;
-	private ZootTiledMapActorFactory factory;
+	private ZootTiledSceneActorFactory factory;
 	private ControllerFactory ctrlFactory;
 		
 	@Before
@@ -69,6 +69,9 @@ public class ZootTiledMapActorFactoryTest
 		when(physicsMock.createBody(any(BodyDef.class))).thenReturn(mock(Body.class));		
 		when(sceneMock.getPhysics()).thenReturn(physicsMock);
 		when(sceneMock.getUnitScale()).thenReturn(1.0f);
+		when(sceneMock.getAssetManager()).thenReturn(mock(AssetManager.class));
+		ctrlFactory = new ControllerFactory();
+		when(sceneMock.getControllerFactory()).thenReturn(ctrlFactory);
 		
 		//mock tile and inner cell
 		tileProperties = new MapProperties();
@@ -77,14 +80,12 @@ public class ZootTiledMapActorFactoryTest
 		tile = mock(TiledMapTile.class);
 		when(tile.getProperties()).thenReturn(tileProperties);
 		
-		
 		innerCell = mock(Cell.class);
 		when(innerCell.getTile()).thenReturn(tile);
 		when(innerCell.getTile().getProperties()).thenReturn(tileProperties);
 		
 		//create factory
-		ctrlFactory = new ControllerFactory();
-		factory = new ZootTiledMapActorFactory(sceneMock, ctrlFactory, mock(AssetManager.class));
+		factory = new ZootTiledSceneActorFactory(sceneMock);
 	}
 			
 	@Test(expected = RuntimeZootException.class)
@@ -211,7 +212,7 @@ public class ZootTiledMapActorFactoryTest
 		
 		//then
 		assertNotNull(actor);
-		assertEquals(ZootTiledMapActorFactory.DEFAULT_NAME, actor.getName());
+		assertEquals(ZootTiledSceneActorFactory.DEFAULT_NAME, actor.getName());
 	}
 	
 	@Test

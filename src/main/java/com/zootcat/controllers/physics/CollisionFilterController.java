@@ -38,4 +38,15 @@ public class CollisionFilterController extends ControllerAdapter
 	{
 		return collisionFilter;
 	}
+	
+	public String getCategory()
+	{
+		return category;
+	}
+	
+	public String getMask()
+	{
+		return mask;
+	}
+	
 }

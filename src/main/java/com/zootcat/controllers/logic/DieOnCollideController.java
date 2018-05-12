@@ -10,12 +10,17 @@ public class DieOnCollideController extends OnCollideController
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
-		getControllerActor().addAction(ZootActions.killActorAction(getControllerActor()));
+		die();
 	}
 
 	@Override
 	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		//noop
+	}
+	
+	protected void die()
+	{
+		getControllerActor().addAction(ZootActions.killActorAction(getControllerActor()));
 	}
 }

@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.Controller;
@@ -19,21 +19,23 @@ import com.zootcat.map.tiled.optimizer.ZootLayerRegion;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.tiled.ZootTiledScene;
 
-public class ZootTiledMapActorFactory 
+public class ZootTiledSceneActorFactory 
 {
 	public static final String DEFAULT_NAME = "";
 	private static final String SCENE_GLOBAL_PARAM = "scene";
 	private static final String ASSET_MANAGER_GLOBAL_PARAM = "assetManager";
 
 	private float scale;
+	private ZootTiledScene scene;
 	private ControllerFactory controllerFactory;		
 			
-	public ZootTiledMapActorFactory(ZootTiledScene scene, ControllerFactory controllerFactory, AssetManager assetManager)
+	public ZootTiledSceneActorFactory(ZootTiledScene scene)
 	{
+		this.scene = scene;
 		this.scale = scene.getUnitScale();
-		this.controllerFactory = controllerFactory;
+		this.controllerFactory = scene.getControllerFactory();
 		this.controllerFactory.addGlobalParameter(SCENE_GLOBAL_PARAM, scene);
-		this.controllerFactory.addGlobalParameter(ASSET_MANAGER_GLOBAL_PARAM, assetManager);
+		this.controllerFactory.addGlobalParameter(ASSET_MANAGER_GLOBAL_PARAM, scene.getAssetManager());
 	}
 	
 	public ZootActor createFromMapObject(final MapObject mapObject)
@@ -52,6 +54,30 @@ public class ZootTiledMapActorFactory
 		cellActor.setBounds(cell.x * cell.width * scale, cell.y * cell.height * scale, cell.width * scale, cell.height * scale);
 		setActorControllers(cell.cell.getTile().getProperties(), cellActor);		
 		return cellActor;
+	}
+	
+	//TODO add test
+	public ZootActor createFromTile(final TiledMapTile tile)
+	{
+		ZootActor tileActor = new ZootActor();
+		tileActor.setGid(tile.getProperties().get("id", 0, Integer.class));
+		tileActor.setName(tile.getProperties().get("name", "", String.class));
+		
+		//id
+		int sceneMaxActorId = scene.getActors().stream().mapToInt(actor -> actor.getId()).max().getAsInt();
+		int mapMaxObjectId = scene.getMap().getAllObjects().stream().mapToInt(mo -> mo.getProperties().get("id", 0, Integer.class)).max().getAsInt();
+		int tileActorId = Math.max(sceneMaxActorId, mapMaxObjectId) + 1;
+		tileActor.setId(tileActorId);
+
+		//size
+		float width = Float.valueOf(getPropertyOrDefault(tile.getProperties(), "width", "0"));
+		float height = Float.valueOf(getPropertyOrDefault(tile.getProperties(), "height", "0"));
+		tileActor.setBounds(0.0f, 0.0f, width * scale, height * scale);		
+	
+		//controllers
+		setActorControllers(tile.getProperties(), tileActor);
+		
+		return tileActor;
 	}
 	
 	public ZootActor createFromLayerRegion(ZootLayerRegion region)
@@ -88,9 +114,9 @@ public class ZootTiledMapActorFactory
 		actor.setColor(mapObject.getColor());
 		actor.setVisible(mapObject.isVisible());
 		actor.setOpacity(mapObject.getOpacity());
-		actor.setId(Integer.valueOf(getPropertyOrThrow(mapObject, "id")));
-		actor.setGid(Integer.valueOf(getPropertyOrDefault(mapObject, "gid", "-1")));		
-		actor.setRotation(Float.valueOf(getPropertyOrDefault(mapObject, "rotation", "0.0f")));
+		actor.setId(Integer.valueOf(getPropertyOrThrow(mapObject.getProperties(), "id")));
+		actor.setGid(Integer.valueOf(getPropertyOrDefault(mapObject.getProperties(), "gid", "-1")));		
+		actor.setRotation(Float.valueOf(getPropertyOrDefault(mapObject.getProperties(), "rotation", "0.0f")));
 				
 		boolean isPolygon = ClassReflection.isInstance(PolygonMapObject.class, mapObject);
 		if(isPolygon)
@@ -104,10 +130,10 @@ public class ZootTiledMapActorFactory
 		}
 		else
 		{
-			float x = Float.valueOf(getPropertyOrThrow(mapObject, "x")) * scale;
-			float y = Float.valueOf(getPropertyOrThrow(mapObject, "y")) * scale;
-			float width = Float.valueOf(getPropertyOrThrow(mapObject, "width")) * scale;
-			float height = Float.valueOf(getPropertyOrThrow(mapObject, "height")) * scale;
+			float x = Float.valueOf(getPropertyOrThrow(mapObject.getProperties(), "x")) * scale;
+			float y = Float.valueOf(getPropertyOrThrow(mapObject.getProperties(), "y")) * scale;
+			float width = Float.valueOf(getPropertyOrThrow(mapObject.getProperties(), "width")) * scale;
+			float height = Float.valueOf(getPropertyOrThrow(mapObject.getProperties(), "height")) * scale;
 			actor.setBounds(x, y, width, height);
 		}
 	}
@@ -134,19 +160,19 @@ public class ZootTiledMapActorFactory
 		addControllersToActor(actor, createdControllers);
 	}
 			
-	protected String getPropertyOrDefault(MapObject mapObject, String key, String defaultValue)
+	protected String getPropertyOrDefault(MapProperties properties, String key, String defaultValue)
 	{
-		Object value = mapObject.getProperties().get(key);
+		Object value = properties.get(key);
 		return value != null ? value.toString() : defaultValue;	
 	}
 	
-	protected String getPropertyOrThrow(MapObject mapObject, String key)
+	protected String getPropertyOrThrow(MapProperties properties, String key)
 	{
-		if(!mapObject.getProperties().containsKey(key))
+		if(!properties.containsKey(key))
 		{
-			throw new RuntimeZootException("Object property missing: " + key + " for object with name: " + getNameOrDefault(mapObject));
+			throw new RuntimeZootException("Object property missing: " + key + " for object with name: " + getPropertyOrDefault(properties, "name", DEFAULT_NAME));
 		}
-		return mapObject.getProperties().get(key).toString();
+		return properties.get(key).toString();
 	}
 	
 	private void addControllersToActor(ZootActor actor, List<Controller> createdControllers)

@@ -5,6 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.utils.Disposable;
 import com.zootcat.map.tiled.ZootTiledMapCell;
@@ -16,9 +17,11 @@ public interface ZootMap extends Disposable
 	Color getBackgroundColor();	
 	
 	MapLayer getLayer(String layerName);
+	
 	TiledMapTileSets getTilesets();
+	TiledMapTile getTile(String tilesetName, int id);
 	
 	MapObject getObjectById(int id);
 	List<MapObject> getAllObjects();
-	List<ZootTiledMapCell> getLayerCells(String layerName);	
+	List<ZootTiledMapCell> getLayerCells(String layerName);
 }

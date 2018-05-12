@@ -12,8 +12,10 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.map.ZootMap;
 
 public class ZootTiledMap implements ZootMap
@@ -65,6 +67,19 @@ public class ZootTiledMap implements ZootMap
 	{
 		return tiledMap.getTileSets();
 	}
+	
+	@Override
+	public TiledMapTile getTile(String tilesetName, int id)
+	{
+		TiledMapTileSet tileset = tiledMap.getTileSets().getTileSet(tilesetName);
+		if(tileset == null)
+		{
+			throw new RuntimeZootException("Tileset not found for name " + tilesetName);
+		}
+		
+		int firstGid = tileset.getProperties().get("firstgid", Integer.class);		
+		return tileset.getTile(id + firstGid);
+	}
 
 	public TiledMap getTiledMap()
 	{
@@ -73,7 +88,7 @@ public class ZootTiledMap implements ZootMap
 	
 	@Override
 	public MapObject getObjectById(int id)
-	{
+	{		
 		for(MapLayer layer : tiledMap.getLayers())
 		{
 			for(MapObject obj : layer.getObjects())

@@ -6,7 +6,7 @@ import com.zootcat.events.ZootEvent;
 import com.zootcat.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
-public class OnDieEventController extends OnZootEventController
+public abstract class OnDieEventController extends OnZootEventController
 {
 	public OnDieEventController()
 	{
@@ -15,7 +15,8 @@ public class OnDieEventController extends OnZootEventController
 	
 	public boolean onZootEvent(ZootActor actor, ZootEvent event)
 	{
-		return true;
+		return onDie(actor, event);
 	}
-	
+
+	protected abstract boolean onDie(ZootActor actor, ZootEvent event);	
 }

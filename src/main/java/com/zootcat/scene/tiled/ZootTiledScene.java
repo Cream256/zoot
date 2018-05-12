@@ -21,7 +21,7 @@ import com.zootcat.gfx.ZootRender;
 import com.zootcat.hud.ZootHud;
 import com.zootcat.map.ZootMap;
 import com.zootcat.map.tiled.ZootTiledMap;
-import com.zootcat.map.tiled.ZootTiledMapActorFactory;
+import com.zootcat.map.tiled.ZootTiledSceneActorFactory;
 import com.zootcat.map.tiled.ZootTiledMapRender;
 import com.zootcat.map.tiled.ZootTiledMapRenderConfig;
 import com.zootcat.map.tiled.ZootTiledWorldScaleCalculator;
@@ -88,7 +88,7 @@ public class ZootTiledScene implements ZootScene
 		stage = new Stage(viewport);
 		
 		//cell actors
-    	ZootTiledMapActorFactory actorFactory = new ZootTiledMapActorFactory(this, ctrlFactory, assetManager);		
+    	ZootTiledSceneActorFactory actorFactory = new ZootTiledSceneActorFactory(this);
     	TiledMapTileLayer collisionLayer = map.getLayer(ZootTiledMap.COLLISION_LAYER_NAME);
     	
     	List<ZootLayerRegion> cellRegions = ZootLayerOptimizer.optimize(collisionLayer, new ZootTiledCellTileComparator());			
@@ -303,5 +303,15 @@ public class ZootTiledScene implements ZootScene
 	public ZootHud getHud()
 	{
 		return hud;
+	}
+	
+	public ControllerFactory getControllerFactory()
+	{
+		return ctrlFactory;
+	}
+	
+	public AssetManager getAssetManager()
+	{
+		return assetManager;
 	}
 }

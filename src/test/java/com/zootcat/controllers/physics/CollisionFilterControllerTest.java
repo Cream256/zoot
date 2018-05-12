@@ -60,4 +60,16 @@ public class CollisionFilterControllerTest
 		//then
 		verify(physCtrl, times(1)).setCollisionFilter(ctrl.getCollisionFilter());
 	}
+	
+	@Test
+	public void shouldReturnCategory()
+	{
+		assertEquals(CATEGORY, ctrl.getCategory());
+	}
+	
+	@Test
+	public void shouldReturnMask()
+	{
+		assertEquals(MASK, ctrl.getMask());
+	}
 }
