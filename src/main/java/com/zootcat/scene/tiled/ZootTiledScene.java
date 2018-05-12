@@ -31,6 +31,7 @@ import com.zootcat.map.tiled.optimizer.ZootTiledCellTileComparator;
 import com.zootcat.physics.ZootPhysics;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.scene.ZootSceneActorSpawner;
 
 public class ZootTiledScene implements ZootScene
 {
@@ -45,6 +46,7 @@ public class ZootTiledScene implements ZootScene
 	private ZootTiledMapRender mapRender;
 	private ControllerFactory ctrlFactory;
 	private ZootHud hud;
+	private ZootTiledSceneActorSpawner spawner;
 	
 	private float unitScale;
 	private float worldUnitPerTile;
@@ -87,8 +89,10 @@ public class ZootTiledScene implements ZootScene
 		Viewport viewport = new StretchViewport(viewportWidth, viewportHeight, camera);
 		stage = new Stage(viewport);
 		
-		//cell actors
+		//actor factory
     	ZootTiledSceneActorFactory actorFactory = new ZootTiledSceneActorFactory(this);
+    	
+		//cell actors
     	TiledMapTileLayer collisionLayer = map.getLayer(ZootTiledMap.COLLISION_LAYER_NAME);
     	
     	List<ZootLayerRegion> cellRegions = ZootLayerOptimizer.optimize(collisionLayer, new ZootTiledCellTileComparator());			
@@ -98,6 +102,9 @@ public class ZootTiledScene implements ZootScene
 		//object actors
 		List<ZootActor> actors = actorFactory.createFromMapObjects(map.getAllObjects());		
 		actors.forEach(actor -> addActor(actor));
+		
+    	//actor spawner for spawning actors after scene have been created
+    	spawner = new ZootTiledSceneActorSpawner(map, actorFactory);
 		
 		//debug
 		isDebugMode = false;
@@ -313,5 +320,11 @@ public class ZootTiledScene implements ZootScene
 	public AssetManager getAssetManager()
 	{
 		return assetManager;
+	}
+
+	@Override
+	public ZootSceneActorSpawner getActorSpawner()
+	{
+		return spawner;
 	}
 }

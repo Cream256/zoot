@@ -14,18 +14,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.zootcat.assets.ZootAssetManager;
-import com.zootcat.controllers.factory.ControllerFactory;
+import com.badlogic.gdx.math.Vector2;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.map.tiled.ZootTiledMap;
+import com.zootcat.map.tiled.ZootTiledSceneActorFactory;
 import com.zootcat.scene.ZootActor;
 
 public class ZootTiledSceneActorSpawnerTest
 {		
-	@Mock private ZootTiledScene zootTiledScene;
 	@Mock private ZootTiledMap zootTiledMap;
-	@Mock private ZootAssetManager zootAssetManager;
-	@Mock private ControllerFactory ctrlFactory;
+	@Mock private ZootTiledSceneActorFactory actorFactory;
 		
 	private ZootTiledSceneActorSpawner spawner;
 	
@@ -33,12 +31,8 @@ public class ZootTiledSceneActorSpawnerTest
 	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);		
-		when(zootTiledScene.getAssetManager()).thenReturn(zootAssetManager);
-		when(zootTiledScene.getControllerFactory()).thenReturn(ctrlFactory);
-		when(zootTiledScene.getUnitScale()).thenReturn(1.0f);
-		when(zootTiledScene.getMap()).thenReturn(zootTiledMap);
 		
-		spawner = new ZootTiledSceneActorSpawner(zootTiledScene);
+		spawner = new ZootTiledSceneActorSpawner(zootTiledMap, actorFactory);
 	}
 	
 	@Test
@@ -53,7 +47,7 @@ public class ZootTiledSceneActorSpawnerTest
 			//when
 			when(zootTiledMap.getTilesets()).thenReturn(tilesets);
 			when(tilesets.getTileSet(tilesetName)).thenReturn(mock(TiledMapTileSet.class));						
-			spawner.spawn(tilesetName, 0);
+			spawner.spawn(tilesetName, 0, new Vector2());
 		}
 		catch(RuntimeZootException e)
 		{
@@ -72,9 +66,10 @@ public class ZootTiledSceneActorSpawnerTest
 		//when
 		StaticTiledMapTile tile = new StaticTiledMapTile(mock(TextureRegion.class));
 		when(zootTiledMap.getTile(tilesetName, expectedTileId)).thenReturn(tile);
+		when(actorFactory.createFromTile(tile)).thenReturn(new ZootActor());
 				
 		//then
-		ZootActor actor = spawner.spawn(tilesetName, expectedTileId);
+		ZootActor actor = spawner.spawn(tilesetName, expectedTileId, new Vector2());
 		assertNotNull(actor);
 	}
 }

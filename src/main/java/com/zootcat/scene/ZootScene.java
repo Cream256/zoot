@@ -43,4 +43,5 @@ public interface ZootScene extends Disposable
 	void removeListener(EventListener listener);
 	
 	float getUnitScale();
+	ZootSceneActorSpawner getActorSpawner();
 }
