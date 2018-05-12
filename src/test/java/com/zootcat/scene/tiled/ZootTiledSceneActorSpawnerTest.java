@@ -2,6 +2,7 @@ package com.zootcat.scene.tiled;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -9,17 +10,18 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.controllers.factory.ControllerFactory;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.map.tiled.ZootTiledMap;
 import com.zootcat.scene.ZootActor;
 
-//TODO finish 
 public class ZootTiledSceneActorSpawnerTest
-{	
+{		
 	@Mock private ZootTiledScene zootTiledScene;
 	@Mock private ZootTiledMap zootTiledMap;
 	@Mock private ZootAssetManager zootAssetManager;
@@ -39,44 +41,40 @@ public class ZootTiledSceneActorSpawnerTest
 		spawner = new ZootTiledSceneActorSpawner(zootTiledScene);
 	}
 	
-	@Test(expected = RuntimeZootException.class)
-	public void shouldThrowIfIdIsNotFound()
+	@Test
+	public void shouldThrowIfTileIdIsNotFoundInTileset()
 	{
-		spawner.spawn("", 0);
+		try
+		{		
+			//given
+			final String tilesetName = "Existing tileset";
+			TiledMapTileSets tilesets = mock(TiledMapTileSets.class);
+			
+			//when
+			when(zootTiledMap.getTilesets()).thenReturn(tilesets);
+			when(tilesets.getTileSet(tilesetName)).thenReturn(mock(TiledMapTileSet.class));						
+			spawner.spawn(tilesetName, 0);
+		}
+		catch(RuntimeZootException e)
+		{
+			//then
+			assertEquals("Unable to spawn actor with tile id 0", e.getMessage());			
+		}
 	}
 	
-	@Test	//TODO
-	public void spawnByNameShouldReturnValidActor()
+	@Test
+	public void shouldSpawnActor()
 	{
-		//given		
-		String expectedActorName = "Skeleton";		
-		final int expectedId = 1;
-		final float expectedX = 128.0f;
-		final float expectedY = 256.0f;
-		final float expectedWidth = 123.0f;
-		final float expectedHeight = 321.0f;
-		final Color expectedColor = Color.WHITE;
+		//given
+		final int expectedTileId = 1;
+		final String tilesetName = "Tileset";
 		
 		//when
-		MapObject mapObj = new MapObject();
-		mapObj.setName(expectedActorName);
-		mapObj.setColor(expectedColor);
-		mapObj.getProperties().put("id", expectedId);
-		mapObj.getProperties().put("x", expectedX);
-		mapObj.getProperties().put("y", expectedY);
-		mapObj.getProperties().put("width", expectedWidth);
-		mapObj.getProperties().put("height", expectedHeight);
-		when(zootTiledMap.getObjectById(expectedId)).thenReturn(mapObj);
-		
+		StaticTiledMapTile tile = new StaticTiledMapTile(mock(TextureRegion.class));
+		when(zootTiledMap.getTile(tilesetName, expectedTileId)).thenReturn(tile);
+				
 		//then
-		ZootActor actor = spawner.spawn("", expectedId);
+		ZootActor actor = spawner.spawn(tilesetName, expectedTileId);
 		assertNotNull(actor);
-		assertEquals(expectedActorName, actor.getName());
-		assertEquals(expectedColor, actor.getColor());
-		assertEquals(expectedId, actor.getId());
-		assertEquals(expectedX, actor.getX(), 0.0f);
-		assertEquals(expectedY, actor.getY(), 0.0f);
-		assertEquals(expectedWidth, actor.getWidth(), 0.0f);
-		assertEquals(expectedHeight, actor.getHeight(), 0.0f);
 	}
 }

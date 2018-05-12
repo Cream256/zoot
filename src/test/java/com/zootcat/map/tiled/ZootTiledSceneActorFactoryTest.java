@@ -7,6 +7,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -14,10 +16,12 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.zootcat.controllers.factory.ControllerFactory;
@@ -34,7 +38,7 @@ import com.zootcat.physics.ZootPhysics;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.tiled.ZootTiledScene;
 
-public class ZootTiledMapActorFactoryTest
+public class ZootTiledSceneActorFactoryTest
 {	
 	private static final String CTRL_PACKAGE = "com.zootcat.controllers.factory.mocks";
 	private static final String ACTOR_NAME = "abc";
@@ -52,6 +56,7 @@ public class ZootTiledMapActorFactoryTest
 	private static final float CELL_HEIGHT = 48;
 	private static final int ACTOR_ID = 1;
 			
+	@Mock private ZootTiledMap mapMock;
 	@Mock private ZootTiledScene sceneMock;	
 	@Mock private ZootPhysics physicsMock;
 	@Mock private TiledMapTile tile;
@@ -70,6 +75,7 @@ public class ZootTiledMapActorFactoryTest
 		when(sceneMock.getPhysics()).thenReturn(physicsMock);
 		when(sceneMock.getUnitScale()).thenReturn(1.0f);
 		when(sceneMock.getAssetManager()).thenReturn(mock(AssetManager.class));
+		when(sceneMock.getMap()).thenReturn(mapMock);
 		ctrlFactory = new ControllerFactory();
 		when(sceneMock.getControllerFactory()).thenReturn(ctrlFactory);
 		
@@ -295,6 +301,85 @@ public class ZootTiledMapActorFactoryTest
 		assertEquals(tileHeight * regionHeight, actor.getHeight(), 0.0f);
 		assertFalse(actor.getName().isEmpty());
 		assertNotNull(actor.getController(SimpleController.class));		
+	}
+	
+	@Test
+	public void shouldReturnActorWithValidTileProperties()
+	{
+		//given
+		final int expectedTileId = 10;
+		final int expectedActorId = 1;
+		final float expectedWidth = 123.0f;
+		final float expectedHeight = 321.0f;
+		final String expectedName = "Actor name";		
+		StaticTiledMapTile tile = new StaticTiledMapTile(mock(TextureRegion.class));
+				
+		//when
+		tile.getProperties().put("name", expectedName);		
+		tile.getProperties().put("id", expectedTileId);
+		tile.getProperties().put("width", expectedWidth);
+		tile.getProperties().put("height", expectedHeight);
+		ZootActor createdActor = factory.createFromTile(tile);
+		
+		//then
+		assertNotNull(createdActor);
+		assertEquals(expectedName, createdActor.getName());
+		assertEquals(expectedTileId, createdActor.getGid());
+		assertEquals(expectedActorId, createdActor.getId());
+		assertEquals(expectedWidth, createdActor.getWidth(), 0.0f);
+		assertEquals(expectedHeight, createdActor.getHeight(), 0.0f);
+	}
+	
+	@Test
+	public void shouldReturnActorWithIdGreaterThanSceneMaxId()
+	{
+		//given
+		ZootActor actor1 = new ZootActor();	actor1.setId(200);		
+		ZootActor actor2 = new ZootActor(); actor2.setId(100);
+				
+		//when
+		when(sceneMock.getActors()).thenReturn(Arrays.asList(actor1, actor2));		
+		ZootActor createdActor = factory.createFromTile(new StaticTiledMapTile(mock(TextureRegion.class)));
+		
+		//then
+		assertNotNull(createdActor);
+		assertEquals(201, createdActor.getId());		
+	}
+	
+	@Test
+	public void shouldReturnActorWithIdGreaterThanMapObjectsMaxId()
+	{
+		//given
+		MapObject mapObject1 = new MapObject();	mapObject1.getProperties().put("id", 400);		
+		MapObject mapObject2 = new MapObject();	mapObject2.getProperties().put("id", 500);
+		
+		//when
+		when(mapMock.getAllObjects()).thenReturn(Arrays.asList(mapObject1, mapObject2));
+		ZootActor createdActor = factory.createFromTile(new StaticTiledMapTile(mock(TextureRegion.class)));
+		
+		//then
+		assertNotNull(createdActor);
+		assertEquals(501, createdActor.getId());		
+	}
+	
+	@Test
+	public void shouldReturnActorWithIdGreaterThanMapObjectsMaxIdAndSceneActorsMaxId()
+	{
+		//given
+		ZootActor actor1 = new ZootActor(); actor1.setId(1);
+		ZootActor actor2 = new ZootActor();	actor2.setId(2);
+		MapObject mapObject1 = new MapObject();	mapObject1.getProperties().put("id", 3);
+		MapObject mapObject2 = new MapObject();	mapObject2.getProperties().put("id", 4);
+		StaticTiledMapTile tile = new StaticTiledMapTile(mock(TextureRegion.class));
+				
+		//when
+		when(sceneMock.getActors()).thenReturn(Arrays.asList(actor1, actor2));		
+		when(mapMock.getAllObjects()).thenReturn(Arrays.asList(mapObject1, mapObject2));	
+		ZootActor createdActor = factory.createFromTile(tile);
+		
+		//then
+		assertNotNull(createdActor);
+		assertEquals(5, createdActor.getId());
 	}
 	
 	private ZootTiledMapCell createDefaultCell()

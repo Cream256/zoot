@@ -56,7 +56,6 @@ public class ZootTiledSceneActorFactory
 		return cellActor;
 	}
 	
-	//TODO add test
 	public ZootActor createFromTile(final TiledMapTile tile)
 	{
 		ZootActor tileActor = new ZootActor();
@@ -64,8 +63,8 @@ public class ZootTiledSceneActorFactory
 		tileActor.setName(tile.getProperties().get("name", "", String.class));
 		
 		//id
-		int sceneMaxActorId = scene.getActors().stream().mapToInt(actor -> actor.getId()).max().getAsInt();
-		int mapMaxObjectId = scene.getMap().getAllObjects().stream().mapToInt(mo -> mo.getProperties().get("id", 0, Integer.class)).max().getAsInt();
+		int sceneMaxActorId = scene.getActors().stream().mapToInt(actor -> actor.getId()).max().orElse(0);
+		int mapMaxObjectId = scene.getMap().getAllObjects().stream().mapToInt(mo -> mo.getProperties().get("id", 0, Integer.class)).max().orElse(0);
 		int tileActorId = Math.max(sceneMaxActorId, mapMaxObjectId) + 1;
 		tileActor.setId(tileActorId);
 
