@@ -8,12 +8,12 @@ public class ZootEvents
 {
 	private static final Pool<ZootEvent> pool = Pools.get(ZootEvent.class);
 	
-	public static ZootEvent get(ZootEventType type)
+	public static ZootEvent get(ZootEventTypeEnum type)
 	{
 		return get(type, null);
 	}
 	
-	public static ZootEvent get(ZootEventType type, Object userObj)
+	public static ZootEvent get(ZootEventTypeEnum type, Object userObj)
 	{
 		ZootEvent event = pool.obtain();
 		event.setType(type);
@@ -21,12 +21,12 @@ public class ZootEvents
 		return event;
 	}
 	
-	public static void fireAndFree(ZootActor actor, ZootEventType type)
+	public static void fireAndFree(ZootActor actor, ZootEventTypeEnum type)
 	{
 		fireAndFree(actor, type, null);
 	}
 	
-	public static void fireAndFree(ZootActor actor, ZootEventType type, Object userObj)
+	public static void fireAndFree(ZootActor actor, ZootEventTypeEnum type, Object userObj)
 	{
 		ZootEvent event = get(type, userObj);
 		actor.fire(event);
