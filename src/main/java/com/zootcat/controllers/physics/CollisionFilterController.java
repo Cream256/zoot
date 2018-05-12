@@ -15,8 +15,8 @@ import com.zootcat.utils.BitMaskConverter;
  */
 public class CollisionFilterController extends ControllerAdapter
 {
-	@CtrlParam(required = true) private String category = "";
-	@CtrlParam private String mask = "";
+	@CtrlParam(debug = true) private String category;
+	@CtrlParam(debug = true) private String mask;
 	
 	private Filter collisionFilter;
 	
@@ -47,6 +47,5 @@ public class CollisionFilterController extends ControllerAdapter
 	public String getMask()
 	{
 		return mask;
-	}
-	
+	}	
 }

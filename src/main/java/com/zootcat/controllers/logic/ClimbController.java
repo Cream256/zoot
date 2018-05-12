@@ -16,6 +16,7 @@ import com.zootcat.events.ZootEventType;
 import com.zootcat.events.ZootEvents;
 import com.zootcat.fsm.states.ClimbState;
 import com.zootcat.math.ZootBoundingBoxFactory;
+import com.zootcat.physics.ZootDefaultContactFilter;
 import com.zootcat.physics.ZootPhysicsUtils;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
@@ -213,9 +214,26 @@ public class ClimbController extends OnCollideWithSensorController
 							   .filter(fix -> fix != climbingFixture)
 							   .filter(fix -> !fix.isSensor())
 							   .filter(fix -> !isFixtureOneWayPlatform(fix))
+							   .filter(fix -> isCollisionBetweenFixtureAndActor(fix, climbingActor))
 							   .collect(Collectors.toList());		
 				
 		return filtered.isEmpty();					   
+	}
+	
+	private boolean isCollisionBetweenFixtureAndActor(Fixture fix, ZootActor climbingActor)
+	{
+		return climbingActor.controllerCondition(PhysicsBodyController.class, ctrl -> 
+		{
+			for(Fixture actorFix : ctrl.getFixtures())
+			{
+				if(actorFix.isSensor()) continue;				
+				if(ZootDefaultContactFilter.shouldCollide(fix, actorFix))
+				{
+					return true;
+				}				
+			}
+			return false;
+		});
 	}
 	
 	private boolean isFixtureOneWayPlatform(Fixture fix)
