@@ -1,5 +1,6 @@
 package com.zootcat.controllers.physics;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -298,4 +299,14 @@ public class MoveableControllerTest
 		//then
 		verify(physicsCtrl).setVelocity(JUMP_FORWARD_VEL_X, 0.0f, true, false);
 	}
+	
+	@Test
+	public void shouldSetAndReturnRunVelocity()
+	{
+		assertEquals(RUN_VEL, ctrl.getRunVelocity(), 0.0f);
+		
+		ctrl.setRunVelocity(1.23f);
+		assertEquals(1.23f, ctrl.getRunVelocity(), 0.0f);
+	}
+	
 }

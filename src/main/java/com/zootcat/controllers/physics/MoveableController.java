@@ -56,6 +56,16 @@ public class MoveableController extends ControllerAdapter
 		timeout = Math.max(0, timeout - ZootUtils.trunc(delta * 1000));
 	}
 	
+	public void setRunVelocity(float velocity)
+	{
+		runVel = velocity;
+	}
+	
+	public float getRunVelocity()
+	{
+		return runVel;
+	}
+	
 	public void jumpUp()
 	{
 		jumpUp(true);
