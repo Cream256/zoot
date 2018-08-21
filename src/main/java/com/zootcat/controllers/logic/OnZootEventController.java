@@ -7,13 +7,14 @@ import java.util.Set;
 
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEventTypeEnum;
 import com.zootcat.scene.ZootActor;
 
 public class OnZootEventController extends ZootEventListenerController
 {
 	private boolean done = false;
 	private boolean singleExecution = false;
-	private Set<ZootEventType> allowedEventTypes = new HashSet<ZootEventType>();
+	private Set<ZootEventTypeEnum> allowedEventTypes = new HashSet<ZootEventTypeEnum>();
 	
 	public OnZootEventController()
 	{
@@ -25,7 +26,7 @@ public class OnZootEventController extends ZootEventListenerController
 		this(Arrays.asList(ZootEventType.values()), singleExecution);
 	}
 	
-	public OnZootEventController(Collection<ZootEventType> types, boolean singleExecution)
+	public OnZootEventController(Collection<ZootEventTypeEnum> types, boolean singleExecution)
 	{		
 		allowedEventTypes.addAll(types);
 		this.singleExecution = singleExecution;
@@ -46,7 +47,7 @@ public class OnZootEventController extends ZootEventListenerController
 		return done;
 	}
 		
-	public Set<ZootEventType> getEventTypes()
+	public Set<ZootEventTypeEnum> getEventTypes()
 	{
 		return allowedEventTypes;
 	}

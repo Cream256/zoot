@@ -10,11 +10,11 @@ import java.util.List;
 import org.junit.Test;
 
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEventTypeEnum;
 import com.zootcat.fsm.events.ZootEvents;
 
 public class OnZootEventControllerTest
 {
-	
 	@Test
 	public void defaultCtorTest()
 	{
@@ -36,7 +36,7 @@ public class OnZootEventControllerTest
 	@Test
 	public void thirdCtorTest()
 	{
-		List<ZootEventType> types = Arrays.asList(ZootEventType.Attack, ZootEventType.Collide);
+		List<ZootEventTypeEnum> types = Arrays.asList(ZootEventType.Attack, ZootEventType.Collide);
 		OnZootEventController ctrl = new OnZootEventController(types, true);
 		assertFalse(ctrl.isDone());
 		assertTrue(ctrl.isSingleExecution());
