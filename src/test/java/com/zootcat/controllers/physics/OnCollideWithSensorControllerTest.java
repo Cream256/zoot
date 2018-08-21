@@ -2,6 +2,7 @@ package com.zootcat.controllers.physics;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -194,6 +195,24 @@ public class OnCollideWithSensorControllerTest
 		assertEquals("Should have filter category", suppliedCategoryBits, sensor.getFilterData().categoryBits);
 		assertEquals("Should have filter group", DEFAULT_GROUP_INDEX, sensor.getFilterData().groupIndex);
 		assertEquals("Should have suplied mask", suppliedMaskBits, sensor.getFilterData().maskBits);
+	}
+	
+	@Test
+	public void shouldRemoveFixture()
+	{
+		//when
+		ctrl.init(ctrlActor);
+		ctrl.onAdd(ctrlActor);
+		Fixture sensor = ctrl.getSensor();
+		
+		//then
+		assertNotNull("Should create sensor", sensor);
+		
+		//when
+		ctrl.onRemove(ctrlActor);
+		
+		//then
+		assertNull("Should remove sensor", ctrl.getSensor());
 	}
 	
 	@Test

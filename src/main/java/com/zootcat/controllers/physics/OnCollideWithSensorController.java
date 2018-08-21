@@ -71,6 +71,15 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	}
 	
 	@Override
+	public void onRemove(ZootActor actor) 
+	{
+		actor.getController(PhysicsBodyController.class).removeFixture(sensor);
+		sensor = null;		
+		
+		super.onRemove(actor);
+	}
+	
+	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		if(collidedWithSensor(contact))
