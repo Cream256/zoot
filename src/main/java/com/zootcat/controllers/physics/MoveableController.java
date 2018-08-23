@@ -66,6 +66,16 @@ public class MoveableController extends ControllerAdapter
 		return runVel;
 	}
 	
+	public void setJumpTimeout(int timeout)
+	{
+		jumpTimeout = timeout;
+	}
+	
+	public int getJumpTimeout()
+	{
+		return jumpTimeout;
+	}
+	
 	public void jumpUp()
 	{
 		jumpUp(true);
@@ -76,7 +86,7 @@ public class MoveableController extends ControllerAdapter
 		if(verifyJump && !canJump()) return;
 		
 		physicsCtrl.setVelocity(0.0f, jumpUpVel, false, true);
-		setJumpTimeout();
+		setTimeout();
 	}
 	
 	public void jumpForward(ZootDirection direction)
@@ -89,7 +99,7 @@ public class MoveableController extends ControllerAdapter
 		if(verifyJump && !canJump()) return;
 		
 		physicsCtrl.setVelocity(jumpForwardVelX * direction.getHorizontalValue(), jumpForwardVelY, true, true);
-		setJumpTimeout();
+		setTimeout();
 	}
 	
 	public void setForwardJumpVelocity(float velX, float velY)
@@ -125,7 +135,7 @@ public class MoveableController extends ControllerAdapter
 		return timeout == 0 && groundCtrl.isOnGround();
 	}
 	
-	protected void setJumpTimeout()
+	protected void setTimeout()
 	{
 		timeout = jumpTimeout;
 	}

@@ -331,4 +331,17 @@ public class MoveableControllerTest
 		//then
 		verify(physicsCtrl).setVelocity(0.0f, 0.0f, true, false);
 	}	
+	
+	@Test
+	public void shouldReturnJumpTimeout()
+	{
+		assertEquals(JUMP_TIMEOUT, ctrl.getJumpTimeout());
+	}
+	
+	@Test
+	public void shouldSetJumpTimeout()
+	{
+		ctrl.setJumpTimeout(256);
+		assertEquals(256, ctrl.getJumpTimeout());
+	}
 }
