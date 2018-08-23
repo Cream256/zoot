@@ -309,4 +309,14 @@ public class MoveableControllerTest
 		assertEquals(1.23f, ctrl.getRunVelocity(), 0.0f);
 	}
 	
+	@Test
+	public void shouldStopHorizontalMovement()
+	{
+		//when
+		ctrl.onAdd(actor);
+		ctrl.stop();
+		
+		//then
+		verify(physicsCtrl).setVelocity(0.0f, 0.0f, true, false);
+	}	
 }

@@ -109,6 +109,11 @@ public class MoveableController extends ControllerAdapter
 		physicsCtrl.setVelocity(runVel * direction.getHorizontalValue(), 0.0f, true, false);
 	}
 	
+	public void stop()
+	{
+		physicsCtrl.setVelocity(0.0f, 0.0f, true, false);
+	}
+	
 	protected boolean canJump()
 	{
 		return timeout == 0 && groundCtrl.isOnGround();
