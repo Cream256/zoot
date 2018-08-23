@@ -213,6 +213,18 @@ public class MoveableControllerTest
 	}
 	
 	@Test
+	public void shouldJumpForwardWithNewVelocitySet()	
+	{
+		//when
+		ctrl.onAdd(actor);
+		ctrl.setForwardJumpVelocity(2.56f, 5.12f);
+		ctrl.jumpForward(ZootDirection.Right);
+				
+		//then
+		verify(physicsCtrl).setVelocity(2.56f, 5.12f, true, true);
+	}
+	
+	@Test
 	public void shouldNotJumpForwardWhenNotTouchingGround()
 	{
 		//when

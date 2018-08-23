@@ -92,6 +92,12 @@ public class MoveableController extends ControllerAdapter
 		setJumpTimeout();
 	}
 	
+	public void setForwardJumpVelocity(float velX, float velY)
+	{
+		this.jumpForwardVelX = velX;
+		this.jumpForwardVelY = velY;
+	}
+	
 	public void moveInAir(ZootDirection direction)
 	{
 		float currentVel = physicsCtrl.getVelocity().x;		 

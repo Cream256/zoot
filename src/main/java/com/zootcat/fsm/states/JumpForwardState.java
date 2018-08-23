@@ -9,13 +9,14 @@ import com.zootcat.scene.ZootDirection;
 
 public class JumpForwardState extends JumpState
 {
+	public static final String NAME = "JumpForward";
 	public static final int ID = JumpForwardState.class.hashCode();
-	
+	 	
 	private ZootDirection forwardJumpDirection = ZootDirection.None;
 	
 	public JumpForwardState()
 	{
-		super("JumpForward");
+		super(NAME);
 	}
 	
 	@Override

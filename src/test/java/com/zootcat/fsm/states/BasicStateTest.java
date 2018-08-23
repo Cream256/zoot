@@ -68,6 +68,14 @@ public class BasicStateTest
 	}
 	
 	@Test
+	public void setNameTest()
+	{
+		BasicState state = new BasicState("oldName");
+		state.setName("newName");
+		assertEquals("newName", state.getName());		
+	}
+	
+	@Test
 	public void toStringTest()
 	{
 		assertEquals("ABC", new BasicState("ABC").toString());

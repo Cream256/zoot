@@ -9,7 +9,7 @@ import com.zootcat.scene.ZootActor;
 
 public class BasicState implements ZootState
 {
-	private final String name;
+	private String name;
 	
 	public BasicState(String name)
 	{
@@ -70,6 +70,11 @@ public class BasicState implements ZootState
 	public String getName()
 	{
 		return name;
+	}
+	
+	protected void setName(String name)
+	{
+		this.name = name;
 	}
 	
 	protected void changeState(ZootActor actor, int stateId)
