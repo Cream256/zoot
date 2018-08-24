@@ -37,7 +37,14 @@ public class ZootActions
 		ZootAddControllerAction addCtrlAction = zootAction(ZootAddControllerAction.class);
 		addCtrlAction.setController(ctrl);
 		addCtrlAction.setTarget(actor);
-		return addCtrlAction;
-		
+		return addCtrlAction;	
+	}
+	
+	public static ZootRemoveControllerAction removeControllerAction(ZootActor actor, Controller ctrl)
+	{
+		ZootRemoveControllerAction removeCtrlAction = zootAction(ZootRemoveControllerAction.class);
+		removeCtrlAction.setController(ctrl);
+		removeCtrlAction.setTarget(actor);
+		return removeCtrlAction;
 	}
 }

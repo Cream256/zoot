@@ -51,4 +51,14 @@ public class ZootActionsTest
 		assertEquals(ctrl, action.getController());
 		assertNotNull(action.getPool());
 	}
+	
+	@Test
+	public void shouldCreateRemoveControllerAction()
+	{
+		Controller ctrl = mock(Controller.class);
+		ZootRemoveControllerAction action = ZootActions.removeControllerAction(actor, ctrl);		
+		assertEquals(actor, action.getTargetZootActor());
+		assertEquals(ctrl, action.getController());
+		assertNotNull(action.getPool());		
+	}
 }
