@@ -344,4 +344,17 @@ public class MoveableControllerTest
 		ctrl.setJumpTimeout(256);
 		assertEquals(256, ctrl.getJumpTimeout());
 	}
+	
+	@Test
+	public void shouldReturnJumpUpVelocity()
+	{
+		assertEquals(JUMP_UP_VEL, ctrl.getJumpUpVelocity(), 0.0f);
+	}
+	
+	@Test
+	public void shouldSetJumpUpVelocity()
+	{
+		ctrl.setJumpUpVelocity(0.5f);
+		assertEquals(0.5f, ctrl.getJumpUpVelocity(), 0.0f);		
+	}
 }

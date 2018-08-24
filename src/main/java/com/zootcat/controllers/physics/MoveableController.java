@@ -76,6 +76,16 @@ public class MoveableController extends ControllerAdapter
 		return jumpTimeout;
 	}
 	
+	public void setJumpUpVelocity(float velocity)
+	{
+		jumpUpVel = velocity;
+	}
+	
+	public float getJumpUpVelocity()
+	{
+		return jumpUpVel;
+	}
+	
 	public void jumpUp()
 	{
 		jumpUp(true);

@@ -10,6 +10,7 @@ public class ZootAnimation
 	private final String name;	//name must be final in order to make getId() immutable	
 	private float animationTime = 0.0f;	
 	private boolean playing = false;
+	private int repeatCount = 0;
 	private Animation<TextureRegion> animation;
 	private ZootAnimationOffset[] offsets;
 		
@@ -61,7 +62,7 @@ public class ZootAnimation
 	
 	public TextureRegion getKeyFrame()
 	{
-		return animation.getKeyFrame(animationTime);
+		return animation.getKeyFrame(animationTime);		
 	}
 	
 	public Texture getKeyFrameTexture()
@@ -138,5 +139,16 @@ public class ZootAnimation
 		if(obj == this) return true;
 		if(!(obj instanceof ZootAnimation)) return false;
 		return getId() == ((ZootAnimation)obj).getId();
+	}
+
+	//TODO zrobic  tak, zeby animacja sie zapetlala okreslona ilosc razy
+	public void setRepeatCount(int value)
+	{
+		repeatCount = Math.max(0, value);
+	}
+	
+	public int getRepeatCount()
+	{
+		return repeatCount;
 	}
 }

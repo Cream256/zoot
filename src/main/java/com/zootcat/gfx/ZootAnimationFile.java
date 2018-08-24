@@ -44,7 +44,8 @@ public class ZootAnimationFile
 			
 			ZootAnimation animation = new ZootAnimation(getName(data), orderedFrames, getFrameDuration(data));		
 			animation.setPlayMode(getPlayMode(data));
-			animation.setOffsets(offsets);			
+			animation.setOffsets(offsets);		
+			animation.setRepeatCount(data.getInt("Repeats", 0));
 			animations.put(animation.getId(), animation);
 		}
 		return animations;

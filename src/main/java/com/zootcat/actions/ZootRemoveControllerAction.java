@@ -9,7 +9,6 @@ public class ZootRemoveControllerAction extends ZootAction
 	@Override
 	public boolean act(float delta)
 	{
-		ctrl.onRemove(getTargetZootActor());
 		getTargetZootActor().removeController(ctrl);		
 		return true;
 	}

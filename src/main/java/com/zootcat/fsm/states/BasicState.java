@@ -5,6 +5,7 @@ import com.zootcat.controllers.gfx.AnimatedSpriteController;
 import com.zootcat.fsm.ZootState;
 import com.zootcat.fsm.ZootStateMachine;
 import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.scene.ZootActor;
 
 public class BasicState implements ZootState
@@ -89,6 +90,12 @@ public class BasicState implements ZootState
 		sm.changeState(sm.getStateById(stateId), event);
 	}
 			
+	protected ZootAnimation getActorAnimation(ZootActor actor)
+	{
+		AnimatedSpriteController ctrl = actor.tryGetController(AnimatedSpriteController.class);
+		return ctrl != null ? ctrl.getCurrentAnimation() : null;
+	}
+	
 	protected void setAnimationBasedOnStateName(ZootActor actor)
 	{
 		setActorAnimation(actor, name);

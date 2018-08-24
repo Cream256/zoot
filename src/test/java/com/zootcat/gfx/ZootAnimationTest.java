@@ -181,4 +181,23 @@ public class ZootAnimationTest
 	{
 		assertEquals(FRAME_DURATION, animation.getFrameDuration(), 0.0f);
 	}
+	
+	@Test
+	public void shouldReturnDefaultRepeatCount()
+	{
+		assertEquals(0, animation.getRepeatCount());
+	}
+	
+	@Test
+	public void shouldSetProperRepeatCount()
+	{
+		animation.setRepeatCount(123);
+		assertEquals(123, animation.getRepeatCount());
+		
+		animation.setRepeatCount(-123);
+		assertEquals(0, animation.getRepeatCount());
+		
+		animation.setRepeatCount(0);
+		assertEquals(0, animation.getRepeatCount());
+	}
 }

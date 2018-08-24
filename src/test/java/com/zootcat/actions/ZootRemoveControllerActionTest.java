@@ -24,7 +24,7 @@ public class ZootRemoveControllerActionTest
 		action.act(0.0f);
 		
 		//then
-		verify(ctrl).onRemove(actor);
+		verify(ctrl, times(0)).onRemove(actor);
 		verify(actor).removeController(ctrl);
 	}
 	
