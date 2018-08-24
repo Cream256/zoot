@@ -1,7 +1,7 @@
 package com.zootcat.fsm.states;
 
 import com.zootcat.controllers.logic.DirectionController;
-import com.zootcat.controllers.physics.PhysicsBodyController;
+import com.zootcat.controllers.physics.MoveableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
@@ -22,7 +22,7 @@ public class IdleState extends BasicState
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{
 		setAnimationBasedOnStateName(actor);
-		actor.controllerAction(PhysicsBodyController.class, (ctrl) -> ctrl.setVelocity(0.0f, 0.0f, true, false));
+		actor.controllerAction(MoveableController.class, (ctrl) -> ctrl.stop());
 		
 		actorDirection = ZootDirection.None;
 		actor.controllerAction(DirectionController.class, c -> actorDirection = c.getDirection());

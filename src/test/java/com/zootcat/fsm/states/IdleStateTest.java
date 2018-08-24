@@ -45,7 +45,7 @@ public class IdleStateTest extends ZootStateTestCase
 		//first invocation is done by DefaultStateMachineController
 		verify(animatedSpriteCtrlMock, times(1)).setAnimation(idleState.getName());
 		idleState.onEnter(actor, null);
-		verify(physicsBodyCtrlMock, times(2)).setVelocity(0.0f, 0.0f, true, false);
+		verify(moveableCtrlMock, times(2)).stop();
 	}
 	
 	@Test
