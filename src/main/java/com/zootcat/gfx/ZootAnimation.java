@@ -4,13 +4,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.zootcat.utils.ZootUtils;
 
 public class ZootAnimation 
 {	
 	private final String name;	//name must be final in order to make getId() immutable	
 	private float animationTime = 0.0f;	
 	private boolean playing = false;
-	private int repeatCount = 0;
+	private int repeatsCount = 0;
+	private int repeatsDone = 0;
 	private Animation<TextureRegion> animation;
 	private ZootAnimationOffset[] offsets;
 		
@@ -88,6 +90,13 @@ public class ZootAnimation
 		}
 		
 		animationTime += delta;
+		
+		if(getPlayMode() != PlayMode.NORMAL && repeatsCount > 0)
+		{
+			int loopMul = getPlayMode() == PlayMode.LOOP_PINGPONG ? 2 : 1;
+			repeatsDone = ZootUtils.trunc(animationTime / (animation.getAnimationDuration() * loopMul));
+			if(repeatsDone >= repeatsCount) stop();		
+		}
 	}
 	
 	public void start()
@@ -103,7 +112,8 @@ public class ZootAnimation
 	public void stop()
 	{
 		playing = false;
-		animationTime = 0.0f;
+		repeatsDone = 0;
+		animationTime = 0.0f;		
 	}
 	
 	public void restart()
@@ -141,14 +151,13 @@ public class ZootAnimation
 		return getId() == ((ZootAnimation)obj).getId();
 	}
 
-	//TODO zrobic  tak, zeby animacja sie zapetlala okreslona ilosc razy
 	public void setRepeatCount(int value)
 	{
-		repeatCount = Math.max(0, value);
+		repeatsCount = Math.max(0, value);
 	}
 	
 	public int getRepeatCount()
 	{
-		return repeatCount;
+		return repeatsCount;
 	}
 }

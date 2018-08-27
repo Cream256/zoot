@@ -19,6 +19,7 @@
 	rightOffsetX = 0
 	leftOffsetX = 0
 	sheet = image1
+	repeat = 123
 :~Animation
 
 :Animation

@@ -86,6 +86,7 @@ public class ZootAnimationFileTest
 		assertEquals(0.1f, anim1.getFrameDuration(), 0.0f);
 		assertEquals(PlayMode.NORMAL, anim1.getPlayMode());
 		assertEquals(texture1, anim1.getKeyFrameTexture());
+		assertEquals(123, anim1.getRepeatCount());
 		
 		assertEquals(anim1.getFrameCount(), anim1.getOffsets().length);		
 		Vector2 emptyVector = new Vector2();
@@ -104,6 +105,7 @@ public class ZootAnimationFileTest
 		assertEquals(0.25f, anim2.getFrameDuration(), 0.0f);
 		assertEquals(PlayMode.LOOP_PINGPONG, anim2.getPlayMode());
 		assertEquals(texture2, anim2.getKeyFrameTexture());
+		assertEquals(0, anim2.getRepeatCount());
 		
 		assertEquals(5, anim2.getOffsets().length);
 		assertEquals(0.0f, anim2.getOffsets()[0].right.x, 0.0f);

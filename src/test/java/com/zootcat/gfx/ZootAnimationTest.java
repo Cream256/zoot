@@ -14,10 +14,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class ZootAnimationTest 
 {
+	private static final int FRAME_COUNT = 3;
 	private static final int FRAME_WIDTH = 0;
 	private static final int FRAME_HEIGHT = 0;
 	private static final float FRAME_DURATION = 0.25f;
-	
+		
 	private Texture textureMock;
 	private TextureRegion[] frames;
 	private ZootAnimation animation;
@@ -26,7 +27,7 @@ public class ZootAnimationTest
 	public void setup()
 	{
 		textureMock = mock(Texture.class);
-		frames = new TextureRegion[3]; 
+		frames = new TextureRegion[FRAME_COUNT];
 		frames[0] = new TextureRegion(textureMock, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);	
 		frames[1] = new TextureRegion(textureMock, FRAME_WIDTH, 0, FRAME_WIDTH, FRAME_HEIGHT);
 		frames[2] = new TextureRegion(textureMock, FRAME_WIDTH * 2, 0, FRAME_WIDTH, FRAME_HEIGHT);
@@ -199,5 +200,49 @@ public class ZootAnimationTest
 		
 		animation.setRepeatCount(0);
 		assertEquals(0, animation.getRepeatCount());
+	}
+	
+	@Test
+	public void shouldStopAfterCertainNumberOfRepeatsForNormalLoop()
+	{
+		//given
+		animation.setRepeatCount(2);
+		animation.setPlayMode(PlayMode.LOOP);
+		
+		//when
+		animation.start();
+		animation.step(FRAME_COUNT * FRAME_DURATION);	//first repeat
+		
+		//then
+		assertTrue(animation.isPlaying());
+		
+		//when
+		animation.step(FRAME_COUNT * FRAME_DURATION);	//second repeat
+		
+		//then
+		assertFalse(animation.isPlaying());
+	}
+	
+	@Test
+	public void shouldStopAfterCertainNumberOfRepeatsForPingPongLoop()
+	{
+		//given
+		animation.setRepeatCount(2);
+		animation.setPlayMode(PlayMode.LOOP_PINGPONG);
+		
+		//when
+		animation.start();
+		animation.step(FRAME_COUNT * FRAME_DURATION);	//half of first repeat
+		animation.step(FRAME_COUNT * FRAME_DURATION);	//second half of first repeat
+		
+		//then
+		assertTrue(animation.isPlaying());
+		
+		//when
+		animation.step(FRAME_COUNT * FRAME_DURATION);	//half of second repeat
+		animation.step(FRAME_COUNT * FRAME_DURATION);	//second half of second repeat
+		
+		//then
+		assertFalse(animation.isPlaying());
 	}
 }
