@@ -17,11 +17,10 @@ import com.zootcat.utils.BitMaskConverter;
  * OnCollide Controller - abstract class used to do some action when 
  * collision begins and ends.<br/> 
  * <br/>
- * OnEnter and OnLeave will be executed per actor, so even if Box2D 
- * uses collision on fixture level, OnEnter/OnLeave will be executed 
- * only once even if actor has different fixtures assigned to single
- * box2d body.<br/>
- * 
+ * OnEnter and OnLeave will be executed by default per fixture. It can be 
+ * changed by setting the 'collidePerActor' parameter, then the collision
+ * will count once per body, even if body has several fixtures.<br/>
+ *  * 
  * @override onEnter - will be executed when collision begins<br/>
  * @override onLeave - will be executed when collision ends<br/>
  * 
@@ -33,6 +32,8 @@ import com.zootcat.utils.BitMaskConverter;
  * 
  * @ctrlParam collideWithSensors - if sensors should count to collision, default true 
  * 
+ * @ctrlParam collidePerActor - if collision per actor rather than fixture should be counted
+ * 
  * @author Cream
  */
 public abstract class OnCollideController extends PhysicsCollisionController
@@ -40,10 +41,21 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	@CtrlParam(debug = true) private String category = null;
 	@CtrlParam(debug = true) private String mask = null;
 	@CtrlParam(debug = true) private boolean collideWithSensors = true;
+	@CtrlParam(debug = true) private boolean collidePerActor = false;
 	
 	private Filter filter;
 	private Set<ZootActor> collidingActors = new HashSet<ZootActor>();
 		
+	public OnCollideController()
+	{
+		//noop
+	}
+	
+	public OnCollideController(boolean collidePerActor)
+	{
+		this.collidePerActor = collidePerActor;
+	}
+	
 	@Override
 	public void init(ZootActor actor)
 	{		
@@ -62,22 +74,32 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	public void beginContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{				
 		ZootActor otherActor = getOtherActor(actorA, actorB);
-		if(collides(actorA, actorB, contact) && !collidingActors.contains(otherActor))
+		if(collides(actorA, actorB, contact) && beginCollisionCounts(otherActor))
 		{
 			collidingActors.add(otherActor);
 			onEnter(actorA, actorB, contact);
 		}
+	}
+
+	private boolean beginCollisionCounts(ZootActor otherActor)
+	{
+		return !collidePerActor || !collidingActors.contains(otherActor);
 	}
 	
 	@Override
 	public void endContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		ZootActor otherActor = getOtherActor(actorA, actorB);
-		if(collides(actorA, actorB, contact) && collidingActors.contains(otherActor))
+		if(collides(actorA, actorB, contact) && endCollisionCounts(otherActor))
 		{			
 			onLeave(actorA, actorB, contact);
 			collidingActors.remove(otherActor);
 		}
+	}
+	
+	private boolean endCollisionCounts(ZootActor otherActor)
+	{
+		return !collidePerActor || collidingActors.contains(otherActor);
 	}
 	
 	@Override

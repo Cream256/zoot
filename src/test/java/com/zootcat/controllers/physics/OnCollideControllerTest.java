@@ -29,6 +29,7 @@ public class OnCollideControllerTest
 	@Mock protected ZootActor ctrlActor;
 	@Mock protected ZootActor otherActor;
 	@Mock protected Fixture ctrlActorFixture;
+	@Mock protected Fixture ctrlActorFixture2;
 	@Mock protected Fixture otherActorFixture;
 	@Mock protected Fixture otherActorFixture2;
 	@Mock protected Contact contact;
@@ -41,7 +42,8 @@ public class OnCollideControllerTest
 		leaveCount = 0;
 		ctrlActorFilter = new Filter();
 		otherActorFilter = new Filter();		
-		ctrl = new OnCollideController(){
+		ctrl = new OnCollideController()
+		{
 			@Override
 			public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 			{
@@ -52,7 +54,8 @@ public class OnCollideControllerTest
 			public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
 			{
 				++leaveCount;
-			}};
+			}
+		};
 						
 		when(contact.getFixtureA()).thenReturn(ctrlActorFixture);
 		when(contact.getFixtureB()).thenReturn(otherActorFixture);
@@ -92,9 +95,23 @@ public class OnCollideControllerTest
 	}
 	
 	@Test
-	public void shouldBeginAndEndCollisionOnlyOncePerActorEvenIfActorBodyHasMultiplyFixtures()
+	public void shouldCollideOnlyPerActor()
 	{
 		//given
+		ctrl = new OnCollideController(true)
+		{
+			@Override
+			public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
+			{
+				++enterCount;
+			}
+
+			@Override
+			public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
+			{
+				++leaveCount;
+			}
+		};		
 		ctrl.init(ctrlActor);
 		
 		//when
@@ -118,6 +135,44 @@ public class OnCollideControllerTest
 		
 		//then
 		assertEquals("Collision should end", 1, leaveCount);
+	}
+	
+	@Test
+	public void shouldCollideForEachActorFixture()
+	{
+		//given
+		ctrl.init(ctrlActor);
+		
+		//when
+		when(contact.getFixtureA()).thenReturn(ctrlActorFixture);
+		when(contact.getFixtureB()).thenReturn(otherActorFixture);
+		ctrl.beginContact(ctrlActor, otherActor, contact);
+		
+		//then
+		assertEquals("Collision should begin", 1, enterCount);
+		
+		//when
+		when(contact.getFixtureA()).thenReturn(ctrlActorFixture2);
+		ctrl.beginContact(ctrlActor, otherActor, contact);
+		
+		//then
+		assertEquals("Collision with other fixture should also begin", 2, enterCount);
+		
+		//when
+		when(contact.getFixtureA()).thenReturn(ctrlActorFixture);
+		when(contact.getFixtureB()).thenReturn(otherActorFixture);
+		ctrl.endContact(ctrlActor, otherActor, contact);
+		
+		//then
+		assertEquals("Collision should end", 1, leaveCount);
+		
+		//when
+		when(contact.getFixtureA()).thenReturn(ctrlActorFixture2);
+		when(contact.getFixtureB()).thenReturn(otherActorFixture);
+		ctrl.endContact(ctrlActor, otherActor, contact);
+		
+		//then
+		assertEquals("Collision with other fixture should also end", 2, leaveCount);
 	}
 		
 	@Test

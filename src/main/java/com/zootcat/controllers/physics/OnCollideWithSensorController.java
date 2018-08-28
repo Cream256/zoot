@@ -82,8 +82,17 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
+		Fixture fixtureA = contact.getFixtureA();
+		Fixture fixtureB = contact.getFixtureB();
+		System.out.println("onEnter");
+		System.out.println(fixtureA + "[" + fixtureA.getUserData() +"]");
+		System.out.println(fixtureB + "[" + fixtureB.getUserData() +"]");
+				
 		if(collidedWithSensor(contact))
 		{
+			Fixture fix = getOtherFixture(actorA, actorB, contact);
+			System.out.println("+++ " + fix);
+			
 			collisions.add(getOtherFixture(actorA, actorB, contact));
 		}
 	}
@@ -91,6 +100,15 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	@Override
 	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
+		Fixture fixtureA = contact.getFixtureA();
+		Fixture fixtureB = contact.getFixtureB();
+		System.out.println("onLeave");
+		System.out.println(fixtureA + "[" + fixtureA.getUserData() +"]");
+		System.out.println(fixtureB + "[" + fixtureB.getUserData() +"]");
+		
+		System.out.println("--- " + getOtherFixture(actorA, actorB, contact));
+		
+		
 		collisions.remove(getOtherFixture(actorA, actorB, contact));
 	}
 
