@@ -44,6 +44,10 @@ public class WalkState extends BasicState
 		{
 			changeState(event, IdleState.ID);
 		}
+		else if(ZootStateUtils.isRunEvent(event) && ZootStateUtils.canActorRun(event))
+		{
+			changeState(event, RunState.ID);
+		}		
 		else if(event.getType() == ZootEventType.JumpUp && ZootStateUtils.canActorJump(event))
 		{		
 			changeState(event, JumpState.ID);

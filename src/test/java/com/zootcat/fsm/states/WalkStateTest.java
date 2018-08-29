@@ -135,4 +135,19 @@ public class WalkStateTest extends ZootStateTestCase
 		assertTrue(walkState.handle(createEvent(ZootEventType.Hurt)));
 		assertEquals(HurtState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
+	
+	@Test
+	public void handleRunEvent()
+	{
+		assertTrue(walkState.handle(createEvent(ZootEventType.RunRight)));
+		assertEquals(RunState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleRunEventWhenActorCantRun()
+	{
+		when(moveableCtrlMock.canRun()).thenReturn(false);
+		assertTrue(walkState.handle(createEvent(ZootEventType.RunRight)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
 }
