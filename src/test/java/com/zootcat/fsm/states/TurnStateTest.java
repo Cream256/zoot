@@ -25,13 +25,13 @@ public class TurnStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void getIdTest()
+	public void getId()
 	{
 		assertEquals(TurnState.ID, turnState.getId());
 	}
 	
 	@Test
-	public void onEnterShouldNotChangeAnimationIfTurnAnimationIsNotPresentTest()
+	public void onEnterShouldNotChangeAnimationIfTurnAnimationIsNotPresent()
 	{
 		when(animatedSpriteCtrlMock.getAnimation(turnState.getName())).thenReturn(null);
 		turnState.onEnter(actor, null);
@@ -40,7 +40,7 @@ public class TurnStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onEnterShouldSetTurnAnimationIfPresentTest()
+	public void onEnterShouldSetTurnAnimationIfPresent()
 	{
 		when(animatedSpriteCtrlMock.getAnimation(turnState.getName())).thenReturn(turnAnimationMock);
 		turnState.onEnter(actor, null);
@@ -49,7 +49,7 @@ public class TurnStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onUpdateShouldChangeToIdleStateWhenThereIsNoAnimationTest()
+	public void onUpdateShouldChangeToIdleStateWhenThereIsNoAnimation()
 	{
 		//given
 		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Right);
@@ -66,7 +66,7 @@ public class TurnStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onUpdateShouldChangeToIdleStateWhenAnimationHasFinishedTest()
+	public void onUpdateShouldChangeToIdleStateWhenAnimationHasFinished()
 	{
 		//given
 		when(animatedSpriteCtrlMock.getAnimation(turnState.getName())).thenReturn(turnAnimationMock);
@@ -91,7 +91,7 @@ public class TurnStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onLeaveShouldChangeDirectionTest()
+	public void onLeaveShouldChangeDirection()
 	{
 		//given right
 		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Right);		
@@ -115,21 +115,37 @@ public class TurnStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void handleJumpUpEventTest()
+	public void handleJumpUpEvent()
 	{
 		assertTrue(turnState.handle(createEvent(ZootEventType.JumpUp)));
 		assertEquals(JumpState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test
-	public void handleJumpForwardEventTest()
+	public void handleJumpUpEventWhenActorCantJump()
+	{
+		when(moveableCtrlMock.canJump()).thenReturn(false);		
+		assertTrue(turnState.handle(createEvent(ZootEventType.JumpUp)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleJumpForwardEvent()
 	{
 		assertTrue(turnState.handle(createEvent(ZootEventType.JumpForward)));
 		assertEquals(JumpForwardState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test
-	public void handleHurtEventTest()
+	public void handleJumpForwardEventWhenActorCantJump()
+	{
+		when(moveableCtrlMock.canJump()).thenReturn(false);
+		assertTrue(turnState.handle(createEvent(ZootEventType.JumpForward)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleHurtEvent()
 	{
 		assertTrue(turnState.handle(createEvent(ZootEventType.Hurt)));
 		assertEquals(HurtState.ID, actor.getStateMachine().getCurrentState().getId());

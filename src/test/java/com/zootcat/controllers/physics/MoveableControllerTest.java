@@ -1,6 +1,8 @@
 package com.zootcat.controllers.physics;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -130,6 +132,21 @@ public class MoveableControllerTest
 		verify(physicsCtrl).setVelocity(-RUN_VEL, 0.0f, true, false);
 	}
 	
+	
+	@Test
+	public void shouldNotRunWhenCanRunIsSetToFalse()
+	{
+		//when
+		ctrl.onAdd(actor);
+		ctrl.setCanRun(false);
+		ctrl.run(ZootDirection.Left);
+		ctrl.run(ZootDirection.Right);
+		
+		//then
+		verify(physicsCtrl, times(0)).setVelocity(-RUN_VEL, 0.0f, true, false);
+		verify(physicsCtrl, times(0)).setVelocity(RUN_VEL, 0.0f, true, false);
+	}
+	
 	@Test
 	public void shouldJumpUp()
 	{
@@ -222,6 +239,20 @@ public class MoveableControllerTest
 				
 		//then
 		verify(physicsCtrl).setVelocity(2.56f, 5.12f, true, true);
+	}
+	
+	@Test
+	public void shouldNotJumpAtAllWhenCanJumpIsSetToFalse()
+	{
+		//when
+		ctrl.onAdd(actor);
+		ctrl.setCanJump(false);
+		ctrl.jumpForward(ZootDirection.Right);
+		ctrl.jumpForward(ZootDirection.Left);
+		ctrl.jumpForward(ZootDirection.Up);
+		
+		//then
+		verify(physicsCtrl, times(0)).setVelocity(JUMP_FORWARD_VEL_X, JUMP_FORWARD_VEL_Y, true, true);
 	}
 	
 	@Test
@@ -356,5 +387,37 @@ public class MoveableControllerTest
 	{
 		ctrl.setJumpUpVelocity(0.5f);
 		assertEquals(0.5f, ctrl.getJumpUpVelocity(), 0.0f);		
+	}
+	
+	@Test
+	public void shouldGetDefaultCanJumpValue()
+	{
+		assertTrue(ctrl.canJump());
+	}
+	
+	@Test
+	public void shouldSetCanJump()
+	{
+		ctrl.setCanJump(false);
+		assertFalse(ctrl.canJump());
+		
+		ctrl.setCanJump(true);
+		assertTrue(ctrl.canJump());
+	}
+	
+	@Test
+	public void shouldGetDefaultCanRunValue()
+	{
+		assertTrue(ctrl.canRun());
+	}
+	
+	@Test
+	public void shouldSetCanRun()
+	{
+		ctrl.setCanRun(false);
+		assertFalse(ctrl.canRun());
+		
+		ctrl.setCanRun(true);
+		assertTrue(ctrl.canRun());		
 	}
 }

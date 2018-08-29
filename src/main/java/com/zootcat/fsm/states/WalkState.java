@@ -44,11 +44,11 @@ public class WalkState extends BasicState
 		{
 			changeState(event, IdleState.ID);
 		}
-		else if(event.getType() == ZootEventType.JumpUp)
+		else if(event.getType() == ZootEventType.JumpUp && ZootStateUtils.canActorJump(event))
 		{		
 			changeState(event, JumpState.ID);
 		}
-		else if(event.getType() == ZootEventType.JumpForward)
+		else if(event.getType() == ZootEventType.JumpForward && ZootStateUtils.canActorJump(event))
 		{
 			changeState(event, JumpForwardState.ID);
 		}	

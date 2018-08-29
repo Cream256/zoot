@@ -18,6 +18,8 @@ import com.zootcat.utils.ZootUtils;
  * @ctrlParam inAirVelX - horizontal velocity that will be used to move actor in air
  * @ctrlParam maxInAirVel - maximum allowed horizontal velocity when moving in air
  * @ctrlParam jumpTimeout - timeout in ms after which actor can try to jump again, default 100
+ * @ctrlParam canJump - if the actor can jump, default true
+ * @ctrlParam canRun - if the actor can run, default true
  * @author Cream
  *
  */
@@ -30,6 +32,8 @@ public class MoveableController extends ControllerAdapter
 	@CtrlParam(debug = true) private float jumpForwardVelY = 1.0f;	
 	@CtrlParam(debug = true) private float inAirVelX = 1.0f;			
 	@CtrlParam(debug = true) private int jumpTimeout = 100;
+	@CtrlParam(debug = true) private boolean canJump = true;
+	@CtrlParam(debug = true) private boolean canRun = true;
 	@CtrlDebug private int timeout = 0;
 	
 	private PhysicsBodyController physicsCtrl;
@@ -86,6 +90,26 @@ public class MoveableController extends ControllerAdapter
 		return jumpUpVel;
 	}
 	
+	public boolean canJump()
+	{
+		return canJump;
+	}
+	
+	public void setCanJump(boolean value)
+	{
+		canJump = value;
+	}
+	
+	public boolean canRun()
+	{
+		return canRun;
+	}
+	
+	public void setCanRun(boolean value)
+	{
+		canRun = value;
+	}
+	
 	public void jumpUp()
 	{
 		jumpUp(true);
@@ -93,7 +117,7 @@ public class MoveableController extends ControllerAdapter
 	
 	public void jumpUp(boolean verifyJump)
 	{
-		if(verifyJump && !canJump()) return;
+		if(verifyJump && !canMakeJump()) return;
 		
 		physicsCtrl.setVelocity(0.0f, jumpUpVel, false, true);
 		setTimeout();
@@ -106,7 +130,7 @@ public class MoveableController extends ControllerAdapter
 	
 	public void jumpForward(ZootDirection direction, boolean verifyJump)
 	{
-		if(verifyJump && !canJump()) return;
+		if(verifyJump && !canMakeJump()) return;
 		
 		physicsCtrl.setVelocity(jumpForwardVelX * direction.getHorizontalValue(), jumpForwardVelY, true, true);
 		setTimeout();
@@ -132,7 +156,10 @@ public class MoveableController extends ControllerAdapter
 
 	public void run(ZootDirection direction)
 	{
-		physicsCtrl.setVelocity(runVel * direction.getHorizontalValue(), 0.0f, true, false);
+		if(canRun())
+		{
+			physicsCtrl.setVelocity(runVel * direction.getHorizontalValue(), 0.0f, true, false);	
+		}
 	}
 	
 	public void stop()
@@ -140,9 +167,9 @@ public class MoveableController extends ControllerAdapter
 		physicsCtrl.setVelocity(0.0f, 0.0f, true, false);
 	}
 	
-	protected boolean canJump()
+	protected boolean canMakeJump()
 	{
-		return timeout == 0 && groundCtrl.isOnGround();
+		return timeout == 0 && canJump() && groundCtrl.isOnGround();
 	}
 	
 	protected void setTimeout()

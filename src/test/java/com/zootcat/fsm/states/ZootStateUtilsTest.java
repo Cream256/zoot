@@ -3,11 +3,15 @@ package com.zootcat.fsm.states;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 
+import com.zootcat.controllers.physics.MoveableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 
 public class ZootStateUtilsTest
@@ -78,5 +82,85 @@ public class ZootStateUtilsTest
 		assertFalse(ZootStateUtils.isRunEvent(new ZootEvent(ZootEventType.Collide)));
 		assertFalse(ZootStateUtils.isRunEvent(new ZootEvent(ZootEventType.Stop)));
 		assertFalse(ZootStateUtils.isRunEvent(new ZootEvent(ZootEventType.Update)));
+	}
+	
+	@Test
+	public void shouldReturnCanRunValueFromController()
+	{
+		//given
+		MoveableController moveableCtrl = mock(MoveableController.class);
+		ZootActor actor = new ZootActor();
+		actor.addController(moveableCtrl);
+		
+		ZootEvent event = new ZootEvent();
+		event.setTarget(actor);
+		
+		//when
+		when(moveableCtrl.canRun()).thenReturn(true);
+		
+		//then
+		assertTrue(ZootStateUtils.canActorRun(event));
+		
+		//when
+		when(moveableCtrl.canRun()).thenReturn(false);
+	
+		//then
+		assertFalse(ZootStateUtils.canActorRun(event));		
+	}
+	
+	@Test
+	public void shouldReturnFalseForCanRunWhenNoMovementControllerIsPresent()
+	{
+		ZootActor actor = new ZootActor();
+		ZootEvent event = new ZootEvent();
+		event.setTarget(actor);
+		
+		assertTrue(ZootStateUtils.canActorRun(event));
+	}
+	
+	@Test
+	public void shouldReturnFalseForCanRunWhenEventHasNoActor()
+	{
+		assertTrue(ZootStateUtils.canActorRun(new ZootEvent()));
+	}
+	
+	@Test
+	public void shouldReturnCanJumpValueFromController()
+	{
+		//given
+		MoveableController moveableCtrl = mock(MoveableController.class);
+		ZootActor actor = new ZootActor();
+		actor.addController(moveableCtrl);
+		
+		ZootEvent event = new ZootEvent();
+		event.setTarget(actor);
+		
+		//when
+		when(moveableCtrl.canJump()).thenReturn(true);
+		
+		//then
+		assertTrue(ZootStateUtils.canActorJump(event));
+		
+		//when
+		when(moveableCtrl.canJump()).thenReturn(false);
+	
+		//then
+		assertFalse(ZootStateUtils.canActorJump(event));		
+	}
+	
+	@Test
+	public void shouldReturnTrueForCanJumpWhenNoMovementControllerIsPresent()
+	{
+		ZootActor actor = new ZootActor();
+		ZootEvent event = new ZootEvent();
+		event.setTarget(actor);
+		
+		assertTrue(ZootStateUtils.canActorJump(event));
+	}
+	
+	@Test
+	public void shouldReturnFalseForCanJumpWhenEventHasNoActor()
+	{
+		assertTrue(ZootStateUtils.canActorJump(new ZootEvent()));
 	}
 }

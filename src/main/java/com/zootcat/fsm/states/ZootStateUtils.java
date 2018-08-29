@@ -3,9 +3,11 @@ package com.zootcat.fsm.states;
 import java.util.Arrays;
 import java.util.List;
 
+import com.zootcat.controllers.physics.MoveableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEventTypeEnum;
+import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 
 public class ZootStateUtils
@@ -30,6 +32,23 @@ public class ZootStateUtils
 	public static boolean isRunEvent(ZootEvent event)
 	{
 		return RUN_EVENTS.contains(event.getType());
+	}
+	
+	public static boolean canActorRun(ZootEvent event)
+	{
+		MoveableController moveCtrl = getMoveableController(event.getTargetZootActor());
+		return moveCtrl != null ? moveCtrl.canRun() : true;
+	}
+	
+	public static boolean canActorJump(ZootEvent event)
+	{
+		MoveableController moveCtrl = getMoveableController(event.getTargetZootActor());
+		return moveCtrl != null ? moveCtrl.canJump() : true;
+	}
+	
+	private static MoveableController getMoveableController(ZootActor actor)
+	{
+		return actor != null ? actor.tryGetController(MoveableController.class) : null;
 	}
 	
 	public static ZootDirection getDirectionFromEvent(ZootEvent event)

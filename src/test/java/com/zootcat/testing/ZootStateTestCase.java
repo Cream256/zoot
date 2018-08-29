@@ -1,5 +1,7 @@
 package com.zootcat.testing;
 
+import static org.mockito.Mockito.when;
+
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -33,6 +35,9 @@ public class ZootStateTestCase
 		actor.addController(directionCtrlMock);
 		actor.addController(moveableCtrlMock);
 		actor.addController(lifeCtrlMock);
+		
+		when(moveableCtrlMock.canJump()).thenReturn(true);
+		when(moveableCtrlMock.canRun()).thenReturn(true);
 		
 		DefaultStateMachineController smCtrl = new DefaultStateMachineController();
 		smCtrl.init(actor);

@@ -25,13 +25,13 @@ public class IdleStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void getIdTest()
+	public void getId()
 	{
 		assertEquals(IdleState.ID, idleState.getId());
 	}
 	
 	@Test
-	public void onEnterShouldSetIdleAnimationTest()
+	public void onEnterShouldSetIdleAnimation()
 	{
 		//first invocation is done by DefaultStateMachineController
 		verify(animatedSpriteCtrlMock, times(1)).setAnimation(idleState.getName());
@@ -40,7 +40,7 @@ public class IdleStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onEnterShouldZeroHoritontalVelocityActorTest()
+	public void onEnterShouldZeroHoritontalVelocityActor()
 	{
 		//first invocation is done by DefaultStateMachineController
 		verify(animatedSpriteCtrlMock, times(1)).setAnimation(idleState.getName());
@@ -49,7 +49,33 @@ public class IdleStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void handleWalkEventAtTheSameDirectionTest()
+	public void handleRunEvent()
+	{
+		//when
+		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Right);
+		when(moveableCtrlMock.canRun()).thenReturn(true);
+		idleState.onEnter(actor, null);
+		
+		//then
+		assertTrue(idleState.handle(createEvent(ZootEventType.RunRight)));
+		assertEquals(RunState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleRunEventWhenActorCantRun()
+	{
+		//when
+		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Right);
+		when(moveableCtrlMock.canRun()).thenReturn(false);
+		idleState.onEnter(actor, null);
+		
+		//then
+		assertTrue(idleState.handle(createEvent(ZootEventType.RunRight)));
+		assertEquals(WalkState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleWalkEventAtTheSameDirection()
 	{
 		//when
 		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Right);		
@@ -69,7 +95,7 @@ public class IdleStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void handleWalkEventAtDifferentDirectionTest()
+	public void handleWalkEventAtDifferentDirection()
 	{
 		//when
 		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Left);		
@@ -89,56 +115,72 @@ public class IdleStateTest extends ZootStateTestCase
 	}
 		
 	@Test
-	public void handleJumpUpEventTest()
+	public void handleJumpUpEvent()
 	{
 		assertTrue(idleState.handle(createEvent(ZootEventType.JumpUp)));
 		assertEquals(JumpState.ID, actor.getStateMachine().getCurrentState().getId());
 	}	
 	
 	@Test
-	public void handleJumpForwardEventTest()
+	public void handleJumpUpEventWhenActorCantJump()
+	{
+		when(moveableCtrlMock.canJump()).thenReturn(false);
+		assertTrue(idleState.handle(createEvent(ZootEventType.JumpUp)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleJumpForwardEvent()
 	{
 		assertTrue(idleState.handle(createEvent(ZootEventType.JumpForward)));
 		assertEquals(JumpForwardState.ID, actor.getStateMachine().getCurrentState().getId());
-	}		
+	}
 	
 	@Test
-	public void handleFallEventTest()
+	public void handleJumpForwardEventWhenActorCantJump()
+	{
+		when(moveableCtrlMock.canJump()).thenReturn(false);
+		assertTrue(idleState.handle(createEvent(ZootEventType.JumpForward)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleFallEvent()
 	{
 		assertTrue(idleState.handle(createEvent(ZootEventType.Fall)));
 		assertEquals(FallState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test
-	public void handleInAirEventTest()
+	public void handleInAirEvent()
 	{
 		assertTrue(idleState.handle(createEvent(ZootEventType.InAir)));
 		assertEquals(FallState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test
-	public void handleAttackEventTest()
+	public void handleAttackEvent()
 	{
 		assertTrue(idleState.handle(createEvent(ZootEventType.Attack)));
 		assertEquals(AttackState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test
-	public void handleHurtEventTest()
+	public void handleHurtEvent()
 	{
 		assertTrue(idleState.handle(createEvent(ZootEventType.Hurt)));
 		assertEquals(HurtState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test
-	public void handleDownEventTest()
+	public void handleDownEvent()
 	{
 		assertTrue(idleState.handle(createEvent(ZootEventType.Down)));
 		assertEquals(DownState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test
-	public void handleDeadEventTest()
+	public void handleDeadEvent()
 	{
 		assertTrue(idleState.handle(createEvent(ZootEventType.Dead)));
 		assertEquals(DeadState.ID, actor.getStateMachine().getCurrentState().getId());
