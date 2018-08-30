@@ -33,6 +33,14 @@ public class ZootActions
 		return moveAction;
 	}
 	
+	public static ZootPositionActorAction positionActorAction(ZootActor actor, float x, float y)
+	{
+		ZootPositionActorAction positionAction = zootAction(ZootPositionActorAction.class);
+		positionAction.setPosition(x, y);
+		positionAction.setTarget(actor);
+		return positionAction;
+	}
+	
 	public static ZootAddControllerAction addControllerAction(ZootActor actor, Controller ctrl)
 	{
 		ZootAddControllerAction addCtrlAction = zootAction(ZootAddControllerAction.class);

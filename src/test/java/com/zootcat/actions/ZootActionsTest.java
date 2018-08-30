@@ -44,6 +44,18 @@ public class ZootActionsTest
 	}
 	
 	@Test
+	public void shouldCreatePositionActorAction()
+	{
+		final float posX = 16.0f;
+		final float posY = 32.0f;
+		ZootPositionActorAction action = ZootActions.positionActorAction(actor, posX, posY);
+		assertEquals(actor, action.getTargetZootActor());
+		assertEquals(posX, action.getX(), 0.0f);
+		assertEquals(posY, action.getY(), 0.0f);
+		assertNotNull(action.getPool());
+	}
+	
+	@Test
 	public void shouldCreateAddControllerAction()
 	{
 		Controller ctrl = mock(Controller.class);
