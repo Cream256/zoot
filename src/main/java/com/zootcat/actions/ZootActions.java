@@ -1,5 +1,6 @@
 package com.zootcat.actions;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.zootcat.controllers.Controller;
@@ -46,5 +47,13 @@ public class ZootActions
 		removeCtrlAction.setController(ctrl);
 		removeCtrlAction.setTarget(actor);
 		return removeCtrlAction;
+	}
+	
+	public static ZootParabolicMovementAction parabolicMovementAction(ZootActor actor, Vector2 peak, Vector2 pointOnParabole)
+	{
+		ZootParabolicMovementAction parabolicAction = zootAction(ZootParabolicMovementAction.class);
+		parabolicAction.setParaboleParams(peak, pointOnParabole);
+		parabolicAction.setTarget(actor);
+		return parabolicAction;
 	}
 }

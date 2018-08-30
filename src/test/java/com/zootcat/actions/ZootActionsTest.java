@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.Controller;
 import com.zootcat.scene.ZootActor;
 
@@ -60,5 +61,17 @@ public class ZootActionsTest
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(ctrl, action.getController());
 		assertNotNull(action.getPool());		
+	}
+	
+	@Test
+	public void shouldCreateParabolicMovementAction()
+	{
+		Vector2 peak = new Vector2(10.0f, 10.0f);
+		Vector2 point = new Vector2(5.0f, 5.0f);
+		
+		ZootParabolicMovementAction action = ZootActions.parabolicMovementAction(actor, peak, point);
+		assertEquals(actor, action.getTargetZootActor());
+		assertNotNull(action.getParabole());
+		assertNotNull(action.getPool());
 	}
 }
