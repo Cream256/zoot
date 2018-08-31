@@ -12,9 +12,11 @@ public abstract class CollectOnCollideController extends OnCollideController
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
-		onCollect(getControllerActor(), getOtherActor(actorA, actorB));
-		ZootEvents.fireAndFree(getControllerActor(), ZootEventType.Dead);
-		getControllerActor().addAction(Actions.removeActor());
+		if(onCollect(getControllerActor(), getOtherActor(actorA, actorB)))
+		{
+			ZootEvents.fireAndFree(getControllerActor(), ZootEventType.Dead);
+			getControllerActor().addAction(Actions.removeActor());
+		}
 	}
 
 	@Override
@@ -23,5 +25,12 @@ public abstract class CollectOnCollideController extends OnCollideController
 		//noop		
 	}
 	
-	public abstract void onCollect(ZootActor collectible, ZootActor collector);
+	/**
+	 * Method that is called when collision occurs and the collectible is trying to
+	 * be collected by the collector.
+	 * @param collectible - collectible actor (like life, mana, any other bonus)
+	 * @param collector - collector actor (like player, npc)
+	 * @return true if collection was successful, false otherwise
+	 */
+	public abstract boolean onCollect(ZootActor collectible, ZootActor collector);
 }

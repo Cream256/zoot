@@ -20,7 +20,8 @@ public class CollectOnCollideControllerTest
 	@Mock private Contact contact;
 	@Mock private ZootActor collector;
 	@Mock private ZootActor collectible;
-	private CollectOnCollideController ctrl;
+	private CollectOnCollideController collectingCtrl;
+	private CollectOnCollideController notCollectingCtrl;
 	private boolean onCollectCalled;
 	
 	@Before
@@ -28,16 +29,28 @@ public class CollectOnCollideControllerTest
 	{
 		MockitoAnnotations.initMocks(this);	
 		onCollectCalled = false;
-		ctrl = new CollectOnCollideController(){
+		collectingCtrl = new CollectOnCollideController()
+		{
 			@Override
-			public void onCollect(ZootActor collectible, ZootActor collector)
+			public boolean onCollect(ZootActor collectible, ZootActor collector)
 			{
 				onCollectCalled = true;
-			}};
+				return true;
+			}
+		};
+		notCollectingCtrl = new CollectOnCollideController() 
+		{
+			@Override
+			public boolean onCollect(ZootActor collectible, ZootActor collector)
+			{
+				onCollectCalled = true;
+				return false;
+			}
+		};
 	}
 	
 	@Test
-	public void onEnterTest()
+	public void shouldRemoveCollectibleOnCollection()
 	{
 		//given
 		collector = new ZootActor();
@@ -47,8 +60,8 @@ public class CollectOnCollideControllerTest
 		collectible.addListener(counter);
 			
 		//when		
-		ctrl.init(collectible);
-		ctrl.onEnter(collectible, collector, contact);
+		collectingCtrl.init(collectible);
+		collectingCtrl.onEnter(collectible, collector, contact);
 		
 		//then
 		assertEquals("Dead event should be send", 1, counter.getCount());		
@@ -58,16 +71,36 @@ public class CollectOnCollideControllerTest
 	}
 	
 	@Test
-	public void onLeaveTest()
+	public void shouldNotRemoveCollectibleOnCollection()
 	{
-		ctrl.onLeave(collector, collectible, contact);
+		//given
+		collector = new ZootActor();
+		collectible = new ZootActor();
+		
+		ZootActorEventCounterListener counter = new ZootActorEventCounterListener();
+		collectible.addListener(counter);
+			
+		//when		
+		notCollectingCtrl.init(collectible);
+		notCollectingCtrl.onEnter(collectible, collector, contact);
+		
+		//then
+		assertEquals("Dead event should not be send", 0, counter.getCount());		
+		assertTrue("Remove action should not be added", collectible.getActions().size == 0);
+		assertTrue("onCollect should be called", onCollectCalled);
+	}
+	
+	@Test
+	public void shouldDoNothingOnLeave()
+	{
+		collectingCtrl.onLeave(collector, collectible, contact);
 		verifyZeroInteractions(collector, collectible, contact);
 	}
 
 	@Test
-	public void onCollectTest()
+	public void shuoldDoNothingOnCollect()
 	{
-		ctrl.onCollect(collectible, collector);
+		collectingCtrl.onCollect(collectible, collector);
 		verifyZeroInteractions(collector, collectible);
 	}
 }

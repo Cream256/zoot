@@ -1,6 +1,7 @@
 package com.zootcat.controllers.logic;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,9 +41,9 @@ public class CollectForLifeControllerTest
 		ControllerAnnotations.setControllerParameter(ctrl, "life", 0);
 		ControllerAnnotations.setControllerParameter(ctrl, "maxLife", 1);		
 		collector.addController(lifeCtrl);
-		ctrl.onCollect(collectible, collector);
 		
 		//then
+		assertTrue(ctrl.onCollect(collectible, collector));
 		assertEquals(LifeController.DEFAULT_LIFE, lifeCtrl.getValue());
 		assertEquals(LifeController.DEFAULT_LIFE + 1, lifeCtrl.getMaxValue());
 	}
@@ -63,9 +64,9 @@ public class CollectForLifeControllerTest
 		ControllerAnnotations.setControllerParameter(ctrl, "life", lifeToAdd);
 		ControllerAnnotations.setControllerParameter(ctrl, "maxLife", 0);
 		collector.addController(lifeCtrl);
-		ctrl.onCollect(collectible, collector);
-		
+				
 		//then
+		assertTrue(ctrl.onCollect(collectible, collector));
 		assertEquals(life + lifeToAdd, lifeCtrl.getValue());
 		assertEquals(maxLife, lifeCtrl.getMaxValue());
 	}
@@ -87,9 +88,9 @@ public class CollectForLifeControllerTest
 		ControllerAnnotations.setControllerParameter(ctrl, "life", lifeToAdd);
 		ControllerAnnotations.setControllerParameter(ctrl, "maxLife", maxLifeToAdd);
 		collector.addController(lifeCtrl);
-		ctrl.onCollect(collectible, collector);
 		
 		//then
+		assertTrue(ctrl.onCollect(collectible, collector));
 		assertEquals(life + lifeToAdd, lifeCtrl.getValue());
 		assertEquals(maxLife + maxLifeToAdd, lifeCtrl.getMaxValue());		
 	}
