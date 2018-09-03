@@ -41,9 +41,10 @@ public class DetectGroundController extends PhysicsCollisionController
 	private Fixture feetSensor;
 	private ZootActor actorWithSensor;
 	private PhysicsBodyController physicsCtrl;
-	private Set<Fixture> collidedFixtures = new HashSet<Fixture>();
-	private Set<Fixture> ignoredFixtures = new HashSet<Fixture>();
 	
+	private Set<Fixture> collidedFixtures = new HashSet<Fixture>();
+	private Set<Fixture> disabledFixtures = new HashSet<Fixture>();
+		
 	@Override
 	public void onAdd(ZootActor actor)
 	{
@@ -61,15 +62,16 @@ public class DetectGroundController extends PhysicsCollisionController
 		//cleanup
 		feetShape.dispose();
 		collidedFixtures.clear();
-		ignoredFixtures.clear();
+		disabledFixtures.clear();
 	}
 
 	@Override
 	public void onRemove(ZootActor actor)
 	{
 		super.onRemove(actor);
+		
 		collidedFixtures.clear();
-		ignoredFixtures.clear();
+		disabledFixtures.clear();
 		physicsCtrl.removeFixture(feetSensor);
 		physicsCtrl = null;
 	}
@@ -77,13 +79,20 @@ public class DetectGroundController extends PhysicsCollisionController
 	@Override
 	public void onUpdate(float delta, ZootActor actor)
 	{
-		isOnGround = collidedFixtures.size() - ignoredFixtures.size() > 0;
+		isOnGround = collidedFixtures.stream().anyMatch(fix -> shouldCollide(fix));		
 		if(isOnGround)
 		{
 			ZootEvents.fireAndFree(actorWithSensor, ZootEventType.Ground);
 		}
 	}
 	
+	private boolean shouldCollide(Fixture fixture)
+	{
+		boolean contactEnabled = !disabledFixtures.contains(fixture);
+		boolean fixtureIsSensor = fixture.isSensor();	
+		return contactEnabled && !fixtureIsSensor;
+	}
+		
 	@Override
 	public void beginContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
@@ -97,26 +106,25 @@ public class DetectGroundController extends PhysicsCollisionController
 	public void endContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		if(isContactWithFeetSensor(actorA, actorB, contact))
-		{
-			Fixture otherFixture = getOtherFixture(contact);			
-			collidedFixtures.remove(otherFixture);
-			ignoredFixtures.remove(otherFixture);
+		{			
+			collidedFixtures.remove(getOtherFixture(contact));
+			disabledFixtures.remove(getOtherFixture(contact));
 		}
 	}
 		
+	//Box2D enables all contacts after postSolve step, so we need to keep track of them 
+	//in the preSolve step
 	@Override
 	public void preSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
 	{	
 		Fixture otherFixture = getOtherFixture(contact);
-		boolean shouldFilter = shouldFilter(contact, otherFixture);
-		
-		if(shouldFilter && !ignoredFixtures.contains(otherFixture) && collidedFixtures.contains(otherFixture)) 
-		{			
-			ignoredFixtures.add(otherFixture);
-		}		
-		else if(!shouldFilter && ignoredFixtures.contains(otherFixture))
-		{	
-			ignoredFixtures.remove(otherFixture);
+		if(!contact.isEnabled() && collidedFixtures.contains(otherFixture))
+		{
+			disabledFixtures.add(otherFixture);
+		}
+		else if(contact.isEnabled() && disabledFixtures.contains(otherFixture))
+		{
+			disabledFixtures.remove(otherFixture);
 		}
 	}
 
@@ -135,14 +143,7 @@ public class DetectGroundController extends PhysicsCollisionController
 	{
 		return feetSensor;
 	}
-	
-	private boolean shouldFilter(Contact contact, Fixture otherFixture)
-	{
-		boolean contactNotEnabled = !contact.isEnabled();
-		boolean fixtureIsSensor = otherFixture.isSensor();	
-		return contactNotEnabled || fixtureIsSensor;
-	}
-	
+		
 	private boolean isContactWithFeetSensor(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		return contact.getFixtureA() == feetSensor || contact.getFixtureB() == feetSensor;		
