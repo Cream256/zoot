@@ -32,4 +32,24 @@ public class ApplyImpulseController implements Controller
 	{
 		actor.controllerAction(PhysicsBodyController.class, ctrl -> ctrl.applyImpulse(impulseX * delta, impulseY * delta));
 	}
+	
+	public float getImpulseX()
+	{
+		return impulseX;
+	}
+	
+	public float getImpulseY()
+	{
+		return impulseY;
+	}
+	
+	public void setImpulseX(float value)
+	{
+		impulseX = value;
+	}
+	
+	public void setImpulseY(float value)
+	{
+		impulseY = value;
+	}
 }

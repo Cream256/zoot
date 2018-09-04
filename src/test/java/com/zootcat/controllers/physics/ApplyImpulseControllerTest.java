@@ -1,6 +1,7 @@
 package com.zootcat.controllers.physics;
 
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -33,6 +34,20 @@ public class ApplyImpulseControllerTest
 		controller = new ApplyImpulseController();
 		ControllerAnnotations.setControllerParameter(controller, "impulseX", IMPULSE_X);
 		ControllerAnnotations.setControllerParameter(controller, "impulseY", IMPULSE_Y);
+	}
+	
+	@Test
+	public void shouldSetImpulseX()
+	{
+		controller.setImpulseX(5.0f);
+		assertEquals(5.0f, controller.getImpulseX(), 0.0f);		
+	}
+	
+	@Test
+	public void shouldSetImpulseY()
+	{
+		controller.setImpulseY(7.0f);
+		assertEquals(7.0f, controller.getImpulseY(), 0.0f);
 	}
 	
 	@Test
