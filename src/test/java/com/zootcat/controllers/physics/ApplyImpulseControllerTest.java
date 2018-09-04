@@ -3,25 +3,23 @@ package com.zootcat.controllers.physics;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.scene.ZootActor;
 
-
 public class ApplyImpulseControllerTest
 {
-	private static final float IMPULSE_X = 123.0f;
-	private static final float IMPULSE_Y = 234.0f;
-	
-	private ZootActor otherActor;
+	private static final float IMPULSE_X = 1.0f;
+	private static final float IMPULSE_Y = 2.0f;
+		
+	private ZootActor controllerActor;
 	private ApplyImpulseController controller;
-	@Mock private ZootActor controllerActor;
 	@Mock private PhysicsBodyController physicsBodyCtrl;	
 		
 	@Before
@@ -29,52 +27,63 @@ public class ApplyImpulseControllerTest
 	{
 		MockitoAnnotations.initMocks(this);
 		
-		otherActor = new ZootActor();
-		otherActor.addController(physicsBodyCtrl);
+		controllerActor = new ZootActor();
+		controllerActor.addController(physicsBodyCtrl);
 		
 		controller = new ApplyImpulseController();
 		ControllerAnnotations.setControllerParameter(controller, "impulseX", IMPULSE_X);
 		ControllerAnnotations.setControllerParameter(controller, "impulseY", IMPULSE_Y);
-		controller.init(controllerActor);
 	}
 	
 	@Test
-	public void shouldApplyImpulseContinously()
+	public void shouldApplyImpulse()
 	{
-		//given
-		ControllerAnnotations.setControllerParameter(controller, "continous", true);
-		controller.onEnter(controllerActor, otherActor, mock(Contact.class));
-		
-		//when
 		controller.onUpdate(1.0f, controllerActor);
-		
-		//then
 		verify(physicsBodyCtrl).applyImpulse(IMPULSE_X, IMPULSE_Y);
 		
-		//when
 		controller.onUpdate(1.0f, controllerActor);
-		
-		//then
 		verify(physicsBodyCtrl, times(2)).applyImpulse(IMPULSE_X, IMPULSE_Y);
+		
+		controller.onUpdate(0.5f, controllerActor);
+		verify(physicsBodyCtrl).applyImpulse(IMPULSE_X * 0.5f, IMPULSE_Y * 0.5f);
 	}
 	
 	@Test
-	public void shouldApplyImpulseOnce()
+	public void shouldDoNothingOnInit()
 	{
 		//given
-		ControllerAnnotations.setControllerParameter(controller, "continous", false);
-		controller.onEnter(controllerActor, otherActor, mock(Contact.class));
+		ZootActor actor = mock(ZootActor.class);
 		
 		//when
-		controller.onUpdate(1.0f, controllerActor);
+		controller.init(actor);
 		
 		//then
-		verify(physicsBodyCtrl).applyImpulse(IMPULSE_X, IMPULSE_Y);
+		verifyNoMoreInteractions(actor);
+	}
+	
+	@Test
+	public void shouldDoNothingOnAdd()
+	{
+		//given
+		ZootActor actor = mock(ZootActor.class);
 		
 		//when
-		controller.onUpdate(1.0f, controllerActor);
+		controller.onAdd(actor);
 		
-		//then no more invocations
-		verify(physicsBodyCtrl).applyImpulse(IMPULSE_X, IMPULSE_Y);		
+		//then
+		verifyNoMoreInteractions(actor);		
+	}
+	
+	@Test
+	public void shouldDoNothingOnLeave()
+	{
+		//given
+		ZootActor actor = mock(ZootActor.class);
+		
+		//when
+		controller.onRemove(actor);
+		
+		//then
+		verifyNoMoreInteractions(actor);		
 	}	
 }
