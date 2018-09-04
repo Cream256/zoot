@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -149,8 +148,7 @@ public class BuoyancyController {
                 fixtures.add(fixture);
             }
         } catch (ClassCastException e) {
-            Gdx.app.debug("BuoyancyController",
-                    "Fixture shape is not an instance of PolygonShape.");
+            //Gdx.app.debug("BuoyancyController", "Fixture shape is not an instance of PolygonShape.");
         }
     }
 

@@ -15,8 +15,8 @@ public class WaterController extends OnCollideController
     @CtrlParam(debug = true) public float fluidDrag = 0.25f;
     @CtrlParam(debug = true) public float fluidLift = 0.25f;
     @CtrlParam(debug = true) public float linearDrag = 0;
-    @CtrlParam(debug = true) public float maxFluidDrag = 2000;
-    @CtrlParam(debug = true) public float maxFluidLift = 500;
+    @CtrlParam(debug = true) public float maxFluidDrag = 5000;
+    @CtrlParam(debug = true) public float maxFluidLift = 2000;
 	
 	private BuoyancyController buoyancyCtrl;
 		
