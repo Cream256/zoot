@@ -41,11 +41,12 @@ public class ClimbControllerTest
 	@Mock private Contact contact;
 	@Mock private Manifold manifold;
 	@Mock private Fixture otherFixture;
-	@Mock private ZootActor otherActor;
 	@Mock private ContactImpulse contactImpulse;
+	@Mock private ClimbPropertiesController climbPropCtrl;
 		
 	private ClimbController ctrl;
 	private ZootActor ctrlActor;
+	private ZootActor otherActor;
 	private ZootPhysics physics;
 	private PhysicsBodyController physicsCtrl;
 	private ZootActorEventCounterListener eventCounter;
@@ -59,10 +60,13 @@ public class ClimbControllerTest
 		physics = new ZootPhysics();
 		when(scene.getPhysics()).thenReturn(physics);
 		when(scene.getUnitScale()).thenReturn(1.0f);
-		
+				
 		//ctrl actor
 		ctrlActor = new ZootActor();
 		ctrlActor.setSize(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
+		
+		//other actor
+		otherActor = new ZootActor();
 		
 		//event counter
 		eventCounter = new ZootActorEventCounterListener();
@@ -183,6 +187,38 @@ public class ClimbControllerTest
 		
 		//then
 		assertFalse(ctrl.isFixtureGrabbable(ctrlActor, sensor, fixtureToGrab));
+	}
+	
+	@Test
+	public void shouldNotBeAbleToGrabFixtureIfItHasGrabbablePropertySetToFalse()
+	{
+		//given
+		otherActor.addController(climbPropCtrl);
+		when(climbPropCtrl.canGrab()).thenReturn(false);
+				
+		//when
+		Fixture sensor = createFixture(true, new Vector2(), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
+		Fixture fixtureToGrab = createFixture(false, new Vector2(), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
+		when(fixtureToGrab.getUserData()).thenReturn(otherActor);
+		
+		//then
+		assertFalse(ctrl.isFixtureGrabbable(ctrlActor, sensor, fixtureToGrab));
+	}
+	
+	@Test
+	public void shouldBeAbleToGrabFixtureIfItHasGrabbablePropertySetToTrue()
+	{
+		//given
+		otherActor.addController(climbPropCtrl);
+		when(climbPropCtrl.canGrab()).thenReturn(true);
+				
+		//when
+		Fixture sensor = createFixture(true, new Vector2(), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
+		Fixture fixtureToGrab = createFixture(false, new Vector2(), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
+		when(fixtureToGrab.getUserData()).thenReturn(otherActor);
+		
+		//then
+		assertTrue(ctrl.isFixtureGrabbable(ctrlActor, sensor, fixtureToGrab));
 	}
 		
 	@Test

@@ -258,10 +258,20 @@ public class ClimbController extends OnCollideWithSensorController
 	public boolean isFixtureGrabbable(ZootActor actor, Fixture sensorFixture, Fixture grabbableFixture)
 	{
 		boolean notSensor = !grabbableFixture.isSensor();
-		boolean collidingWithFixtureTop = isCollidingWithFixtureTop(sensorFixture, grabbableFixture);
-		return notSensor && collidingWithFixtureTop;
+		boolean collidingWithFixtureTop = isCollidingWithFixtureTop(sensorFixture, grabbableFixture);		
+		boolean hasGrabbableProperty = hasGrabbableProperty(grabbableFixture);
+		return notSensor && collidingWithFixtureTop && hasGrabbableProperty;
 	}
 	
+	private boolean hasGrabbableProperty(Fixture grabbableFixture)
+	{
+		ZootActor fixtureActor = (ZootActor) grabbableFixture.getUserData();
+		if(fixtureActor == null) return true;
+		
+		ClimbPropertiesController ctrl = fixtureActor.tryGetController(ClimbPropertiesController.class);
+		return ctrl == null ? true : ctrl.canGrab();
+	}
+
 	private boolean isCollidingWithFixtureTop(Fixture actorSensorFixture, Fixture platformFixture)
 	{
 		ZootBoundingBoxFactory.createAtRef(actorSensorFixture, actorBoxCache);
