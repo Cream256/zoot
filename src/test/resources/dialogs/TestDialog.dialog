@@ -1,0 +1,45 @@
+#
+# Simple dialog
+#
+:Test1
+	actorName=First
+	facePosition=left
+	faceImage=/data/gfx/characters/First.png
+	dialogImage=/data/gfx/items/FirstDialogImage.jpg
+	line1=Line 1
+	line2=Line 2
+	line3=Line 3
+:~Test1
+
+:Test1
+	actorName=Second
+	facePosition=right
+	faceImage=/data/gfx/characters/Second.png
+	dialogImage=/data/gfx/items/SecondDialogImage.jpg
+	line1=Line 1
+	line2=Line 2
+	line3=Line 3
+:~Test1
+
+:Test1
+	actorName=Third
+	facePosition=none
+	faceImage=/data/gfx/characters/Third.png
+	dialogImage=/data/gfx/items/ThirdDialogImage.jpg
+	line1=Line 1
+	line2=Line 2
+	line3=Line 3
+:~Test1
+
+#
+# Dialog with not found faces and images
+#
+:NoFace
+	actorName=Third
+	facePosition=none
+	faceImage=/data/gfx/characters/NoFace.png
+	dialogImage=/data/gfx/items/NoImage.jpg
+	line1=Line 1
+	line2=Line 2
+	line3=Line 3
+:~NoFace
