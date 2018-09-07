@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.controllers.factory.ControllerFactory;
@@ -19,16 +20,18 @@ public abstract class ZootGame extends Game
 	private float unitPerTile = 1.0f;
 	private float viewportWidth = 16.0f;
 	private float viewportHeight = 9.0f;
-	private String currentLevelPath;
+	private Screen previousScreen;
+	private String currentLevelPath;	
 	private ZootAssetManager assetManager;
 	private ControllerFactory controllerFactory;
 	private Function<ZootGame, ZootLoadingScreen> loadingScreenSupplier;
 	private BiFunction<ZootGame, ZootScene, ZootSceneScreen> sceneScreenSupplier;
-		
+	
 	public ZootGame()
 	{
 		assetManager = new ZootAssetManager();
 		controllerFactory = new ControllerFactory();
+		controllerFactory.addGlobalParameter("game", this);
 		loadingScreenSupplier = (game) -> new ZootLoadingScreen(game);
 		sceneScreenSupplier = (game, scene) -> new ZootSceneScreen(game, scene);
 	}
@@ -38,8 +41,26 @@ public abstract class ZootGame extends Game
     {
     	super.dispose();
     	
+    	if(previousScreen != null) getPreviousScreen().dispose();
+    	previousScreen = null;
+    	
+    	if(super.screen != null) getScreen().dispose();    	
+    	super.screen = null;
+    	
     	assetManager.dispose();
     	assetManager = null;
+    }
+    
+    @Override
+	public void setScreen (Screen screen) 
+    {
+		previousScreen = getScreen();
+    	super.setScreen(screen);
+	}
+    
+    public Screen getPreviousScreen()
+    {
+    	return previousScreen;
     }
     
     public void restartCurrentLevel()
