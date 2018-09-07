@@ -63,8 +63,7 @@ public class ZootSceneScreen implements Screen
 	@Override
 	public void hide()
 	{
-		deassignInput();
-		dispose();		
+		deassignInput();	
 	}
 
 	@Override

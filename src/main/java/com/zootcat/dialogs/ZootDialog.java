@@ -10,7 +10,7 @@ import com.zootcat.scene.ZootDirection;
 import com.zootcat.textdata.TextDataFile;
 import com.zootcat.textdata.TextDataSection;
 
-public class Dialog 
+public class ZootDialog 
 {
 	private static final int MAX_LINES = 5;
 	private static final float CHARS_PER_SECOND = 50.0f;
@@ -29,12 +29,12 @@ public class Dialog
     private Texture currentImage = null;
     private ZootAssetManager assetManager;
         
-    public Dialog(String path, String startToken, String endToken, ZootAssetManager assetManager) throws ZootException
+    public ZootDialog(String path, String startToken, String endToken, ZootAssetManager assetManager) throws ZootException
     {
         this(new TextDataFile(new File(path)), startToken, endToken, assetManager);
     }
     
-    public Dialog(TextDataFile dialogFile, String startToken, String endToken, ZootAssetManager assetManager) throws ZootException
+    public ZootDialog(TextDataFile dialogFile, String startToken, String endToken, ZootAssetManager assetManager) throws ZootException
     {        
         List<TextDataSection> settingFrames = dialogFile.readSections(":Settings", ":EndSettings");
         if(settingFrames.size() > 0)
