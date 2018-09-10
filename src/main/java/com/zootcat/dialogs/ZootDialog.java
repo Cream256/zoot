@@ -74,7 +74,7 @@ public class ZootDialog
         try
         {
             currentFaceFileName = currentFrame.getString("faceImage", "");            
-            currentFace = assetManager.get(currentFaceFileName, Texture.class);
+            currentFace = assetManager.getOrLoad(currentFaceFileName, Texture.class);
         }
         catch(Exception e)
         {
@@ -83,14 +83,14 @@ public class ZootDialog
         try
         {
         	String currentImageFileName = currentFrame.getString("dialogImage", "");
-        	currentImage = assetManager.get(currentImageFileName, Texture.class);
+        	currentImage = assetManager.getOrLoad(currentImageFileName, Texture.class);
         }
         catch(Exception e)
         {
         	currentImage = null;
         }
     }
-    
+        
     public Texture getCurrentFace()
     {
         return currentFace;

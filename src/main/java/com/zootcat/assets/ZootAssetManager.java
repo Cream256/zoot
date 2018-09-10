@@ -30,4 +30,19 @@ public class ZootAssetManager extends AssetManager
 		setLoader(ZootTiledMap.class, new ZootTiledMapLoader(assetRecognizer));
 		setLoader(ZootAnimationFile.class, new ZootAnimationFileLoader(assetRecognizer));
 	}
+	
+	public <T> T getOrLoad(String filename, Class<T> clazz)
+	{
+		if(filename == null || filename.isEmpty())
+		{
+			return null;
+		}
+		
+		if(!isLoaded(filename, clazz))
+		{
+			load(filename, clazz);
+			finishLoading();
+		}
+		return get(filename, clazz);
+	}
 }

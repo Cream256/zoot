@@ -124,6 +124,12 @@ public class ZootGameTest
 	}
 	
 	@Test
+	public void shouldSetGraphicsFactoryGlobalParameterForControllerFactory()
+	{
+		assertNotNull(game.getControllerFactory().getGlobalParameters().get("graphicsFactory"));
+	}
+	
+	@Test
 	public void shouldReturnPreviousScreen()
 	{
 		//given

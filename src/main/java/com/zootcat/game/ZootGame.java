@@ -9,6 +9,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.controllers.factory.ControllerFactory;
+import com.zootcat.gfx.ZootGraphicsFactory;
 import com.zootcat.map.tiled.ZootTiledMap;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.scene.tiled.ZootTiledScene;
@@ -32,6 +33,7 @@ public abstract class ZootGame extends Game
 		assetManager = new ZootAssetManager();
 		controllerFactory = new ControllerFactory();
 		controllerFactory.addGlobalParameter("game", this);
+		controllerFactory.addGlobalParameter("graphicsFactory", new ZootGraphicsFactory());
 		loadingScreenSupplier = (game) -> new ZootLoadingScreen(game);
 		sceneScreenSupplier = (game, scene) -> new ZootSceneScreen(game, scene);
 	}

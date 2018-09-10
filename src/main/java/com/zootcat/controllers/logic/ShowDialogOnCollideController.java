@@ -7,7 +7,10 @@ import com.zootcat.controllers.physics.OnCollideController;
 import com.zootcat.dialogs.ZootDialog;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.exceptions.ZootException;
+import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.game.ZootGame;
+import com.zootcat.gfx.ZootGraphicsFactory;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.screen.ZootDialogScreen;
 
@@ -17,7 +20,8 @@ public class ShowDialogOnCollideController extends OnCollideController
 	@CtrlParam private String path = "";	
 	@CtrlParam(global = true) private ZootGame game;
 	@CtrlParam(global = true) private ZootAssetManager assetManager;
-	
+	@CtrlParam(global = true) private ZootGraphicsFactory graphicsFactory;
+		
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
@@ -30,9 +34,12 @@ public class ShowDialogOnCollideController extends OnCollideController
 			String endToken = String.format(":~%s", token);
 			ZootDialog dialog = new ZootDialog(path, startToken, endToken, assetManager);
 			
-			ZootDialogScreen dialogScreen = new ZootDialogScreen(game);
+			ZootActor triggeringActor = getOtherActor(actorA, actorB);
+			triggeringActor.fire(ZootEvents.get(ZootEventType.Stop));
+			
+			ZootDialogScreen dialogScreen = new ZootDialogScreen(game, graphicsFactory);
 			dialogScreen.setDialog(dialog);
-			dialogScreen.setTriggeringActor(getOtherActor(actorA, actorB));
+			dialogScreen.setTriggeringActor(triggeringActor);
 			game.setScreen(dialogScreen);
 		}
 		catch (ZootException e)
