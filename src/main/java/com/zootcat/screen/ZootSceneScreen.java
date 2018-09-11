@@ -91,8 +91,8 @@ public class ZootSceneScreen implements ZootScreen
 	}
 
 	public void onUpdate(float delta)
-	{
-        inputManager.processPressedKeys(delta);
+	{		
+		inputManager.processPressedKeys(delta);
         scene.update(delta);
 	}
 
@@ -123,7 +123,8 @@ public class ZootSceneScreen implements ZootScreen
 	
 	protected void deassignInput()
 	{
-		inputManager.clear();		
+		inputManager.clear();
+		inputManager.clearPressedKeys();
 		Gdx.input.setInputProcessor(null);
 	}
 }

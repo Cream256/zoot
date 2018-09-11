@@ -87,6 +87,7 @@ public class ZootDialogScreen extends ZootScreenAdapter
 		}
 				
 		//render previous screen
+		if(dialog.isRealTime()) previousScreen.onUpdate(delta);
 		previousScreen.onRender(delta);
 				
 		//get face

@@ -66,6 +66,11 @@ public class ZootInputManager extends InputAdapter
 	{
 		pressedKeys.forEach((key) -> keyDown(key));
 	}
+	
+	public void clearPressedKeys()
+	{
+		pressedKeys.clear();
+	}
 
 	public void addProcessor(InputProcessor inputProcessor) 
 	{
