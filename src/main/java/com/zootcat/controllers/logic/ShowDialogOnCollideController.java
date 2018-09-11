@@ -21,15 +21,20 @@ public class ShowDialogOnCollideController extends OnCollideController
 	@CtrlParam(global = true) private ZootGame game;
 	@CtrlParam(global = true) private ZootAssetManager assetManager;
 	@CtrlParam(global = true) private ZootGraphicsFactory graphicsFactory;
+	
+	private boolean shown = false;
 		
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		if(path.isEmpty()) throw new RuntimeZootException("No dialog path was given for ShowDialogOnCollideController");
 		if(token.isEmpty()) throw new RuntimeZootException("No dialog token was given for ShowDialogOnCollideController");
+		if(shown) return;
 		
 		try
 		{
+			shown = true;
+			
 			String startToken = String.format(":%s", token);
 			String endToken = String.format(":~%s", token);
 			ZootDialog dialog = new ZootDialog(path, startToken, endToken, assetManager);

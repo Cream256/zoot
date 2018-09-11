@@ -3,11 +3,10 @@ package com.zootcat.screen;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.zootcat.game.ZootGame;
 
-public class ZootLoadingScreen implements Screen
+public class ZootLoadingScreen extends ZootScreenAdapter
 {
 	private int allCount;
 	private int finishedCount;
@@ -82,37 +81,7 @@ public class ZootLoadingScreen implements Screen
 		float progress = finishedCount / (float)allCount;		
 		return Float.isNaN(progress) ? 0.0f : progress;
 	}
-	
-	@Override
-	public void resize(int width, int height)
-	{
-		//noop		
-	}
-
-	@Override
-	public void pause()
-	{
-		//noop		
-	}
-
-	@Override
-	public void resume()
-	{
-		//noop		
-	}
-
-	@Override
-	public void hide()
-	{
-		//noop
-	}
-
-	@Override
-	public void dispose()
-	{
-		//noop
-	}
-	
+		
 	public void onFinishLoading(Consumer<ZootGame> consumer)
 	{
 		onFinishLoading = consumer;

@@ -4,8 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,7 +15,6 @@ import org.mockito.InOrder;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.screen.ZootScreen;

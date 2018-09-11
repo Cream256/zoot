@@ -3,6 +3,7 @@ package com.zootcat.controllers.logic;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
@@ -65,6 +66,15 @@ public class ShowDialogOnCollideControllerTest
 		
 		assertEquals(1, eventCounter.getCount());
 		assertEquals(ZootEventType.Stop, eventCounter.getLastZootEvent().getType());
+	}
+	
+	@Test
+	public void shouldEnterDialogOnlyOnce()
+	{
+		controller.onEnter(otherActor, controllerActor, mock(Contact.class));
+		controller.onEnter(otherActor, controllerActor, mock(Contact.class));
+		controller.onEnter(otherActor, controllerActor, mock(Contact.class));
+		verify(game, times(1)).setScreen(any(ZootDialogScreen.class));
 	}
 	
 	@Test

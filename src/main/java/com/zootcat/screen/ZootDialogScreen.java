@@ -1,8 +1,6 @@
 package com.zootcat.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -78,7 +76,7 @@ public class ZootDialogScreen extends ZootScreenAdapter
 		dialog.forceFinish();
 		return true;
 	}
-
+	
 	@Override
 	public void render(float delta)
 	{
