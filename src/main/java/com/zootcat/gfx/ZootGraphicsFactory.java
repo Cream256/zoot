@@ -1,5 +1,6 @@
 package com.zootcat.gfx;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -15,5 +16,10 @@ public class ZootGraphicsFactory
 	public ShapeRenderer createShapeRenderer()
 	{
 		return new ShapeRenderer();
+	}
+	
+	public BitmapFont createBitmapFont()
+	{
+		return new BitmapFont();
 	}
 }

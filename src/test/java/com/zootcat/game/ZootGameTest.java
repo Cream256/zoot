@@ -17,6 +17,7 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.assets.ZootAssetManager;
+import com.zootcat.screen.ZootScreen;
 
 public class ZootGameTest
 {
@@ -45,8 +46,8 @@ public class ZootGameTest
 	public void shouldDisposeScreens()
 	{
 		//given
-		Screen screen1 = mock(Screen.class);
-		Screen screen2 = mock(Screen.class);
+		ZootScreen screen1 = mock(ZootScreen.class);
+		ZootScreen screen2 = mock(ZootScreen.class);
 		
 		//when
 		game.setScreen(screen1);
@@ -73,7 +74,7 @@ public class ZootGameTest
 	public void shouldHideCurrentSceneOnDispose()
 	{
 		//given
-		Screen screen1 = mock(Screen.class);
+		ZootScreen screen1 = mock(ZootScreen.class);
 		game.setScreen(screen1);
 		
 		//when
@@ -133,8 +134,8 @@ public class ZootGameTest
 	public void shouldReturnPreviousScreen()
 	{
 		//given
-		Screen screen1 = mock(Screen.class);
-		Screen screen2 = mock(Screen.class);
+		ZootScreen screen1 = mock(ZootScreen.class);
+		ZootScreen screen2 = mock(ZootScreen.class);
 		
 		//then
 		assertNull(game.getPreviousScreen());

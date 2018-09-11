@@ -1,12 +1,11 @@
 package com.zootcat.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.zootcat.game.ZootGame;
 import com.zootcat.input.ZootInputManager;
 import com.zootcat.scene.ZootScene;
 
-public class ZootSceneScreen implements Screen
+public class ZootSceneScreen implements ZootScreen
 {
 	private ZootGame game;
 	private ZootScene scene;

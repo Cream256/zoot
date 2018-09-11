@@ -9,19 +9,21 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.controllers.factory.ControllerFactory;
+import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.gfx.ZootGraphicsFactory;
 import com.zootcat.map.tiled.ZootTiledMap;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.scene.tiled.ZootTiledScene;
 import com.zootcat.screen.ZootLoadingScreen;
 import com.zootcat.screen.ZootSceneScreen;
+import com.zootcat.screen.ZootScreen;
 
 public abstract class ZootGame extends Game
 {		
 	private float unitPerTile = 1.0f;
 	private float viewportWidth = 16.0f;
 	private float viewportHeight = 9.0f;
-	private Screen previousScreen;
+	private ZootScreen previousScreen;
 	private String currentLevelPath;	
 	private ZootAssetManager assetManager;
 	private ControllerFactory controllerFactory;
@@ -56,11 +58,16 @@ public abstract class ZootGame extends Game
     @Override
 	public void setScreen (Screen screen) 
     {
-		previousScreen = getScreen();
+		if(!(screen instanceof ZootScreen))
+		{
+			throw new RuntimeZootException("Screen must be instance of ZootScreen");
+		}
+    	
+    	previousScreen = (ZootScreen)getScreen();
     	super.setScreen(screen);
 	}
     
-    public Screen getPreviousScreen()
+    public ZootScreen getPreviousScreen()
     {
     	return previousScreen;
     }
