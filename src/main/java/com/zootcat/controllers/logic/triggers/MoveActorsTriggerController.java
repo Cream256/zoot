@@ -41,7 +41,7 @@ public class MoveActorsTriggerController extends TriggerEventListener
 		
 		scene.getActors(act -> act.getName().equalsIgnoreCase(actorName)).forEach(act -> 
 		{
-			act.addAction(ZootActions.moveActorAction(act, distX, distY));
+			act.addAction(ZootActions.moveActor(act, distX, distY));
 		});
 	}
 }

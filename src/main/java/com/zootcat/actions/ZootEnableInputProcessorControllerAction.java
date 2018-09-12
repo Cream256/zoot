@@ -2,7 +2,7 @@ package com.zootcat.actions;
 
 import com.zootcat.controllers.input.InputProcessorController;
 
-public class EnableInputProcessorControllerAction extends ZootAction
+public class ZootEnableInputProcessorControllerAction extends ZootAction
 {
 	private boolean controllerEnabled = true;
 	

@@ -21,6 +21,6 @@ public class DieOnCollideController extends OnCollideController
 	
 	protected void die()
 	{
-		getControllerActor().addAction(ZootActions.killActorAction(getControllerActor()));
+		getControllerActor().addAction(ZootActions.killActor(getControllerActor()));
 	}
 }

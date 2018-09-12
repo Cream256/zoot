@@ -11,11 +11,11 @@ import com.badlogic.gdx.InputProcessor;
 import com.zootcat.controllers.input.InputProcessorController;
 import com.zootcat.scene.ZootActor;
 
-public class EnableInputProcessorControllerActionTest
+public class ZootEnableInputProcessorControllerActionTest
 {
 	private ZootActor targetActor;
 	private InputProcessorController inputProcessorCtrl;
-	private EnableInputProcessorControllerAction action;
+	private ZootEnableInputProcessorControllerAction action;
 	
 	@Before
 	public void setup()
@@ -24,7 +24,7 @@ public class EnableInputProcessorControllerActionTest
 		targetActor = new ZootActor();
 		targetActor.addController(inputProcessorCtrl);		
 		
-		action = new EnableInputProcessorControllerAction();
+		action = new ZootEnableInputProcessorControllerAction();
 		action.setTarget(targetActor);
 	}
 	

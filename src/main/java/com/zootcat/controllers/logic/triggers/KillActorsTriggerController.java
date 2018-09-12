@@ -15,7 +15,7 @@ public class KillActorsTriggerController extends TriggerEventListener
 	{
 		scene.getActors(act -> act.getName().equalsIgnoreCase(actorName)).forEach(act -> 
 		{
-			act.addAction(ZootActions.killActorAction(act));	 
+			act.addAction(ZootActions.killActor(act));	 
 		});
 	}
 

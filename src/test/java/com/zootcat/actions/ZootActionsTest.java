@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.Vector2;
+import com.zootcat.camera.ZootCamera;
 import com.zootcat.controllers.Controller;
 import com.zootcat.scene.ZootActor;
 
@@ -27,7 +28,7 @@ public class ZootActionsTest
 	@Test
 	public void shouldCreateKillActorAction()
 	{
-		ZootKillActorAction action = ZootActions.killActorAction(actor);
+		ZootKillActorAction action = ZootActions.killActor(actor);
 		assertEquals(actor, action.getTargetZootActor());
 		assertNotNull(action.getPool());
 	}
@@ -37,7 +38,7 @@ public class ZootActionsTest
 	{
 		final float mx = 16.0f;
 		final float my = 32.0f;
-		ZootMoveActorAction action = ZootActions.moveActorAction(actor, mx, my);
+		ZootMoveActorAction action = ZootActions.moveActor(actor, mx, my);
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(mx, action.getMovementX(), 0.0f);
 		assertEquals(my, action.getMovementY(), 0.0f);
@@ -49,7 +50,7 @@ public class ZootActionsTest
 	{
 		final float posX = 16.0f;
 		final float posY = 32.0f;
-		ZootPositionActorAction action = ZootActions.positionActorAction(actor, posX, posY);
+		ZootPositionActorAction action = ZootActions.positionActor(actor, posX, posY);
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(posX, action.getX(), 0.0f);
 		assertEquals(posY, action.getY(), 0.0f);
@@ -60,7 +61,7 @@ public class ZootActionsTest
 	public void shouldCreateAddControllerAction()
 	{
 		Controller ctrl = mock(Controller.class);
-		ZootAddControllerAction action = ZootActions.addControllerAction(actor, ctrl);		
+		ZootAddControllerAction action = ZootActions.addController(actor, ctrl);		
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(ctrl, action.getController());
 		assertNotNull(action.getPool());
@@ -70,7 +71,7 @@ public class ZootActionsTest
 	public void shouldCreateRemoveControllerAction()
 	{
 		Controller ctrl = mock(Controller.class);
-		ZootRemoveControllerAction action = ZootActions.removeControllerAction(actor, ctrl);		
+		ZootRemoveControllerAction action = ZootActions.removeController(actor, ctrl);		
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(ctrl, action.getController());
 		assertNotNull(action.getPool());		
@@ -82,7 +83,7 @@ public class ZootActionsTest
 		Vector2 peak = new Vector2(10.0f, 10.0f);
 		Vector2 point = new Vector2(5.0f, 5.0f);
 		
-		ZootParabolicMovementAction action = ZootActions.parabolicMovementAction(actor, peak, point);
+		ZootParabolicMovementAction action = ZootActions.parabolicMovement(actor, peak, point);
 		assertEquals(actor, action.getTargetZootActor());
 		assertNotNull(action.getParabole());
 		assertNotNull(action.getPool());
@@ -91,8 +92,17 @@ public class ZootActionsTest
 	@Test
 	public void shouldCreateEnableInputProcessorControllerAction()
 	{
-		EnableInputProcessorControllerAction action = ZootActions.enableInputProcessorControllerAction(actor, false);
+		ZootEnableInputProcessorControllerAction action = ZootActions.enableInputProcessorController(actor, false);
 		assertEquals(actor, action.getTargetZootActor());
 		assertFalse(action.getControllerEnabled());
+	}
+	
+	@Test
+	public void shouldCreateCameraFocusAction()
+	{
+		ZootCamera camera = new ZootCamera(1.0f, 1.0f);		
+		ZootCameraFocusAction action = ZootActions.cameraFocus(camera, actor);
+		assertEquals(actor, action.getTargetZootActor());
+		assertEquals(camera, action.getCamera());
 	}
 }
