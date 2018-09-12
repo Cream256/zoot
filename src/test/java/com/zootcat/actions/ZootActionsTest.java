@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.camera.ZootCamera;
 import com.zootcat.controllers.Controller;
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.game.ZootGame;
 import com.zootcat.scene.ZootActor;
 
@@ -114,5 +115,14 @@ public class ZootActionsTest
 		ZootCameraFocusAction action = ZootActions.cameraFocus(camera, actor);
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(camera, action.getCamera());
-	}	
+	}
+	
+	@Test
+	public void shouldCreateFireEventAction()
+	{
+		ZootEvent event = mock(ZootEvent.class);
+		ZootFireEventAction action = ZootActions.fireEvent(actor, event);
+		assertEquals(actor, action.getTargetZootActor());
+		assertEquals(event, action.getEvent());
+	}
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.zootcat.camera.ZootCamera;
 import com.zootcat.controllers.Controller;
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.game.ZootGame;
 import com.zootcat.scene.ZootActor;
 
@@ -89,5 +90,14 @@ public class ZootActions
 		cameraFocusAction.setTarget(target);
 		cameraFocusAction.setCamera(camera);
 		return cameraFocusAction;		
+	}
+	
+	public static ZootFireEventAction fireEvent(ZootActor target, ZootEvent event)
+	{
+		ZootFireEventAction fireEventAction = new ZootFireEventAction();
+		fireEventAction.setTarget(target);
+		fireEventAction.setEvent(event);
+		return fireEventAction;
+		
 	}
 }
