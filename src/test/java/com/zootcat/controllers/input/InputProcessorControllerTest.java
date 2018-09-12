@@ -23,7 +23,7 @@ public class InputProcessorControllerTest
 	}
 	
 	@Test
-	public void keyDownTest()
+	public void shouldProcessKeyDown()
 	{
 		//given
 		InputEvent event = mock(InputEvent.class);
@@ -36,7 +36,7 @@ public class InputProcessorControllerTest
 	}
 	
 	@Test
-	public void keyUpTest()
+	public void shouldProcessKeyUp()
 	{
 		//given
 		InputEvent event = mock(InputEvent.class);
@@ -49,7 +49,7 @@ public class InputProcessorControllerTest
 	}
 	
 	@Test
-	public void keyTypedTest()
+	public void shouldProcessKeyTyped()
 	{
 		//given
 		InputEvent event = mock(InputEvent.class);
@@ -59,6 +59,40 @@ public class InputProcessorControllerTest
 		//then
 		assertTrue(ctrl.keyTyped(event, 'A'));
 		assertFalse(ctrl.keyTyped(event, 'B'));
+	}
+	
+	@Test
+	public void shouldBeEnabledByDefault()
+	{
+		assertTrue(ctrl.isEnabled());
+	}
+	
+	@Test
+	public void shouldSetEnabled()
+	{
+		ctrl.setEnabled(false);
+		assertFalse(ctrl.isEnabled());
+		
+		ctrl.setEnabled(true);
+		assertTrue(ctrl.isEnabled());
+	}
+	
+	@Test
+	public void shouldNotProcessKeysWhenDisabled()
+	{
+		//given
+		InputEvent event = mock(InputEvent.class);
+		when(inputProcessor.keyDown(Input.Keys.UP)).thenReturn(true);
+		when(inputProcessor.keyUp(Input.Keys.UP)).thenReturn(true);
+		when(inputProcessor.keyTyped('A')).thenReturn(true);
+		
+		//when		
+		ctrl.setEnabled(false);
+				
+		//then
+		assertFalse(ctrl.keyDown(event, Input.Keys.UP));
+		assertFalse(ctrl.keyUp(event, Input.Keys.UP));
+		assertFalse(ctrl.keyTyped(event, 'A'));		
 	}
 	
 }
