@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.zootcat.camera.ZootCamera;
 import com.zootcat.controllers.Controller;
+import com.zootcat.game.ZootGame;
 import com.zootcat.scene.ZootActor;
 
 public class ZootActions
@@ -72,6 +73,14 @@ public class ZootActions
 		enableInputProcessorAction.setTarget(target);
 		enableInputProcessorAction.setControllerEnabled(enabled);
 		return enableInputProcessorAction;
+	}
+	
+	public static ZootEnableInputAction enableInput(ZootGame game, boolean enabled)
+	{
+		ZootEnableInputAction enableInputAction = zootAction(ZootEnableInputAction.class);
+		enableInputAction.setGame(game);
+		enableInputAction.setInputEnabled(enabled);		
+		return enableInputAction;
 	}
 	
 	public static ZootCameraFocusAction cameraFocus(ZootCamera camera, ZootActor target)

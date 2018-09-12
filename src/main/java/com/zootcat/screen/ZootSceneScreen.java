@@ -1,8 +1,6 @@
 package com.zootcat.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.zootcat.game.ZootGame;
-import com.zootcat.input.ZootInputManager;
 import com.zootcat.scene.ZootScene;
 
 public class ZootSceneScreen implements ZootScreen
@@ -48,23 +46,17 @@ public class ZootSceneScreen implements ZootScreen
 	@Override
 	public void show()
 	{			
-		createHud();
-		assignInput();
+		//noop
 	}
 	
-	protected void createHud()
+	@Override
+	public void hide()
 	{
 		//noop
 	}
 
 	@Override
-	public void hide()
-	{
-		deassignInput();	
-	}
-
-	@Override
-	public void render(float delta)
+	public final void render(float delta)
 	{
         if(isPaused() || !hasScene())
         {
@@ -107,19 +99,5 @@ public class ZootSceneScreen implements ZootScreen
 	public boolean isPaused()
 	{
 		return paused;
-	}
-				
-	//TODO remove?
-	protected void assignInput()
-	{
-		//Gdx.input.setInputProcessor(inputManager);
-	}
-	
-	//TODO remove?
-	protected void deassignInput()
-	{
-		//inputManager.clear();
-		//inputManager.clearPressedKeys();
-		//Gdx.input.setInputProcessor(null);
 	}
 }

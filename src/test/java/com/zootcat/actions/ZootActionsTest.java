@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.camera.ZootCamera;
 import com.zootcat.controllers.Controller;
+import com.zootcat.game.ZootGame;
 import com.zootcat.scene.ZootActor;
 
 public class ZootActionsTest
@@ -98,11 +99,20 @@ public class ZootActionsTest
 	}
 	
 	@Test
+	public void shouldCreateEnableInputAction()
+	{
+		ZootGame game = mock(ZootGame.class);
+		ZootEnableInputAction action = ZootActions.enableInput(game, false);
+		assertEquals(game, action.getGame());
+		assertFalse(action.isInputEnabled());		
+	}
+	
+	@Test
 	public void shouldCreateCameraFocusAction()
 	{
 		ZootCamera camera = new ZootCamera(1.0f, 1.0f);		
 		ZootCameraFocusAction action = ZootActions.cameraFocus(camera, actor);
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(camera, action.getCamera());
-	}
+	}	
 }
