@@ -9,8 +9,18 @@ import com.badlogic.gdx.InputProcessor;
 
 public class ZootInputManager extends InputAdapter 
 {
+	private InputMultiplexer multiplexer;
 	private Set<Integer> pressedKeys = new HashSet<Integer>();
-	private InputMultiplexer multiplexer = new InputMultiplexer();
+		
+	public ZootInputManager()
+	{
+		this(new InputMultiplexer());
+	}
+	
+	public ZootInputManager(InputMultiplexer multiplexer)
+	{
+		this.multiplexer = multiplexer;
+	}
 	
 	@Override
 	public boolean keyDown (int keycode) 
@@ -85,5 +95,10 @@ public class ZootInputManager extends InputAdapter
 	public void clear()
 	{
 		multiplexer.clear();
+	}
+	
+	public int getProcessorsCount()
+	{
+		return multiplexer.size();
 	}
 }
