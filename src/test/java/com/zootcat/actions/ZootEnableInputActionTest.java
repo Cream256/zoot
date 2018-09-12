@@ -69,4 +69,14 @@ public class ZootEnableInputActionTest
 		
 		verify(inputManager).enable(false);
 	}
+	
+	@Test
+	public void shouldClearPressedKeys()
+	{
+		action.setGame(game);
+		action.setInputEnabled(false);
+		action.act(1.0f);
+		
+		verify(inputManager).clearPressedKeys();
+	}
 }

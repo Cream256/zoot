@@ -11,6 +11,7 @@ public class ZootEnableInputAction extends ZootAction
 	public boolean act(float delta)
 	{
 		game.getInputManager().enable(inputEnabled);
+		game.getInputManager().clearPressedKeys();
 		return true;
 	}
 	

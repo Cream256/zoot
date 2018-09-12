@@ -98,6 +98,5 @@ public class ZootActions
 		fireEventAction.setTarget(target);
 		fireEventAction.setEvent(event);
 		return fireEventAction;
-		
 	}
 }
