@@ -28,7 +28,9 @@ public class ZootInputManagerTest
 	public void shouldCreateDefaultManager()
 	{
 		inputManager = new ZootInputManager();
-		assertEquals(0, inputManager.getProcessorsCount());
+		
+		assertTrue(inputManager.isEnabled());
+		assertEquals(0, inputManager.getProcessorsCount());		
 	}
 	
 	@Test
@@ -196,5 +198,40 @@ public class ZootInputManagerTest
 	{
 		inputManager.clear();
 		verify(multiplexer).clear();
+	}
+	
+	@Test
+	public void shouldEnableInputManager()
+	{
+		inputManager.enable(true);
+		assertTrue(inputManager.isEnabled());
+		
+		inputManager.enable(false);
+		assertFalse(inputManager.isEnabled());
+	}
+	
+	@Test
+	public void shouldNotProcessInputEventsWhenDisabled()
+	{
+		when(multiplexer.keyDown(anyInt())).thenReturn(true);
+		when(multiplexer.keyUp(anyInt())).thenReturn(true);
+		when(multiplexer.keyTyped(anyChar())).thenReturn(true);
+		when(multiplexer.mouseMoved(anyInt(), anyInt())).thenReturn(true);
+		when(multiplexer.scrolled(anyInt())).thenReturn(true);
+		when(multiplexer.touchDown(anyInt(), anyInt(), anyInt(), anyInt())).thenReturn(true);
+		when(multiplexer.touchUp(anyInt(), anyInt(), anyInt(), anyInt())).thenReturn(true);
+		when(multiplexer.touchDragged(anyInt(), anyInt(), anyInt())).thenReturn(true);
+		
+		inputManager.enable(false);
+		
+		assertFalse(inputManager.keyDown(Input.Keys.A));
+		assertFalse(inputManager.keyUp(Input.Keys.B));
+		assertFalse(inputManager.keyTyped('C'));
+		assertFalse(inputManager.mouseMoved(1, 2));
+		assertFalse(inputManager.scrolled(123));
+		assertFalse(inputManager.touchDown(1, 2, 3, 3));
+		assertFalse(inputManager.touchUp(1, 2, 3, 4));
+		assertFalse(inputManager.touchDragged(1, 2, 3));
+		verifyZeroInteractions(multiplexer);
 	}
 }

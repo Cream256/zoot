@@ -10,13 +10,11 @@ public class ZootSceneScreen implements ZootScreen
 	private ZootGame game;
 	private ZootScene scene;
 	private boolean paused = false;
-	private ZootInputManager inputManager;
 	
 	public ZootSceneScreen(ZootGame game, ZootScene scene)
 	{
 		this.game = game;
 		this.scene = scene;
-		inputManager = new ZootInputManager();
 	}
 			
 	@Override
@@ -92,7 +90,7 @@ public class ZootSceneScreen implements ZootScreen
 
 	public void onUpdate(float delta)
 	{		
-		inputManager.processPressedKeys(delta);
+		game.getInputManager().processPressedKeys(delta);
         scene.update(delta);
 	}
 
@@ -110,21 +108,18 @@ public class ZootSceneScreen implements ZootScreen
 	{
 		return paused;
 	}
-		
-	public ZootInputManager getInputManager()
-	{
-		return inputManager;
-	}
-		
+				
+	//TODO remove?
 	protected void assignInput()
 	{
-		Gdx.input.setInputProcessor(inputManager);
+		//Gdx.input.setInputProcessor(inputManager);
 	}
 	
+	//TODO remove?
 	protected void deassignInput()
 	{
-		inputManager.clear();
-		inputManager.clearPressedKeys();
-		Gdx.input.setInputProcessor(null);
+		//inputManager.clear();
+		//inputManager.clearPressedKeys();
+		//Gdx.input.setInputProcessor(null);
 	}
 }

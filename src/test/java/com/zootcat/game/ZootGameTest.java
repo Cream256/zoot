@@ -15,31 +15,61 @@ import org.mockito.InOrder;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.assets.ZootAssetManager;
+import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.screen.ZootScreen;
 
 public class ZootGameTest
 {
 	private ZootGame game;
+	private boolean onCreateCalled;
+	private boolean onDisposeCalled;
 	
 	@Before
 	public void setup()
 	{
+		Gdx.input = mock(Input.class);
 		Gdx.graphics = mock(Graphics.class);
-		
-		game = new ZootGame(){
+				
+		onCreateCalled = false;
+		onDisposeCalled = false;
+		game = new ZootGame()
+		{
 			@Override
-			public void create()
+			public void onCreate()
 			{
-				//noop
+				onCreateCalled = true;
+			}
+
+			@Override
+			public void onDispose()
+			{
+				onDisposeCalled = true;
 			}};
 	}
 	
 	@After
 	public void tearDown()
 	{
+		Gdx.input = null;
 		Gdx.graphics = null;
+	}
+	
+	@Test
+	public void shouldCallOnCreateDuringCreation()
+	{
+		game.create();
+		assertTrue(onCreateCalled);
+	}
+	
+	@Test
+	public void shouldCallOnDisposeDuringDisposing()
+	{
+		game.dispose();
+		assertTrue(onDisposeCalled);
 	}
 	
 	@Test
@@ -128,6 +158,29 @@ public class ZootGameTest
 	public void shouldSetGraphicsFactoryGlobalParameterForControllerFactory()
 	{
 		assertNotNull(game.getControllerFactory().getGlobalParameters().get("graphicsFactory"));
+	}
+	
+	@Test
+	public void shouldSetScreen()
+	{
+		ZootScreen screen = mock(ZootScreen.class);
+		game.setScreen(screen);
+		
+		assertEquals(screen, game.getScreen());
+	}
+	
+	@Test(expected = RuntimeZootException.class)
+	public void shouldThrowIfScreenIsNotZootScreen()
+	{
+		Screen screen = mock(Screen.class);
+		game.setScreen(screen);		
+	}
+	
+	@Test
+	public void shouldReturnEmptyInputManagerAfterCreation()
+	{
+		assertNotNull(game.getInputManager());
+		assertEquals(0, game.getInputManager().getProcessorsCount());
 	}
 	
 	@Test

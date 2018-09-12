@@ -56,13 +56,14 @@ public class ZootDialogScreen extends ZootScreenAdapter
 		inputProcessor.bindDown(Keys.ENTER, () -> advanceDialog());
 		inputProcessor.bindDown(Keys.SPACE, () -> advanceDialog());
 		inputProcessor.bindDown(Keys.ESCAPE, () -> quitDialog());
-		Gdx.input.setInputProcessor(inputProcessor);
+		game.getInputManager().addProcessor(inputProcessor);
 	}
 	
 	@Override
 	public void hide() 
 	{
-		Gdx.input.setInputProcessor(null);
+		game.getInputManager().clear();
+		game.getInputManager().clearPressedKeys();
 	}
 		
 	private boolean advanceDialog()

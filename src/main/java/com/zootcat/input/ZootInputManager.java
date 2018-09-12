@@ -9,7 +9,8 @@ import com.badlogic.gdx.InputProcessor;
 
 public class ZootInputManager extends InputAdapter 
 {
-	private InputMultiplexer multiplexer;
+	private boolean enabled;
+	private InputMultiplexer multiplexer;	
 	private Set<Integer> pressedKeys = new HashSet<Integer>();
 		
 	public ZootInputManager()
@@ -19,12 +20,15 @@ public class ZootInputManager extends InputAdapter
 	
 	public ZootInputManager(InputMultiplexer multiplexer)
 	{
+		this.enabled = true;
 		this.multiplexer = multiplexer;
 	}
 	
 	@Override
 	public boolean keyDown (int keycode) 
 	{
+		if(!enabled) return false;
+		
 		pressedKeys.add(keycode);		
 		return multiplexer.keyDown(keycode);
 	}
@@ -32,6 +36,8 @@ public class ZootInputManager extends InputAdapter
 	@Override
 	public boolean keyUp (int keycode) 
 	{
+		if(!enabled) return false;
+		
 		pressedKeys.remove(keycode);
 		return multiplexer.keyUp(keycode);
 	}
@@ -39,37 +45,37 @@ public class ZootInputManager extends InputAdapter
 	@Override
 	public boolean keyTyped (char character) 
 	{
-		return multiplexer.keyTyped(character);
+		return enabled ? multiplexer.keyTyped(character) : false;
 	}
 
 	@Override
 	public boolean touchDown (int screenX, int screenY, int pointer, int button) 
 	{
-		return multiplexer.touchDown(screenX, screenY, pointer, button);
+		return enabled ? multiplexer.touchDown(screenX, screenY, pointer, button) : false;
 	}
 
 	@Override
 	public boolean touchUp (int screenX, int screenY, int pointer, int button) 
 	{
-		return multiplexer.touchUp(screenX, screenY, pointer, button);
+		return enabled ? multiplexer.touchUp(screenX, screenY, pointer, button) : false;
 	}
 
 	@Override
 	public boolean touchDragged (int screenX, int screenY, int pointer) 
 	{
-		return multiplexer.touchDragged(screenX, screenY, pointer);
+		return enabled ? multiplexer.touchDragged(screenX, screenY, pointer) : false;
 	}
 
 	@Override
 	public boolean mouseMoved (int screenX, int screenY) 
 	{
-		return multiplexer.mouseMoved(screenX, screenY);
+		return enabled ? multiplexer.mouseMoved(screenX, screenY) : false;
 	}
 
 	@Override
 	public boolean scrolled (int amount)
 	{
-		return multiplexer.scrolled(amount);
+		return enabled ? multiplexer.scrolled(amount) : false;
 	}
 	
 	public void processPressedKeys(float delta)
@@ -100,5 +106,15 @@ public class ZootInputManager extends InputAdapter
 	public int getProcessorsCount()
 	{
 		return multiplexer.size();
+	}
+	
+	public void enable(boolean value)
+	{
+		enabled = value;
+	}
+	
+	public boolean isEnabled()
+	{
+		return enabled;
 	}
 }

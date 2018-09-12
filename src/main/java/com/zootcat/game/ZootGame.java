@@ -11,6 +11,7 @@ import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.controllers.factory.ControllerFactory;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.gfx.ZootGraphicsFactory;
+import com.zootcat.input.ZootInputManager;
 import com.zootcat.map.tiled.ZootTiledMap;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.scene.tiled.ZootTiledScene;
@@ -26,23 +27,37 @@ public abstract class ZootGame extends Game
 	private ZootScreen previousScreen;
 	private String currentLevelPath;	
 	private ZootAssetManager assetManager;
+	private ZootInputManager inputManager;
 	private ControllerFactory controllerFactory;
 	private Function<ZootGame, ZootLoadingScreen> loadingScreenSupplier;
 	private BiFunction<ZootGame, ZootScene, ZootSceneScreen> sceneScreenSupplier;
 	
 	public ZootGame()
 	{
-		assetManager = new ZootAssetManager();
+		assetManager = new ZootAssetManager();		
+		inputManager = new ZootInputManager();
+		
 		controllerFactory = new ControllerFactory();
 		controllerFactory.addGlobalParameter("game", this);
 		controllerFactory.addGlobalParameter("graphicsFactory", new ZootGraphicsFactory());
+		
 		loadingScreenSupplier = (game) -> new ZootLoadingScreen(game);
 		sceneScreenSupplier = (game, scene) -> new ZootSceneScreen(game, scene);
 	}
+	
+	@Override
+	public final void create()
+	{
+		Gdx.input.setInputProcessor(inputManager);
+		onCreate();
+	}
+	
+	public abstract void onCreate();
 	    
     @Override
-    public void dispose()
+    public final void dispose()
     {
+    	onDispose();
     	super.dispose();
     	
     	if(previousScreen != null) getPreviousScreen().dispose();
@@ -53,7 +68,12 @@ public abstract class ZootGame extends Game
     	
     	assetManager.dispose();
     	assetManager = null;
+    	
+    	inputManager = null;
+    	Gdx.input.setInputProcessor(null);
     }
+    
+    public abstract void onDispose();
     
     @Override
 	public void setScreen (Screen screen) 
@@ -158,4 +178,9 @@ public abstract class ZootGame extends Game
     {
     	sceneScreenSupplier = supplier;
     }    
+    
+    public ZootInputManager getInputManager()
+    {
+    	return inputManager;
+    }
 }
