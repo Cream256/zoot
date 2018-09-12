@@ -64,4 +64,12 @@ public class ZootActions
 		parabolicAction.setTarget(actor);
 		return parabolicAction;
 	}
+
+	public static EnableInputProcessorControllerAction enableInputProcessorControllerAction(ZootActor target, boolean enabled)
+	{		
+		EnableInputProcessorControllerAction enableInputProcessorAction = zootAction(EnableInputProcessorControllerAction.class);
+		enableInputProcessorAction.setTarget(target);
+		enableInputProcessorAction.setControllerEnabled(enabled);
+		return enableInputProcessorAction;
+	}
 }

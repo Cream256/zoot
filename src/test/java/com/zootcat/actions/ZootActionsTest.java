@@ -1,6 +1,7 @@
 package com.zootcat.actions;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
@@ -85,5 +86,13 @@ public class ZootActionsTest
 		assertEquals(actor, action.getTargetZootActor());
 		assertNotNull(action.getParabole());
 		assertNotNull(action.getPool());
+	}
+	
+	@Test
+	public void shouldCreateEnableInputProcessorControllerAction()
+	{
+		EnableInputProcessorControllerAction action = ZootActions.enableInputProcessorControllerAction(actor, false);
+		assertEquals(actor, action.getTargetZootActor());
+		assertFalse(action.getControllerEnabled());
 	}
 }

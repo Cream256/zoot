@@ -31,7 +31,7 @@ public abstract class ZootAction extends Action
 	}
 	
 	@Override
-	public void reset () 
+	public void reset() 
 	{
 		actionActor = null;
 		targetActor = null;
