@@ -126,6 +126,16 @@ public class PhysicsBodyController implements Controller
 		body.setLinearVelocity(setX ? vx : velocity.x, setY ? vy : velocity.y);	
 	}
 	
+	public float getAngularVelocity()
+	{
+		return body.getAngularVelocity();
+	}
+	
+	public void setAngularVelocity(float omega)
+	{
+		body.setAngularVelocity(omega);
+	}
+	
 	public Fixture addFixture(FixtureDef fixtureDef, ZootActor actor)
 	{
 		Fixture fixture = body.createFixture(fixtureDef);
