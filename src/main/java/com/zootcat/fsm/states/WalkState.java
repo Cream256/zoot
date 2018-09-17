@@ -48,9 +48,7 @@ public class WalkState extends BasicState
 		{
 			ZootDirection eventDirection = ZootStateUtils.getDirectionFromEvent(event);
 			if(eventDirection != moveDirection)
-			{
-				int nextStateId = ZootStateUtils.isRunEvent(event) ? RunState.ID : WalkState.ID;				
-				event.setUserObject(nextStateId);				
+			{				
 				changeState(event, TurnState.ID);
 				moveDirection = eventDirection;
 			}

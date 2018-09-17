@@ -1,6 +1,7 @@
 package com.zootcat.fsm.states;
 
 import com.zootcat.controllers.logic.DirectionController;
+import com.zootcat.controllers.physics.MoveableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
@@ -22,9 +23,9 @@ public class TurnState extends AnimationBasedState
 	{		
 		super.onEnter(actor, event);
 		
-		//get actor direction
 		direction = ZootDirection.None;
 		actor.controllerAction(DirectionController.class, ctrl -> direction = ctrl.getDirection());
+		actor.controllerAction(MoveableController.class, ctrl -> ctrl.stop());
 	}
 	
 	@Override

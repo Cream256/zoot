@@ -49,6 +49,15 @@ public class TurnStateTest extends ZootStateTestCase
 	}
 	
 	@Test
+	public void onEnterShouldStopActor()
+	{
+		reset(moveableCtrlMock);		
+		turnState.onEnter(actor, null);
+		
+		verify(moveableCtrlMock).stop();		
+	}
+	
+	@Test
 	public void onUpdateShouldChangeToIdleStateWhenThereIsNoAnimation()
 	{
 		//given
