@@ -90,7 +90,7 @@ public class BasicState implements ZootState
 	{
 		ZootStateMachine sm = event.getTargetZootActor().getStateMachine();
 		sm.changeState(sm.getStateById(stateId), event);
-	}
+	} 
 	
 	protected void changeState(ZootEventTypeEnum eventType, ZootActor actor, int stateId)
 	{

@@ -16,12 +16,18 @@ public class ZootStateUtils
 			ZootEventType.WalkLeft, ZootEventType.RunLeft, ZootEventType.RunRight);
 
 	private static final List<ZootEventType> RUN_EVENTS = Arrays.asList(ZootEventType.RunRight, ZootEventType.RunLeft);
-	
+	private static final List<ZootEventType> WALK_EVENTS = Arrays.asList(ZootEventType.WalkRight, ZootEventType.WalkLeft);	
 	private static final List<ZootEventType> JUMP_EVENTS = Arrays.asList(ZootEventType.JumpUp, ZootEventType.JumpForward);
 	
 	public static boolean isMoveEvent(ZootEvent event)
 	{
 		return MOVE_EVENTS.contains(event.getType());
+	}
+	
+	//TODO add test
+	public static boolean isWalkEvent(ZootEvent event)
+	{
+		return WALK_EVENTS.contains(event.getType());
 	}
 	
 	public static boolean isJumpEvent(ZootEvent event)

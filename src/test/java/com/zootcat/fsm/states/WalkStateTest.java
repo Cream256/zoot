@@ -139,6 +139,7 @@ public class WalkStateTest extends ZootStateTestCase
 	@Test
 	public void handleRunEvent()
 	{
+		walkState.onEnter(actor, createEvent(ZootEventType.WalkRight));
 		assertTrue(walkState.handle(createEvent(ZootEventType.RunRight)));
 		assertEquals(RunState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
@@ -147,7 +148,33 @@ public class WalkStateTest extends ZootStateTestCase
 	public void handleRunEventWhenActorCantRun()
 	{
 		when(moveableCtrlMock.canRun()).thenReturn(false);
+		walkState.onEnter(actor, createEvent(ZootEventType.WalkRight));
 		assertTrue(walkState.handle(createEvent(ZootEventType.RunRight)));
 		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleRunEventInDifferentDirection()
+	{
+		walkState.onEnter(actor, createEvent(ZootEventType.WalkRight));
+		assertTrue(walkState.handle(createEvent(ZootEventType.RunLeft)));
+		assertEquals(TurnState.ID, actor.getStateMachine().getCurrentState().getId());		
+	}
+	
+	@Test
+	public void handleRunEventInDifferentDirectionWhenActorCantRun()
+	{
+		when(moveableCtrlMock.canRun()).thenReturn(false);
+		walkState.onEnter(actor, createEvent(ZootEventType.WalkRight));
+		assertTrue(walkState.handle(createEvent(ZootEventType.RunLeft)));
+		assertEquals(TurnState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleWalkEventInDifferentDirection()
+	{
+		walkState.onEnter(actor, createEvent(ZootEventType.WalkRight));
+		assertTrue(walkState.handle(createEvent(ZootEventType.WalkLeft)));
+		assertEquals(TurnState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 }

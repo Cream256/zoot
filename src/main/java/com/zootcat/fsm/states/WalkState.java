@@ -44,9 +44,20 @@ public class WalkState extends BasicState
 		{
 			changeState(event, IdleState.ID);
 		}
-		else if(ZootStateUtils.isRunEvent(event) && ZootStateUtils.canActorRun(event))
+		else if(ZootStateUtils.isMoveEvent(event))
 		{
-			changeState(event, RunState.ID);
+			ZootDirection eventDirection = ZootStateUtils.getDirectionFromEvent(event);
+			if(eventDirection != moveDirection)
+			{
+				int nextStateId = ZootStateUtils.isRunEvent(event) ? RunState.ID : WalkState.ID;				
+				event.setUserObject(nextStateId);				
+				changeState(event, TurnState.ID);
+				moveDirection = eventDirection;
+			}
+			else if(ZootStateUtils.isRunEvent(event) && ZootStateUtils.canActorRun(event))
+			{
+				changeState(event, RunState.ID);
+			}
 		}		
 		else if(event.getType() == ZootEventType.JumpUp && ZootStateUtils.canActorJump(event))
 		{		
