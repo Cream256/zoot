@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 
@@ -23,14 +24,15 @@ public class LifeControllerTest
 	}
 	
 	@Test
-	public void defaultsTest()
+	public void shouldProperlyInitialize()
 	{
+		assertTrue(ctrl.getRemoveWhenDead());
 		assertEquals(LifeController.DEFAULT_LIFE, ctrl.getValue());
 		assertEquals(LifeController.DEFAULT_LIFE, ctrl.getMaxValue());		
 	}
 	
 	@Test
-	public void isAliveTest()
+	public void shouldReturnIsAlive()
 	{
 		ctrl.setValue(3);
 		assertTrue(ctrl.isAlive());
@@ -46,7 +48,7 @@ public class LifeControllerTest
 	}
 	
 	@Test
-	public void addLifeTest()
+	public void shouldAddLife()
 	{
 		ctrl.addToValue(-1);
 		assertEquals(2, ctrl.getValue());
@@ -62,7 +64,7 @@ public class LifeControllerTest
 	}
 	
 	@Test
-	public void addMaxLifeTest()
+	public void shouldGetMaxLife()
 	{
 		ctrl.addToMaxValue(1);
 		assertEquals(4, ctrl.getMaxValue());
@@ -75,7 +77,7 @@ public class LifeControllerTest
 	}
 	
 	@Test
-	public void setLifeTest()
+	public void shouldSetLife()
 	{		
 		ctrl.setValue(0);
 		assertEquals(0, ctrl.getValue());
@@ -94,7 +96,7 @@ public class LifeControllerTest
 	}
 	
 	@Test
-	public void setMaxLifeTest()
+	public void shouldSetMaxLife()
 	{		
 		ctrl.setMaxValue(10);
 		assertEquals(10, ctrl.getMaxValue());
@@ -118,7 +120,52 @@ public class LifeControllerTest
 	}
 	
 	@Test
-	public void updateTest()
+	public void shouldSetRemoveWhenDead()
+	{
+		ctrl.setRemoveWhenDead(false);
+		assertFalse(ctrl.getRemoveWhenDead());
+		
+		ctrl.setRemoveWhenDead(true);
+		assertTrue(ctrl.getRemoveWhenDead());
+	}
+	
+	@Test
+	public void shouldRemoveFromSceneWhenDead()
+	{
+		//given
+		ZootActor actor = new ZootActor();
+		ctrl.init(actor);
+		ctrl.onAdd(actor);
+		ctrl.setRemoveWhenDead(true);
+		
+		//when		
+		ctrl.setValue(0);
+		ctrl.onUpdate(1.0f, actor);
+		
+		//then
+		assertEquals(1, actor.getActions().size);
+		assertEquals(RemoveActorAction.class, actor.getActions().get(0).getClass());
+	}
+	
+	@Test
+	public void shouldNotRemoveFromSceneWhenDead()
+	{
+		//given
+		ZootActor actor = new ZootActor();
+		ctrl.init(actor);
+		ctrl.onAdd(actor);
+		ctrl.setRemoveWhenDead(false);
+		
+		//when		
+		ctrl.setValue(0);
+		ctrl.onUpdate(1.0f, actor);
+		
+		//then
+		assertEquals(0, actor.getActions().size);		
+	}
+	
+	@Test
+	public void shouldSendDeadEvent()
 	{	
 		//given
 		ZootActor actor = new ZootActor();		

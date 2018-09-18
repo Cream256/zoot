@@ -1,6 +1,8 @@
 package com.zootcat.controllers.logic;
 
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.zootcat.controllers.factory.CtrlDebug;
+import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
@@ -9,9 +11,10 @@ public class LifeController extends IntValueController
 {
 	public static final int DEFAULT_LIFE = 3;
 	
+	@CtrlParam boolean removeWhenDead = true;
 	@CtrlDebug boolean sendDeadEvent = false;
 	@CtrlDebug boolean deadEventSend = false;
-		
+			
 	@Override
 	public void init(ZootActor actor) 
 	{		
@@ -43,11 +46,26 @@ public class LifeController extends IntValueController
 		{
 			ZootEvents.fireAndFree(actor, ZootEventType.Dead);		
 			deadEventSend = true;
+			
+			if(removeWhenDead)
+			{
+				actor.addAction(Actions.removeActor());
+			}			
 		}		
 	}
 	
 	public boolean isAlive()
 	{
 		return getValue() > 0;
+	}
+
+	public boolean getRemoveWhenDead()
+	{
+		return removeWhenDead;
+	}
+	
+	public void setRemoveWhenDead(boolean value)
+	{
+		removeWhenDead = value;
 	}
 }
