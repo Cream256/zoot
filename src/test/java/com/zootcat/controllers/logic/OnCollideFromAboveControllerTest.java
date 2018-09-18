@@ -22,12 +22,13 @@ import com.zootcat.scene.ZootActor;
 
 public class OnCollideFromAboveControllerTest
 {
-	private int collisionCount;	
+	private int aboveCollisionCount;
+	private int belowCollisionCount;
 	private Filter ctrlActorFilter;
 	private Filter otherActorFilter;
 	private PolygonShape ctrlShape;
 	private PolygonShape otherShape;
-	private OnCollideFromAboveController ctrl;
+	private OnCollideFromAboveOrBelowController ctrl;
 	
 	@Mock private ZootActor ctrlActor;
 	@Mock private ZootActor otherActor;
@@ -47,7 +48,8 @@ public class OnCollideFromAboveControllerTest
 	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);
-		collisionCount = 0;
+		aboveCollisionCount = 0;
+		belowCollisionCount = 0;
 		ctrlActorFilter = new Filter();
 		otherActorFilter = new Filter();	
 		ctrlShape = new PolygonShape();
@@ -55,11 +57,17 @@ public class OnCollideFromAboveControllerTest
 		otherShape = new PolygonShape();		
 		otherShape.setAsBox(5, 5);
 		
-		ctrl = new OnCollideFromAboveController() {
+		ctrl = new OnCollideFromAboveOrBelowController() {
 			@Override
 			public void onCollidedFromAbove(ZootActor actorA, ZootActor actorB, Contact contact)
 			{
-				++collisionCount;
+				++aboveCollisionCount;
+			}
+
+			@Override
+			public void onCollidedFromBelow(ZootActor actorA, ZootActor actorB, Contact contact)
+			{
+				++belowCollisionCount;
 			}
 		};
 			
@@ -100,7 +108,8 @@ public class OnCollideFromAboveControllerTest
 		ctrl.beginContact(ctrlActor, otherActor, contact);
 
 		//then
-		assertEquals("Should accept collision", 1, collisionCount);
+		assertEquals("Should accept above collision", 1, aboveCollisionCount);
+		assertEquals("Should not accept below collision", 0, belowCollisionCount);
 	}
 	
 	@Test
@@ -118,7 +127,8 @@ public class OnCollideFromAboveControllerTest
 		ctrl.beginContact(ctrlActor, otherActor, contact);
 			
 		//then
-		assertEquals("Should accept collision", 1, collisionCount);		
+		assertEquals("Should accept above collision", 1, aboveCollisionCount);
+		assertEquals("Should not accept below collision", 0, belowCollisionCount);
 	}
 	
 	@Test
@@ -136,7 +146,8 @@ public class OnCollideFromAboveControllerTest
 		ctrl.beginContact(ctrlActor, otherActor, contact);
 			
 		//then
-		assertEquals("Should not accept collision", 0, collisionCount);		
+		assertEquals("Should not accept above collision", 0, aboveCollisionCount);
+		assertEquals("Should accept below collision", 1, belowCollisionCount);
 	}
 	
 	@Test
@@ -155,14 +166,16 @@ public class OnCollideFromAboveControllerTest
 		ctrl.beginContact(ctrlActor, otherActor, contact);
 		
 		//then
-		assertEquals("Should accept collision", 1, collisionCount);	
+		assertEquals("Should accept above collision", 1, aboveCollisionCount);
+		assertEquals("Should not accept below collision", 0, belowCollisionCount);
 		
 		//when
 		ctrlBodyPosition.y += 10.0f;
 		ctrl.beginContact(ctrlActor, otherActor, contact);
 		
 		//then
-		assertEquals("Should not accept collision", 1, collisionCount);
+		assertEquals("Should not accept above collision", 1, aboveCollisionCount);
+		assertEquals("Should accept below collision", 1, belowCollisionCount);
 	}
 	
 	@Test

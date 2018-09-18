@@ -11,7 +11,7 @@ import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 
-public class MovingPlatformController extends OnCollideFromAboveController
+public class MovingPlatformController extends OnCollideFromAboveOrBelowController
 {
 	@CtrlParam(debug = true) private float range = 0.0f;
 	@CtrlParam(debug = true) private float speed = 1.0f;
@@ -91,6 +91,12 @@ public class MovingPlatformController extends OnCollideFromAboveController
 	public void onCollidedFromAbove(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		connectedActors.add(getControllerActor() == actorA ? actorB : actorA);
+	}
+	
+	@Override
+	public void onCollidedFromBelow(ZootActor actorA, ZootActor actorB, Contact contact)
+	{
+		//noop
 	}
 	
 	@Override

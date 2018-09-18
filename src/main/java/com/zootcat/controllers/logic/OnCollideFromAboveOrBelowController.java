@@ -8,8 +8,8 @@ import com.zootcat.controllers.physics.OnCollideController;
 import com.zootcat.math.ZootBoundingBoxFactory;
 import com.zootcat.scene.ZootActor;
 
-public abstract class OnCollideFromAboveController extends OnCollideController
-{
+public abstract class OnCollideFromAboveOrBelowController extends OnCollideController
+{	
 	private BoundingBox cachedBoundingBox = null;
 		
 	@Override
@@ -29,6 +29,10 @@ public abstract class OnCollideFromAboveController extends OnCollideController
 		{
 			onCollidedFromAbove(actorA, actorB, contact);
 		}
+		else
+		{
+			onCollidedFromBelow(actorA, actorB, contact);
+		}
 	}
 
 	@Override
@@ -38,6 +42,8 @@ public abstract class OnCollideFromAboveController extends OnCollideController
 	}
 	
 	public abstract void onCollidedFromAbove(ZootActor actorA, ZootActor actorB, Contact contact);
+	
+	public abstract void onCollidedFromBelow(ZootActor actorA, ZootActor actorB, Contact contact);
 	
 	private BoundingBox getControllerFixtureBoundingBox(Fixture fixture)
 	{

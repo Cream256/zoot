@@ -6,7 +6,7 @@ import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
 
-public class DieOnCollideFromAboveController extends OnCollideFromAboveController
+public class DieOnCollideFromAboveController extends OnCollideFromAboveOrBelowController
 {
 	@Override
 	public void onCollidedFromAbove(ZootActor actorA, ZootActor actorB, Contact contact)
@@ -18,5 +18,11 @@ public class DieOnCollideFromAboveController extends OnCollideFromAboveControlle
 	{
 		ZootEvents.fireAndFree(getControllerActor(), ZootEventType.Dead);				
 		getControllerActor().addAction(new RemoveActorAction());		
+	}
+
+	@Override
+	public void onCollidedFromBelow(ZootActor actorA, ZootActor actorB, Contact contact)
+	{
+		//noop	
 	}
 }

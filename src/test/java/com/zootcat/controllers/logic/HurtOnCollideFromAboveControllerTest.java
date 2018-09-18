@@ -89,4 +89,14 @@ public class HurtOnCollideFromAboveControllerTest
 		assertFalse(controller.getHurtOwner());
 	}
 	
+	@Test
+	public void shouldDoNothingWhenCollidingFromBelow()
+	{
+		ZootActor actorA = mock(ZootActor.class);
+		ZootActor actorB = mock(ZootActor.class);
+		Contact contact = mock(Contact.class);
+		
+		controller.onCollidedFromBelow(actorA, actorB, contact);
+		verifyZeroInteractions(actorA, actorB, contact);		
+	}
 }

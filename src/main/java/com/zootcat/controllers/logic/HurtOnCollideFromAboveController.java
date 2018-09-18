@@ -4,7 +4,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 
-public class HurtOnCollideFromAboveController extends OnCollideFromAboveController
+public class HurtOnCollideFromAboveController extends OnCollideFromAboveOrBelowController
 {
 	@CtrlParam private int damage = 1;
 	@CtrlParam private boolean hurtOwner = false;
@@ -33,6 +33,12 @@ public class HurtOnCollideFromAboveController extends OnCollideFromAboveControll
 	public void onCollidedFromAbove(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		hurtOnCollideCtrl.hurt(actorA, actorB);
+	}
+	
+	@Override
+	public void onCollidedFromBelow(ZootActor actorA, ZootActor actorB, Contact contact)
+	{
+		//noop
 	}
 	
 	public void setDamage(int value)

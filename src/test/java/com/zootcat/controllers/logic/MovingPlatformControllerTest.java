@@ -224,4 +224,15 @@ public class MovingPlatformControllerTest
 		ctrl.setComeback(true);
 		assertTrue(ctrl.getComeback());
 	}
+	
+	@Test
+	public void shouldDoNothingWhenCollidedFromBelow()
+	{
+		ZootActor actorA = mock(ZootActor.class);
+		ZootActor actorB = mock(ZootActor.class);
+		Contact contact = mock(Contact.class);
+		
+		ctrl.onCollidedFromBelow(actorA, actorB, contact);
+		verifyZeroInteractions(actorA, actorB, contact);
+	}
 }
