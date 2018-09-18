@@ -8,8 +8,8 @@ import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
 
 /**
- * HurtOnCollide controller - lowers health of collided actor 
- * and sends Hurt {@link ZootEvent}. 
+ * HurtOnCollide controller - sends Hurt {@link ZootEvent} to lower the health
+ * of an actor. 
  * 
  * @ctrlParam damage - amout of damage dealt to the collided actor, default 1
  * 
@@ -19,18 +19,43 @@ import com.zootcat.scene.ZootActor;
 public class HurtOnCollideController extends OnCollideController
 {
 	@CtrlParam(debug = true) private int damage = 1;
+	@CtrlParam(debug = true) private boolean hurtOwner = false;	//TODO
 	
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 	{		
-		ZootActor otherActor = getOtherActor(actorA, actorB);
-		ZootEvents.fireAndFree(otherActor, ZootEventType.Hurt);
-		otherActor.controllerAction(LifeController.class, ctrl -> ctrl.addToValue(-damage));
+		hurt(actorA, actorB);
 	}
 
 	@Override
 	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		//noop
+	}
+	
+	public void hurt(ZootActor actorA, ZootActor actorB)
+	{
+		ZootActor actorToHurt = hurtOwner ? getControllerActor() : getOtherActor(actorA, actorB);		
+		ZootEvents.fireAndFree(actorToHurt, ZootEventType.Hurt, damage);
+	}
+	
+	public void setDamage(int value)
+	{
+		damage = value;
+	}
+	
+	public int getDamage()
+	{
+		return damage;
+	}
+	
+	public void setHurtOwner(boolean value)
+	{
+		hurtOwner = value;
+	}
+	
+	public boolean getHurtOwner()
+	{
+		return hurtOwner;
 	}
 }
