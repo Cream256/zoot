@@ -499,6 +499,28 @@ public class ZootActorTest
 	}
 	
 	@Test
+	public void shouldRemoveAllControllersInDescendingPriorityOrder()
+	{
+		//given
+		when(mockCtrl1.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(mockCtrl2.getPriority()).thenReturn(ControllerPriority.High);
+		when(mockCtrl3.getPriority()).thenReturn(ControllerPriority.Low);
+		
+		InOrder inOrder = inOrder(mockCtrl1, mockCtrl2, mockCtrl3);
+		
+		ZootActor actor = new ZootActor();
+		actor.addControllers(Arrays.asList(mockCtrl1, mockCtrl2, mockCtrl3));
+		
+		//when
+		actor.remove();
+		
+		//then
+		inOrder.verify(mockCtrl3).onRemove(actor);
+		inOrder.verify(mockCtrl1).onRemove(actor);
+		inOrder.verify(mockCtrl2).onRemove(actor);
+	}
+	
+	@Test
 	public void shouldRemoveAllControllers()
 	{
 		//given

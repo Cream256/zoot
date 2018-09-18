@@ -73,6 +73,7 @@ public class PhysicsBodyController implements Controller
 	public void onRemove(ZootActor actor)
 	{
 		scene.getPhysics().removeBody(body);
+		fixtures = null;
 		body = null;
 	}
 
@@ -147,8 +148,11 @@ public class PhysicsBodyController implements Controller
 	
 	public void removeFixture(Fixture fixture)
 	{
-		body.destroyFixture(fixture);
-		fixtures.remove(fixture);		
+		if(body != null && fixtures != null)
+		{
+			body.destroyFixture(fixture);
+			fixtures.remove(fixture);
+		}
 	}
 	
 	public void setGravityScale(float scale)

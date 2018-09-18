@@ -146,7 +146,8 @@ public class ZootActor extends Actor
 	
 	public void removeAllControllers()
 	{
-		controllers.forEach(ctrl -> ctrl.onRemove(this));
+		controllers.stream().sorted(ControllerComparator.Instance.reversed())
+							.forEach(ctrl -> ctrl.onRemove(this));
 		controllers.clear();
 	}
 	
