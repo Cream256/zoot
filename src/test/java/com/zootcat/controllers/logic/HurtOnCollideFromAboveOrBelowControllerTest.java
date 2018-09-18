@@ -11,13 +11,13 @@ import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
-public class HurtOnCollideFromAboveControllerTest
+public class HurtOnCollideFromAboveOrBelowControllerTest
 {
 	private static final int DAMAGE = 512;
 	
 	private ZootActor otherActor;
 	private ZootActor controllerActor;	
-	private HurtOnCollideFromAboveController controller;
+	private HurtOnCollideFromAboveOrBelowController controller;
 	private ZootActorEventCounterListener eventCounter;
 	
 	@Before
@@ -29,8 +29,16 @@ public class HurtOnCollideFromAboveControllerTest
 		controllerActor.setName("Ctrl actor");
 		eventCounter = new ZootActorEventCounterListener();
 		
-		controller = new HurtOnCollideFromAboveController();
+		controller = new HurtOnCollideFromAboveOrBelowController();
 		controller.init(controllerActor);
+	}
+	
+	@Test
+	public void shouldReturnProperDefaults()
+	{
+		assertEquals(1, controller.getDamage());
+		assertFalse(controller.getHurtOwner());
+		assertTrue(controller.collideFromAbove());
 	}
 	
 	@Test
@@ -90,13 +98,38 @@ public class HurtOnCollideFromAboveControllerTest
 	}
 	
 	@Test
-	public void shouldDoNothingWhenCollidingFromBelow()
+	public void shouldNotHurtOtherActorWhenCollidingFromBelow()
 	{
-		ZootActor actorA = mock(ZootActor.class);
-		ZootActor actorB = mock(ZootActor.class);
-		Contact contact = mock(Contact.class);
+		//given
+		controller.setDamage(DAMAGE);
+		controller.setHurtOwner(false);
+		controller.setCollideFromAbove(true);
+		controller.onAdd(controllerActor);
+		otherActor.addListener(eventCounter);
 		
-		controller.onCollidedFromBelow(actorA, actorB, contact);
-		verifyZeroInteractions(actorA, actorB, contact);		
+		//when
+		controller.onCollidedFromBelow(otherActor, controllerActor, mock(Contact.class));
+		
+		//then
+		assertEquals(0, eventCounter.getCount());		
+	}
+	
+	@Test
+	public void shouldHurtOtherActorWhenCollidingFromBelow()
+	{
+		//given
+		controller.setDamage(DAMAGE);
+		controller.setHurtOwner(false);
+		controller.setCollideFromAbove(false);
+		controller.onAdd(controllerActor);
+		otherActor.addListener(eventCounter);
+		
+		//when
+		controller.onCollidedFromBelow(otherActor, controllerActor, mock(Contact.class));
+		
+		//then
+		assertEquals(1, eventCounter.getCount());
+		assertEquals(ZootEventType.Hurt, eventCounter.getLastZootEvent().getType());
+		assertEquals(DAMAGE, (int)eventCounter.getLastZootEvent().getUserObject(Integer.class));		
 	}
 }
