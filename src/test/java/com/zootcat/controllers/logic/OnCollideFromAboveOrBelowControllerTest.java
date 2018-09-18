@@ -20,7 +20,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.zootcat.scene.ZootActor;
 
-public class OnCollideFromAboveControllerTest
+public class OnCollideFromAboveOrBelowControllerTest
 {
 	private int aboveCollisionCount;
 	private int belowCollisionCount;
