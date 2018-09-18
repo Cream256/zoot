@@ -20,7 +20,7 @@ public class HurtState extends AnimationBasedState
 		super.onEnter(actor, event);
 		
 		int damage = event.getUserObject(Integer.class, 0);
-		actor.controllerAction(LifeController.class, c -> c.addToValue(damage));
+		actor.controllerAction(LifeController.class, c -> c.addToValue(-damage));
 	}
 	
 	@Override

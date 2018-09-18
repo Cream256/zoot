@@ -62,7 +62,7 @@ public class HurtStateTest extends ZootStateTestCase
 		hurtState.onEnter(actor, event);
 		
 		//then
-		verify(lifeCtrlMock).addToValue(damage);
+		verify(lifeCtrlMock).addToValue(-damage);
 	}
 		
 	@Test
