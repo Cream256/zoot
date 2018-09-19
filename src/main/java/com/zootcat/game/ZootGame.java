@@ -102,6 +102,9 @@ public abstract class ZootGame extends Game
     	Gdx.app.debug("ZootGame", "Restarting level " + currentLevelPath);
     	
     	getAssetManager().unload(currentLevelPath);    	
+    	getInputManager().clear();
+    	getInputManager().clearPressedKeys();
+    	
     	getScreen().hide();
     	loadLevel(currentLevelPath);
     }
