@@ -25,11 +25,14 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 {
 	@CtrlParam(required = true, debug = true) private String file;
 	@CtrlParam(debug = true) private boolean useActorSize = true;
+	@CtrlParam(debug = true) private boolean keepAspectRatio = false;
 	@CtrlParam(debug = true) private String startingAnimation = "IDLE";
 	@CtrlParam(global = true) private ZootScene scene;
 	@CtrlParam(global = true) private AssetManager assetManager;
 	
 	private Sprite sprite;
+	private float firstAnimationWidth;
+	private float firstAnimationHeight;
 	private ZootAnimation currentAnimation;
 	private Map<Integer, ZootAnimation> animations;
 				
@@ -46,6 +49,7 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 			
 			animations = zootAnimationFile.createAnimations(spriteSheets); 		
 			setAnimation(startingAnimation);
+			calculateFirstAnimationFrameSize(getCurrentAnimation());
 			
 			sprite = new Sprite();
 			updateSprite(actor);
@@ -54,6 +58,12 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 		{
 			throw new RuntimeZootException("Unable to initialize animated sprite", e);
 		}
+	}
+
+	private void calculateFirstAnimationFrameSize(ZootAnimation firstAnimation)
+	{
+		firstAnimationWidth = firstAnimation.getKeyFrame().getRegionWidth();
+		firstAnimationHeight = firstAnimation.getKeyFrame().getRegionHeight();
 	}
 
 	@Override
@@ -132,20 +142,31 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 		boolean leftOffset = actor.controllerCondition(DirectionController.class, c -> c.getDirection() == ZootDirection.Left);			
 		Vector2 directionOffset = leftOffset ? offset.left : offset.right;
 				
-		float scale = scene.getUnitScale();
-		float x = actor.getX() + directionOffset.x * scale + getOffsetX();
-		float y = actor.getY() + directionOffset.y * scale + getOffsetY();
+		float sceneUnitScale = scene.getUnitScale();
+		float x = actor.getX() + directionOffset.x * sceneUnitScale + getOffsetX();
+		float y = actor.getY() + directionOffset.y * sceneUnitScale + getOffsetY();
 		
 		ZootDirection direction = getDirection(actor);		
 		sprite.setFlip(direction == ZootDirection.Left, false);
-		
+				
 		if(useActorSize)
 		{
-			sprite.setBounds(x, y, actor.getWidth(), actor.getHeight());
+			if(keepAspectRatio)
+			{
+				float frameScaleX = currentAnimation.getKeyFrame().getRegionWidth() / firstAnimationWidth;
+				float frameScaleY = currentAnimation.getKeyFrame().getRegionHeight() / firstAnimationHeight;								
+				float frameWidth = actor.getWidth() * frameScaleX;
+				float frameHeight = actor.getHeight() * frameScaleY;				
+				sprite.setBounds(x, y, frameWidth, frameHeight);
+			}
+			else
+			{
+				sprite.setBounds(x, y, actor.getWidth(), actor.getHeight());	
+			}
 		}
 		else
 		{
-			sprite.setBounds(x, y, frame.getRegionWidth() * scale, frame.getRegionHeight() * scale);
+			sprite.setBounds(x, y, frame.getRegionWidth() * sceneUnitScale, frame.getRegionHeight() * sceneUnitScale);
 		}
 		
 		sprite.setOriginCenter();

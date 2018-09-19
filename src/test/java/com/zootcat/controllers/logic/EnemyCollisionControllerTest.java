@@ -60,6 +60,20 @@ public class EnemyCollisionControllerTest
 	}
 	
 	@Test
+	public void shouldSendAttackEventToEnemy()
+	{
+		//given
+		enemy.addListener(eventCounter);
+		
+		//when
+		controller.onCollidedFromBelow(enemy, player, mock(Contact.class));
+		
+		//then
+		assertEquals(1, eventCounter.getCount());
+		assertEquals(ZootEventType.Attack, eventCounter.getLastZootEvent().getType());		
+	}
+	
+	@Test
 	public void shouldHurtEnemy()
 	{
 		//given
