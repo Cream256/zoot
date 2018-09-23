@@ -32,7 +32,7 @@ public class ZootRemoveControllerActionTest
 	public void shouldClearTheControllerAfterReset()
 	{
 		//given
-		ZootAddControllerAction action = new ZootAddControllerAction();
+		ZootRemoveControllerAction action = new ZootRemoveControllerAction();
 		
 		//when
 		action.setController(mock(Controller.class));

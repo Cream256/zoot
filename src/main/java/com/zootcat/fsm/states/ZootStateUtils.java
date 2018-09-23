@@ -24,7 +24,6 @@ public class ZootStateUtils
 		return MOVE_EVENTS.contains(event.getType());
 	}
 	
-	//TODO add test
 	public static boolean isWalkEvent(ZootEvent event)
 	{
 		return WALK_EVENTS.contains(event.getType());

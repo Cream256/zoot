@@ -621,4 +621,17 @@ public class ZootActorTest
 		verifyNoMoreInteractions(ctrl3);
 	}
 	
+	@Test
+	public void shouldSetScene()
+	{
+		//given
+		ZootActor actor = new ZootActor();
+		ZootScene scene = mock(ZootScene.class);
+		
+		//when
+		actor.setScene(scene);
+		
+		//then
+		assertEquals(scene, actor.getScene());
+	}
 }

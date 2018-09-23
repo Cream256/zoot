@@ -72,7 +72,7 @@ public class RunStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void updateShouldChangeStateToWalkingWhenActorCanNoLongerRun()
+	public void updateShouldChangeStateToWalkingRightWhenActorCanNoLongerRun()
 	{
 		runState.onEnter(actor, createEvent(ZootEventType.RunRight));
 		runState.onUpdate(actor, 1.0f);
@@ -81,6 +81,18 @@ public class RunStateTest extends ZootStateTestCase
 		when(moveableCtrlMock.canRun()).thenReturn(false);
 		runState.onUpdate(actor, 1.0f);
 		verify(moveableCtrlMock, times(1)).run(ZootDirection.Right);
+	}
+	
+	@Test
+	public void updateShouldChangeStateToWalkingLeftWhenActorCanNoLongerRun()
+	{
+		runState.onEnter(actor, createEvent(ZootEventType.RunLeft));
+		runState.onUpdate(actor, 1.0f);
+		verify(moveableCtrlMock, times(1)).run(ZootDirection.Left);
+		
+		when(moveableCtrlMock.canRun()).thenReturn(false);
+		runState.onUpdate(actor, 1.0f);
+		verify(moveableCtrlMock, times(1)).run(ZootDirection.Left);
 	}
 	
 	@Test

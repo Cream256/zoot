@@ -50,4 +50,17 @@ public class JumpForwardStateTest extends ZootStateTestCase
 		assertTrue(jumpForwardState.handle(createEvent(ZootEventType.Fall)));
 		assertEquals(FallForwardState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
+	
+	@Test
+	public void handleAnyOtherEventShouldWorkLikeInBaseClass()
+	{
+		assertTrue(jumpForwardState.handle(createEvent(ZootEventType.Hurt)));
+		assertEquals(HurtState.ID, actor.getStateMachine().getCurrentState().getId());	
+	}
+	
+	@Test
+	public void shouldReturnProperName()
+	{
+		assertEquals(JumpForwardState.NAME, jumpForwardState.getName());
+	}
 }

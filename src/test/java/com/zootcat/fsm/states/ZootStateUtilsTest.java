@@ -85,6 +85,19 @@ public class ZootStateUtilsTest
 	}
 	
 	@Test
+	public void shouldRecognizeWalkEvent()
+	{
+		assertTrue(ZootStateUtils.isWalkEvent(new ZootEvent(ZootEventType.WalkLeft)));
+		assertTrue(ZootStateUtils.isWalkEvent(new ZootEvent(ZootEventType.WalkRight)));
+		assertFalse(ZootStateUtils.isWalkEvent(new ZootEvent(ZootEventType.RunLeft)));
+		assertFalse(ZootStateUtils.isWalkEvent(new ZootEvent(ZootEventType.RunRight)));
+		assertFalse(ZootStateUtils.isWalkEvent(new ZootEvent(ZootEventType.Attack)));
+		assertFalse(ZootStateUtils.isWalkEvent(new ZootEvent(ZootEventType.Collide)));
+		assertFalse(ZootStateUtils.isWalkEvent(new ZootEvent(ZootEventType.Stop)));
+		assertFalse(ZootStateUtils.isWalkEvent(new ZootEvent(ZootEventType.Update)));	
+	}
+	
+	@Test
 	public void shouldReturnCanRunValueFromController()
 	{
 		//given

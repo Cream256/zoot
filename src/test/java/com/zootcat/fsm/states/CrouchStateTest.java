@@ -25,20 +25,20 @@ public class CrouchStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void getIdTest()
+	public void getId()
 	{
 		assertEquals(CrouchState.ID, crouchState.getId());
 	}
 	
 	@Test
-	public void onEnterShouldSetCrouchAnimationTest()
+	public void onEnterShouldSetCrouchAnimation()
 	{
 		crouchState.onEnter(actor, createEvent(ZootEventType.WalkRight));
 		verify(animatedSpriteCtrlMock).setAnimation(crouchState.getName());
 	}
 	
 	@Test
-	public void onEnterShouldShrinkActorTest()
+	public void onEnterShouldShrinkActor()
 	{		
 		PhysicsBodyScale bodyScale = new PhysicsBodyScale(0.75f, 2.50f, 1.25f, false);
 		crouchState.setBodyScaling(bodyScale);
@@ -48,7 +48,7 @@ public class CrouchStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onEnterShouldNotShrinkActorIfScaleIsNotProvidedTest()
+	public void onEnterShouldNotShrinkActorIfScaleIsNotProvided()
 	{		
 		crouchState.setBodyScaling(null);
 		crouchState.onEnter(actor, createEvent(ZootEventType.Down));
@@ -57,7 +57,7 @@ public class CrouchStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onLeaveShouldGrowActorTest()
+	public void onLeaveShouldGrowActor()
 	{
 		PhysicsBodyScale bodyScale = new PhysicsBodyScale(0.75f, 2.50f, 1.25f, false);
 		crouchState.setBodyScaling(bodyScale);
@@ -67,7 +67,7 @@ public class CrouchStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onLeaveShouldNotGrowActorIfScaleIsNotProvidedTest()
+	public void onLeaveShouldNotGrowActorIfScaleIsNotProvided()
 	{		
 		crouchState.setBodyScaling(null);
 		crouchState.onLeave(actor, createEvent(ZootEventType.Up));
@@ -76,7 +76,7 @@ public class CrouchStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onEnterShouldSetActorDirectionTest()
+	public void onEnterShouldSetActorDirection()
 	{
 		crouchState.onEnter(actor, createEvent(ZootEventType.WalkRight));		
 		verify(directionCtrlMock).setDirection(ZootDirection.Right);
@@ -92,7 +92,7 @@ public class CrouchStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onUpdateTest()
+	public void onUpdate()
 	{
 		crouchState.onEnter(actor, createEvent(ZootEventType.WalkRight));		
 		crouchState.onUpdate(actor, 1.0f);		
@@ -110,30 +110,40 @@ public class CrouchStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void handleStopEventTest()
+	public void handleStopEvent()
 	{
 		assertTrue(crouchState.handle(createEvent(ZootEventType.Stop)));
 		assertEquals(DownState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test
-	public void handleFallEventTest()
+	public void handleFallEvent()
 	{
 		assertTrue(crouchState.handle(createEvent(ZootEventType.Fall)));
 		assertEquals(FallState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 		
 	@Test
-	public void handleHurtEventTest()
+	public void handleHurtEvent()
 	{
 		assertTrue(crouchState.handle(createEvent(ZootEventType.Hurt)));
 		assertEquals(HurtState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test
-	public void handleUpEventTest()
+	public void handleUpEvent()
 	{
 		assertTrue(crouchState.handle(createEvent(ZootEventType.Up)));
 		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
+	
+	@Test
+	public void shouldSetBodyScaling()
+	{		
+		PhysicsBodyScale bodyScale = new PhysicsBodyScale(0.75f, 2.50f, 1.25f, false);
+		crouchState.setBodyScaling(bodyScale);
+		
+		assertEquals(bodyScale, crouchState.getBodyScaling());
+	}
+
 }

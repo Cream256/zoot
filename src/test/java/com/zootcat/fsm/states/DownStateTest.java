@@ -27,13 +27,13 @@ public class DownStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void getIdTest()
+	public void getId()
 	{
 		assertEquals(DownState.ID, downState.getId());
 	}
 	
 	@Test
-	public void onEnterShouldSetDownAnimationTest()
+	public void onEnterShouldSetDownAnimation()
 	{
 		reset(animatedSpriteCtrlMock);
 		downState.onEnter(actor, createEvent(ZootEventType.Down));
@@ -41,15 +41,15 @@ public class DownStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onEnterShouldZeroHoritontalVelocityActorTest()
+	public void onEnterShouldZeroHoritontalVelocityActor()
 	{
 		reset(physicsBodyCtrlMock);
-		downState.onEnter(actor, createEvent(ZootEventType.Down));
+ 		downState.onEnter(actor, createEvent(ZootEventType.Down));
 		verify(physicsBodyCtrlMock, times(1)).setVelocity(0.0f, 0.0f, true, false);
 	}
 	
 	@Test
-	public void onEnterShouldShrinkActorTest()
+	public void onEnterShouldShrinkActor()
 	{		
 		PhysicsBodyScale bodyScale = new PhysicsBodyScale(0.75f, 2.50f, 1.25f, false);
 		downState.setBodyScaling(bodyScale);
@@ -59,7 +59,7 @@ public class DownStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onEnterShouldNotShrinkActorIfNoScaleIsProvidedTest()
+	public void onEnterShouldNotShrinkActorIfNoScaleIsProvided()
 	{
 		downState.setBodyScaling(null);
 		downState.onEnter(actor, createEvent(ZootEventType.Down));		
@@ -68,7 +68,7 @@ public class DownStateTest extends ZootStateTestCase
 	}
 
 	@Test
-	public void onLeaveShouldGrowActorTest()
+	public void onLeaveShouldGrowActor()
 	{
 		PhysicsBodyScale bodyScale = new PhysicsBodyScale(0.75f, 2.50f, 1.25f, false);
 		downState.setBodyScaling(bodyScale);
@@ -78,7 +78,7 @@ public class DownStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void onLeaveShouldNotGrowActorIfNoScaleIsProvidedTest()
+	public void onLeaveShouldNotGrowActorIfNoScaleIsProvided()
 	{
 		downState.onEnter(actor, createEvent(ZootEventType.Down));
 		downState.onLeave(actor, createEvent(ZootEventType.Up));
@@ -87,7 +87,7 @@ public class DownStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void handleWalkEventAtTheSameDirectionTest()
+	public void handleWalkEventAtTheSameDirection()
 	{
 		//when
 		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Right);		
@@ -107,7 +107,7 @@ public class DownStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void handleWalkEventAtDifferentDirectionTest()
+	public void handleWalkEventAtDifferentDirection()
 	{
 		//when
 		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Left);		
@@ -127,23 +127,32 @@ public class DownStateTest extends ZootStateTestCase
 	}
 			
 	@Test
-	public void handleFallEventTest()
+	public void handleFallEvent()
 	{
 		assertTrue(downState.handle(createEvent(ZootEventType.Fall)));
 		assertEquals(FallState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 		
 	@Test
-	public void handleHurtEventTest()
+	public void handleHurtEvent()
 	{
 		assertTrue(downState.handle(createEvent(ZootEventType.Hurt)));
 		assertEquals(HurtState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test
-	public void handleUpEventTest()
+	public void handleUpEvent()
 	{
 		assertTrue(downState.handle(createEvent(ZootEventType.Up)));
 		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());		
+	}
+	
+	@Test
+	public void shouldSetBodyScaling()
+	{		
+		PhysicsBodyScale bodyScale = new PhysicsBodyScale(0.75f, 2.50f, 1.25f, false);
+		downState.setBodyScaling(bodyScale);
+		
+		assertEquals(bodyScale, downState.getBodyScaling());
 	}
 }

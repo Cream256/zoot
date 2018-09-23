@@ -2,6 +2,7 @@ package com.zootcat.fsm.states;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
@@ -23,20 +24,20 @@ public class NullStateTest
 	}
 		
 	@Test
-	public void handleTest()
+	public void shouldReturnFalseOnHandle()
 	{
 		assertFalse(state.handle(new ZootEvent()));
 		assertFalse(state.handle(null));
 	}
 	
 	@Test
-	public void getIdTest()
+	public void shouldReturnId()
 	{
 		assertEquals(0, state.getId());
 	}
 	
 	@Test
-	public void actionsShouldNotCauseAnySideEffectsTest()
+	public void actionsShouldNotCauseAnySideEffects()
 	{
 		//given
 		ZootActor actor = mock(ZootActor.class);
@@ -48,5 +49,11 @@ public class NullStateTest
 		
 		//then
 		verifyZeroInteractions(actor);		
+	}
+	
+	@Test
+	public void shouldReturnNullName()
+	{
+		assertNull(state.getName());
 	}
 }

@@ -5,7 +5,9 @@ import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
+import com.zootcat.controllers.logic.ClimbController;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootStateTestCase;
@@ -15,12 +17,15 @@ public class FallStateTest extends ZootStateTestCase
 	private static final float JUMP_TIMEOUT = 1.0f;
 	
 	private FallState fallState;
+	@Mock private ClimbController climbCtrlMock;
 	
 	@Before
 	public void setup()
 	{
 		super.setup();
+		actor.addController(climbCtrlMock);
 		fallState = new FallState();
+		
 	}
 	
 	@Test
@@ -73,9 +78,40 @@ public class FallStateTest extends ZootStateTestCase
 	}
 	
 	@Test
-	public void handleClimbEvent()
+	public void handleMoveEventShouldSetDirection()
+	{
+		fallState.handle(createEvent(ZootEventType.WalkRight));
+		fallState.handle(createEvent(ZootEventType.RunRight));
+		verify(directionCtrlMock, times(2)).setDirection(ZootDirection.Right);
+		
+		fallState.handle(createEvent(ZootEventType.WalkLeft));
+		fallState.handle(createEvent(ZootEventType.RunLeft));
+		verify(directionCtrlMock, times(2)).setDirection(ZootDirection.Left);
+	}
+	
+	@Test
+	public void handleMoveEventShouldSetClimbSensorPosition()
+	{
+		fallState.handle(createEvent(ZootEventType.WalkRight));
+		fallState.handle(createEvent(ZootEventType.RunRight));
+		verify(climbCtrlMock, times(2)).setSensorPosition(ZootDirection.Right);
+		
+		fallState.handle(createEvent(ZootEventType.WalkLeft));
+		fallState.handle(createEvent(ZootEventType.RunLeft));
+		verify(climbCtrlMock, times(2)).setSensorPosition(ZootDirection.Left);	
+	}
+	
+	@Test
+	public void handleGrabEvent()
 	{
 		assertTrue(fallState.handle(createEvent(ZootEventType.Grab)));
+		assertEquals(ClimbState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void handleGrabSideEvent()
+	{
+		assertTrue(fallState.handle(createEvent(ZootEventType.GrabSide)));
 		assertEquals(ClimbState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	

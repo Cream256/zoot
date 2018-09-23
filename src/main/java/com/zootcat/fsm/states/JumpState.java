@@ -12,6 +12,7 @@ import com.zootcat.scene.ZootDirection;
 public class JumpState extends BasicState
 {
 	public static final int ID = JumpState.class.hashCode();
+	public static final String NAME = "Jump";
 			
 	public JumpState(String name)
 	{
@@ -20,7 +21,7 @@ public class JumpState extends BasicState
 	
 	public JumpState()
 	{
-		super("Jump");
+		super(NAME);
 	}
 	
 	@Override

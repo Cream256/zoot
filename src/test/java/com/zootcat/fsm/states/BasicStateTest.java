@@ -2,19 +2,22 @@ package com.zootcat.fsm.states;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import org.junit.Test;
 
+import com.zootcat.controllers.gfx.AnimatedSpriteController;
 import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.scene.ZootActor;
 
 public class BasicStateTest
 {
 	@Test
-	public void hashCodeTest()
+	public void shouldReturnHashCode()
 	{
 		BasicState state1 = new BasicState("test");
 		BasicState state2 = new BasicState("test");
@@ -25,7 +28,7 @@ public class BasicStateTest
 	}
 		
 	@Test
-	public void equalsTest()
+	public void shouldReturnEquals()
 	{
 		BasicState state1 = new BasicState("test");
 		BasicState state2 = new BasicState("test");
@@ -46,7 +49,7 @@ public class BasicStateTest
 	}
 	
 	@Test
-	public void getIdTest()
+	public void shouldReturnId()
 	{
 		BasicState state1 = new BasicState("test");
 		BasicState state2 = new BasicState("test");
@@ -60,7 +63,7 @@ public class BasicStateTest
 	}
 	
 	@Test
-	public void getNameTest()
+	public void shouldReturnName()
 	{
 		assertEquals("ABC", new BasicState("ABC").getName());
 		assertEquals("test", new BasicState("test").getName());
@@ -68,7 +71,7 @@ public class BasicStateTest
 	}
 	
 	@Test
-	public void setNameTest()
+	public void shouldSetName()
 	{
 		BasicState state = new BasicState("oldName");
 		state.setName("newName");
@@ -76,7 +79,7 @@ public class BasicStateTest
 	}
 	
 	@Test
-	public void toStringTest()
+	public void shouldConvertToString()
 	{
 		assertEquals("ABC", new BasicState("ABC").toString());
 		assertEquals("test", new BasicState("test").toString());
@@ -84,13 +87,13 @@ public class BasicStateTest
 	}
 	
 	@Test
-	public void handleTest()
+	public void shouldAlwaysReturnFalseOnHandle()
 	{
 		assertFalse("NamedState should always return false", new BasicState("").handle(new ZootEvent()));
 	}
 	
 	@Test
-	public void actionsShouldNotCauseAnySideEffectsTest()
+	public void actionsShouldNotCauseAnySideEffects()
 	{
 		//given
 		BasicState state = new BasicState("test");
@@ -103,5 +106,36 @@ public class BasicStateTest
 		
 		//then
 		verifyZeroInteractions(actor);		
+	}
+	
+	@Test
+	public void shouldReturnNullActorAnimation()
+	{
+		//given
+		BasicState state = new BasicState("test");
+		ZootActor actor = mock(ZootActor.class);
+		
+		//when
+		when(actor.tryGetController(AnimatedSpriteController.class)).thenReturn(null);
+
+		//then
+		assertNull(state.getActorAnimation(actor));
+	}
+	
+	@Test
+	public void shouldReturnActorAnimation()
+	{
+		//given
+		BasicState state = new BasicState("test");
+		ZootActor actor = mock(ZootActor.class);
+		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
+		ZootAnimation animation = mock(ZootAnimation.class);
+		
+		//when
+		when(actor.tryGetController(AnimatedSpriteController.class)).thenReturn(spriteCtrl);
+		when(spriteCtrl.getCurrentAnimation()).thenReturn(animation);
+		
+		//then
+		assertEquals(animation, state.getActorAnimation(actor));
 	}
 }
