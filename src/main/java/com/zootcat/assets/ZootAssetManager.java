@@ -33,7 +33,7 @@ public class ZootAssetManager extends AssetManager
 	
 	public <T> T getOrLoad(String filename, Class<T> clazz)
 	{
-		if(filename == null || filename.isEmpty())
+		if(filename == null || filename.trim().isEmpty())
 		{
 			return null;
 		}
