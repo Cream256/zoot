@@ -166,6 +166,11 @@ public class PhysicsBodyController implements Controller
 		return body.getGravityScale();
 	}
 	
+	public float getMass()
+	{
+		return body.getMass();
+	}
+	
 	public void applyImpulse(float vx, float vy)
 	{
 		float cx = body.getPosition().x;

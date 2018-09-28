@@ -2,8 +2,10 @@ package com.zootcat.controllers.logic.triggers;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
@@ -102,5 +104,39 @@ public class MoveActorsTriggerControllerTest
 		assertEquals(-MX, argument.getValue().getMovementX(), 0.0f);
 		assertEquals(-MY, argument.getValue().getMovementY(), 0.0f);
 		assertEquals(actor1, argument.getValue().getTargetZootActor());		
+	}
+	
+	@Test
+	public void shouldNotRevertToPreviousPositionIfWasNotTriggeredOn()
+	{
+		//given
+		ControllerAnnotations.setControllerParameter(ctrl, "canRevert", true);
+		
+		//when
+		when(scene.getActors(any())).thenReturn(Arrays.asList(actor1));
+		ctrl.triggerOff(switchActor);
+		
+		//then
+		verify(actor1, never()).addAction(any());
+	}
+	
+	@Test
+	public void shouldNotRevertToPreviousPositionIfNotRevertable()
+	{
+		//given
+		ArgumentCaptor<ZootMoveActorAction> argument = ArgumentCaptor.forClass(ZootMoveActorAction.class);
+		ControllerAnnotations.setControllerParameter(ctrl, "canRevert", false);
+		
+		//when
+		when(scene.getActors(any())).thenReturn(Arrays.asList(actor1));
+		
+		ctrl.triggerOn(switchActor);
+		ctrl.triggerOff(switchActor);
+		
+		//then
+		verify(actor1, times(1)).addAction(argument.capture());
+		assertEquals(MX, argument.getValue().getMovementX(), 0.0f);
+		assertEquals(MY, argument.getValue().getMovementY(), 0.0f);
+		assertEquals(actor1, argument.getValue().getTargetZootActor());
 	}
 }

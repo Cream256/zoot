@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
+import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.scene.ZootActor;
 
 public class MassButtonController extends ButtonController
@@ -33,7 +34,8 @@ public class MassButtonController extends ButtonController
 	
 	private float getOtherBodyMass(ZootActor actorA, ZootActor actorB, Contact contact) 
 	{
-		Fixture otherFixture = super.getOtherFixture(actorA, actorB, contact);
-		return otherFixture.getBody().getMass();
+		ZootActor otherActor = getOtherActor(actorA, actorB);
+		PhysicsBodyController physicsBodyCtrl = otherActor.tryGetController(PhysicsBodyController.class);
+		return physicsBodyCtrl != null ? physicsBodyCtrl.getMass() : 0.0f;
 	}	
 }
