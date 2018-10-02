@@ -7,8 +7,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -18,17 +16,18 @@ import org.mockito.MockitoAnnotations;
 import com.zootcat.actions.ZootMoveActorAction;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootScene;
+import com.zootcat.testing.ZootSceneMock;
 
 public class MoveActorsTriggerControllerTest
 {
 	private static final float MX = 10.0f;
 	private static final float MY = -20.0f;
 	
-	@Mock private ZootScene scene;
+	private ZootSceneMock scene;
 	@Mock private ZootActor actor1;
 	@Mock private ZootActor actor2;
 	@Mock private ZootActor actor3;
+	@Mock private ZootActor actor4;
 	@Mock private ZootActor switchActor;
 	private MoveActorsTriggerController ctrl;
 		
@@ -36,12 +35,31 @@ public class MoveActorsTriggerControllerTest
 	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);
-		when(scene.getUnitScale()).thenReturn(1.0f);
+		scene = new ZootSceneMock();
 		
 		ctrl = new MoveActorsTriggerController();
 		ControllerAnnotations.setControllerParameter(ctrl, "mx", MX);
 		ControllerAnnotations.setControllerParameter(ctrl, "my", MY);
 		ControllerAnnotations.setControllerParameter(ctrl, "scene", scene);
+		ControllerAnnotations.setControllerParameter(ctrl, "actorName", "moveable");
+		
+		when(actor1.getName()).thenReturn("moveable");
+		when(actor2.getName()).thenReturn("moveable");
+		when(actor3.getName()).thenReturn("moveable");
+		when(actor4.getName()).thenReturn("not moveable");
+	}
+	
+	@Test
+	public void shouldNotAddMoveActionToWrongActor()
+	{
+		//given
+		scene.addActor(actor4);
+		
+		//when
+		ctrl.triggerOn(switchActor);
+		
+		//then
+		verify(actor4, times(0)).addAction(any());;
 	}
 	
 	@Test
@@ -49,9 +67,9 @@ public class MoveActorsTriggerControllerTest
 	{
 		//given
 		ArgumentCaptor<ZootMoveActorAction> argument = ArgumentCaptor.forClass(ZootMoveActorAction.class);
+		scene.addActor(actor1);
 		
 		//when
-		when(scene.getActors(any())).thenReturn(Arrays.asList(actor1));
 		ctrl.triggerOn(switchActor);
 		
 		//then		
@@ -64,8 +82,12 @@ public class MoveActorsTriggerControllerTest
 	@Test
 	public void shouldAddMoveActionOnTriggerToAllActors()
 	{		
+		//given
+		scene.addActor(actor1);
+		scene.addActor(actor2);
+		scene.addActor(actor3);
+		
 		//when
-		when(scene.getActors(any())).thenReturn(Arrays.asList(actor1, actor2, actor3));
 		ctrl.triggerOn(switchActor);
 		
 		//then
@@ -77,8 +99,10 @@ public class MoveActorsTriggerControllerTest
 	@Test
 	public void shouldAddMoveActionOnTriggerOnlyOnce()
 	{		
+		//given
+		scene.addActor(actor1);
+		
 		//when
-		when(scene.getActors(any())).thenReturn(Arrays.asList(actor1));
 		ctrl.triggerOn(switchActor);
 		ctrl.triggerOn(switchActor);
 		
@@ -92,10 +116,9 @@ public class MoveActorsTriggerControllerTest
 		//given
 		ArgumentCaptor<ZootMoveActorAction> argument = ArgumentCaptor.forClass(ZootMoveActorAction.class);
 		ControllerAnnotations.setControllerParameter(ctrl, "canRevert", true);
+		scene.addActor(actor1);
 		
 		//when
-		when(scene.getActors(any())).thenReturn(Arrays.asList(actor1));
-		
 		ctrl.triggerOn(switchActor);
 		ctrl.triggerOff(switchActor);
 		
@@ -111,9 +134,9 @@ public class MoveActorsTriggerControllerTest
 	{
 		//given
 		ControllerAnnotations.setControllerParameter(ctrl, "canRevert", true);
+		scene.addActor(actor1);
 		
 		//when
-		when(scene.getActors(any())).thenReturn(Arrays.asList(actor1));
 		ctrl.triggerOff(switchActor);
 		
 		//then
@@ -126,10 +149,9 @@ public class MoveActorsTriggerControllerTest
 		//given
 		ArgumentCaptor<ZootMoveActorAction> argument = ArgumentCaptor.forClass(ZootMoveActorAction.class);
 		ControllerAnnotations.setControllerParameter(ctrl, "canRevert", false);
+		scene.addActor(actor1);
 		
 		//when
-		when(scene.getActors(any())).thenReturn(Arrays.asList(actor1));
-		
 		ctrl.triggerOn(switchActor);
 		ctrl.triggerOff(switchActor);
 		
