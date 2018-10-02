@@ -2,11 +2,7 @@ package com.zootcat.controllers.logic.triggers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,14 +13,14 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.actions.ZootKillActorAction;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootScene;
+import com.zootcat.testing.ZootSceneMock;
 
 public class KillActorsTriggerControllerTest
 {
 	private static final String ACTOR_TO_KILL_NAME = "Actor1";
 	
-	@Mock private ZootScene scene;
 	@Mock private ZootActor ctrlActor;
+	private ZootSceneMock scene;
 	private ZootActor actorToKill;
 	private KillActorsTriggerController ctrl;
 			
@@ -32,12 +28,15 @@ public class KillActorsTriggerControllerTest
 	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);
-		ctrl = new KillActorsTriggerController();
-		actorToKill = new ZootActor();
 		
+		actorToKill = new ZootActor();	
+		actorToKill.setName(ACTOR_TO_KILL_NAME);
+		scene = new ZootSceneMock();
+		scene.addActor(actorToKill);
+		
+		ctrl = new KillActorsTriggerController();
 		ControllerAnnotations.setControllerParameter(ctrl, "scene", scene);
 		ControllerAnnotations.setControllerParameter(ctrl, "actorName", ACTOR_TO_KILL_NAME);
-		when(scene.getActors(any())).thenReturn(Arrays.asList(actorToKill));
 	}
 	
 	@Test
@@ -53,10 +52,27 @@ public class KillActorsTriggerControllerTest
 	}
 	
 	@Test
+	public void shouldNotKillActorWithInvalidName()
+	{
+		//given
+		ZootActor otherActor = new ZootActor();
+		otherActor.setName("other");
+		
+		//when		
+		scene.removeActor(actorToKill);
+		scene.addActor(otherActor);
+		ctrl.triggerOn(ctrlActor);
+		
+		//then
+		assertEquals(0, actorToKill.getActions().size);
+		assertEquals(0, otherActor.getActions().size);		
+		verifyZeroInteractions(ctrlActor);
+	}
+	
+	@Test
 	public void shouldDoNothingOnTriggerOff()
 	{
 		ctrl.triggerOff(ctrlActor);
 		verifyZeroInteractions(ctrlActor);
 	}
-	
 }
