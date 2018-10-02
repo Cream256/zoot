@@ -1,7 +1,6 @@
 package com.zootcat.controllers.logic.triggers;
 
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.controllers.physics.PhysicsBodyController;
