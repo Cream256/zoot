@@ -63,16 +63,24 @@ public class ZootPhysics implements Disposable
 		world.destroyBody(body);
 	}
 		
+	public Fixture createFixture(Body body, FixtureDef fixtureDef)
+	{
+		Fixture newFixture = body.createFixture(fixtureDef);
+		fixtureDef.shape.dispose();
+		fixtureDef.shape = null;
+		return newFixture;
+	}
+	
 	public List<Fixture> createFixtures(Body body, List<FixtureDef> fixtureDefs) 
 	{
 		List<Fixture> fixtures = new ArrayList<Fixture>();
-		fixtureDefs.forEach((def) -> 
-		{
-			fixtures.add(body.createFixture(def));
-			def.shape.dispose();
-			def.shape = null;
-		});
+		fixtureDefs.forEach((def) -> fixtures.add(createFixture(body, def)));
 		return fixtures;
+	}
+	
+	public void destroyFixture(Body body, Fixture fixture)
+	{
+		body.destroyFixture(fixture);
 	}
 	
 	public void step(float delta)

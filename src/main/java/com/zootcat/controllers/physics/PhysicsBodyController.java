@@ -27,7 +27,6 @@ import com.zootcat.physics.ZootShapeFactory;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
-//TODO add tests
 public class PhysicsBodyController implements Controller
 {
 	@CtrlParam(debug = true) protected float density = 1.0f;
@@ -139,18 +138,18 @@ public class PhysicsBodyController implements Controller
 	
 	public Fixture addFixture(FixtureDef fixtureDef, ZootActor actor)
 	{
-		Fixture fixture = body.createFixture(fixtureDef);
-		fixture.setUserData(actor);
+		Fixture newFixture = scene.getPhysics().createFixture(body, fixtureDef);
+		newFixture.setUserData(actor);
 		
-		fixtures.add(fixture);		
-		return fixture;
+		fixtures.add(newFixture);		
+		return newFixture;
 	}
 	
 	public void removeFixture(Fixture fixture)
 	{
 		if(body != null && fixtures != null)
 		{
-			body.destroyFixture(fixture);
+			scene.getPhysics().destroyFixture(body, fixture);
 			fixtures.remove(fixture);
 		}
 	}
@@ -174,7 +173,7 @@ public class PhysicsBodyController implements Controller
 	public void applyImpulse(float vx, float vy)
 	{
 		float cx = body.getPosition().x;
-		float cy = body.getPosition().x;		
+		float cy = body.getPosition().y;		
 		body.applyLinearImpulse(vx, vy, cx, cy, true);
 	}
 	
