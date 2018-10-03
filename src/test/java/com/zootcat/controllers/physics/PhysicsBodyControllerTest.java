@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -27,11 +27,15 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.ControllerAnnotations;
+import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.physics.ZootBodyShape;
 import com.zootcat.physics.ZootPhysics;
 import com.zootcat.scene.ZootActor;
@@ -43,6 +47,8 @@ public class PhysicsBodyControllerTest
 	private static final float ACTOR_Y = 75;
 	private static final float ACTOR_WIDTH = 100.0f;
 	private static final float ACTOR_HEIGHT = 200.0f;
+	private static final float SCENE_UNIT_SCALE = 0.5f;
+
 	private static final Vector2 BODY_LINEAR_VELOCITY = new Vector2(50.0f, 75.0f);
 
 	@Mock private Body body;
@@ -65,6 +71,7 @@ public class PhysicsBodyControllerTest
 	{
 		MockitoAnnotations.initMocks(this);
 		when(scene.getPhysics()).thenReturn(physics);
+		when(scene.getUnitScale()).thenReturn(SCENE_UNIT_SCALE);
 		when(body.getPosition()).thenReturn(new Vector2());
 		when(body.getLinearVelocity()).thenReturn(BODY_LINEAR_VELOCITY);
 		when(physics.createBody(any())).thenReturn(body);
@@ -137,6 +144,123 @@ public class PhysicsBodyControllerTest
 		assertEquals("Filter should have default values", 1, def.filter.categoryBits);
 		assertEquals("Filter should have default values", 0, def.filter.groupIndex);
 		assertEquals("Filter should have default values", -1, def.filter.maskBits);
+	}
+	
+	@Test
+	public void shouldCreateBoxShapeFixtureUsingActorSize()
+	{
+		//given
+		Vector2 vertex1 = new Vector2();
+		Vector2 vertex2 = new Vector2();
+		Vector2 vertex3 = new Vector2();
+		Vector2 vertex4 = new Vector2();
+		ControllerAnnotations.setControllerParameter(physicsBodyCtrl, "shape", ZootBodyShape.BOX);
+		
+		//when
+		physicsBodyCtrl.init(ctrlActor);
+		verify(physics, times(2)).createFixtures(any(), fixtureDefCaptor.capture());	//first time is in @Before method
+		
+		//then
+		assertEquals(1, fixtureDefCaptor.getValue().size());
+		
+		//and
+		FixtureDef fixtureDef = fixtureDefCaptor.getValue().get(0);
+		assertEquals("Should create box shape", Shape.Type.Polygon, fixtureDef.shape.getType());
+		
+		//and
+		PolygonShape boxShape = (PolygonShape)fixtureDef.shape;
+		assertEquals(4, boxShape.getVertexCount());
+		boxShape.getVertex(0, vertex1);
+		boxShape.getVertex(1, vertex2);
+		boxShape.getVertex(2, vertex3);
+		boxShape.getVertex(3, vertex4);
+		assertEquals(ACTOR_WIDTH, vertex2.x - vertex1.x, 0.0f);
+		assertEquals(ACTOR_HEIGHT, vertex4.y - vertex2.y, 0.0f);
+	}
+	
+	@Test
+	public void shouldCreateBoxShapeFixtureUsingWidthAndHeightPropertiesScaled()
+	{
+		//given
+		final float expectedWidth = 256.0f;
+		final float expectedHeight = 128.0f;
+		Vector2 vertex1 = new Vector2();
+		Vector2 vertex2 = new Vector2();
+		Vector2 vertex3 = new Vector2();
+		Vector2 vertex4 = new Vector2();
+		ControllerAnnotations.setControllerParameter(physicsBodyCtrl, "shape", ZootBodyShape.BOX);
+		ControllerAnnotations.setControllerParameter(physicsBodyCtrl, "width", expectedWidth);
+		ControllerAnnotations.setControllerParameter(physicsBodyCtrl, "height", expectedHeight);
+		
+		//when
+		physicsBodyCtrl.init(ctrlActor);
+		verify(physics, times(2)).createFixtures(any(), fixtureDefCaptor.capture());	//first time is in @Before method
+		
+		//then
+		assertEquals(1, fixtureDefCaptor.getValue().size());
+		
+		//and
+		FixtureDef fixtureDef = fixtureDefCaptor.getValue().get(0);
+		assertEquals("Should create box shape", Shape.Type.Polygon, fixtureDef.shape.getType());
+		
+		//and
+		PolygonShape boxShape = (PolygonShape)fixtureDef.shape;
+		assertEquals(4, boxShape.getVertexCount());
+		boxShape.getVertex(0, vertex1);
+		boxShape.getVertex(1, vertex2);
+		boxShape.getVertex(2, vertex3);
+		boxShape.getVertex(3, vertex4);
+		assertEquals(expectedWidth * SCENE_UNIT_SCALE, vertex2.x - vertex1.x, 0.0f);
+		assertEquals(expectedHeight * SCENE_UNIT_SCALE, vertex4.y - vertex2.y, 0.0f);
+	}
+	
+	@Test
+	public void shouldCreateCircleShapedFixtureUsingActorWidth()
+	{
+		//given
+		ControllerAnnotations.setControllerParameter(physicsBodyCtrl, "shape", ZootBodyShape.CIRCLE);
+		
+		//when
+		physicsBodyCtrl.init(ctrlActor);
+		
+		//then
+		verify(physics, times(2)).createFixtures(any(), fixtureDefCaptor.capture());	//first time is in @Before method
+		assertEquals(1, fixtureDefCaptor.getValue().size());
+		
+		FixtureDef fixtureDef = fixtureDefCaptor.getValue().get(0);
+		assertEquals("Should create circle shape", Shape.Type.Circle, fixtureDef.shape.getType());
+		assertEquals("Radius should be equal to actor width", 
+					ACTOR_WIDTH, 
+					fixtureDef.shape.getRadius(), 0.0f);
+	}
+	
+	@Test
+	public void shouldCreateCircleShapedFixtureUsingWidthParameter()
+	{
+		//given
+		final float widthParam = 256.0f;
+		ControllerAnnotations.setControllerParameter(physicsBodyCtrl, "shape", ZootBodyShape.CIRCLE);
+		ControllerAnnotations.setControllerParameter(physicsBodyCtrl, "width", widthParam);
+		
+		//when
+		physicsBodyCtrl.init(ctrlActor);
+		
+		//then
+		verify(physics, times(2)).createFixtures(any(), fixtureDefCaptor.capture());	//first time is in @Before method
+		assertEquals(1, fixtureDefCaptor.getValue().size());
+		
+		FixtureDef fixtureDef = fixtureDefCaptor.getValue().get(0);
+		assertTrue("Should create circle shape", fixtureDef.shape instanceof CircleShape);
+		assertEquals("Radius should be equal to width parameter scaled by scene unit scale", 
+					widthParam * SCENE_UNIT_SCALE, 
+					fixtureDef.shape.getRadius(), 0.0f);
+	}
+	
+	@Test(expected = RuntimeZootException.class)
+	public void shouldThrowWhenUnknownBodyShapeIsProvided()
+	{
+		ControllerAnnotations.setControllerParameter(physicsBodyCtrl, "shape", ZootBodyShape.NONE);
+		physicsBodyCtrl.init(ctrlActor);
 	}
 	
 	@Test
@@ -352,7 +476,7 @@ public class PhysicsBodyControllerTest
 		Fixture newFixture = mock(Fixture.class);
 		
 		//when
-		when(physics.createFixture(any(), eq(fixtureDef))).thenReturn(newFixture);
+		when(body.createFixture(eq(fixtureDef))).thenReturn(newFixture);
 		physicsBodyCtrl.addFixture(fixtureDef, ctrlActor);
 		
 		//then
@@ -367,7 +491,7 @@ public class PhysicsBodyControllerTest
 		physicsBodyCtrl.removeFixture(fixture);
 		
 		assertEquals(0, physicsBodyCtrl.getFixtures().size());
-		verify(physics).destroyFixture(body, fixture);
+		verify(body).destroyFixture(fixture);
 	}
 	
 	@Test

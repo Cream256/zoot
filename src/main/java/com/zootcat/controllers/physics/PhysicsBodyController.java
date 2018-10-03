@@ -138,18 +138,18 @@ public class PhysicsBodyController implements Controller
 	
 	public Fixture addFixture(FixtureDef fixtureDef, ZootActor actor)
 	{
-		Fixture newFixture = scene.getPhysics().createFixture(body, fixtureDef);
-		newFixture.setUserData(actor);
+		Fixture fixture = body.createFixture(fixtureDef);
+		fixture.setUserData(actor);
 		
-		fixtures.add(newFixture);		
-		return newFixture;
+		fixtures.add(fixture);		
+		return fixture;
 	}
 	
 	public void removeFixture(Fixture fixture)
 	{
 		if(body != null && fixtures != null)
 		{
-			scene.getPhysics().destroyFixture(body, fixture);
+			body.destroyFixture(fixture);
 			fixtures.remove(fixture);
 		}
 	}
