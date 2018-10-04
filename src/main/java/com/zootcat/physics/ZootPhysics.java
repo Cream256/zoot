@@ -18,9 +18,10 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class ZootPhysics implements Disposable
 {
+	public static final Vector2 DEFAULT_GRAVITY = new Vector2(0.0f, -9.80f);
+	
 	private static final int POSITION_ITERATIONS = 2;
 	private static final int VELOCITY_ITERATIONS = 6;
-	private static final Vector2 DEFAULT_GRAVITY = new Vector2(0.0f, -9.80f);
 	
 	private World world;
 	private ZootContactFilter contactFilter = new ZootContactFilter();
@@ -48,9 +49,14 @@ public class ZootPhysics implements Disposable
 		contactFilter.removeFixtureFilters(fixture);
 	}
 	
-	public void setGravity(float x, float y, float z)
+	public void setGravity(float x, float y)
 	{
 		world.setGravity(new Vector2(x, y));
+	}
+	
+	public Vector2 getGravity()
+	{
+		return world.getGravity().cpy();
 	}
 	
 	public Body createBody(BodyDef bodyDef)
