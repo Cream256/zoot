@@ -8,18 +8,54 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.zootcat.exceptions.RuntimeZootException;
+
 public class ArgumentParserTest
 {                
     @Test
-    public void noArgsTest()
+    public void shouldReturnEmptyResultOnEmptyArray()
     {
         Map<String, Object> result = ArgumentParser.parse(new String[0]);        
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
+    
+    @Test
+    public void shouldReturnEmptyResultOnSingleEmptyElement()
+    {
+    	Map<String, Object> result = ArgumentParser.parse(new String[] {""});        
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+    
+    @Test
+    public void shouldReturnEmptyResultOnMultiplyWhitespaceElements()
+    {
+    	Map<String, Object> result = ArgumentParser.parse(new String[] {" ", "  ", "   "});        
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+    
+    @Test(expected = RuntimeZootException.class)
+    public void shouldThrowOnInvalidElement()
+    {
+    	ArgumentParser.parse(new String[] {"abc=zxc=sdf"});
+    }
+    
+    @Test(expected = RuntimeZootException.class)
+    public void shouldThrowOnEmptyArgumentName()
+    {
+    	ArgumentParser.parse(new String[] {" =zxc"});
+    }
+    
+    @Test(expected = RuntimeZootException.class)
+    public void shouldThrowOnEmptyArgumentValue()
+    {
+    	ArgumentParser.parse(new String[] {"abc= "});
+    }
         
     @Test
-    public void booleanTrueTest()
+    public void shouldReturnPositiveBoolean()
     {
     	Map<String, Object> result = ArgumentParser.parse(new String[]{"myBool = true"});        
         assertNotNull(result);
@@ -29,7 +65,7 @@ public class ArgumentParserTest
     }
     
     @Test
-    public void booleanFalseTest()
+    public void shouldReturnNegativeBoolean()
     {
     	Map<String, Object> result = ArgumentParser.parse(new String[]{"myBool = false"});        
         assertNotNull(result);
@@ -38,13 +74,14 @@ public class ArgumentParserTest
         assertEquals(false, result.get("myBool"));
     }
     
-    public void emptyStringArgShouldNotThrowTest()
+    public void shouldNotThrowOnWhitespaceStringArgument()
     {
-    	ArgumentParser.parse(new String[]{"   "});        
+    	ArgumentParser.parse(new String[]{"   "});
+    	//ok, no exception thrown
     }
     
     @Test
-    public void stringArgTest()
+    public void shouldReturnString()
     {                
         Map<String, Object> result = ArgumentParser.parse(new String[]{"str = myString"});        
         assertNotNull(result);
@@ -54,7 +91,7 @@ public class ArgumentParserTest
     }
 
     @Test
-    public void stringWithSpacesTest()
+    public void shouldReturnStringWithSpaces()
     {                
         Map<String, Object> result = ArgumentParser.parse(new String[]{"str = '  '"});        
         assertNotNull(result);
@@ -64,7 +101,7 @@ public class ArgumentParserTest
     }   
                     
     @Test
-    public void integerArgTest() 
+    public void shouldReturnInteger() 
     {
         Map<String, Object> result = ArgumentParser.parse(new String[]{"myInt = 123"});
         assertNotNull(result);
@@ -74,7 +111,7 @@ public class ArgumentParserTest
     }
     
     @Test
-    public void negativeIntegerArgTest() 
+    public void shouldReturnNegativeInteger() 
     {
         Map<String, Object> result = ArgumentParser.parse(new String[]{"myInt = -123"});
         assertNotNull(result);
@@ -84,7 +121,7 @@ public class ArgumentParserTest
     }
     
     @Test
-    public void positiveIntegerArgTest() 
+    public void shouldReturnPositiveInteger() 
     {
         Map<String, Object> result = ArgumentParser.parse(new String[]{"myInt = +123"});
         assertNotNull(result);
@@ -94,7 +131,7 @@ public class ArgumentParserTest
     }
         
     @Test
-    public void floatArgTest() 
+    public void shouldReturnFloat() 
     {
         Map<String, Object> result = ArgumentParser.parse(new String[]{"myFloat = 0.123f"});
         assertNotNull(result);
@@ -104,7 +141,7 @@ public class ArgumentParserTest
     }
     
     @Test
-    public void floatNoLeadingZeroArgTest() 
+    public void shouldReturnFloatWithoutLeadingNumber() 
     {
         Map<String, Object> result = ArgumentParser.parse(new String[]{"myFloat = .123f"});
         assertNotNull(result);
@@ -114,7 +151,7 @@ public class ArgumentParserTest
     }
     
     @Test
-    public void floatNegativeArgTest() 
+    public void shouldReturnNegativeFloat() 
     {
         Map<String, Object> result = ArgumentParser.parse(new String[]{"myFloat = -0.123f"});
         assertNotNull(result);
@@ -124,7 +161,7 @@ public class ArgumentParserTest
     }
     
     @Test
-    public void doubleArgTest() 
+    public void shouldReturnDouble() 
     {
         Map<String, Object> result = ArgumentParser.parse(new String[]{"myDouble = 0.123d"});
         assertNotNull(result);
@@ -134,7 +171,7 @@ public class ArgumentParserTest
     }
                    
     @Test
-    public void multiplyArgumentsTest() 
+    public void shouldReturnMultiplyArguments() 
     {        
         String[] arguments = {"arg1=@player1", "arg2=@little bunny", "arg3 = 'DUH'", "arg4=3.14f", "arg5 = 6.14d"};
         Map<String, Object> result = ArgumentParser.parse(arguments); 
