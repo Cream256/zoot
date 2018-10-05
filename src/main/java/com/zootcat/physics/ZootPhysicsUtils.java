@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.zootcat.exceptions.RuntimeZootException;
 
-//TODO add test
 public class ZootPhysicsUtils
 {
 	public static Vector2[] getPolygonVertices(PolygonShape polygon)

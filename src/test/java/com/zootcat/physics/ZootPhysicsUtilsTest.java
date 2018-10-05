@@ -140,15 +140,59 @@ public class ZootPhysicsUtilsTest
 		assertEquals(my, center.y, 0.0f);		
 	}
 	
+	@Test(expected = RuntimeZootException.class)
+	public void shouldThrowWhenSettingPositionIfFixtureHasUnsupportedShapeType()
+	{
+		//given
+		Shape shape = mock(Shape.class);
+		Fixture fixture = mock(Fixture.class);
+		
+		//when
+		when(fixture.getShape()).thenReturn(shape);
+		when(shape.getType()).thenReturn(Shape.Type.Edge);
+		ZootPhysicsUtils.setFixturePosition(fixture, 0.0f, 0.0f);		
+	}
+	
 	@Test
 	public void shouldSetPolygonShapeFixturePosition()
 	{
-		//TODO
+		//given
+		final float posX = 5.0f;
+		final float posY = -3.0f;
+		PolygonShape polygon = new PolygonShape();
+		Fixture fixture = mock(Fixture.class);
+		
+		//when
+		when(fixture.getBody()).thenReturn(mock(Body.class));
+		when(fixture.getShape()).thenReturn(polygon);
+		polygon.setAsBox(10.0f, 10.0f, new Vector2(25.0f, 37.0f), 0.0f);
+		ZootPhysicsUtils.setFixturePosition(fixture, posX, posY);
+		
+		//then
+		Vector2 centroid = ZootPhysicsUtils.getPolygonCentroid(polygon);
+		assertEquals(posX, centroid.x, 0.0f);
+		assertEquals(posY, centroid.y, 0.0f);
 	}
 	
 	@Test
 	public void shouldSetCircleShapeFixturePosition()
 	{
-		//TODO
+		//given
+		final float posX = 55.0f;
+		final float posY = -33.0f;
+		CircleShape circle = new CircleShape();
+		Fixture fixture = mock(Fixture.class);
+		
+		//when
+		when(fixture.getBody()).thenReturn(mock(Body.class));
+		when(fixture.getShape()).thenReturn(circle);
+		circle.setRadius(1.0f);
+		circle.setPosition(new Vector2(123.0f, -256.0f));
+		ZootPhysicsUtils.setFixturePosition(fixture, posX, posY);
+		
+		//then
+		Vector2 center = circle.getPosition();
+		assertEquals(posX, center.x, 0.0f);
+		assertEquals(posY, center.y, 0.0f);	
 	}
 }
