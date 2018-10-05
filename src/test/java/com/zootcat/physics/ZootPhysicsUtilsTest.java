@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
+
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -98,6 +99,21 @@ public class ZootPhysicsUtilsTest
 	}
 	
 	@Test
+	public void shouldThrowIfFixtureHasUnsupportedShapeType()
+	{
+		//given
+		Fixture fixture = mock(Fixture.class);
+		
+		//when
+		when(fixture.getShape()).thenReturn(null);
+		ZootPhysicsUtils.moveFixture(fixture, 1.0f, 2.0f);
+		
+		//then
+		verify(fixture).getShape();
+		verifyNoMoreInteractions(fixture);
+	}
+	
+	@Test
 	public void shouldMoveFixtureWithPolygonShape()
 	{
 		//given
@@ -150,7 +166,7 @@ public class ZootPhysicsUtilsTest
 		//when
 		when(fixture.getShape()).thenReturn(shape);
 		when(shape.getType()).thenReturn(Shape.Type.Edge);
-		ZootPhysicsUtils.setFixturePosition(fixture, 0.0f, 0.0f);		
+		ZootPhysicsUtils.setFixturePosition(fixture, 0.0f, 0.0f);
 	}
 	
 	@Test

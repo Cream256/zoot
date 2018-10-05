@@ -1,5 +1,7 @@
 package com.zootcat.gfx;
 
+import java.util.Arrays;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
@@ -20,6 +22,8 @@ public class ZootAnimation
 	{
 		this.name = name;
 		animation = new Animation<TextureRegion>(frameDuration, frames);
+		offsets = new ZootAnimationOffset[frames.length];
+		Arrays.fill(offsets, new ZootAnimationOffset());
 	}
 		
 	public static int getAnimationId(String name)
@@ -37,7 +41,7 @@ public class ZootAnimation
 		return offsets;
 	}
 	
-	public ZootAnimationOffset getFrameOffset()
+	public ZootAnimationOffset getKeyFrameOffset()
 	{
 		return offsets[animation.getKeyFrameIndex(animationTime)];
 	}
