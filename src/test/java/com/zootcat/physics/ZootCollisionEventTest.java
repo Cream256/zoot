@@ -141,5 +141,11 @@ public class ZootCollisionEventTest
 		assertNull(event.getContactImpulse());
 		assertEquals(Type.Unknown, event.getType());
 	}
-
+	
+	@Test
+	public void shouldReturnEventTypeName()
+	{
+		ZootCollisionEvent event = new ZootCollisionEvent(actorA, actorB, Type.PreSolve);
+		assertEquals("PreSolve", event.toString());
+	}
 }
