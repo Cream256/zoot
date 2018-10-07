@@ -10,7 +10,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
-
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -99,7 +98,7 @@ public class ZootPhysicsUtilsTest
 	}
 	
 	@Test
-	public void shouldThrowIfFixtureHasUnsupportedShapeType()
+	public void shouldDoNothingIfNoShapeIsSet()
 	{
 		//given
 		Fixture fixture = mock(Fixture.class);
