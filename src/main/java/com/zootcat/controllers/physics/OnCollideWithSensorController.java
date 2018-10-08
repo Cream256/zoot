@@ -108,7 +108,7 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	
 	public void setSensorPosition(float x, float y)
 	{
-		ZootPhysicsUtils.setFixturePosition(sensor, x * scene.getUnitScale(), y * scene.getUnitScale());
+		ZootPhysicsUtils.setFixturePosition(sensor, x, y);
 	}
 		
 	public Fixture getSensor()
