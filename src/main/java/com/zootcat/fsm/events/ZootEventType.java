@@ -24,5 +24,6 @@ public enum ZootEventType implements ZootEventTypeEnum
 	TriggerOn, 
 	TriggerOff, 
 	Grab, 
-	GrabSide;
+	GrabSide, 
+	Obstacle;
 }
