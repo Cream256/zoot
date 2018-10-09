@@ -198,6 +198,7 @@ public class PhysicsBodyController implements Controller
 		this.body.setFixedRotation(!canRotate);
 	}
 	
+	//TODO move this out to ZootPhysicUtils
 	public void scale(PhysicsBodyScale bodyScale)
 	{
 		fixtures.forEach(f ->

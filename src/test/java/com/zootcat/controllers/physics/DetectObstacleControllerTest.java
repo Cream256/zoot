@@ -46,7 +46,7 @@ public class DetectObstacleControllerTest
 		physics = new ZootPhysics();
 		when(scene.getPhysics()).thenReturn(physics);
 		when(scene.getUnitScale()).thenReturn(1.0f);
-		when(dirCtrl.getDirection()).thenReturn(ZootDirection.Right);
+		when(dirCtrl.getDirection()).thenReturn(ZootDirection.None);
 				
 		//create controller actor
 		controllerActor = new ZootActor();

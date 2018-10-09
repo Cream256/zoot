@@ -20,6 +20,7 @@ public enum ZootEventType implements ZootEventTypeEnum
 	Collide, 
 	Dead, 
 	Ground, 
+	NoGroundAhead,
 	InAir, 
 	TriggerOn, 
 	TriggerOff, 

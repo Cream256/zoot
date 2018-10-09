@@ -9,8 +9,8 @@ import com.zootcat.scene.ZootDirection;
 
 public class DetectObstacleController extends OnCollideWithSensorController
 {
-	private ZootDirection direction = ZootDirection.Right;
-	
+	private ZootDirection direction = ZootDirection.None;
+		
 	@Override
 	public void onAdd(ZootActor actor)
 	{
@@ -22,7 +22,7 @@ public class DetectObstacleController extends OnCollideWithSensorController
 	public void onUpdate(float delta, ZootActor actor)
 	{
 		super.onUpdate(delta, actor);
-		updateSensor(actor);		
+		updateSensor(actor);	
 	}
 	
 	@Override
@@ -34,8 +34,13 @@ public class DetectObstacleController extends OnCollideWithSensorController
 	
 	protected void updateSensor(ZootActor actor)
 	{
-		actor.controllerAction(DirectionController.class, ctrl -> direction = ctrl.getDirection());		
-		float newX = actor.getWidth() * 0.5f * direction.getHorizontalValue();
-		super.setSensorPosition(newX, 0.0f);		
+		ZootDirection oldDirection = direction;		
+		actor.controllerAction(DirectionController.class, ctrl -> direction = ctrl.getDirection());
+		
+		if(oldDirection != direction)
+		{
+			float newX = actor.getWidth() * 0.5f * direction.getHorizontalValue();
+			super.setSensorPosition(newX, 0.0f);
+		}		
 	}
 }
