@@ -56,17 +56,46 @@ public abstract class OnCollideController extends PhysicsCollisionController
 		this.collidePerActor = collidePerActor;
 	}
 	
+	public void setCategory(String category)
+	{
+		this.category = category;
+	}
+	
+	public void setMask(String mask)
+	{
+		this.mask = mask;
+	}
+	
+	public void setFilter(Filter filter)
+	{
+		this.filter = filter;
+	}
+	
+	public Filter getFilter()
+	{
+		return filter;
+	}
+	
 	@Override
 	public void init(ZootActor actor)
 	{		
 		super.init(actor);
 		
 		collidingActors.clear();		
-		filter = new Filter();	
-		filter.maskBits = BitMaskConverter.Instance.fromString(mask);
-		if(category != null && !category.isEmpty())
+		createCollisionFilter(actor);
+	}
+
+	private void createCollisionFilter(ZootActor actor)
+	{
+		filter = new Filter();
+		
+		if(mask != null || category != null)
 		{
-			filter.categoryBits = BitMaskConverter.Instance.fromString(category);
+			filter.maskBits = BitMaskConverter.Instance.fromString(mask);
+			if(category != null && !category.isEmpty())
+			{
+				filter.categoryBits = BitMaskConverter.Instance.fromString(category);
+			}
 		}
 	}
 		
@@ -113,17 +142,7 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	{
 		//noop
 	}
-			
-	public void setCategory(String category)
-	{
-		this.category = category;
-	}
-	
-	public void setMask(String mask)
-	{
-		this.mask = mask;
-	}
-	
+				
 	public abstract void onEnter(ZootActor actorA, ZootActor actorB, Contact contact);
 	
 	public abstract void onLeave(ZootActor actorA, ZootActor actorB, Contact contact);
@@ -142,12 +161,7 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	{
 		return (actorA == getControllerActor()) ? contact.getFixtureA() : contact.getFixtureB();
 	}
-	
-	protected Filter getFilter()
-	{
-		return filter;
-	}
-	
+		
 	private boolean collides(ZootActor actorA, ZootActor actorB, Contact contact)
 	{				
 		Fixture otherFixture = getOtherFixture(actorA, actorB, contact);

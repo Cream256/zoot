@@ -3,7 +3,7 @@ package com.zootcat.controllers.physics;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -270,7 +270,7 @@ public class OnCollideControllerTest
 		assertEquals("Should not collide on begin contact", 0, enterCount);
 		assertEquals("Should not collide on end contact", 0, leaveCount);
 	}
-	
+		
 	@Test
 	public void shouldNotCollideWithSensors()
 	{
@@ -326,5 +326,49 @@ public class OnCollideControllerTest
 				
 		ctrl.postSolve(actorA, actorB, contactImpulse);
 		verifyZeroInteractions(actorA, actorB, contactImpulse);
+	}
+	
+	@Test
+	public void shouldSetCategory()
+	{
+		//given
+		ctrl.setCategory("ABC");
+		
+		//when
+		ctrl.init(ctrlActor);
+		
+		//then
+		assertEquals(BitMaskConverter.Instance.fromString("ABC"), ctrl.getFilter().categoryBits);
+	}
+	
+	@Test
+	public void shouldSetMask()
+	{
+		//given
+		ctrl.setMask("DEF");
+		
+		//when
+		ctrl.init(ctrlActor);
+		
+		//then
+		assertEquals(BitMaskConverter.Instance.fromString("DEF"), ctrl.getFilter().categoryBits);		
+	}
+	
+	@Test
+	public void shouldSetCollisionFilter()
+	{
+		//given
+		Filter filter = new Filter();
+		filter.categoryBits = 123;
+		filter.groupIndex = 456;
+		filter.maskBits = 789;
+		
+		//when
+		ctrl.setFilter(filter);
+		
+		//then
+		assertEquals(123, ctrl.getFilter().categoryBits);
+		assertEquals(456, ctrl.getFilter().groupIndex);
+		assertEquals(789, ctrl.getFilter().maskBits);
 	}
 }
