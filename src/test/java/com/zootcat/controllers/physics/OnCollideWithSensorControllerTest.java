@@ -4,7 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.anyFloat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -15,7 +20,10 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.zootcat.controllers.factory.ControllerAnnotations;
@@ -58,6 +66,9 @@ public class OnCollideWithSensorControllerTest
 		physics = new ZootPhysics();
 		when(scene.getPhysics()).thenReturn(physics);
 		when(scene.getUnitScale()).thenReturn(1.0f);
+		
+		//other fixture
+		when(otherFixture.getFilterData()).thenReturn(new Filter());
 		
 		//ctrl actor
 		ctrlActor = new ZootActor();
@@ -335,5 +346,162 @@ public class OnCollideWithSensorControllerTest
 		verify(fixture1, never()).testPoint(anyFloat(), anyFloat());
 		verify(fixture2).testPoint(anyFloat(), anyFloat());
 		verify(fixture3, never()).testPoint(anyFloat(), anyFloat());		
+	}
+	
+	@Test
+	public void shouldProperlyDetectCollisionWhenContactIsDisabledAndReenabled()
+	{
+		//given
+		Manifold manifold = mock(Manifold.class);
+		ContactImpulse contactImpulse = mock(ContactImpulse.class);
+		
+		//when
+		ctrl.init(ctrlActor);
+		ctrl.onAdd(ctrlActor);
+		when(contact.getFixtureA()).thenReturn(ctrl.getSensor());
+		when(contact.getFixtureB()).thenReturn(otherFixture);
+		when(contact.isEnabled()).thenReturn(false);
+		
+		ctrl.beginContact(ctrlActor, otherActor, contact);
+		ctrl.preSolve(ctrlActor, otherActor, contact, manifold);
+		ctrl.postSolve(ctrlActor, otherActor, contactImpulse);
+		ctrl.onUpdate(0.0f, ctrlActor);
+		
+		//then
+		verify(otherFixture, never()).testPoint(anyFloat(), anyFloat());
+				
+		//when
+		when(contact.isEnabled()).thenReturn(true);
+		ctrl.preSolve(ctrlActor, otherActor, contact, manifold);
+		ctrl.postSolve(ctrlActor, otherActor, contactImpulse);
+		ctrl.onUpdate(0.0f, ctrlActor);
+		
+		//then
+		verify(otherFixture).testPoint(anyFloat(), anyFloat());
+	}
+	
+	@Test
+	public void shouldProperlyHandleMultiplyContacts()
+	{
+		//given
+		positiveResultsCount = 100;	//to process all fixtures when needed
+		
+		//when
+		ctrl.init(ctrlActor);
+		ctrl.onAdd(ctrlActor);
+		Fixture sensorFixture = ctrl.getSensor();
+		
+		Fixture fixture1 = mock(Fixture.class);
+		when(fixture1.getFilterData()).thenReturn(new Filter());
+		
+		Fixture fixture2 = mock(Fixture.class);
+		when(fixture2.getFilterData()).thenReturn(new Filter());
+		
+		Fixture fixture3 = mock(Fixture.class);
+		when(fixture3.getFilterData()).thenReturn(new Filter());
+			
+		Contact contact1 = mock(Contact.class);
+		when(contact1.getFixtureA()).thenReturn(sensorFixture);
+		when(contact1.getFixtureB()).thenReturn(fixture1);
+		when(contact1.isEnabled()).thenReturn(true);
+		
+		Contact contact2 = mock(Contact.class);
+		when(contact2.getFixtureA()).thenReturn(sensorFixture);
+		when(contact2.getFixtureB()).thenReturn(fixture2);
+		when(contact2.isEnabled()).thenReturn(true);
+		
+		Contact contact3 = mock(Contact.class);
+		when(contact3.getFixtureA()).thenReturn(sensorFixture);
+		when(contact3.getFixtureB()).thenReturn(fixture3);
+		when(contact3.isEnabled()).thenReturn(true);
+				
+		//when all contacts are enabled
+		ctrl.beginContact(ctrlActor, otherActor, contact1);
+		ctrl.beginContact(ctrlActor, otherActor, contact2);
+		ctrl.beginContact(ctrlActor, otherActor, contact3);
+		ctrl.preSolve(ctrlActor, otherActor, contact1, mock(Manifold.class));
+		ctrl.preSolve(ctrlActor, otherActor, contact2, mock(Manifold.class));
+		ctrl.preSolve(ctrlActor, otherActor, contact3, mock(Manifold.class));
+		ctrl.onUpdate(1.0f, ctrlActor);
+		
+		//then detect collision for all contacts
+		verify(fixture1).testPoint(anyFloat(), anyFloat());
+		verify(fixture2).testPoint(anyFloat(), anyFloat());
+		verify(fixture3).testPoint(anyFloat(), anyFloat());
+				
+		//when only one contact is left enabled
+		when(contact2.isEnabled()).thenReturn(false);
+		when(contact3.isEnabled()).thenReturn(false);
+		ctrl.preSolve(ctrlActor, otherActor, contact1, mock(Manifold.class));
+		ctrl.preSolve(ctrlActor, otherActor, contact2, mock(Manifold.class));
+		ctrl.preSolve(ctrlActor, otherActor, contact3, mock(Manifold.class));			
+
+		//this is required to simulate box2d behaviour, all contacts are reenabled after postsolve
+		when(contact2.isEnabled()).thenReturn(true);
+		when(contact3.isEnabled()).thenReturn(true);
+
+		ctrl.onUpdate(1.0f, ctrlActor);
+		
+		//then detect only contact for fixture 1
+		verify(fixture1, times(2)).testPoint(anyFloat(), anyFloat());
+		verify(fixture2, times(1)).testPoint(anyFloat(), anyFloat());
+		verify(fixture3, times(1)).testPoint(anyFloat(), anyFloat());
+		
+		//when all contacts are disabled
+		when(contact1.isEnabled()).thenReturn(false);
+		when(contact2.isEnabled()).thenReturn(false);
+		when(contact3.isEnabled()).thenReturn(false);
+		ctrl.preSolve(ctrlActor, otherActor, contact1, mock(Manifold.class));
+		ctrl.preSolve(ctrlActor, otherActor, contact2, mock(Manifold.class));
+		ctrl.preSolve(ctrlActor, otherActor, contact3, mock(Manifold.class));			
+		
+		//this is required to simulate box2d behaviour, all contacts are reenabled after postsolve
+		when(contact1.isEnabled()).thenReturn(true);
+		when(contact2.isEnabled()).thenReturn(true);
+		when(contact3.isEnabled()).thenReturn(true);
+		
+		ctrl.onUpdate(1.0f, ctrlActor);
+		
+		//then no more contacts should be detected
+		verify(fixture1, times(2)).testPoint(anyFloat(), anyFloat());
+		verify(fixture2, times(1)).testPoint(anyFloat(), anyFloat());
+		verify(fixture3, times(1)).testPoint(anyFloat(), anyFloat());
+	}
+	
+	@Test
+	public void shouldSetScene()
+	{
+		//given
+		ZootScene scene = mock(ZootScene.class);
+		
+		//when		
+		ctrl.setScene(scene);
+		
+		//then
+		assertEquals(scene, ctrl.getScene());		
+	}
+	
+	@Test
+	public void shouldSetSensorSizeAndPosition()
+	{
+		//given
+		final float width = 123.0f;
+		final float height = 234.0f;
+		final float x = 345.0f;
+		final float y = 456.0f;
+		
+		//when		
+		ctrl = new OnCollideWithSensorController(width, height, x, y) {
+			@Override
+			protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
+			{
+				return null;
+			}};
+		
+		//then		
+		assertEquals(width, ctrl.sensorWidth, 0.0f);
+		assertEquals(height, ctrl.sensorHeight, 0.0f);
+		assertEquals(x, ctrl.sensorX, 0.0f);
+		assertEquals(y, ctrl.sensorY, 0.0f);
 	}
 }

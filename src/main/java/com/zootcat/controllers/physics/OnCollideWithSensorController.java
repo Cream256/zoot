@@ -1,11 +1,15 @@
 package com.zootcat.controllers.physics;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.physics.ZootPhysicsUtils;
@@ -40,7 +44,8 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	public enum SensorCollisionResult { ProcessNext, StopProcessing };
 	
 	private Fixture sensor;
-	private Set<Fixture> collisions = new LinkedHashSet<Fixture>();
+	private Set<Fixture> collidedFixtures = new LinkedHashSet<Fixture>();
+	private Set<Fixture> disabledFixtures = new HashSet<Fixture>();
 	
 	public OnCollideWithSensorController()
 	{
@@ -67,12 +72,15 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 				
 		//cleanup
 		sensorShape.dispose();
-		collisions.clear();
+		collidedFixtures.clear();
 	}
 	
 	@Override
 	public void onRemove(ZootActor actor) 
 	{
+		collidedFixtures.clear();
+		disabledFixtures.clear();
+		
 		actor.getController(PhysicsBodyController.class).removeFixture(sensor);
 		sensor = null;		
 		
@@ -84,20 +92,31 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	{
 		if(collidedWithSensor(contact))
 		{			
-			collisions.add(getOtherFixture(actorA, actorB, contact));
+			collidedFixtures.add(getOtherFixture(actorA, actorB, contact));
 		}
+	}
+	
+	private boolean collidedWithSensor(Contact contact)
+	{
+		return contact.getFixtureA() == sensor || contact.getFixtureB() == sensor;
 	}
 
 	@Override
 	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
 	{		
-		collisions.remove(getOtherFixture(actorA, actorB, contact));
+		if(collidedWithSensor(contact))
+		{
+			Fixture otherFixture = getOtherFixture(actorA, actorB, contact);
+			collidedFixtures.remove(otherFixture);
+			disabledFixtures.remove(otherFixture);	
+		}
 	}
 
 	@Override
-	public void onUpdate(float delta, ZootActor actor) 
+	public void onUpdate(float delta, ZootActor actor)
 	{
-		for(Fixture fixture : collisions)
+		List<Fixture> collided = collidedFixtures.stream().filter(fix -> shouldCollide(fix)).collect(Collectors.toList());		
+		for(Fixture fixture : collided)
 		{
 			if(onCollideWithSensor(fixture) == SensorCollisionResult.StopProcessing)
 			{
@@ -106,6 +125,29 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 		}
 	}
 	
+	private boolean shouldCollide(Fixture fixture)
+	{
+		boolean contactEnabled = !disabledFixtures.contains(fixture);	
+		return contactEnabled;		
+		//boolean fixtureIsSensor = fixture.isSensor();	//TODO	
+		//return contactEnabled && !fixtureIsSensor;
+	}
+	
+	//Box2D enables all contacts after postSolve step, so we need to keep track of them in the preSolve step
+	@Override
+	public void preSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
+	{	
+		Fixture otherFixture = getOtherFixture(actorA, actorB, contact);
+		if(!contact.isEnabled() && collidedFixtures.contains(otherFixture))
+		{
+			disabledFixtures.add(otherFixture);
+		}
+		else if(contact.isEnabled() && disabledFixtures.contains(otherFixture))
+		{
+			disabledFixtures.remove(otherFixture);
+		}
+	}
+		
 	public void setSensorPosition(float x, float y)
 	{
 		ZootPhysicsUtils.setFixturePosition(sensor, x, y);
@@ -121,13 +163,13 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 		this.scene = scene;
 	}
 	
-	protected abstract SensorCollisionResult onCollideWithSensor(Fixture fixture);
-		
-	private boolean collidedWithSensor(Contact contact)
+	public ZootScene getScene()
 	{
-		return contact.getFixtureA() == sensor || contact.getFixtureB() == sensor;
+		return scene;
 	}
 	
+	protected abstract SensorCollisionResult onCollideWithSensor(Fixture fixture);
+			
 	private FixtureDef createSensorFixtureDef(ZootActor actor, Shape sensorShape)
 	{
 		FixtureDef fixtureDef = new FixtureDef();
