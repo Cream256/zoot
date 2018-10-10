@@ -76,6 +76,16 @@ public abstract class OnCollideController extends PhysicsCollisionController
 		return filter;
 	}
 	
+	public void setCollideWithSensors(boolean value)
+	{
+		collideWithSensors = value;
+	}
+	
+	public boolean getCollideWithSensors()
+	{
+		return collideWithSensors;
+	}
+	
 	@Override
 	public void init(ZootActor actor)
 	{		

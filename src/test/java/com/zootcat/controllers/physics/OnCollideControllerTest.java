@@ -1,6 +1,8 @@
 package com.zootcat.controllers.physics;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.*;
@@ -370,5 +372,15 @@ public class OnCollideControllerTest
 		assertEquals(123, ctrl.getFilter().categoryBits);
 		assertEquals(456, ctrl.getFilter().groupIndex);
 		assertEquals(789, ctrl.getFilter().maskBits);
+	}
+	
+	@Test
+	public void shouldSetCollideWithSensors()
+	{
+		ctrl.setCollideWithSensors(false);
+		assertFalse(ctrl.getCollideWithSensors());
+		
+		ctrl.setCollideWithSensors(true);
+		assertTrue(ctrl.getCollideWithSensors());		
 	}
 }

@@ -85,6 +85,9 @@ public class DetectGroundControllerTest
 		otherActorPhysicsCtrl.init(ctrlActor);
 		otherActor.addController(otherActorPhysicsCtrl);
 		
+		//other fixture
+		when(otherFixture.getFilterData()).thenReturn(new Filter());
+		
 		//create ground detector controller
 		groundCtrl = new DetectGroundController();
 		ControllerAnnotations.setControllerParameter(groundCtrl, "scene", scene);	
@@ -105,7 +108,7 @@ public class DetectGroundControllerTest
 		groundCtrl.onAdd(ctrlActor);
 		
 		//then
-		assertTrue(physicsCtrl.getFixtures().contains(groundCtrl.getFeetFixture()));
+		assertTrue(physicsCtrl.getFixtures().contains(groundCtrl.getSensor()));
 	}
 	
 	@Test
@@ -117,7 +120,7 @@ public class DetectGroundControllerTest
 		groundCtrl.onRemove(ctrlActor);
 		
 		//then
-		assertFalse("Sensor fixture should be removed", physicsCtrl.getFixtures().contains(groundCtrl.getFeetFixture()));
+		assertFalse("Sensor fixture should be removed", physicsCtrl.getFixtures().contains(groundCtrl.getSensor()));
 		assertFalse("Actor should have deregistered ground detector listener", ctrlActor.getListeners().contains(groundCtrl, true));
 	}
 	
@@ -131,7 +134,7 @@ public class DetectGroundControllerTest
 		//then
 		assertEquals("Sensor fixture should be present", 2, physicsCtrl.getFixtures().size());
 		
-		Fixture feetFixture = groundCtrl.getFeetFixture();
+		Fixture feetFixture = groundCtrl.getSensor();
 		assertTrue("Fixture should be a sensor", feetFixture.isSensor());		
 		assertEquals("Fixture should be assigned to proper body", physicsCtrl.getBody(), feetFixture.getBody());
 		assertEquals("Fixture shape should be polygon", Type.Polygon, feetFixture.getShape().getType());		
@@ -139,15 +142,19 @@ public class DetectGroundControllerTest
 	}
 	
 	@Test
-	public void shouldCreateFeetFixtureUsingCustomWidth()
+	public void shouldUseProvidedWidthAndHeightWhenCreatingSensor()
 	{
-		//when
-		final int customWidth = 128;
+		//given
+		final float customWidth = 128.0f;
+		final float customHeight = 256.0f;
 		ControllerAnnotations.setControllerParameter(groundCtrl, "sensorWidth", customWidth);
+		ControllerAnnotations.setControllerParameter(groundCtrl, "sensorHeight", customHeight);
+		ControllerAnnotations.setControllerParameter(groundCtrl, "useActorSize", false);
 		
+		//when
 		groundCtrl.init(ctrlActor);
 		groundCtrl.onAdd(ctrlActor);
-		PolygonShape fixtureShape = (PolygonShape)groundCtrl.getFeetFixture().getShape();
+		PolygonShape fixtureShape = (PolygonShape)groundCtrl.getSensor().getShape();
 		
 		//then
 		Vector2 vertex1 = new Vector2();
@@ -156,18 +163,20 @@ public class DetectGroundControllerTest
 		fixtureShape.getVertex(0, vertex1);
 		fixtureShape.getVertex(1, vertex2);
 		fixtureShape.getVertex(2, vertex3);
-		assertEquals("Sensor should have actor width", customWidth, Math.abs(vertex1.x - vertex2.x), 0.0f);
-		assertEquals("Sensor should have 10% of actor height", ACTOR_HEIGHT * DetectGroundController.SENSOR_HEIGHT_PERCENT, 
-					Math.abs(vertex1.y - vertex3.y), 0.0f);
+		assertEquals("Sensor should have custom width", customWidth, Math.abs(vertex1.x - vertex2.x), 0.0f);
+		assertEquals("Sensor should have custom height", customHeight, Math.abs(vertex1.y - vertex3.y), 0.0f);
 	}
 	
 	@Test
-	public void shouldCreateFeetFixtureUsingActorWidthWhenWidthIsSetToZero()
+	public void shouldUseActorSizeWhenCreatingSensor()
 	{
+		//given
+		ControllerAnnotations.setControllerParameter(groundCtrl, "useActorSize", true);
+		
 		//when
 		groundCtrl.init(ctrlActor);
 		groundCtrl.onAdd(ctrlActor);
-		PolygonShape fixtureShape = (PolygonShape)groundCtrl.getFeetFixture().getShape();
+		PolygonShape fixtureShape = (PolygonShape)groundCtrl.getSensor().getShape();
 		
 		//then
 		Vector2 vertex1 = new Vector2();
@@ -196,6 +205,7 @@ public class DetectGroundControllerTest
 	public void shouldCreateFeetFixtureWithTheSameCollisionFilterAsForControllerActor()
 	{
 		//given
+		ControllerAnnotations.setControllerParameter(groundCtrl, "useActorFilter", true);
 		Filter expectedFilter = mock(Filter.class);
 		expectedFilter.categoryBits = 1;
 		expectedFilter.maskBits = 2;
@@ -210,7 +220,7 @@ public class DetectGroundControllerTest
 		groundCtrl.onAdd(ctrlActor);
 		
 		//then		
-		Filter feetFilter = groundCtrl.getFeetFixture().getFilterData();
+		Filter feetFilter = groundCtrl.getSensor().getFilterData();
 		assertNotNull(feetFilter);
 		assertEquals(expectedFilter.categoryBits, feetFilter.categoryBits);
 		assertEquals(expectedFilter.maskBits, feetFilter.maskBits);
@@ -223,7 +233,7 @@ public class DetectGroundControllerTest
 		//when
 		groundCtrl.init(ctrlActor);
 		groundCtrl.onAdd(ctrlActor);		
-		when(contact.getFixtureA()).thenReturn(groundCtrl.getFeetFixture());
+		when(contact.getFixtureA()).thenReturn(groundCtrl.getSensor());
 		when(contact.getFixtureB()).thenReturn(otherFixture);
 		when(contact.isEnabled()).thenReturn(true);
 		
@@ -250,7 +260,7 @@ public class DetectGroundControllerTest
 		//when
 		groundCtrl.init(ctrlActor);
 		groundCtrl.onAdd(ctrlActor);		
-		when(contact.getFixtureA()).thenReturn(groundCtrl.getFeetFixture());
+		when(contact.getFixtureA()).thenReturn(groundCtrl.getSensor());
 		when(contact.getFixtureB()).thenReturn(otherFixture);
 		when(contact.isEnabled()).thenReturn(true);
 		
@@ -280,7 +290,7 @@ public class DetectGroundControllerTest
 		//when
 		groundCtrl.init(ctrlActor);
 		groundCtrl.onAdd(ctrlActor);
-		when(contact.getFixtureA()).thenReturn(groundCtrl.getFeetFixture());
+		when(contact.getFixtureA()).thenReturn(groundCtrl.getSensor());
 		when(contact.getFixtureB()).thenReturn(otherFixture);
 		when(contact.isEnabled()).thenReturn(false);
 		
@@ -310,7 +320,7 @@ public class DetectGroundControllerTest
 		//when
 		groundCtrl.init(ctrlActor);
 		groundCtrl.onAdd(ctrlActor);		
-		when(contact.getFixtureA()).thenReturn(groundCtrl.getFeetFixture());
+		when(contact.getFixtureA()).thenReturn(groundCtrl.getSensor());
 		when(contact.getFixtureB()).thenReturn(otherFixture);
 		when(contact.isEnabled()).thenReturn(true);
 		when(otherFixture.isSensor()).thenReturn(true);
@@ -342,24 +352,30 @@ public class DetectGroundControllerTest
 		groundCtrl.init(ctrlActor);
 		groundCtrl.onAdd(ctrlActor);
 		
-		Fixture fixtureB = mock(Fixture.class);
-		Fixture fixtureC = mock(Fixture.class);
-		Fixture fixtureD = mock(Fixture.class);
-		Fixture groundSensorFixture = groundCtrl.getFeetFixture();
+		Fixture fixture1 = mock(Fixture.class);
+		when(fixture1.getFilterData()).thenReturn(new Filter());
+		
+		Fixture fixture2 = mock(Fixture.class);
+		when(fixture2.getFilterData()).thenReturn(new Filter());
+		
+		Fixture fixture3 = mock(Fixture.class);
+		when(fixture3.getFilterData()).thenReturn(new Filter());
+		
+		Fixture groundSensorFixture = groundCtrl.getSensor();
 			
 		Contact contact1 = mock(Contact.class);
 		when(contact1.getFixtureA()).thenReturn(groundSensorFixture);
-		when(contact1.getFixtureB()).thenReturn(fixtureB);
+		when(contact1.getFixtureB()).thenReturn(fixture1);
 		when(contact1.isEnabled()).thenReturn(true);
 		
 		Contact contact2 = mock(Contact.class);
 		when(contact2.getFixtureA()).thenReturn(groundSensorFixture);
-		when(contact2.getFixtureB()).thenReturn(fixtureC);
+		when(contact2.getFixtureB()).thenReturn(fixture2);
 		when(contact2.isEnabled()).thenReturn(true);
 		
 		Contact contact3 = mock(Contact.class);
 		when(contact3.getFixtureA()).thenReturn(groundSensorFixture);
-		when(contact3.getFixtureB()).thenReturn(fixtureD);
+		when(contact3.getFixtureB()).thenReturn(fixture3);
 		when(contact3.isEnabled()).thenReturn(true);
 		
 		//when

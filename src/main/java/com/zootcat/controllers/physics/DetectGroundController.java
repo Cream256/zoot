@@ -1,195 +1,102 @@
 package com.zootcat.controllers.physics;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootScene;
 
 /**
  * DetectGround controller - Creates a feet sensor, that is detecting if
  * the actor is in contact with the ground. When he is, the controller 
  * emits Ground {@link ZootEvent}.
  * 
- * @ctrlParam sensorWidth - feet sensor width. If not set, actor width will be used.
+ * @ctrlParam useActorSize - If set, actor width and 10% of actor height will be used
+ * to set sensor size. Otherwise sensorWidth and sensorHeight will be used
+ * 
+ * @ctrlParam useActorFilter - If set, actor collision filter will be used. Otherwise
+ * category and mask parameters must be supplied.
+ * 
  * @author Cream
  *
  */
-public class DetectGroundController extends PhysicsCollisionController
+public class DetectGroundController extends OnCollideWithSensorController	 
 {
 	public static final float SENSOR_HEIGHT_PERCENT = 0.2f;
-	
-	@CtrlParam private int sensorWidth = 0;		
-	@CtrlParam(global = true) private ZootScene scene;
-	@CtrlDebug private boolean isOnGround = false;
-	
-	private Fixture feetSensor;
-	private ZootActor actorWithSensor;
-	private PhysicsBodyController physicsCtrl;
-	
-	private Set<Fixture> collidedFixtures = new HashSet<Fixture>();
-	private Set<Fixture> disabledFixtures = new HashSet<Fixture>();
 		
+	@CtrlParam private boolean useActorSize = true;
+	@CtrlParam private boolean useActorFilter = true;
+	@CtrlDebug private boolean isOnGround = false;
+			
 	@Override
 	public void onAdd(ZootActor actor)
 	{
+		setSensorSizeAndPosition(actor);
+		super.setCollideWithSensors(true);
 		super.onAdd(actor);
-		actorWithSensor = actor;
-		physicsCtrl = actor.getController(PhysicsBodyController.class);
-				
-		//create feet shape		
-		Shape feetShape = createFeetShape(actor);
-		
-		//create fixture
-		FixtureDef feetDef = createFeetSensorFixtureDef(physicsCtrl.getBody(), actor, feetShape);		
-		feetSensor = physicsCtrl.addFixture(feetDef, actor);
-		
-		//cleanup
-		feetShape.dispose();
-		collidedFixtures.clear();
-		disabledFixtures.clear();
+		setSensorFilter(actor);
 	}
-
-	@Override
-	public void onRemove(ZootActor actor)
+	
+	private void setSensorSizeAndPosition(ZootActor actor)
 	{
-		super.onRemove(actor);
-		
-		collidedFixtures.clear();
-		disabledFixtures.clear();
-		physicsCtrl.removeFixture(feetSensor);
-		physicsCtrl = null;
+		Vector2 sensorPosition = new Vector2(0.0f, -actor.getHeight() / 2.0f);		
+		super.sensorHeight = calculateSensorHeight(actor);
+		super.sensorWidth = calculateSensorWidth(actor);
+		super.sensorX = sensorPosition.x;
+		super.sensorY = sensorPosition.y;						
+	}
+	
+	private float calculateSensorWidth(ZootActor actor)
+	{
+		return useActorSize ? actor.getWidth() : sensorWidth;
+	}
+	
+	private float calculateSensorHeight(ZootActor actor)
+	{
+		return useActorSize ? actor.getHeight() * SENSOR_HEIGHT_PERCENT : sensorHeight;		
 	}
 
 	@Override
 	public void onUpdate(float delta, ZootActor actor)
-	{
-		isOnGround = collidedFixtures.stream().anyMatch(fix -> shouldCollide(fix));		
-		if(isOnGround)
+	{		
+		isOnGround = false;		
+		super.onUpdate(delta, actor);
+		
+		if(isOnGround) 
 		{
-			ZootEvents.fireAndFree(actorWithSensor, ZootEventType.Ground);
+			ZootEvents.fireAndFree(actor, ZootEventType.Ground);
 		}
 	}
 	
-	private boolean shouldCollide(Fixture fixture)
-	{
-		boolean contactEnabled = !disabledFixtures.contains(fixture);
-		boolean fixtureIsSensor = fixture.isSensor();	
-		return contactEnabled && !fixtureIsSensor;
-	}
-		
 	@Override
-	public void beginContact(ZootActor actorA, ZootActor actorB, Contact contact)
+	protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
 	{
-		if(isContactWithFeetSensor(actorA, actorB, contact))
+		if(fixture.isSensor())
 		{
-			collidedFixtures.add(getOtherFixture(contact));
+			return SensorCollisionResult.ProcessNext;
 		}
+		
+		isOnGround = true;
+		return SensorCollisionResult.StopProcessing;
 	}
 
-	@Override
-	public void endContact(ZootActor actorA, ZootActor actorB, Contact contact)
-	{
-		if(isContactWithFeetSensor(actorA, actorB, contact))
-		{			
-			collidedFixtures.remove(getOtherFixture(contact));
-			disabledFixtures.remove(getOtherFixture(contact));
-		}
-	}
-		
-	//Box2D enables all contacts after postSolve step, so we need to keep track of them 
-	//in the preSolve step
-	@Override
-	public void preSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
-	{	
-		Fixture otherFixture = getOtherFixture(contact);
-		if(!contact.isEnabled() && collidedFixtures.contains(otherFixture))
-		{
-			disabledFixtures.add(otherFixture);
-		}
-		else if(contact.isEnabled() && disabledFixtures.contains(otherFixture))
-		{
-			disabledFixtures.remove(otherFixture);
-		}
-	}
-
-	@Override
-	public void postSolve(ZootActor actorA, ZootActor actorB, ContactImpulse contactImpulse)
-	{
-		//noop
-	}
-	
 	public boolean isOnGround()
 	{
 		return isOnGround;
 	}
-
-	public Fixture getFeetFixture()
-	{
-		return feetSensor;
-	}
 		
-	private boolean isContactWithFeetSensor(ZootActor actorA, ZootActor actorB, Contact contact)
-	{
-		return contact.getFixtureA() == feetSensor || contact.getFixtureB() == feetSensor;		
-	}
 	
-	private float calculateWidth(ZootActor actor)
-	{
-		if(sensorWidth == 0)
-		{
-			return actor.getWidth() / 2.0f;
-		}
-		return (sensorWidth / 2.0f) * scene.getUnitScale();
-	}
-	
-	private Shape createFeetShape(ZootActor actor)
-	{
-		Vector2 center = new Vector2(0.0f, -actor.getHeight() / 2.0f);		
-		
-		float feetWidth = calculateWidth(actor);
-		float feetHeight = (actor.getHeight() * SENSOR_HEIGHT_PERCENT) / 2.0f;	//10% of actor height
-		
-		PolygonShape feetShape = new PolygonShape();
-		feetShape.setAsBox(feetWidth, feetHeight, center, 0.0f);				
-		return feetShape;
-	}
-	
-	private FixtureDef createFeetSensorFixtureDef(Body body, ZootActor actor, Shape feetShape)
-	{
-		FixtureDef def = new FixtureDef();
-		def.isSensor = true;
-		def.friction = 0.0f;		
-		def.shape = feetShape;
+	private void setSensorFilter(ZootActor actor)
+	{		
+		if(!useActorFilter) return;
 		
 		CollisionFilterController filterCtrl = actor.tryGetController(CollisionFilterController.class);
 		if(filterCtrl != null)
 		{
-			Filter existingFilter = filterCtrl.getCollisionFilter();			
-			def.filter.categoryBits = existingFilter.categoryBits;
-			def.filter.maskBits = existingFilter.maskBits;
-			def.filter.groupIndex = existingFilter.groupIndex;
+			setFilter(filterCtrl.getCollisionFilter());			
 		}
-		return def;
-	}
-	
-	private Fixture getOtherFixture(Contact contact)
-	{
-		return contact.getFixtureA() == feetSensor ? contact.getFixtureB() : contact.getFixtureA();		
 	}
 }

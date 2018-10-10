@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
@@ -128,9 +129,7 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	private boolean shouldCollide(Fixture fixture)
 	{
 		boolean contactEnabled = !disabledFixtures.contains(fixture);	
-		return contactEnabled;		
-		//boolean fixtureIsSensor = fixture.isSensor();	//TODO	
-		//return contactEnabled && !fixtureIsSensor;
+		return contactEnabled;
 	}
 	
 	//Box2D enables all contacts after postSolve step, so we need to keep track of them in the preSolve step
@@ -157,6 +156,13 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	{
 		return sensor;
 	}	
+	
+	@Override
+	public void setFilter(Filter filter)	
+	{
+		getSensor().setFilterData(filter);
+		super.setFilter(filter);		
+	}
 	
 	public void setScene(ZootScene scene)
 	{

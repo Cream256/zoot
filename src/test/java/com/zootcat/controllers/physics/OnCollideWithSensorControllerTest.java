@@ -504,4 +504,31 @@ public class OnCollideWithSensorControllerTest
 		assertEquals(x, ctrl.sensorX, 0.0f);
 		assertEquals(y, ctrl.sensorY, 0.0f);
 	}
+	
+	@Test
+	public void shouldSetFilterForSensor()
+	{
+		//given
+		final int expectedGroupIndex = 10;
+		final int expectedCategory = 20;
+		final int expectedMask = 30;
+		
+		Filter filter = new Filter();
+		filter.groupIndex = expectedGroupIndex;
+		filter.categoryBits = expectedCategory;		
+		filter.maskBits = expectedMask;
+				
+		//when
+		ctrl.init(ctrlActor);
+		ctrl.onAdd(ctrlActor);
+		ctrl.setFilter(filter);
+		
+		//then
+		assertEquals(expectedGroupIndex, ctrl.getFilter().groupIndex);
+		assertEquals(expectedCategory, ctrl.getFilter().categoryBits);
+		assertEquals(expectedMask, ctrl.getFilter().maskBits);
+		assertEquals(expectedGroupIndex, ctrl.getSensor().getFilterData().groupIndex);
+		assertEquals(expectedCategory, ctrl.getSensor().getFilterData().categoryBits);
+		assertEquals(expectedMask, ctrl.getSensor().getFilterData().maskBits);
+	}
 }
