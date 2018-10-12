@@ -1,6 +1,6 @@
 package com.zootcat.physics;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -209,5 +209,71 @@ public class ZootPhysicsUtilsTest
 		Vector2 center = circle.getPosition();
 		assertEquals(posX, center.x, 0.0f);
 		assertEquals(posY, center.y, 0.0f);	
+	}
+	
+	@Test(expected = RuntimeZootException.class)
+	public void shouldThrowWhenGettingFixtureCenterIfFixtureShapeIsUnsupported()
+	{
+		//given
+		Shape shape = mock(Shape.class);
+		Fixture fixture = mock(Fixture.class);
+		
+		//when
+		when(shape.getType()).thenReturn(Shape.Type.Edge);
+		when(fixture.getShape()).thenReturn(shape);
+		ZootPhysicsUtils.getFixtureCenter(fixture);		
+	}	
+	
+	@Test
+	public void shouldReturnNullWhenGettingFixtureCenterIfFixtureHasNoShape()
+	{
+		//given
+		Fixture fixture = mock(Fixture.class);
+		
+		//when
+		when(fixture.getShape()).thenReturn(null);
+		assertNull(ZootPhysicsUtils.getFixtureCenter(fixture));	
+	}
+	
+	@Test
+	public void shouldReturnPolygonFixtureCenter()
+	{
+		//given
+		final float halfWidth = 100.0f;
+		final float halfHeight = 50.0f;
+		final float expectedX = 50;
+		final float expectedY = 25;
+		
+		PolygonShape polygon = new PolygonShape();
+		Fixture fixture = mock(Fixture.class);
+		
+		//when		
+		polygon.setAsBox(halfWidth, halfHeight, new Vector2(expectedX, expectedY), 0.0f);
+		when(fixture.getShape()).thenReturn(polygon);		
+		Vector2 center = ZootPhysicsUtils.getFixtureCenter(fixture);
+		
+		//then
+		assertEquals(expectedX, center.x, 0.0f);
+		assertEquals(expectedY, center.y, 0.0f);
+	}
+	
+	@Test
+	public void shouldReturnCircleFixtureCenter()
+	{
+		//given
+		final float expectedX = 55.0f;
+		final float expectedY = -33.0f;
+		CircleShape circle = new CircleShape();
+		Fixture fixture = mock(Fixture.class);
+		
+		//when
+		when(fixture.getShape()).thenReturn(circle);
+		circle.setRadius(1.0f);
+		circle.setPosition(new Vector2(expectedX, expectedY));
+		Vector2 center = ZootPhysicsUtils.getFixtureCenter(fixture);
+		
+		//then		
+		assertEquals(expectedX, center.x, 123.0f);
+		assertEquals(expectedY, center.y, -256.0f);			
 	}
 }

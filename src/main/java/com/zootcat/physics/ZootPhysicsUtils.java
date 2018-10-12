@@ -22,6 +22,28 @@ public class ZootPhysicsUtils
 		return vertices;		
 	}
 	
+	//TODO add test
+	public static Vector2 getFixtureCenter(Fixture fixture)
+	{
+		Shape shape = fixture.getShape();
+		if(shape == null)
+		{
+			return null;
+		}
+		
+		switch(shape.getType())
+		{
+		case Polygon:
+			return getPolygonCentroid((PolygonShape) shape);
+		
+		case Circle:
+			return ((CircleShape)shape).getPosition();
+		
+		default:
+			throw new RuntimeZootException("Unable to get fixture center with shape type " + shape.getType());		
+		}		
+	}
+	
 	public static Vector2 getPolygonCentroid(PolygonShape polygon)
 	{
 		Vector2 centroid = new Vector2();
