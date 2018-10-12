@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -150,6 +151,11 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	public void setSensorPosition(float x, float y)
 	{
 		ZootPhysicsUtils.setFixturePosition(sensor, x, y);
+	}
+	
+	public Vector2 getSensorPosition()
+	{
+		return ZootPhysicsUtils.getFixtureCenter(sensor);
 	}
 		
 	public Fixture getSensor()

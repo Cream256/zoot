@@ -482,7 +482,7 @@ public class OnCollideWithSensorControllerTest
 	}
 	
 	@Test
-	public void shouldSetSensorSizeAndPosition()
+	public void shouldSetSensorSizeAndPositionParameters()
 	{
 		//given
 		final float width = 123.0f;
@@ -530,5 +530,23 @@ public class OnCollideWithSensorControllerTest
 		assertEquals(expectedGroupIndex, ctrl.getSensor().getFilterData().groupIndex);
 		assertEquals(expectedCategory, ctrl.getSensor().getFilterData().categoryBits);
 		assertEquals(expectedMask, ctrl.getSensor().getFilterData().maskBits);
+	}
+	
+	@Test
+	public void shouldSetSensorPosition()
+	{
+		//given
+		final float expectedX = 256.0f;
+		final float expectedY = 512.0f;
+		
+		//when
+		ctrl.init(ctrlActor);
+		ctrl.onAdd(ctrlActor);		
+		ctrl.setSensorPosition(expectedX, expectedY);		
+		Vector2 sensorPosition = ctrl.getSensorPosition();
+		
+		//then
+		assertEquals(expectedX, sensorPosition.x, 0.0f);
+		assertEquals(expectedY, sensorPosition.y, 0.0f);
 	}
 }
