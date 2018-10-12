@@ -177,6 +177,7 @@ public class DetectGroundControllerTest
 		groundCtrl.init(ctrlActor);
 		groundCtrl.onAdd(ctrlActor);
 		PolygonShape fixtureShape = (PolygonShape)groundCtrl.getSensor().getShape();
+		when(scene.getUnitScale()).thenReturn(0.5f);
 		
 		//then
 		Vector2 vertex1 = new Vector2();
@@ -188,6 +189,32 @@ public class DetectGroundControllerTest
 		assertEquals("Sensor should have actor width", ACTOR_WIDTH, Math.abs(vertex1.x - vertex2.x), 0.0f);
 		assertEquals("Sensor should have 10% of actor height", ACTOR_HEIGHT * DetectGroundController.SENSOR_HEIGHT_PERCENT, 
 					Math.abs(vertex1.y - vertex3.y), 0.0f);
+	}
+	
+	@Test
+	public void shouldSetSensorToProperPosition()
+	{
+		//given
+		ControllerAnnotations.setControllerParameter(groundCtrl, "useActorSize", true);
+		
+		//when
+		groundCtrl.init(ctrlActor);
+		groundCtrl.onAdd(ctrlActor);
+		PolygonShape fixtureShape = (PolygonShape)groundCtrl.getSensor().getShape();
+		when(scene.getUnitScale()).thenReturn(0.5f);
+		
+		//then
+		Vector2 vertex1 = new Vector2();
+		Vector2 vertex2 = new Vector2();
+		Vector2 vertex3 = new Vector2();
+		fixtureShape.getVertex(0, vertex1);
+		fixtureShape.getVertex(1, vertex2);
+		fixtureShape.getVertex(2, vertex3);
+		float sensorPositionX = (vertex1.x + vertex2.x) / 2.0f;
+		float sensorPositionY = (vertex1.y + vertex3.y) / 2.0f;
+		
+		assertEquals("Sensor should be in the middle of the actor", 0.0f, sensorPositionX, 0.0f);
+		assertEquals("Sensor should be at the bottom of the actor", -ACTOR_HEIGHT / 2.0f, sensorPositionY, 0.0f);
 	}
 	
 	@Test

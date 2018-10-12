@@ -42,7 +42,7 @@ public class DetectGroundController extends OnCollideWithSensorController
 	
 	private void setSensorSizeAndPosition(ZootActor actor)
 	{
-		Vector2 sensorPosition = new Vector2(0.0f, -actor.getHeight() / 2.0f);		
+		Vector2 sensorPosition = new Vector2(0.0f, -actor.getHeight() / super.getScene().getUnitScale() * 0.5f);		
 		super.sensorHeight = calculateSensorHeight(actor);
 		super.sensorWidth = calculateSensorWidth(actor);
 		super.sensorX = sensorPosition.x;
@@ -51,12 +51,12 @@ public class DetectGroundController extends OnCollideWithSensorController
 	
 	private float calculateSensorWidth(ZootActor actor)
 	{
-		return useActorSize ? actor.getWidth() : sensorWidth;
+		return useActorSize ? actor.getWidth() / super.getScene().getUnitScale() : sensorWidth;
 	}
 	
 	private float calculateSensorHeight(ZootActor actor)
 	{
-		return useActorSize ? actor.getHeight() * SENSOR_HEIGHT_PERCENT : sensorHeight;		
+		return useActorSize ? (actor.getHeight() / super.getScene().getUnitScale()) * SENSOR_HEIGHT_PERCENT : sensorHeight;		
 	}
 
 	@Override
