@@ -30,7 +30,8 @@ import com.zootcat.scene.ZootScene;
  * @ctrlParam sensorWidth - width of the sensor, default 1.0
  * @ctrlParam sensorHeight - height of the sensor, default 1.0
  * @ctrlParam sensorX - X center of the sensor, default 0.0
- * @ctlrParam sensorY - Y center of the sensor, default 0.0 
+ * @ctlrParam sensorY - Y center of the sensor, default 0.0
+ * @ctrlParam useActorFilter - If set, actor collision filter will be used. Otherwise category and mask parameters must be supplied. 
  * 
  * @author Cream
  *
@@ -41,6 +42,7 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	@CtrlParam(debug = true) protected float sensorHeight = 1.0f;
 	@CtrlParam(debug = true) protected float sensorX = 0.0f;
 	@CtrlParam(debug = true) protected float sensorY = 0.0f;
+	@CtrlParam(debug = true) protected boolean useActorFilter = true;
 	@CtrlParam(global = true) protected ZootScene scene;
 	
 	public enum SensorCollisionResult { ProcessNext, StopProcessing };
@@ -71,7 +73,10 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 		Shape sensorShape = createSensorShape(actor);
 		FixtureDef sensorFixtureDef = createSensorFixtureDef(actor, sensorShape);		
 		sensor = actor.getController(PhysicsBodyController.class).addFixture(sensorFixtureDef, actor);
-				
+			
+		//create filter
+		createSensorFilter(actor);
+		
 		//cleanup
 		sensorShape.dispose();
 		collidedFixtures.clear();
@@ -207,5 +212,16 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 										  sensorHeight * scene.getUnitScale(), 
 										  sensorX * scene.getUnitScale(), 
 										  sensorY * scene.getUnitScale());		
+	}
+	
+	private void createSensorFilter(ZootActor actor)
+	{		
+		if(!useActorFilter) return;
+		
+		CollisionFilterController filterCtrl = actor.tryGetController(CollisionFilterController.class);
+		if(filterCtrl != null)
+		{
+			setFilter(filterCtrl.getCollisionFilter());			
+		}
 	}
 }

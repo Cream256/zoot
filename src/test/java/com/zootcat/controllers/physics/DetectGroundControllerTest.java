@@ -2,9 +2,9 @@ package com.zootcat.controllers.physics;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.junit.After;
@@ -227,33 +227,7 @@ public class DetectGroundControllerTest
 		//then
 		assertFalse("Should not be on ground by default", groundCtrl.isOnGround());
 	}
-	
-	@Test
-	public void shouldCreateFeetFixtureWithTheSameCollisionFilterAsForControllerActor()
-	{
-		//given
-		ControllerAnnotations.setControllerParameter(groundCtrl, "useActorFilter", true);
-		Filter expectedFilter = mock(Filter.class);
-		expectedFilter.categoryBits = 1;
-		expectedFilter.maskBits = 2;
-		expectedFilter.groupIndex = 3;
-		
-		CollisionFilterController filterCtrl = mock(CollisionFilterController.class);
-		when(filterCtrl.getCollisionFilter()).thenReturn(expectedFilter);
-		
-		//when
-		ctrlActor.addController(filterCtrl);
-		groundCtrl.init(ctrlActor);
-		groundCtrl.onAdd(ctrlActor);
-		
-		//then		
-		Filter feetFilter = groundCtrl.getSensor().getFilterData();
-		assertNotNull(feetFilter);
-		assertEquals(expectedFilter.categoryBits, feetFilter.categoryBits);
-		assertEquals(expectedFilter.maskBits, feetFilter.maskBits);
-		assertEquals(expectedFilter.groupIndex, feetFilter.groupIndex);
-	}
-		
+			
 	@Test
 	public void shouldProperlyDetectGroundForNormalFixture()
 	{		

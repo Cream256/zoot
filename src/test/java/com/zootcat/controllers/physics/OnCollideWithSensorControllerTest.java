@@ -581,4 +581,65 @@ public class OnCollideWithSensorControllerTest
 		assertEquals(expectedX, sensorPosition.x, 0.0f);
 		assertEquals(expectedY, sensorPosition.y, 0.0f);
 	}
+	
+	@Test
+	public void shouldCreateSensorFixtureWithTheSameCollisionFilterAsForControllerActor()
+	{
+		//given
+		ControllerAnnotations.setControllerParameter(ctrl, "useActorFilter", true);
+		Filter expectedFilter = mock(Filter.class);
+		expectedFilter.categoryBits = 1;
+		expectedFilter.maskBits = 2;
+		expectedFilter.groupIndex = 3;
+		
+		CollisionFilterController filterCtrl = mock(CollisionFilterController.class);
+		when(filterCtrl.getCollisionFilter()).thenReturn(expectedFilter);
+		
+		//when
+		ctrlActor.addController(filterCtrl);
+		ctrl.init(ctrlActor);
+		ctrl.onAdd(ctrlActor);
+		
+		//then		
+		Filter sensorFilter = ctrl.getSensor().getFilterData();
+		assertNotNull(sensorFilter);
+		assertEquals(expectedFilter.categoryBits, sensorFilter.categoryBits);
+		assertEquals(expectedFilter.maskBits, sensorFilter.maskBits);
+		assertEquals(expectedFilter.groupIndex, sensorFilter.groupIndex);
+	}
+	
+	@Test
+	public void shouldNotCreateSesorFixtureWithTheSameCollisionFilterAsForControllerActor()
+	{
+		//given
+		ControllerAnnotations.setControllerParameter(ctrl, "useActorFilter", false);
+		Filter expectedFilter = mock(Filter.class);
+		expectedFilter.categoryBits = 1;
+		expectedFilter.maskBits = 2;
+		expectedFilter.groupIndex = 3;
+		
+		CollisionFilterController filterCtrl = mock(CollisionFilterController.class);
+		when(filterCtrl.getCollisionFilter()).thenReturn(expectedFilter);
+		
+		//when
+		ctrlActor.addController(filterCtrl);
+		ctrl.init(ctrlActor);
+		ctrl.onAdd(ctrlActor);
+		
+		//then		
+		Filter sensorFilter = ctrl.getSensor().getFilterData();
+		assertNotNull(sensorFilter);
+		assertEquals(0x0001, sensorFilter.categoryBits);
+		assertEquals(-1, sensorFilter.maskBits);
+		assertEquals(0, sensorFilter.groupIndex);		
+	}
+	
+	@Test
+	public void shouldCallPreUpdateAndPostUpdate()
+	{
+		ctrl.onUpdate(1.0f, ctrlActor);
+		
+		assertTrue(preUpdateCalled);
+		assertTrue(postUpdateCalled);		
+	}
 }

@@ -17,9 +17,6 @@ import com.zootcat.scene.ZootActor;
  * @ctrlParam useActorSize - If set, actor width and 10% of actor height will be used
  * to set sensor size. Otherwise sensorWidth and sensorHeight will be used
  * 
- * @ctrlParam useActorFilter - If set, actor collision filter will be used. Otherwise
- * category and mask parameters must be supplied.
- * 
  * @author Cream
  *
  */
@@ -28,7 +25,6 @@ public class DetectGroundController extends OnCollideWithSensorController
 	public static final float SENSOR_HEIGHT_PERCENT = 0.2f;
 		
 	@CtrlParam private boolean useActorSize = true;
-	@CtrlParam private boolean useActorFilter = true;
 	@CtrlDebug private boolean isOnGround = false;
 			
 	@Override
@@ -37,7 +33,6 @@ public class DetectGroundController extends OnCollideWithSensorController
 		setSensorSizeAndPosition(actor);
 		super.setCollideWithSensors(true);
 		super.onAdd(actor);
-		setSensorFilter(actor);
 	}
 	
 	private void setSensorSizeAndPosition(ZootActor actor)
@@ -89,17 +84,5 @@ public class DetectGroundController extends OnCollideWithSensorController
 	public boolean isOnGround()
 	{
 		return isOnGround;
-	}
-		
-	
-	private void setSensorFilter(ZootActor actor)
-	{		
-		if(!useActorFilter) return;
-		
-		CollisionFilterController filterCtrl = actor.tryGetController(CollisionFilterController.class);
-		if(filterCtrl != null)
-		{
-			setFilter(filterCtrl.getCollisionFilter());			
-		}
 	}
 }
