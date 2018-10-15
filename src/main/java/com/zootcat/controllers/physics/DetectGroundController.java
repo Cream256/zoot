@@ -60,11 +60,14 @@ public class DetectGroundController extends OnCollideWithSensorController
 	}
 
 	@Override
-	public void onUpdate(float delta, ZootActor actor)
-	{		
-		isOnGround = false;		
-		super.onUpdate(delta, actor);
-		
+	public void preUpdate(float delta, ZootActor actor)
+	{
+		isOnGround = false;
+	}
+
+	@Override
+	public void postUpdate(float delta, ZootActor actor)
+	{
 		if(isOnGround) 
 		{
 			ZootEvents.fireAndFree(actor, ZootEventType.Ground);

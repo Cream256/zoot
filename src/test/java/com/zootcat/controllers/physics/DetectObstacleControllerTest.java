@@ -1,7 +1,7 @@
 package com.zootcat.controllers.physics;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -108,11 +108,11 @@ public class DetectObstacleControllerTest
 	}
 		
 	@Test
-	public void shouldSetLeftSensorPositionOnUpdate()
+	public void shouldSetLeftSensorPositionOnPostUpdate()
 	{
 		//when
 		when(dirCtrl.getDirection()).thenReturn(ZootDirection.Left);
-		detectObstacleCtrl.onUpdate(1.0f, controllerActor);
+		detectObstacleCtrl.postUpdate(1.0f, controllerActor);
 				
 		//then
 		Vector2 sensorCenter = ZootPhysicsUtils.getPolygonCentroid((PolygonShape) detectObstacleCtrl.getSensor().getShape());
@@ -120,14 +120,22 @@ public class DetectObstacleControllerTest
 	}
 	
 	@Test
-	public void shouldSetRightSensorPositionOnUpdate()
+	public void shouldSetRightSensorPositionOnPostUpdate()
 	{
 		//when
 		when(dirCtrl.getDirection()).thenReturn(ZootDirection.Right);
-		detectObstacleCtrl.onUpdate(1.0f, controllerActor);
+		detectObstacleCtrl.postUpdate(1.0f, controllerActor);
 				
 		//then
 		Vector2 sensorCenter = ZootPhysicsUtils.getPolygonCentroid((PolygonShape) detectObstacleCtrl.getSensor().getShape());
 		assertEquals(ACTOR_WIDTH / 2.0f, sensorCenter.x, 0.0f);
+	}
+	
+	@Test
+	public void shouldDoNothingOnPreUpdate()
+	{
+		ZootActor actor = mock(ZootActor.class);		
+		detectObstacleCtrl.preUpdate(1.0f, actor);		
+		verifyZeroInteractions(actor);
 	}
 }

@@ -60,7 +60,7 @@ public class ClimbController extends OnCollideWithSensorController
 	}
 	
 	@Override
-	public void onUpdate(float delta, ZootActor actor) 
+	public void preUpdate(float delta, ZootActor actor) 
 	{
 		if(isActorClimbing(actor))
 		{
@@ -68,8 +68,12 @@ public class ClimbController extends OnCollideWithSensorController
 			return;
 		}		
 		climbTimeout = Math.max(0.0f, climbTimeout - delta);
-		
-		super.onUpdate(delta, actor);
+	}
+	
+	@Override
+	public void postUpdate(float delta, ZootActor actor)
+	{
+		//noop
 	}
 				
 	@Override
@@ -128,7 +132,7 @@ public class ClimbController extends OnCollideWithSensorController
 		grabJoint = scene.getPhysics().createJoint(def);			
 	}
 	
-	public ZootDirection getSensorPosition()
+	public ZootDirection getSensorDirection()
 	{
 		return sensorPosition;
 	}

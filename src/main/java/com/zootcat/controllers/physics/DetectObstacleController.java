@@ -19,9 +19,14 @@ public class DetectObstacleController extends OnCollideWithSensorController
 	}
 	
 	@Override
-	public void onUpdate(float delta, ZootActor actor)
+	public void preUpdate(float delta, ZootActor actor)
 	{
-		super.onUpdate(delta, actor);
+		//noop 
+	}
+	
+	@Override
+	public void postUpdate(float delta, ZootActor actor)
+	{
 		updateSensor(actor);	
 	}
 	

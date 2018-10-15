@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -146,20 +146,20 @@ public class ClimbControllerTest
 	{
 		//when timeout is set to max
 		ctrlActor.getStateMachine().changeState(new ClimbState(), null);
-		ctrl.onUpdate(0.0f, ctrlActor);
+		ctrl.preUpdate(0.0f, ctrlActor);
 		
 		//then
 		assertFalse(ctrl.canActorGrab(ctrlActor));
 		
 		//when timeout is half way through and actor no longer climbing
 		ctrlActor.getStateMachine().changeState(new IdleState(), null);
-		ctrl.onUpdate(CLIMB_TIMEOUT / 2.0f, ctrlActor);
+		ctrl.preUpdate(CLIMB_TIMEOUT / 2.0f, ctrlActor);
 		
 		//then
 		assertFalse(ctrl.canActorGrab(ctrlActor));
 		
 		//when timeout is reached
-		ctrl.onUpdate(CLIMB_TIMEOUT / 2.0f, ctrlActor);
+		ctrl.preUpdate(CLIMB_TIMEOUT / 2.0f, ctrlActor);
 		
 		//then
 		assertTrue(ctrl.canActorGrab(ctrlActor));
@@ -246,7 +246,7 @@ public class ClimbControllerTest
 	@Test
 	public void shouldReturnNoneDirectionByDefault()
 	{
-		assertEquals(ZootDirection.None, ctrl.getSensorPosition());
+		assertEquals(ZootDirection.None, ctrl.getSensorDirection());
 	}
 	
 	@Test
@@ -254,7 +254,7 @@ public class ClimbControllerTest
 	{
 		ctrl.init(ctrlActor);
 		ctrl.onAdd(ctrlActor);
-		assertEquals(ZootDirection.Up, ctrl.getSensorPosition());
+		assertEquals(ZootDirection.Up, ctrl.getSensorDirection());
 	}
 	
 	@Test
@@ -264,13 +264,13 @@ public class ClimbControllerTest
 		ctrl.onAdd(ctrlActor);		
 		
 		ctrl.setSensorPosition(ZootDirection.Right);
-		assertEquals(ZootDirection.Right, ctrl.getSensorPosition());
+		assertEquals(ZootDirection.Right, ctrl.getSensorDirection());
 		
 		ctrl.setSensorPosition(ZootDirection.Left);
-		assertEquals(ZootDirection.Left, ctrl.getSensorPosition());
+		assertEquals(ZootDirection.Left, ctrl.getSensorDirection());
 		
 		ctrl.setSensorPosition(ZootDirection.Up);
-		assertEquals(ZootDirection.Up, ctrl.getSensorPosition());
+		assertEquals(ZootDirection.Up, ctrl.getSensorDirection());
 	}
 	
 	@Test
@@ -281,9 +281,18 @@ public class ClimbControllerTest
 		ctrlActor.getStateMachine().changeState(new ClimbState(), null);
 		
 		ctrl.setSensorPosition(ZootDirection.Right);
-		assertEquals(ZootDirection.Up, ctrl.getSensorPosition());
+		assertEquals(ZootDirection.Up, ctrl.getSensorDirection());
 		
 		ctrl.setSensorPosition(ZootDirection.Left);
-		assertEquals(ZootDirection.Up, ctrl.getSensorPosition());		
+		assertEquals(ZootDirection.Up, ctrl.getSensorDirection());		
+	}
+	
+	@Test
+	public void shouldDoNothingOnPostUpdate()
+	{
+		ZootActor actor = mock(ZootActor.class);
+		ctrl.postUpdate(1.0f, actor);
+		
+		verifyZeroInteractions(actor);
 	}
 }

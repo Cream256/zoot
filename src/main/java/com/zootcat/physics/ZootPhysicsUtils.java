@@ -22,7 +22,6 @@ public class ZootPhysicsUtils
 		return vertices;		
 	}
 	
-	//TODO add test
 	public static Vector2 getFixtureCenter(Fixture fixture)
 	{
 		Shape shape = fixture.getShape();

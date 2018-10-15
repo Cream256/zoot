@@ -2,7 +2,6 @@ package com.zootcat.screen;
 
 import com.badlogic.gdx.ScreenAdapter;
 
-//TODO add tests
 public class ZootScreenAdapter extends ScreenAdapter implements ZootScreen
 {
 	@Override

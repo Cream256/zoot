@@ -115,8 +115,10 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	}
 
 	@Override
-	public void onUpdate(float delta, ZootActor actor)
+	public final void onUpdate(float delta, ZootActor actor)
 	{
+		preUpdate(delta, actor);
+		
 		List<Fixture> collided = collidedFixtures.stream().filter(fix -> shouldCollide(fix)).collect(Collectors.toList());		
 		for(Fixture fixture : collided)
 		{
@@ -125,7 +127,13 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 				break;
 			}
 		}
+		
+		postUpdate(delta, actor);
 	}
+	
+	public abstract void preUpdate(float delta, ZootActor actor);
+	
+	public abstract void postUpdate(float delta, ZootActor actor);
 	
 	private boolean shouldCollide(Fixture fixture)
 	{

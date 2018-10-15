@@ -50,6 +50,8 @@ public class OnCollideWithSensorControllerTest
 	private OnCollideWithSensorController ctrl;
 	private PhysicsBodyController physicsCtrl;
 	private int positiveResultsCount = 0;
+	private boolean preUpdateCalled;
+	private boolean postUpdateCalled;
 		
 	@BeforeClass
 	public static void setupClass()
@@ -82,13 +84,29 @@ public class OnCollideWithSensorControllerTest
 				
 		//tested controller
 		positiveResultsCount = 0;
-		ctrl = new OnCollideWithSensorController() {
+		preUpdateCalled = false;
+		postUpdateCalled = false;
+		ctrl = new OnCollideWithSensorController() 
+		{
 			@Override
 			protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
 			{
 				fixture.testPoint(0.0f, 0.0f);	//required to check for interactions with fixture				
 				return --positiveResultsCount > 0 ? SensorCollisionResult.ProcessNext : SensorCollisionResult.StopProcessing;
-			}};
+			}
+
+			@Override
+			public void preUpdate(float delta, ZootActor actor)
+			{
+				preUpdateCalled = true;
+			}
+
+			@Override
+			public void postUpdate(float delta, ZootActor actor)
+			{
+				postUpdateCalled = true;
+			}
+		};
 		ControllerAnnotations.setControllerParameter(ctrl, "scene", scene);
 						
 		//bitmask converter cleanup
@@ -496,6 +514,20 @@ public class OnCollideWithSensorControllerTest
 			protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
 			{
 				return null;
+			}
+
+			@Override
+			public void preUpdate(float delta, ZootActor actor)
+			{
+				//noop
+				
+			}
+
+			@Override
+			public void postUpdate(float delta, ZootActor actor)
+			{
+				//noop
+				
 			}};
 		
 		//then		
