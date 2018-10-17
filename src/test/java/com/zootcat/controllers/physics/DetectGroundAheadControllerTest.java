@@ -95,9 +95,10 @@ public class DetectGroundAheadControllerTest
 	{
 		//given
 		final float actorWidth = 20.0f;
+		final float actorHeight = 10.0f;
 		
 		//when
-		ctrlActor.setWidth(actorWidth);
+		ctrlActor.setSize(actorWidth, actorHeight);
 		when(directionCtrl.getDirection()).thenReturn(ZootDirection.None);
 		
 		ctrl.init(ctrlActor);
@@ -109,6 +110,7 @@ public class DetectGroundAheadControllerTest
 		//then
 		Vector2 position = ctrl.getSensorPosition();
 		assertEquals(-actorWidth / 2.0f - SENSOR_WIDTH / 2.0f, position.x, 0.0f);
+		assertEquals(-actorHeight / 2.0f, position.y, 0.0f);		
 	}
 	
 	@Test

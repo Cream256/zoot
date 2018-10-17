@@ -96,12 +96,14 @@ public class DetectGroundAheadController extends OnCollideWithSensorController
 		if(direction != oldDirection)
 		{
 			float actorHalfWidth = actor.getWidth() * 0.5f;
+			float actorHalfHeight = actor.getHeight() * 0.5f;
 			
 			ZootBoundingBoxFactory.createAtRef(super.getSensor(), boundingBox);			
-			float sensorHalfWidth = boundingBox.getWidth() * 0.5f;
+			float sensorHalfWidth = boundingBox.getWidth() * 0.5f * super.getScene().getUnitScale();
 			
 			float newX = actorHalfWidth * direction.getHorizontalValue() + sensorHalfWidth * direction.getHorizontalValue();
-			setSensorPosition(newX, super.getSensorPosition().y);			
+			float newY = -actorHalfHeight;
+			setSensorPosition(newX, newY);			
 		}		
 	}
 }
