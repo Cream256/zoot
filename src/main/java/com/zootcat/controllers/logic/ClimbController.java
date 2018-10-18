@@ -99,10 +99,10 @@ public class ClimbController extends OnCollideWithSensorController
 	{
 		boolean timeoutOk = climbTimeout == 0;
 		boolean enoughVelocityToClimb = actor.getController(PhysicsBodyController.class).getVelocity().y <= maxVelocity;
-		boolean notClimbingNow = !isActorClimbing(actor);		
+		boolean notClimbingNow = !isActorClimbing(actor);
 		return timeoutOk && enoughVelocityToClimb && notClimbingNow;
 	}
-
+	
 	public void grab()
 	{		
 		//setup
@@ -264,7 +264,8 @@ public class ClimbController extends OnCollideWithSensorController
 		boolean notSensor = !grabbableFixture.isSensor();
 		boolean collidingWithFixtureTop = isCollidingWithFixtureTop(sensorFixture, grabbableFixture);		
 		boolean hasGrabbableProperty = hasGrabbableProperty(grabbableFixture);
-		return notSensor && collidingWithFixtureTop && hasGrabbableProperty;
+		boolean isEnoughSpaceToGrab = isEnoughSpaceToGrab(sensorFixture, actor);
+		return notSensor && collidingWithFixtureTop && hasGrabbableProperty && isEnoughSpaceToGrab;
 	}
 	
 	private boolean hasGrabbableProperty(Fixture grabbableFixture)
@@ -286,6 +287,29 @@ public class ClimbController extends OnCollideWithSensorController
 		
 		float diff = actorTop - platformTop;		
 		return Math.abs(diff) <= treshold * scene.getUnitScale();
+	}
+	
+	private boolean isEnoughSpaceToGrab(Fixture grabSensor, ZootActor climbingActor)
+	{
+		Vector2 actorCenter = climbingActor.getController(PhysicsBodyController.class).getCenterPositionRef();		
+		Vector2 sensorCenter = ZootPhysicsUtils.getFixtureCenter(grabSensor).add(actorCenter);
+		ZootBoundingBoxFactory.createAtRef(grabSensor, fixtureBoxCache);
+		
+		List<Fixture> found = scene.getPhysics().getFixturesInArea(
+				sensorCenter.x - fixtureBoxCache.getWidth(), 
+				sensorCenter.y - fixtureBoxCache.getHeight(), 
+				sensorCenter.x + fixtureBoxCache.getWidth(),
+				sensorCenter.y + fixtureBoxCache.getHeight());		
+
+		List<Fixture> filtered = found.stream()
+							   .filter(fix -> fix != grabSensor)
+							   .filter(fix -> fix.getUserData() != grabSensor.getUserData())
+							   .filter(fix -> fix != climbingFixture)
+							   .filter(fix -> !fix.isSensor())
+							   .filter(fix -> !isFixtureOneWayPlatform(fix))
+							   .filter(fix -> isCollisionBetweenFixtureAndActor(fix, climbingActor))
+							   .collect(Collectors.toList());		
+		return filtered.size() <= 1;	//first object is the object that was grabbed
 	}
 		
 	private void destroyGrabJoint()
