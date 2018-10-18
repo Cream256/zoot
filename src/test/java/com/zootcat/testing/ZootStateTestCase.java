@@ -10,7 +10,7 @@ import com.zootcat.controllers.ai.DefaultStateMachineController;
 import com.zootcat.controllers.gfx.AnimatedSpriteController;
 import com.zootcat.controllers.logic.DirectionController;
 import com.zootcat.controllers.logic.LifeController;
-import com.zootcat.controllers.physics.MoveableController;
+import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
@@ -22,7 +22,7 @@ public class ZootStateTestCase
 	@Mock protected PhysicsBodyController physicsBodyCtrlMock;
 	@Mock protected AnimatedSpriteController animatedSpriteCtrlMock;
 	@Mock protected DirectionController directionCtrlMock;
-	@Mock protected MoveableController moveableCtrlMock;
+	@Mock protected WalkableController moveableCtrlMock;
 	@Mock protected LifeController lifeCtrlMock;
 	
 	@Before

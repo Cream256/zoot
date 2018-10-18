@@ -2,7 +2,7 @@ package com.zootcat.fsm.states;
 
 import com.zootcat.controllers.logic.ClimbController;
 import com.zootcat.controllers.logic.DirectionController;
-import com.zootcat.controllers.physics.MoveableController;
+import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
@@ -28,7 +28,7 @@ public class JumpState extends BasicState
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{		
 		super.setAnimationBasedOnStateName(actor);
-		actor.controllerAction(MoveableController.class, ctrl -> ctrl.jumpUp());
+		actor.controllerAction(WalkableController.class, ctrl -> ctrl.jumpUp());
 		actor.controllerAction(ClimbController.class, ctrl -> ctrl.setSensorPosition(ZootDirection.Up));
 	}
 	
@@ -53,7 +53,7 @@ public class JumpState extends BasicState
 		else if(ZootStateUtils.isMoveEvent(event))
 		{
 			ZootDirection dir = ZootStateUtils.getDirectionFromEvent(event);
-			event.getTargetZootActor().controllerAction(MoveableController.class, ctrl -> ctrl.moveInAir(dir));
+			event.getTargetZootActor().controllerAction(WalkableController.class, ctrl -> ctrl.moveInAir(dir));
 			event.getTargetZootActor().controllerAction(DirectionController.class, ctrl -> ctrl.setDirection(dir));
 			event.getTargetZootActor().controllerAction(ClimbController.class, ctrl -> ctrl.setSensorPosition(dir));
 		}

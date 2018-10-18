@@ -21,7 +21,7 @@ import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 
-public class MoveableControllerTest
+public class WalkableControllerTest
 {
 	private static final float WALK_VEL = 5.0f;
 	private static final float RUN_VEL = 10.0f;
@@ -34,7 +34,7 @@ public class MoveableControllerTest
 	private ZootActor actor;
 	@Mock private PhysicsBodyController physicsCtrl;
 	@Mock private DetectGroundController groundCtrl;
-	private MoveableController ctrl;
+	private WalkableController ctrl;
 	
 	@Before
 	public void setup()
@@ -47,7 +47,7 @@ public class MoveableControllerTest
 		
 		when(groundCtrl.isOnGround()).thenReturn(true);
 		
-		ctrl = new MoveableController();
+		ctrl = new WalkableController();
 		ControllerAnnotations.setControllerParameter(ctrl, "walkVel", WALK_VEL);
 		ControllerAnnotations.setControllerParameter(ctrl, "runVel", RUN_VEL);
 		ControllerAnnotations.setControllerParameter(ctrl, "jumpUpVel", JUMP_UP_VEL);

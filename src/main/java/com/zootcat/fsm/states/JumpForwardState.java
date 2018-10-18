@@ -1,7 +1,7 @@
 package com.zootcat.fsm.states;
 
 import com.zootcat.controllers.logic.DirectionController;
-import com.zootcat.controllers.physics.MoveableController;
+import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
@@ -25,7 +25,7 @@ public class JumpForwardState extends JumpState
 		//no super
 		super.setAnimationBasedOnStateName(actor);
 		actor.controllerAction(DirectionController.class, ctrl -> forwardJumpDirection = ctrl.getDirection());
-		actor.controllerAction(MoveableController.class, ctrl -> ctrl.jumpForward(forwardJumpDirection, false));
+		actor.controllerAction(WalkableController.class, ctrl -> ctrl.jumpForward(forwardJumpDirection, false));
 	}
 	
 	@Override

@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 
-import com.zootcat.controllers.physics.MoveableController;
+import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
@@ -101,7 +101,7 @@ public class ZootStateUtilsTest
 	public void shouldReturnCanRunValueFromController()
 	{
 		//given
-		MoveableController moveableCtrl = mock(MoveableController.class);
+		WalkableController moveableCtrl = mock(WalkableController.class);
 		ZootActor actor = new ZootActor();
 		actor.addController(moveableCtrl);
 		
@@ -141,7 +141,7 @@ public class ZootStateUtilsTest
 	public void shouldReturnCanJumpValueFromController()
 	{
 		//given
-		MoveableController moveableCtrl = mock(MoveableController.class);
+		WalkableController moveableCtrl = mock(WalkableController.class);
 		ZootActor actor = new ZootActor();
 		actor.addController(moveableCtrl);
 		

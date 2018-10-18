@@ -8,7 +8,8 @@ import com.zootcat.scene.ZootDirection;
 import com.zootcat.utils.ZootUtils;
 
 /**
- * Controller used to move physicall body around the scene.
+ * Controller used to move physicall body around the scene by walking.<br/>
+ * For flying movement use {@link FlyableController}.
  * 
  * @ctrlParam walkVel - horitontal velocity that will be set during walking
  * @ctrlParam runVel - horizontal velocity that will be set during running
@@ -23,7 +24,7 @@ import com.zootcat.utils.ZootUtils;
  * @author Cream
  *
  */
-public class MoveableController extends ControllerAdapter
+public class WalkableController extends ControllerAdapter
 {
 	@CtrlParam(debug = true) private float walkVel = 1.0f;
 	@CtrlParam(debug = true) private float runVel = 2.0f;

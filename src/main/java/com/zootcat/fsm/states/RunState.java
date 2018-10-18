@@ -1,6 +1,6 @@
 package com.zootcat.fsm.states;
 
-import com.zootcat.controllers.physics.MoveableController;
+import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
@@ -17,7 +17,7 @@ public class RunState extends WalkState
 	@Override
 	public void onUpdate(ZootActor actor, float delta)
 	{
-		actor.controllerAction(MoveableController.class, (mvCtrl) -> 
+		actor.controllerAction(WalkableController.class, (mvCtrl) -> 
 		{
 			if(mvCtrl.canRun())
 			{			
