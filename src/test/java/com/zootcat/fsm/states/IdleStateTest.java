@@ -75,6 +75,18 @@ public class IdleStateTest extends ZootStateTestCase
 	}
 	
 	@Test
+	public void handleFlyEvent()
+	{
+		//when
+		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Right);
+		idleState.onEnter(actor, null);
+		
+		//then
+		assertTrue(idleState.handle(createEvent(ZootEventType.FlyRight)));
+		assertEquals(FlyState.ID, actor.getStateMachine().getCurrentState().getId());		
+	}
+	
+	@Test
 	public void handleWalkEventAtTheSameDirection()
 	{
 		//when

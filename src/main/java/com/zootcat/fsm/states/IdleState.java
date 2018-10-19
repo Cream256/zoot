@@ -33,10 +33,11 @@ public class IdleState extends BasicState
 	{		
 		if(ZootStateUtils.isMoveEvent(event))
 		{
-			ZootDirection eventDirection = ZootStateUtils.getDirectionFromEvent(event);
+			ZootDirection eventDirection = ZootStateUtils.getDirectionFromEvent(event);			
 			boolean turn = eventDirection != actorDirection && actorDirection != ZootDirection.None;
+			boolean fly = ZootStateUtils.isFlyEvent(event);
 			boolean run = ZootStateUtils.isRunEvent(event) && ZootStateUtils.canActorRun(event);
-			int nextStateId = turn ? TurnState.ID : (run ? RunState.ID : WalkState.ID);
+			int nextStateId = turn ? TurnState.ID : (fly ? FlyState.ID : (run ? RunState.ID : WalkState.ID));
 			changeState(event, nextStateId);
 		}
 		else if(event.getType() == ZootEventType.JumpUp && ZootStateUtils.canActorJump(event))

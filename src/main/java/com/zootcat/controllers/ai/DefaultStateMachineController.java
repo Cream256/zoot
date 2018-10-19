@@ -9,6 +9,7 @@ import com.zootcat.fsm.states.DeadState;
 import com.zootcat.fsm.states.DownState;
 import com.zootcat.fsm.states.FallForwardState;
 import com.zootcat.fsm.states.FallState;
+import com.zootcat.fsm.states.FlyState;
 import com.zootcat.fsm.states.HurtState;
 import com.zootcat.fsm.states.IdleState;
 import com.zootcat.fsm.states.JumpForwardState;
@@ -32,6 +33,7 @@ public class DefaultStateMachineController extends ControllerAdapter
 		sm.addState(new FallForwardState());
 		sm.addState(new TurnState());
 		sm.addState(new RunState());
+		sm.addState(new FlyState());
 		sm.addState(new AttackState());
 		sm.addState(new HurtState());
 		sm.addState(new DeadState());
