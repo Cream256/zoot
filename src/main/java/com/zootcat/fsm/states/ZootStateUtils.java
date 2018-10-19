@@ -13,11 +13,12 @@ import com.zootcat.scene.ZootDirection;
 public class ZootStateUtils
 {
 	private static final List<ZootEventType> MOVE_EVENTS = Arrays.asList(ZootEventType.WalkRight, 
-			ZootEventType.WalkLeft, ZootEventType.RunLeft, ZootEventType.RunRight);
+			ZootEventType.WalkLeft, ZootEventType.RunLeft, ZootEventType.RunRight, ZootEventType.FlyLeft, ZootEventType.FlyRight);
 
 	private static final List<ZootEventType> RUN_EVENTS = Arrays.asList(ZootEventType.RunRight, ZootEventType.RunLeft);
 	private static final List<ZootEventType> WALK_EVENTS = Arrays.asList(ZootEventType.WalkRight, ZootEventType.WalkLeft);	
 	private static final List<ZootEventType> JUMP_EVENTS = Arrays.asList(ZootEventType.JumpUp, ZootEventType.JumpForward);
+	private static final List<ZootEventType> FLY_EVENTS = Arrays.asList(ZootEventType.FlyLeft, ZootEventType.FlyRight);
 	
 	public static boolean isMoveEvent(ZootEvent event)
 	{
@@ -37,6 +38,11 @@ public class ZootStateUtils
 	public static boolean isRunEvent(ZootEvent event)
 	{
 		return RUN_EVENTS.contains(event.getType());
+	}
+	
+	public static boolean isFlyEvent(ZootEvent event)
+	{
+		return FLY_EVENTS.contains(event.getType());
 	}
 	
 	public static boolean canActorRun(ZootEvent event)
@@ -59,12 +65,12 @@ public class ZootStateUtils
 	public static ZootDirection getDirectionFromEvent(ZootEvent event)
 	{
 		ZootEventTypeEnum eventType = event.getType();
-		if(eventType == ZootEventType.RunRight || eventType == ZootEventType.WalkRight)
+		if(eventType == ZootEventType.RunRight || eventType == ZootEventType.WalkRight || eventType == ZootEventType.FlyRight)
 		{
 			return ZootDirection.Right; 
 		}
 		
-		if(eventType == ZootEventType.RunLeft || eventType == ZootEventType.WalkLeft)
+		if(eventType == ZootEventType.RunLeft || eventType == ZootEventType.WalkLeft || eventType == ZootEventType.FlyLeft)
 		{
 			return ZootDirection.Left;
 		}

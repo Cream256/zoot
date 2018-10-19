@@ -10,8 +10,9 @@ import com.zootcat.controllers.ai.DefaultStateMachineController;
 import com.zootcat.controllers.gfx.AnimatedSpriteController;
 import com.zootcat.controllers.logic.DirectionController;
 import com.zootcat.controllers.logic.LifeController;
-import com.zootcat.controllers.physics.WalkableController;
+import com.zootcat.controllers.physics.FlyableController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
+import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
@@ -23,6 +24,7 @@ public class ZootStateTestCase
 	@Mock protected AnimatedSpriteController animatedSpriteCtrlMock;
 	@Mock protected DirectionController directionCtrlMock;
 	@Mock protected WalkableController moveableCtrlMock;
+	@Mock protected FlyableController flyableCtrlMock;
 	@Mock protected LifeController lifeCtrlMock;
 	
 	@Before
@@ -34,6 +36,7 @@ public class ZootStateTestCase
 		actor.addController(physicsBodyCtrlMock);
 		actor.addController(directionCtrlMock);
 		actor.addController(moveableCtrlMock);
+		actor.addController(flyableCtrlMock);
 		actor.addController(lifeCtrlMock);
 		
 		when(moveableCtrlMock.canJump()).thenReturn(true);
