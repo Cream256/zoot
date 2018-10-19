@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import com.zootcat.fsm.ZootState;
 import com.zootcat.fsm.ZootStateMachine;
+import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.fsm.states.AttackState;
 import com.zootcat.fsm.states.ClimbState;
 import com.zootcat.fsm.states.CrouchState;
@@ -69,5 +71,27 @@ public class DefaultStateMachineControllerTest
 	{
 		ZootState foundState = sm.getStates().stream().filter(state -> state.getClass().equals(clazz)).findAny().orElse(null);		
 		return foundState != null;
+	}
+	
+	@Test
+	public void shouldInitializeWithIdleState()
+	{
+		//when
+		ctrl.init(actor);
+		
+		//then
+		assertEquals(IdleState.ID, ctrl.getCurrentState().getId());
+	}
+	
+	@Test
+	public void shouldUpdateCurrentState()
+	{
+		//when
+		ctrl.init(actor);
+		ZootEvents.fireAndFree(actor, ZootEventType.WalkRight);
+		ctrl.onUpdate(1.0f, actor);
+		
+		//then
+		assertEquals(WalkState.ID, ctrl.getCurrentState().getId());		
 	}
 }

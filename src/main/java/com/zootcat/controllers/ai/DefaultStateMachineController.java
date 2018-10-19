@@ -1,6 +1,8 @@
 package com.zootcat.controllers.ai;
 
 import com.zootcat.controllers.ControllerAdapter;
+import com.zootcat.controllers.factory.CtrlDebug;
+import com.zootcat.fsm.ZootState;
 import com.zootcat.fsm.ZootStateMachine;
 import com.zootcat.fsm.states.AttackState;
 import com.zootcat.fsm.states.ClimbState;
@@ -21,6 +23,8 @@ import com.zootcat.scene.ZootActor;
 
 public class DefaultStateMachineController extends ControllerAdapter
 {
+	@CtrlDebug private ZootState currentState = null;
+	
 	@Override
 	public void init(ZootActor actor)
 	{
@@ -40,5 +44,18 @@ public class DefaultStateMachineController extends ControllerAdapter
 		sm.addState(new DownState());
 		sm.addState(new CrouchState());
 		sm.addState(new ClimbState());
+		
+		currentState = actor.getStateMachine().getCurrentState();
+	}
+	
+	@Override
+	public void onUpdate(float delta, ZootActor actor)
+	{
+		currentState = actor.getStateMachine().getCurrentState();
+	}
+	
+	public ZootState getCurrentState()
+	{
+		return currentState;
 	}
 }

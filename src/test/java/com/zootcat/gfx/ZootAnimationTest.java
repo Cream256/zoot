@@ -355,4 +355,10 @@ public class ZootAnimationTest
 		assertEquals(3.0f, offset.left.x, 0.0f);
 		assertEquals(4.0f, offset.left.y, 0.0f);
 	}
+	
+	@Test
+	public void shouldOutputAnimationAsToAnimationName()
+	{
+		assertEquals("MyAnimation", animation.toString());
+	}
 }

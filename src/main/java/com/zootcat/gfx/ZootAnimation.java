@@ -164,4 +164,10 @@ public class ZootAnimation
 	{
 		return repeatsCount;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return getName();
+	}
 }

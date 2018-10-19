@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.controllers.logic.DirectionController;
 import com.zootcat.exceptions.RuntimeZootException;
@@ -26,14 +27,14 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 	@CtrlParam(required = true, debug = true) private String file;
 	@CtrlParam(debug = true) private boolean useActorSize = true;
 	@CtrlParam(debug = true) private boolean keepAspectRatio = false;
-	@CtrlParam(debug = true) private String startingAnimation = "IDLE";
+	@CtrlParam(debug = true) private String startingAnimation = "Idle";
 	@CtrlParam(global = true) private ZootScene scene;
 	@CtrlParam(global = true) private AssetManager assetManager;
+	@CtrlDebug private ZootAnimation currentAnimation;
 	
 	private Sprite sprite;
 	private float firstAnimationWidth;
-	private float firstAnimationHeight;
-	private ZootAnimation currentAnimation;
+	private float firstAnimationHeight;	
 	private Map<Integer, ZootAnimation> animations;
 				
 	@Override
@@ -61,7 +62,7 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 	}
 
 	private void calculateFirstAnimationFrameSize(ZootAnimation firstAnimation)
-	{
+	{		
 		firstAnimationWidth = firstAnimation.getKeyFrame().getRegionWidth();
 		firstAnimationHeight = firstAnimation.getKeyFrame().getRegionHeight();
 	}
