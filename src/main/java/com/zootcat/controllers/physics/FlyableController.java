@@ -5,7 +5,6 @@ import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 
-//TODO
 public class FlyableController extends ControllerAdapter
 {
 	@CtrlParam(debug = true) private float flyVel = 1.0f;

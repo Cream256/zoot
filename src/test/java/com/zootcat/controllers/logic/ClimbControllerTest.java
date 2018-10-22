@@ -4,10 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-
-import java.util.Arrays;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -231,23 +229,7 @@ public class ClimbControllerTest
 		//then
 		assertFalse(ctrl.isFixtureGrabbable(ctrlActor, sensor, fixtureToGrab));
 	}
-	
-	@Test
-	public void shouldNotBeAbleToGrabFixtureIfThereIsNoSpaceOnFixtureTop()
-	{
-		//when
-		Fixture sensor = createFixture(true, new Vector2(), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
-		Fixture fixtureToGrab = createFixture(false, new Vector2(0.0f, TRESHOLD + 0.1f), CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
 		
-		//TODO
-		
-		
-		
-		
-		//then
-		assertFalse(ctrl.isFixtureGrabbable(ctrlActor, sensor, fixtureToGrab));
-	}
-	
 	@Test
 	public void shouldBeAbleToGrabFixture()
 	{
