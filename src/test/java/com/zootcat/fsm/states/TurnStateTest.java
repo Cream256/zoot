@@ -54,7 +54,8 @@ public class TurnStateTest extends ZootStateTestCase
 		reset(moveableCtrlMock);		
 		turnState.onEnter(actor, null);
 		
-		verify(moveableCtrlMock).stop();		
+		verify(moveableCtrlMock).stop();
+		verify(flyableCtrlMock).stop();
 	}
 	
 	@Test

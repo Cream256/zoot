@@ -28,4 +28,9 @@ public class FlyableController extends ControllerAdapter
 	{
 		physicsCtrl.setVelocity(flyVel * direction.getHorizontalValue(), 0.0f, true, false);
 	}
+	
+	public void stop()
+	{
+		physicsCtrl.setVelocity(0.0f, 0.0f, true, false);
+	}
 }
