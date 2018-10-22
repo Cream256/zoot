@@ -193,6 +193,16 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 		return scene;
 	}
 	
+	public void setUseActorFilter(boolean value)
+	{
+		useActorFilter = value;
+	}
+	
+	public boolean getUseActorFilter()
+	{
+		return useActorFilter;
+	}
+	
 	protected abstract SensorCollisionResult onCollideWithSensor(Fixture fixture);
 			
 	private FixtureDef createSensorFixtureDef(ZootActor actor, Shape sensorShape)

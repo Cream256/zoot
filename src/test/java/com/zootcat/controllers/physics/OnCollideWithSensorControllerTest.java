@@ -1,6 +1,7 @@
 package com.zootcat.controllers.physics;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -641,5 +642,15 @@ public class OnCollideWithSensorControllerTest
 		
 		assertTrue(preUpdateCalled);
 		assertTrue(postUpdateCalled);		
+	}
+	
+	@Test
+	public void shouldSetUseActorFilter()
+	{
+		ctrl.setUseActorFilter(false);
+		assertFalse(ctrl.getUseActorFilter());
+		
+		ctrl.setUseActorFilter(true);
+		assertTrue(ctrl.getUseActorFilter());		
 	}
 }
