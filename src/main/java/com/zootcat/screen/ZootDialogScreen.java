@@ -62,7 +62,7 @@ public class ZootDialogScreen extends ZootScreenAdapter
 	@Override
 	public void hide() 
 	{
-		game.getInputManager().clear();
+		game.getInputManager().removeAllProcessors();
 		game.getInputManager().clearPressedKeys();
 	}
 		

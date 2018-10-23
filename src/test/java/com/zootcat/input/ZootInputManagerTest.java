@@ -196,7 +196,7 @@ public class ZootInputManagerTest
 	@Test
 	public void shouldClearAllProcessors()
 	{
-		inputManager.clear();
+		inputManager.removeAllProcessors();
 		verify(multiplexer).clear();
 	}
 	
