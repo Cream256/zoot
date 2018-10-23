@@ -3,6 +3,7 @@ package com.zootcat.actions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Before;
@@ -124,5 +125,12 @@ public class ZootActionsTest
 		ZootFireEventAction action = ZootActions.fireEvent(actor, event);
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(event, action.getEvent());
+	}
+	
+	@Test
+	public void shouldCreateLambdaAction()
+	{
+		ZootLambdaAction action = ZootActions.lambda((delta) -> true);
+		assertTrue(action.act(1.0f));
 	}
 }

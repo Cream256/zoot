@@ -1,5 +1,7 @@
 package com.zootcat.actions;
 
+import java.util.function.Function;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
@@ -98,5 +100,11 @@ public class ZootActions
 		fireEventAction.setTarget(target);
 		fireEventAction.setEvent(event);
 		return fireEventAction;
+	}
+	
+	public static ZootLambdaAction lambda(Function<Float, Boolean> lambda)
+	{
+		ZootLambdaAction lambdaAction = new ZootLambdaAction(lambda);
+		return lambdaAction;
 	}
 }
