@@ -16,4 +16,9 @@ public class ZootLambdaAction extends ZootAction
 	{
 		return lambda.apply(delta);
 	}
+	
+	public Function<Float, Boolean> getLambda()
+	{
+		return lambda;
+	}
 }

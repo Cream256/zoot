@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import java.util.function.Function;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -130,7 +132,9 @@ public class ZootActionsTest
 	@Test
 	public void shouldCreateLambdaAction()
 	{
-		ZootLambdaAction action = ZootActions.lambda((delta) -> true);
+		Function<Float, Boolean> lambda = (delta) -> true;		
+		ZootLambdaAction action = ZootActions.lambda(lambda);
 		assertTrue(action.act(1.0f));
+		assertEquals(lambda, action.getLambda());
 	}
 }
