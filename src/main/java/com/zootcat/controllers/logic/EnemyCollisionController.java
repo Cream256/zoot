@@ -45,13 +45,13 @@ public class EnemyCollisionController extends OnCollideFromAboveOrBelowControlle
 	@Override
 	public void onCollidedFromAbove(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
-		hurtEnemyCtrl.hurt(actorA, actorB);		
+		hurtEnemyCtrl.onEnter(actorA, actorB, contact);		
 	}
 
 	@Override
 	public void onCollidedFromBelow(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
-		hurtPlayerCtrl.hurt(actorA, actorB);
+		hurtPlayerCtrl.onEnter(actorA, actorB, contact);
 		ZootEvents.fireAndFree(getControllerActor(), ZootEventType.Attack);
 	}
 	

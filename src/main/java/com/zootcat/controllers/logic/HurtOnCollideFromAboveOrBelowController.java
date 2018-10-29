@@ -34,14 +34,14 @@ public class HurtOnCollideFromAboveOrBelowController extends OnCollideFromAboveO
 	public void onCollidedFromAbove(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		if(!above) return;
-		hurtOnCollideCtrl.hurt(actorA, actorB);	
+		hurtOnCollideCtrl.onEnter(actorA, actorB, contact);	
 	}
 	
 	@Override
 	public void onCollidedFromBelow(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		if(above) return;
-		hurtOnCollideCtrl.hurt(actorA, actorB);	
+		hurtOnCollideCtrl.onEnter(actorA, actorB, contact);	
 	}
 	
 	public void setDamage(int value)
