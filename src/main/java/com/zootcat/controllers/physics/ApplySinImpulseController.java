@@ -5,7 +5,7 @@ import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 
-public class ApplySinusoidalImpulseController extends ControllerAdapter
+public class ApplySinImpulseController extends ControllerAdapter
 {
 	@CtrlParam(debug = true) private float impulseX = 1.0f;
 	@CtrlParam(debug = true) private float impulseY = 1.0f;

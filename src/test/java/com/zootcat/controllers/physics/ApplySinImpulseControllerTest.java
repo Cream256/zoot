@@ -10,10 +10,10 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.math.MathUtils;
 import com.zootcat.scene.ZootActor;
 
-public class ApplySinusoidalImpulseControllerTest
+public class ApplySinImpulseControllerTest
 {
 	private ZootActor actor;
-	private ApplySinusoidalImpulseController ctrl;
+	private ApplySinImpulseController ctrl;
 	@Mock private PhysicsBodyController physicsBodyCtrl;
 			
 	@Before
@@ -24,7 +24,7 @@ public class ApplySinusoidalImpulseControllerTest
 		actor = new ZootActor();
 		actor.addController(physicsBodyCtrl);
 		
-		ctrl = new ApplySinusoidalImpulseController();
+		ctrl = new ApplySinImpulseController();
 	}
 
 	@Test
