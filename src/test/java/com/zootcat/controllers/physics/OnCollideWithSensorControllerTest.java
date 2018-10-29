@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -28,6 +29,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.zootcat.controllers.factory.ControllerAnnotations;
+import com.zootcat.math.ZootBoundingBoxFactory;
 import com.zootcat.physics.ZootPhysics;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
@@ -581,6 +583,25 @@ public class OnCollideWithSensorControllerTest
 		//then
 		assertEquals(expectedX, sensorPosition.x, 0.0f);
 		assertEquals(expectedY, sensorPosition.y, 0.0f);
+	}
+	
+	@Test
+	public void shouldScaleSensor()
+	{
+		//given
+		final float expectedScale = 0.5f;
+		ControllerAnnotations.setControllerParameter(ctrl, "sensorWidth", SENSOR_WIDTH);
+		ControllerAnnotations.setControllerParameter(ctrl, "sensorHeight", SENSOR_HEIGHT);
+		
+		//when		
+		ctrl.init(ctrlActor);
+		ctrl.onAdd(ctrlActor);		
+		ctrl.scaleSensor(expectedScale);		
+		
+		//then
+		BoundingBox box = ZootBoundingBoxFactory.create(ctrl.getSensor());
+		assertEquals(SENSOR_WIDTH * expectedScale, box.getWidth(), 0.0f);
+		assertEquals(SENSOR_HEIGHT * expectedScale, box.getHeight(), 0.0f);		
 	}
 	
 	@Test

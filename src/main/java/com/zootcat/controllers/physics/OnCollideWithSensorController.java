@@ -171,8 +171,7 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 		return ZootPhysicsUtils.getFixtureCenter(sensor);
 	}
 		
-	//TODO add test
-	public void scale(float scale)
+	public void scaleSensor(float scale)
 	{
 		ZootPhysicsUtils.scaleFixture(sensor, 1.0f, scale, scale);		
 	}
