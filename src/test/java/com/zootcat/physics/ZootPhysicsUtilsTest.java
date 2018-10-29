@@ -1,6 +1,7 @@
 package com.zootcat.physics;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -10,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -17,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.zootcat.exceptions.RuntimeZootException;
+import com.zootcat.math.ZootBoundingBoxFactory;
 
 public class ZootPhysicsUtilsTest 
 {
@@ -275,5 +278,42 @@ public class ZootPhysicsUtilsTest
 		//then		
 		assertEquals(expectedX, center.x, 123.0f);
 		assertEquals(expectedY, center.y, -256.0f);			
+	}
+	
+	@Test
+	public void shouldScaleCircle()
+	{
+		//given
+		CircleShape circle = new CircleShape();
+		Fixture fixture = mock(Fixture.class);
+		
+		//when
+		when(fixture.getShape()).thenReturn(circle);
+		circle.setRadius(10.0f);
+		circle.setPosition(new Vector2(20.0f, 30.0f));
+		ZootPhysicsUtils.scaleFixture(fixture, 0.5f, 0.0f, 0.0f);
+		
+		//then
+		assertEquals(5.0f, circle.getRadius(), 0.0f);
+		assertEquals(10.0f, circle.getPosition().x, 0.0f);
+		assertEquals(15.0f, circle.getPosition().y, 0.0f);	
+	}
+	
+	@Test
+	public void shouldScalePolygon()
+	{
+		//given
+		PolygonShape polygon = new PolygonShape();
+		Fixture fixture = mock(Fixture.class);
+		
+		//when
+		when(fixture.getShape()).thenReturn(polygon);
+		polygon.setAsBox(10.0f, 15.0f, new Vector2(), 0.0f);
+		ZootPhysicsUtils.scaleFixture(fixture, 0.0f, 0.5f, 0.25f);
+		
+		//then
+		BoundingBox box = ZootBoundingBoxFactory.create(fixture);
+		assertEquals(10.0f, box.getWidth(), 0.0f);
+		assertEquals(7.5f, box.getHeight(), 0.0f);
 	}
 }

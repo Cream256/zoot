@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.zootcat.exceptions.RuntimeZootException;
 
 public class ZootPhysicsUtils
@@ -113,4 +114,30 @@ public class ZootPhysicsUtils
 		
 	}
 	
+	public static void scaleFixture(Fixture fixture, float radiusScale, float scaleX, float scaleY)
+	{	
+		Shape shape = fixture.getShape();
+		if(shape.getType() == Type.Circle)
+		{
+			CircleShape circle = (CircleShape)shape;			
+			Vector2 pos = circle.getPosition();			
+			circle.setPosition(pos.scl(radiusScale, radiusScale));
+			circle.setRadius(shape.getRadius() * radiusScale);
+			return;
+		}
+		else if(shape.getType() == Type.Polygon)
+		{
+			PolygonShape poly = (PolygonShape)shape;
+			
+			Vector2[] vertices = new Vector2[poly.getVertexCount()];
+			for(int i = 0; i < poly.getVertexCount(); ++i)
+			{
+				vertices[i] = new Vector2();					
+				poly.getVertex(i, vertices[i]);
+				vertices[i].x *= scaleX;
+				vertices[i].y *= scaleY;
+			}
+			poly.set(vertices);
+		}
+	}	
 }
