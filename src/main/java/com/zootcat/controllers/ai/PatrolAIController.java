@@ -3,25 +3,29 @@ package com.zootcat.controllers.ai;
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
+import com.zootcat.controllers.gfx.AnimatedSpriteController;
 import com.zootcat.controllers.logic.ZootEventListenerController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEventTypeEnum;
 import com.zootcat.fsm.events.ZootEvents;
+import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 
 public class PatrolAIController extends ZootEventListenerController
 {	
-	public static final float TURN_COOLDOWN = 0.5f;
+	public static final float DEFAULT_TURN_COOLDOWN = 0.5f;
+	public static final float TURN_TIME_PADDING = 0.05f;
 	
 	@CtrlParam private int distance = 0;
 	@CtrlParam private String startDirection = "Left";
 	@CtrlParam private boolean isFlying = false;
 	@CtrlParam(global = true) private ZootScene scene;
-	@CtrlDebug private float turnCooldown = 0.0f;
+	@CtrlDebug private float currentTurnCooldown = 0.0f;
+	@CtrlDebug private float turnCooldown = DEFAULT_TURN_COOLDOWN;
 	
 	private Vector2 start;
 	private ZootDirection direction = ZootDirection.Left;
@@ -34,6 +38,17 @@ public class PatrolAIController extends ZootEventListenerController
 		physicsCtrl = actor.getController(PhysicsBodyController.class);
 		start = physicsCtrl.getCenterPositionRef().cpy();
 		direction = ZootDirection.fromString(startDirection);
+		setTurnCooldownFromAnimation(actor);
+	}
+
+	private void setTurnCooldownFromAnimation(ZootActor actor)
+	{
+		actor.controllerAction(AnimatedSpriteController.class, ctrl -> 
+		{
+			ZootAnimation turnAnimation = ctrl.getAnimation("Turn"); 
+			if(turnAnimation == null) return;			
+			turnCooldown = turnAnimation.getFrameCount() * turnAnimation.getFrameDuration() + TURN_TIME_PADDING; 
+		});
 	}
 
 	@Override
@@ -64,7 +79,7 @@ public class PatrolAIController extends ZootEventListenerController
 			if(currentX > start.x + realDist) direction = ZootDirection.Left;			
 		}		
 		ZootEvents.fireAndFree(actor, getEvent(direction));		
-		turnCooldown = Math.max(0.0f, turnCooldown - delta);
+		currentTurnCooldown = Math.max(0.0f, currentTurnCooldown - delta);
 	}
 	
 	private ZootEventTypeEnum getEvent(ZootDirection direction)
@@ -82,14 +97,13 @@ public class PatrolAIController extends ZootEventListenerController
 	@Override
 	public boolean handleZootEvent(ZootEvent event)
 	{
-		boolean shouldTurn = event.getType() == ZootEventType.Obstacle || event.getType() == ZootEventType.NoGroundAhead;
-		if(shouldTurn && turnCooldown == 0.0f)
+		boolean shouldTurn = event.getType() == ZootEventType.Obstacle || event.getType() == ZootEventType.NoGroundAhead;		
+		if(shouldTurn && currentTurnCooldown == 0.0f)
 		{
-			turnCooldown = TURN_COOLDOWN;
+			currentTurnCooldown = turnCooldown;
 			direction = direction.invert();
 			return true;
-		}
-		
+		}		
 		return false;
 	}	
 }
