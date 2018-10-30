@@ -62,19 +62,19 @@ public class FallStateTest extends ZootStateTestCase
 		
 		assertTrue(fallState.handle(createEvent(ZootEventType.WalkRight)));
 		assertEquals("State should not change", currentStateId, actor.getStateMachine().getCurrentState().getId());
-		verify(moveableCtrlMock, times(1)).moveInAir(ZootDirection.Right);
+		verify(walkableCtrlMock, times(1)).moveInAir(ZootDirection.Right);
 		
 		assertTrue(fallState.handle(createEvent(ZootEventType.WalkLeft)));
 		assertEquals("State should not change", currentStateId, actor.getStateMachine().getCurrentState().getId());
-		verify(moveableCtrlMock, times(1)).moveInAir(ZootDirection.Left);		
+		verify(walkableCtrlMock, times(1)).moveInAir(ZootDirection.Left);		
 		
 		assertTrue(fallState.handle(createEvent(ZootEventType.RunRight)));
 		assertEquals("State should not change", currentStateId, actor.getStateMachine().getCurrentState().getId());
-		verify(moveableCtrlMock, times(2)).moveInAir(ZootDirection.Right);
+		verify(walkableCtrlMock, times(2)).moveInAir(ZootDirection.Right);
 		
 		assertTrue(fallState.handle(createEvent(ZootEventType.RunLeft)));
 		assertEquals("State should not change", currentStateId, actor.getStateMachine().getCurrentState().getId());
-		verify(moveableCtrlMock, times(2)).moveInAir(ZootDirection.Left);
+		verify(walkableCtrlMock, times(2)).moveInAir(ZootDirection.Left);
 	}
 	
 	@Test

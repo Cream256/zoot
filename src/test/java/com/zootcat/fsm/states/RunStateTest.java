@@ -58,17 +58,17 @@ public class RunStateTest extends ZootStateTestCase
 	{
 		runState.onEnter(actor, createEvent(ZootEventType.WalkRight));		
 		runState.onUpdate(actor, 1.0f);		
-		verify(moveableCtrlMock, times(1)).run(ZootDirection.Right);
+		verify(walkableCtrlMock, times(1)).run(ZootDirection.Right);
 		
 		runState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(2)).run(ZootDirection.Right);
+		verify(walkableCtrlMock, times(2)).run(ZootDirection.Right);
 		
 		runState.onEnter(actor, createEvent(ZootEventType.WalkLeft));
 		runState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(1)).run(ZootDirection.Left);
+		verify(walkableCtrlMock, times(1)).run(ZootDirection.Left);
 		
 		runState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(2)).run(ZootDirection.Left);
+		verify(walkableCtrlMock, times(2)).run(ZootDirection.Left);
 	}
 	
 	@Test
@@ -76,11 +76,11 @@ public class RunStateTest extends ZootStateTestCase
 	{
 		runState.onEnter(actor, createEvent(ZootEventType.RunRight));
 		runState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(1)).run(ZootDirection.Right);
+		verify(walkableCtrlMock).run(ZootDirection.Right);
 		
-		when(moveableCtrlMock.canRun()).thenReturn(false);
+		when(walkableCtrlMock.canRun()).thenReturn(false);
 		runState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(1)).run(ZootDirection.Right);
+		verify(walkableCtrlMock).run(ZootDirection.Right);
 	}
 	
 	@Test
@@ -88,11 +88,11 @@ public class RunStateTest extends ZootStateTestCase
 	{
 		runState.onEnter(actor, createEvent(ZootEventType.RunLeft));
 		runState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(1)).run(ZootDirection.Left);
+		verify(walkableCtrlMock, times(1)).run(ZootDirection.Left);
 		
-		when(moveableCtrlMock.canRun()).thenReturn(false);
+		when(walkableCtrlMock.canRun()).thenReturn(false);
 		runState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(1)).run(ZootDirection.Left);
+		verify(walkableCtrlMock, times(1)).run(ZootDirection.Left);
 	}
 	
 	@Test

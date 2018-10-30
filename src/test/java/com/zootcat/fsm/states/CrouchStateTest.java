@@ -96,17 +96,17 @@ public class CrouchStateTest extends ZootStateTestCase
 	{
 		crouchState.onEnter(actor, createEvent(ZootEventType.WalkRight));		
 		crouchState.onUpdate(actor, 1.0f);		
-		verify(moveableCtrlMock, times(1)).walk(ZootDirection.Right);
+		verify(walkableCtrlMock, times(1)).walk(ZootDirection.Right);
 		
 		crouchState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(2)).walk(ZootDirection.Right);
+		verify(walkableCtrlMock, times(2)).walk(ZootDirection.Right);
 		
 		crouchState.onEnter(actor, createEvent(ZootEventType.WalkLeft));
 		crouchState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(1)).walk(ZootDirection.Left);
+		verify(walkableCtrlMock, times(1)).walk(ZootDirection.Left);
 		
 		crouchState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(2)).walk(ZootDirection.Left);
+		verify(walkableCtrlMock, times(2)).walk(ZootDirection.Left);
 	}
 	
 	@Test

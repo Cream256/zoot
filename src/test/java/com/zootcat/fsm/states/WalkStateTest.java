@@ -58,17 +58,17 @@ public class WalkStateTest extends ZootStateTestCase
 	{
 		walkState.onEnter(actor, createEvent(ZootEventType.WalkRight));		
 		walkState.onUpdate(actor, 1.0f);		
-		verify(moveableCtrlMock, times(1)).walk(ZootDirection.Right);
+		verify(walkableCtrlMock, times(1)).walk(ZootDirection.Right);
 		
 		walkState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(2)).walk(ZootDirection.Right);
+		verify(walkableCtrlMock, times(2)).walk(ZootDirection.Right);
 		
 		walkState.onEnter(actor, createEvent(ZootEventType.WalkLeft));
 		walkState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(1)).walk(ZootDirection.Left);
+		verify(walkableCtrlMock, times(1)).walk(ZootDirection.Left);
 		
 		walkState.onUpdate(actor, 1.0f);
-		verify(moveableCtrlMock, times(2)).walk(ZootDirection.Left);
+		verify(walkableCtrlMock, times(2)).walk(ZootDirection.Left);
 	}
 	
 	@Test
@@ -88,7 +88,7 @@ public class WalkStateTest extends ZootStateTestCase
 	@Test
 	public void handleJumpUpEventWhenActorCantJump()
 	{
-		when(moveableCtrlMock.canJump()).thenReturn(false);
+		when(walkableCtrlMock.canJump()).thenReturn(false);
 		assertTrue(walkState.handle(createEvent(ZootEventType.JumpUp)));
 		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
@@ -103,7 +103,7 @@ public class WalkStateTest extends ZootStateTestCase
 	@Test
 	public void handleJumpForwardEventWhenActorCantJump()
 	{
-		when(moveableCtrlMock.canJump()).thenReturn(false);
+		when(walkableCtrlMock.canJump()).thenReturn(false);
 		assertTrue(walkState.handle(createEvent(ZootEventType.JumpForward)));
 		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
@@ -147,7 +147,7 @@ public class WalkStateTest extends ZootStateTestCase
 	@Test
 	public void handleRunEventWhenActorCantRun()
 	{
-		when(moveableCtrlMock.canRun()).thenReturn(false);
+		when(walkableCtrlMock.canRun()).thenReturn(false);
 		walkState.onEnter(actor, createEvent(ZootEventType.WalkRight));
 		assertTrue(walkState.handle(createEvent(ZootEventType.RunRight)));
 		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
@@ -164,7 +164,7 @@ public class WalkStateTest extends ZootStateTestCase
 	@Test
 	public void handleRunEventInDifferentDirectionWhenActorCantRun()
 	{
-		when(moveableCtrlMock.canRun()).thenReturn(false);
+		when(walkableCtrlMock.canRun()).thenReturn(false);
 		walkState.onEnter(actor, createEvent(ZootEventType.WalkRight));
 		assertTrue(walkState.handle(createEvent(ZootEventType.RunLeft)));
 		assertEquals(TurnState.ID, actor.getStateMachine().getCurrentState().getId());

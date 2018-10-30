@@ -1,5 +1,6 @@
 package com.zootcat.testing;
 
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -23,7 +24,7 @@ public class ZootStateTestCase
 	@Mock protected PhysicsBodyController physicsBodyCtrlMock;
 	@Mock protected AnimatedSpriteController animatedSpriteCtrlMock;
 	@Mock protected DirectionController directionCtrlMock;
-	@Mock protected WalkableController moveableCtrlMock;
+	@Mock protected WalkableController walkableCtrlMock;
 	@Mock protected FlyableController flyableCtrlMock;
 	@Mock protected LifeController lifeCtrlMock;
 	
@@ -35,16 +36,22 @@ public class ZootStateTestCase
 		actor.addController(animatedSpriteCtrlMock);
 		actor.addController(physicsBodyCtrlMock);
 		actor.addController(directionCtrlMock);
-		actor.addController(moveableCtrlMock);
+		actor.addController(walkableCtrlMock);
 		actor.addController(flyableCtrlMock);
 		actor.addController(lifeCtrlMock);
-		
-		when(moveableCtrlMock.canJump()).thenReturn(true);
-		when(moveableCtrlMock.canRun()).thenReturn(true);
-		
+				
 		DefaultStateMachineController smCtrl = new DefaultStateMachineController();
 		smCtrl.init(actor);
 		actor.addController(smCtrl);
+		
+		//state machine init can have side effects, reset them
+		reset(animatedSpriteCtrlMock);
+		reset(walkableCtrlMock);
+		reset(flyableCtrlMock);
+				
+		//setup mocks
+		when(walkableCtrlMock.canJump()).thenReturn(true);
+		when(walkableCtrlMock.canRun()).thenReturn(true);
 	}
 	
 	public ZootEvent createEvent(ZootEventType type, Object userObject)

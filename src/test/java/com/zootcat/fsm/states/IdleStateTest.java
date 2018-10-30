@@ -2,7 +2,6 @@ package com.zootcat.fsm.states;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,19 +32,15 @@ public class IdleStateTest extends ZootStateTestCase
 	@Test
 	public void onEnterShouldSetIdleAnimation()
 	{
-		//first invocation is done by DefaultStateMachineController
-		verify(animatedSpriteCtrlMock, times(1)).setAnimation(idleState.getName());
 		idleState.onEnter(actor, null);
-		verify(animatedSpriteCtrlMock, times(2)).setAnimation(idleState.getName());
+		verify(animatedSpriteCtrlMock).setAnimation(idleState.getName());
 	}
 	
 	@Test
 	public void onEnterShouldZeroHoritontalVelocityActor()
 	{
-		//first invocation is done by DefaultStateMachineController
-		verify(animatedSpriteCtrlMock, times(1)).setAnimation(idleState.getName());
 		idleState.onEnter(actor, null);
-		verify(moveableCtrlMock, times(2)).stop();
+		verify(walkableCtrlMock).stop();
 	}
 	
 	@Test
@@ -53,7 +48,7 @@ public class IdleStateTest extends ZootStateTestCase
 	{
 		//when
 		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Right);
-		when(moveableCtrlMock.canRun()).thenReturn(true);
+		when(walkableCtrlMock.canRun()).thenReturn(true);
 		idleState.onEnter(actor, null);
 		
 		//then
@@ -66,7 +61,7 @@ public class IdleStateTest extends ZootStateTestCase
 	{
 		//when
 		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Right);
-		when(moveableCtrlMock.canRun()).thenReturn(false);
+		when(walkableCtrlMock.canRun()).thenReturn(false);
 		idleState.onEnter(actor, null);
 		
 		//then
@@ -136,7 +131,7 @@ public class IdleStateTest extends ZootStateTestCase
 	@Test
 	public void handleJumpUpEventWhenActorCantJump()
 	{
-		when(moveableCtrlMock.canJump()).thenReturn(false);
+		when(walkableCtrlMock.canJump()).thenReturn(false);
 		assertTrue(idleState.handle(createEvent(ZootEventType.JumpUp)));
 		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
@@ -151,7 +146,7 @@ public class IdleStateTest extends ZootStateTestCase
 	@Test
 	public void handleJumpForwardEventWhenActorCantJump()
 	{
-		when(moveableCtrlMock.canJump()).thenReturn(false);
+		when(walkableCtrlMock.canJump()).thenReturn(false);
 		assertTrue(idleState.handle(createEvent(ZootEventType.JumpForward)));
 		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
 	}

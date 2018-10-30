@@ -17,6 +17,7 @@ import com.zootcat.fsm.states.IdleState;
 import com.zootcat.fsm.states.JumpForwardState;
 import com.zootcat.fsm.states.JumpState;
 import com.zootcat.fsm.states.RunState;
+import com.zootcat.fsm.states.StunState;
 import com.zootcat.fsm.states.TurnState;
 import com.zootcat.fsm.states.WalkState;
 import com.zootcat.scene.ZootActor;
@@ -44,6 +45,7 @@ public class DefaultStateMachineController extends ControllerAdapter
 		sm.addState(new DownState());
 		sm.addState(new CrouchState());
 		sm.addState(new ClimbState());
+		sm.addState(new StunState());
 		
 		currentState = actor.getStateMachine().getCurrentState();
 	}

@@ -23,6 +23,7 @@ import com.zootcat.fsm.states.IdleState;
 import com.zootcat.fsm.states.JumpForwardState;
 import com.zootcat.fsm.states.JumpState;
 import com.zootcat.fsm.states.RunState;
+import com.zootcat.fsm.states.StunState;
 import com.zootcat.fsm.states.TurnState;
 import com.zootcat.fsm.states.WalkState;
 import com.zootcat.scene.ZootActor;
@@ -43,7 +44,7 @@ public class DefaultStateMachineControllerTest
 	public void shouldHaveValidNumberOfStates()
 	{
 		ctrl.init(actor);
-		assertEquals(15, actor.getStateMachine().getStates().size());
+		assertEquals(16, actor.getStateMachine().getStates().size());
 	}
 		
 	@Test
@@ -65,6 +66,7 @@ public class DefaultStateMachineControllerTest
 		assertTrue("Should have Crouch State", containsState(actor.getStateMachine(), CrouchState.class));
 		assertTrue("Should have Climb State", containsState(actor.getStateMachine(), ClimbState.class));
 		assertTrue("Should have Fly State", containsState(actor.getStateMachine(), FlyState.class));
+		assertTrue("Should have Stun State", containsState(actor.getStateMachine(), StunState.class));
 	}
 		
 	private boolean containsState(ZootStateMachine sm, Class<? extends ZootState> clazz)

@@ -51,10 +51,10 @@ public class TurnStateTest extends ZootStateTestCase
 	@Test
 	public void onEnterShouldStopActor()
 	{
-		reset(moveableCtrlMock);		
+		reset(walkableCtrlMock);		
 		turnState.onEnter(actor, null);
 		
-		verify(moveableCtrlMock).stop();
+		verify(walkableCtrlMock).stop();
 		verify(flyableCtrlMock).stop();
 	}
 	
@@ -134,7 +134,7 @@ public class TurnStateTest extends ZootStateTestCase
 	@Test
 	public void handleJumpUpEventWhenActorCantJump()
 	{
-		when(moveableCtrlMock.canJump()).thenReturn(false);		
+		when(walkableCtrlMock.canJump()).thenReturn(false);		
 		assertTrue(turnState.handle(createEvent(ZootEventType.JumpUp)));
 		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
@@ -149,7 +149,7 @@ public class TurnStateTest extends ZootStateTestCase
 	@Test
 	public void handleJumpForwardEventWhenActorCantJump()
 	{
-		when(moveableCtrlMock.canJump()).thenReturn(false);
+		when(walkableCtrlMock.canJump()).thenReturn(false);
 		assertTrue(turnState.handle(createEvent(ZootEventType.JumpForward)));
 		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
 	}

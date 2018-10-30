@@ -49,7 +49,7 @@ public class JumpStateTest extends ZootStateTestCase
 	public void shouldPerformJumpUpOnEnteringState()
 	{
 		jumpState.onEnter(actor, createEvent(ZootEventType.JumpUp));
-		verify(moveableCtrlMock).jumpUp();
+		verify(walkableCtrlMock).jumpUp();
 	}
 	
 	@Test
@@ -122,19 +122,19 @@ public class JumpStateTest extends ZootStateTestCase
 		
 		assertTrue(jumpState.handle(createEvent(ZootEventType.WalkRight)));
 		assertEquals("State should not change", currentStateId, actor.getStateMachine().getCurrentState().getId());
-		verify(moveableCtrlMock).moveInAir(ZootDirection.Right);
+		verify(walkableCtrlMock).moveInAir(ZootDirection.Right);
 		
 		assertTrue(jumpState.handle(createEvent(ZootEventType.WalkLeft)));
 		assertEquals("State should not change", currentStateId, actor.getStateMachine().getCurrentState().getId());
-		verify(moveableCtrlMock).moveInAir(ZootDirection.Left);		
+		verify(walkableCtrlMock).moveInAir(ZootDirection.Left);		
 		
 		assertTrue(jumpState.handle(createEvent(ZootEventType.RunRight)));
 		assertEquals("State should not change", currentStateId, actor.getStateMachine().getCurrentState().getId());
-		verify(moveableCtrlMock, times(2)).moveInAir(ZootDirection.Right);
+		verify(walkableCtrlMock, times(2)).moveInAir(ZootDirection.Right);
 		
 		assertTrue(jumpState.handle(createEvent(ZootEventType.RunLeft)));
 		assertEquals("State should not change", currentStateId, actor.getStateMachine().getCurrentState().getId());
-		verify(moveableCtrlMock, times(2)).moveInAir(ZootDirection.Left);
+		verify(walkableCtrlMock, times(2)).moveInAir(ZootDirection.Left);
 	}
 	
 	@Test
