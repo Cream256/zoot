@@ -1,20 +1,25 @@
 package com.zootcat.controllers.physics;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.scene.ZootActor;
 
 public class KnockbackOnTouchControllerTest
 {
 	@Mock private ZootActor ctrlActor;
-	@Mock private PhysicsBodyController physicsBodyCtrl;
+	@Mock private PhysicsBodyController otherActorPhysicsBodyCtrl;
+	@Mock private PhysicsBodyController ctrlActorPhysicsBodyCtrl;
 	
 	private ZootActor otherActor;	
 	private KnockbackOnTouchController ctrl;
@@ -25,7 +30,9 @@ public class KnockbackOnTouchControllerTest
 		MockitoAnnotations.initMocks(this);
 		
 		otherActor = new ZootActor();
-		otherActor.addController(physicsBodyCtrl);
+		otherActor.addController(otherActorPhysicsBodyCtrl);
+		
+		when(ctrlActor.getController(PhysicsBodyController.class)).thenReturn(ctrlActorPhysicsBodyCtrl);
 				
 		ctrl = new KnockbackOnTouchController();
 		ctrl.init(ctrlActor);
@@ -38,9 +45,37 @@ public class KnockbackOnTouchControllerTest
 		ctrl.onEnter(ctrlActor, otherActor, mock(Contact.class));
 		
 		//then
-		verify(physicsBodyCtrl).applyImpulse(1.0f, 1.0f);		
+		verify(otherActorPhysicsBodyCtrl).setVelocity(1.0f, 1.0f, true, true);		
 	}
 		
+	@Test
+	public void shouldApplyOnlyHorizontalKnockback()
+	{
+		//given
+		final float expectedKnockbackX = 1.28f;
+		
+		//when
+		ctrl.setKnockback(expectedKnockbackX, 0.0f);
+		ctrl.onEnter(ctrlActor, otherActor, mock(Contact.class));
+		
+		//then
+		verify(otherActorPhysicsBodyCtrl).setVelocity(expectedKnockbackX, 0.0f, true, false);
+	}
+	
+	@Test
+	public void shouldApplyOnlyVerticalKnockback()
+	{
+		//given
+		final float expectedKnockbackY = -1.28f;
+		
+		//when
+		ctrl.setKnockback(0.0f, expectedKnockbackY);
+		ctrl.onEnter(ctrlActor, otherActor, mock(Contact.class));
+		
+		//then
+		verify(otherActorPhysicsBodyCtrl).setVelocity(0.0f, expectedKnockbackY, false, true);
+	}
+	
 	@Test
 	public void shouldApplyCustomKnockback()
 	{
@@ -53,7 +88,30 @@ public class KnockbackOnTouchControllerTest
 		ctrl.onEnter(ctrlActor, otherActor, mock(Contact.class));
 		
 		//then
-		verify(physicsBodyCtrl).applyImpulse(expectedKnockbackX, expectedKnockbackY);			
+		verify(otherActorPhysicsBodyCtrl).setVelocity(expectedKnockbackX, expectedKnockbackY, true, true);			
+	}
+	
+	@Test
+	public void shouldVaryHorizontalKnockback()
+	{
+		//given
+		when(ctrlActorPhysicsBodyCtrl.getCenterPositionRef()).thenReturn(new Vector2(10.0f, 0.0f));
+		when(otherActorPhysicsBodyCtrl.getCenterPositionRef()).thenReturn(new Vector2(5.0f, 0.0f));
+		
+		//when
+		ctrl.setVaryHorizontal(true);
+		ctrl.onEnter(ctrlActor, otherActor, mock(Contact.class));
+		
+		//then
+		verify(otherActorPhysicsBodyCtrl).setVelocity(-1.0f, 1.0f, true, true);
+		
+		//when
+		when(ctrlActorPhysicsBodyCtrl.getCenterPositionRef()).thenReturn(new Vector2(5.0f, 0.0f));
+		when(otherActorPhysicsBodyCtrl.getCenterPositionRef()).thenReturn(new Vector2(10.0f, 0.0f));
+		ctrl.onEnter(ctrlActor, otherActor, mock(Contact.class));
+		
+		//then
+		verify(otherActorPhysicsBodyCtrl).setVelocity(1.0f, 1.0f, true, true);
 	}
 	
 	@Test
