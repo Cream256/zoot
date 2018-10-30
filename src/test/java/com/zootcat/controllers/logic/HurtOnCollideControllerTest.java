@@ -18,7 +18,6 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
@@ -67,40 +66,7 @@ public class HurtOnCollideControllerTest
 		verify(hurtActor, times(1)).fire(captor.capture());
 		assertTrue(ClassReflection.isInstance(ZootEvent.class, captor.getValue()));
 	}
-	
-	@Test
-	public void shouldApplyZeroKnockbackByDefaultWhenHurt()
-	{
-		//given
-		ZootActor hurtActor = new ZootActor();
-		PhysicsBodyController physicsBodyCtrl = mock(PhysicsBodyController.class);
-		
-		//when
-		hurtActor.addController(physicsBodyCtrl);		
-		ctrl.onEnter(controllerActor, hurtActor, contact);
-		
-		//then		
-		verify(physicsBodyCtrl).applyImpulse(0.0f, 0.0f);				
-	}
-	
-	@Test
-	public void shouldApplyKnockbackWhenHurt()
-	{
-		//given
-		final float expectedKnockbackX = 128.0f;
-		final float expectedKnockbackY = -256.0f;
-		ZootActor hurtActor = new ZootActor();
-		PhysicsBodyController physicsBodyCtrl = mock(PhysicsBodyController.class);
-		
-		//when
-		ctrl.setKnockback(expectedKnockbackX, expectedKnockbackY);		
-		hurtActor.addController(physicsBodyCtrl);		
-		ctrl.onEnter(controllerActor, hurtActor, contact);
-		
-		//then		
-		verify(physicsBodyCtrl).applyImpulse(expectedKnockbackX, expectedKnockbackY);			
-	}
-	
+			
 	@Test
 	public void shouldSendHurtEventToOwner()
 	{
@@ -149,20 +115,5 @@ public class HurtOnCollideControllerTest
 		
 		ctrl.setHurtOwner(false);
 		assertFalse(ctrl.getHurtOwner());
-	}
-	
-	@Test
-	public void shouldSetKnockback()
-	{
-		//given
-		final float expectedKnockbackX = 123.0f;
-		final float expectedKnockbackY = -256.0f;
-		
-		//when
-		ctrl.setKnockback(expectedKnockbackX, expectedKnockbackY);
-		
-		//then
-		assertEquals(expectedKnockbackX, ctrl.getKnockbackX(), 0.0f);
-		assertEquals(expectedKnockbackY, ctrl.getKnockbackY(), 0.0f);		
 	}
 }
