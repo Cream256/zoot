@@ -68,6 +68,10 @@ public class IdleState extends BasicState
 		{
 			changeState(event, DeadState.ID);
 		}
+		else if(event.getType() == ZootEventType.Stun)
+		{
+			changeState(event, StunState.ID);
+		}
 		
 		return true;
 	}

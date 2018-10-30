@@ -63,4 +63,11 @@ public class JumpForwardStateTest extends ZootStateTestCase
 	{
 		assertEquals(JumpForwardState.NAME, jumpForwardState.getName());
 	}
+	
+	@Test
+	public void handleStunEvent()
+	{
+		assertTrue(jumpForwardState.handle(createEvent(ZootEventType.Stun)));
+		assertEquals(StunState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
 }

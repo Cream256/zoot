@@ -65,6 +65,10 @@ public class JumpState extends BasicState
 		{
 			changeState(event, ClimbState.ID);
 		}
+		else if(event.getType() == ZootEventType.Stun)
+		{
+			changeState(event, StunState.ID);
+		}
 		
 		return true;
 	}

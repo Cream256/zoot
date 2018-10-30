@@ -166,4 +166,11 @@ public class JumpStateTest extends ZootStateTestCase
 	{
 		assertEquals(JumpState.NAME, jumpState.getName());
 	}
+	
+	@Test
+	public void handleStunEvent()
+	{
+		assertTrue(jumpState.handle(createEvent(ZootEventType.Stun)));
+		assertEquals(StunState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
 }

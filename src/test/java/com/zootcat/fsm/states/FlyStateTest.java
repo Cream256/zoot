@@ -98,4 +98,11 @@ public class FlyStateTest extends ZootStateTestCase
 		flyState.onUpdate(actor, 1.0f);
 		verify(flyableCtrlMock, times(2)).fly(ZootDirection.Left);
 	}
+	
+	@Test
+	public void handleStunEvent()
+	{
+		assertTrue(flyState.handle(createEvent(ZootEventType.Stun)));
+		assertEquals(StunState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
 }

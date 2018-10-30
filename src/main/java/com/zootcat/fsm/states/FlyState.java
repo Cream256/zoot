@@ -62,6 +62,10 @@ public class FlyState extends BasicState
 		{
 			changeState(event, HurtState.ID);
 		}		
+		else if(event.getType() == ZootEventType.Stun)
+		{
+			changeState(event, StunState.ID);
+		}
 		
 		return true;
 	}
