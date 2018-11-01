@@ -15,7 +15,7 @@ import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
-//TODO use box2d utility class for rendering polygon (https://bitbucket.org/dermetfan/libgdx-utils/wiki/Home)
+//TODO BETA use box2d utility class for rendering polygon (https://bitbucket.org/dermetfan/libgdx-utils/wiki/Home)
 public class PolygonRenderController extends RenderControllerAdapter 
 {
 	@CtrlParam(required = true, debug = true) private String textureFile;
@@ -42,7 +42,6 @@ public class PolygonRenderController extends RenderControllerAdapter
 		float[] vertices = new float[polygon.getVertexCount() * 2];		
 		for(int i = 0; i < polygon.getVertexCount(); ++i)	
 		{
-			//TODO this should show entire texture, not just a fragment
 			polygon.getVertex(i, vertex);			
 			vertices[i * 2] = vertex.x + actor.getWidth() / 2.0f;
 			vertices[i * 2 + 1] = vertex.y + actor.getHeight() / 2.0f;			

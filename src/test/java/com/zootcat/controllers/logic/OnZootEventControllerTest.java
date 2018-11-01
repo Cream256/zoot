@@ -9,16 +9,30 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEventTypeEnum;
 import com.zootcat.fsm.events.ZootEvents;
+import com.zootcat.scene.ZootActor;
 
 public class OnZootEventControllerTest
 {
+	private OnZootEventController createDefaultController()
+	{
+		return new OnZootEventController()
+		{			
+			@Override
+			public boolean onZootEvent(ZootActor actor, ZootEvent event)
+			{
+				return true;
+			}
+		};
+	}
+	
 	@Test
 	public void defaultCtorTest()
 	{
-		OnZootEventController ctrl = new OnZootEventController();
+		OnZootEventController ctrl = createDefaultController();
 		assertFalse(ctrl.isDone());
 		assertFalse(ctrl.isSingleExecution());
 		assertEquals(ZootEventType.values().length, ctrl.getEventTypes().size());
@@ -27,7 +41,14 @@ public class OnZootEventControllerTest
 	@Test
 	public void secondCtorTest()
 	{
-		OnZootEventController ctrl = new OnZootEventController(true);
+		OnZootEventController ctrl = new OnZootEventController(true) 
+		{
+			@Override
+			public boolean onZootEvent(ZootActor actor, ZootEvent event)
+			{
+				//noop
+				return false;
+			}};
 		assertFalse(ctrl.isDone());
 		assertTrue(ctrl.isSingleExecution());
 		assertEquals(ZootEventType.values().length, ctrl.getEventTypes().size());
@@ -37,7 +58,14 @@ public class OnZootEventControllerTest
 	public void thirdCtorTest()
 	{
 		List<ZootEventTypeEnum> types = Arrays.asList(ZootEventType.Attack, ZootEventType.Collide);
-		OnZootEventController ctrl = new OnZootEventController(types, true);
+		OnZootEventController ctrl = new OnZootEventController(types, true) 
+		{
+			@Override
+			public boolean onZootEvent(ZootActor actor, ZootEvent event)
+			{
+				return true;
+			}
+		};
 		assertFalse(ctrl.isDone());
 		assertTrue(ctrl.isSingleExecution());
 		assertEquals(types.size(), ctrl.getEventTypes().size());
@@ -47,7 +75,7 @@ public class OnZootEventControllerTest
 	@Test
 	public void setSingleExecutionTest()
 	{
-		OnZootEventController ctrl = new OnZootEventController();
+		OnZootEventController ctrl = createDefaultController();
 		
 		ctrl.setSingleExecution(true);
 		assertTrue(ctrl.isSingleExecution());
@@ -59,7 +87,7 @@ public class OnZootEventControllerTest
 	@Test
 	public void handleZootEventShouldProcessAllEventsTest()
 	{
-		OnZootEventController ctrl = new OnZootEventController();
+		OnZootEventController ctrl = createDefaultController();
 		for(ZootEventType eventType : ZootEventType.values())
 		{
 			assertTrue(eventType + " event should be processed", ctrl.handleZootEvent(ZootEvents.get(eventType)));	
@@ -69,7 +97,7 @@ public class OnZootEventControllerTest
 	@Test
 	public void handleZootEventShouldProcessOnlyOneEventOnSingleExecutionTest()
 	{
-		OnZootEventController ctrl = new OnZootEventController();
+		OnZootEventController ctrl = createDefaultController();
 		ctrl.setSingleExecution(true);
 		
 		assertTrue("First event should be processed", ctrl.handleZootEvent(ZootEvents.get(ZootEventType.Attack)));
@@ -80,19 +108,18 @@ public class OnZootEventControllerTest
 	@Test
 	public void handleZootEventShouldNotProcessNotIncludedEventTypesTest()
 	{
-		OnZootEventController ctrl = new OnZootEventController(Arrays.asList(ZootEventType.Attack), false);
+		OnZootEventController ctrl = new OnZootEventController(Arrays.asList(ZootEventType.Attack), false)
+		{
+			@Override
+			public boolean onZootEvent(ZootActor actor, ZootEvent event)
+			{
+				return true;
+			}	
+		};
 		
 		assertFalse(ctrl.handleZootEvent(ZootEvents.get(ZootEventType.None)));
 		assertFalse(ctrl.handleZootEvent(ZootEvents.get(ZootEventType.JumpUp)));
 		assertTrue(ctrl.handleZootEvent(ZootEvents.get(ZootEventType.Attack)));
 		assertFalse(ctrl.isDone());
-	}
-	
-	@Test
-	public void onZootEventShouldReturnTrueByDefaultTest()
-	{
-		OnZootEventController ctrl = new OnZootEventController();
-		assertTrue(ctrl.onZootEvent(null, null));
-	}
-	
+	}	
 }

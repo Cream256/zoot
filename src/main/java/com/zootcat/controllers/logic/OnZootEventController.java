@@ -10,7 +10,7 @@ import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEventTypeEnum;
 import com.zootcat.scene.ZootActor;
 
-public class OnZootEventController extends ZootEventListenerController
+public abstract class OnZootEventController extends ZootEventListenerController
 {
 	private boolean done = false;
 	private boolean singleExecution = false;
@@ -64,8 +64,5 @@ public class OnZootEventController extends ZootEventListenerController
 		return onZootEvent(event.getTargetZootActor(), event);
 	}
 	
-	public boolean onZootEvent(ZootActor actor, ZootEvent event)
-	{
-		return true;
-	}
+	public abstract boolean onZootEvent(ZootActor actor, ZootEvent event);
 }
