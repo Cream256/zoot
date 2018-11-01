@@ -334,7 +334,7 @@ public class OnCollideControllerTest
 	public void shouldSetCategory()
 	{
 		//given
-		ctrl.setCategory("ABC");
+		ctrl.setCategoryParameter("ABC");
 		
 		//when
 		ctrl.init(ctrlActor);
@@ -347,7 +347,7 @@ public class OnCollideControllerTest
 	public void shouldSetMask()
 	{
 		//given
-		ctrl.setMask("DEF");
+		ctrl.setMaskParameter("DEF");
 		
 		//when
 		ctrl.init(ctrlActor);

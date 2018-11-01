@@ -40,4 +40,16 @@ public class Mock3Controller implements Controller
 	{
 		return ControllerPriority.Normal;
 	}
+
+	@Override
+	public void setEnabled(boolean value)
+	{
+		//noop
+	}
+
+	@Override
+	public boolean isEnabled()
+	{
+		return true;
+	}
 }

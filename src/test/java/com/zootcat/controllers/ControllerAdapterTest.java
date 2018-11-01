@@ -1,6 +1,6 @@
 package com.zootcat.controllers;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.Before;
@@ -52,5 +52,21 @@ public class ControllerAdapterTest
 	public void shouldReturnNormalPriority()
 	{
 		assertEquals(ControllerPriority.Normal, ctrl.getPriority());
+	}
+	
+	@Test
+	public void shouldBeEnabledByDefault()
+	{
+		assertTrue(ctrl.isEnabled());
+	}
+	
+	@Test
+	public void shouldSetEnabled()
+	{
+		ctrl.setEnabled(false);
+		assertFalse(ctrl.isEnabled());
+		
+		ctrl.setEnabled(true);
+		assertTrue(ctrl.isEnabled());
 	}
 }

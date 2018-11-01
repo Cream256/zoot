@@ -56,12 +56,12 @@ public abstract class OnCollideController extends PhysicsCollisionController
 		this.collidePerActor = collidePerActor;
 	}
 	
-	public void setCategory(String category)
+	public void setCategoryParameter(String category)
 	{
 		this.category = category;
 	}
 	
-	public void setMask(String mask)
+	public void setMaskParameter(String mask)
 	{
 		this.mask = mask;
 	}

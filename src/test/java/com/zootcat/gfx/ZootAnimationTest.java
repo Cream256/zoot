@@ -284,6 +284,26 @@ public class ZootAnimationTest
 	}
 	
 	@Test
+	public void shouldReturnTrueWhenLoopingAnimationIsFinished()
+	{		
+		//when
+		animation.setPlayMode(PlayMode.LOOP);
+		animation.setRepeatCount(3);
+		animation.start();
+		animation.step(FRAME_COUNT * FRAME_DURATION);
+		
+		//then
+		assertFalse(animation.isFinished());
+		
+		//when
+		animation.step(FRAME_COUNT * FRAME_DURATION);
+		animation.step(FRAME_COUNT * FRAME_DURATION);
+		
+		//then
+		assertTrue(animation.isFinished());		
+	}
+	
+	@Test
 	public void shouldReturnAnimationName()
 	{
 		assertEquals(ANIMATION_NAME, animation.getName());

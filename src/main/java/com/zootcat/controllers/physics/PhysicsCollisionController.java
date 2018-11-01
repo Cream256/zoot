@@ -8,6 +8,7 @@ import com.zootcat.scene.ZootActor;
 public abstract class PhysicsCollisionController extends ZootCollisionListener implements Controller 
 {
 	private ZootActor controllerActor;
+	private boolean enabled = true;
 	
 	@Override
 	public void init(ZootActor actor)	
@@ -31,6 +32,18 @@ public abstract class PhysicsCollisionController extends ZootCollisionListener i
 	public void onUpdate(float delta, ZootActor actor) 
 	{
 		//noop
+	}
+	
+	@Override
+	public boolean isEnabled()
+	{
+		return enabled;
+	}
+	
+	@Override
+	public void setEnabled(boolean value)
+	{
+		enabled = value;
 	}
 	
 	public ZootActor getControllerActor()

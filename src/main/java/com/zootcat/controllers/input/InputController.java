@@ -6,6 +6,8 @@ import com.zootcat.scene.ZootActor;
 
 public class InputController extends InputListener implements Controller
 {	
+	private boolean enabled = true;
+	
 	@Override
 	public void init(ZootActor actor)
 	{
@@ -28,5 +30,17 @@ public class InputController extends InputListener implements Controller
 	public void onUpdate(float delta, ZootActor actor) 
 	{
 		//noop
+	}
+
+	@Override
+	public void setEnabled(boolean value)
+	{
+		enabled = value;
+	}
+
+	@Override
+	public boolean isEnabled()
+	{
+		return enabled;
 	}
 }

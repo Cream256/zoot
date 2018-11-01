@@ -116,4 +116,20 @@ public class PhysicsCollisionControllerTest
 	{
 		assertEquals(ControllerPriority.Normal, ctrl.getPriority());
 	}
+	
+	@Test
+	public void shouldBeEnabledByDefault()
+	{
+		assertTrue(ctrl.isEnabled());
+	}
+	
+	@Test
+	public void shouldSetEnabled()
+	{
+		ctrl.setEnabled(false);
+		assertFalse(ctrl.isEnabled());
+		
+		ctrl.setEnabled(true);
+		assertTrue(ctrl.isEnabled());
+	}
 }

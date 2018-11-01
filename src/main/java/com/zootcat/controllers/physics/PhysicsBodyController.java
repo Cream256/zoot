@@ -14,7 +14,7 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.zootcat.controllers.Controller;
+import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
@@ -25,7 +25,7 @@ import com.zootcat.physics.ZootShapeFactory;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
-public class PhysicsBodyController implements Controller
+public class PhysicsBodyController extends ControllerAdapter
 {
 	@CtrlParam(debug = true) protected float density = 1.0f;
 	@CtrlParam(debug = true) protected float friction = 0.2f;

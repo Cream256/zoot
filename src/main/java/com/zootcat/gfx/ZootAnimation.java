@@ -132,8 +132,9 @@ public class ZootAnimation
 	}
 	
 	public boolean isFinished()
-	{
-		return animation.isAnimationFinished(animationTime);
+	{		
+		if(getPlayMode() == PlayMode.NORMAL) return animation.isAnimationFinished(animationTime);
+		return !isPlaying();
 	}
 	
 	public int getId()
