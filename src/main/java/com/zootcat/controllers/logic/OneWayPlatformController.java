@@ -35,7 +35,7 @@ public class OneWayPlatformController extends PhysicsCollisionController
 	}
 	
 	@Override
-	public void beginContact(ZootActor actorA, ZootActor actorB, Contact contact)
+	public void onBeginContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		shouldCollide.add(getOtherActor(actorA, actorB));
 		
@@ -78,7 +78,7 @@ public class OneWayPlatformController extends PhysicsCollisionController
 	}
 
 	@Override
-	public void endContact(ZootActor actorA, ZootActor actorB, Contact contact)
+	public void onEndContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		//This is necessary because contacts exists as long as the AABBs of two fixtures continue to overlap, 
 		//even if the fixtures themselves do not overlap. If the player jumps just high enough to clear the top of the platform,
@@ -89,7 +89,7 @@ public class OneWayPlatformController extends PhysicsCollisionController
 	}
 
 	@Override
-	public void preSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
+	public void onPreSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
 	{
 		ZootActor otherActor = getOtherActor(actorA, actorB);		
 		if(otherActor.controllerCondition(IgnorePlatformsController.class, ctrl -> ctrl.isActive()))
@@ -100,7 +100,7 @@ public class OneWayPlatformController extends PhysicsCollisionController
 	}
 		
 	@Override
-	public void postSolve(ZootActor actorA, ZootActor actorB, ContactImpulse contactImpulse)
+	public void onPostSolve(ZootActor actorA, ZootActor actorB, ContactImpulse contactImpulse)
 	{
 		//noop
 	}

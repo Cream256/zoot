@@ -148,7 +148,7 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	
 	//Box2D enables all contacts after postSolve step, so we need to keep track of them in the preSolve step
 	@Override
-	public void preSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
+	public void onPreSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
 	{	
 		Fixture otherFixture = getOtherFixture(actorA, actorB, contact);
 		if(!contact.isEnabled() && collidedFixtures.contains(otherFixture))

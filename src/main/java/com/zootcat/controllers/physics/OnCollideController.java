@@ -110,8 +110,8 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	}
 		
 	@Override
-	public void beginContact(ZootActor actorA, ZootActor actorB, Contact contact)
-	{				
+	public void onBeginContact(ZootActor actorA, ZootActor actorB, Contact contact)
+	{						
 		ZootActor otherActor = getOtherActor(actorA, actorB);
 		if(collides(actorA, actorB, contact) && beginCollisionCounts(otherActor))
 		{
@@ -126,8 +126,8 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	}
 	
 	@Override
-	public void endContact(ZootActor actorA, ZootActor actorB, Contact contact)
-	{
+	public void onEndContact(ZootActor actorA, ZootActor actorB, Contact contact)
+	{		
 		ZootActor otherActor = getOtherActor(actorA, actorB);
 		if(collides(actorA, actorB, contact) && endCollisionCounts(otherActor))
 		{			
@@ -142,13 +142,13 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	}
 	
 	@Override
-	public void preSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
+	public void onPreSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
 	{
 		//noop
 	}
 	
 	@Override
-	public void postSolve(ZootActor actorA, ZootActor actorB, ContactImpulse contactImpulse)
+	public void onPostSolve(ZootActor actorA, ZootActor actorB, ContactImpulse contactImpulse)
 	{
 		//noop
 	}

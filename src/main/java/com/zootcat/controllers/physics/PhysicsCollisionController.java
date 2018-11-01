@@ -1,5 +1,8 @@
 package com.zootcat.controllers.physics;
 
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.zootcat.controllers.Controller;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.physics.ZootCollisionListener;
@@ -33,6 +36,42 @@ public abstract class PhysicsCollisionController extends ZootCollisionListener i
 	{
 		//noop
 	}
+	
+	@Override
+	public final void beginContact(ZootActor actorA, ZootActor actorB, Contact contact)
+	{						
+		if(!isEnabled()) return;		
+		onBeginContact(actorA, actorB, contact);
+	}
+	
+	public abstract void onBeginContact(ZootActor actorA, ZootActor actorB, Contact contact);
+
+	@Override
+	public final void endContact(ZootActor actorA, ZootActor actorB, Contact contact)
+	{		
+		if(!isEnabled()) return;
+		onEndContact(actorA, actorB, contact);
+	}
+	
+	public abstract void onEndContact(ZootActor actorA, ZootActor actorB, Contact contact);
+		
+	@Override
+	public final void preSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
+	{
+		if(!isEnabled()) return;
+		onPreSolve(actorA, actorB, contact, manifold);
+	}
+	
+	public abstract void onPreSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold);
+	
+	@Override
+	public final void postSolve(ZootActor actorA, ZootActor actorB, ContactImpulse contactImpulse)
+	{
+		if(!isEnabled()) return;
+		onPostSolve(actorA, actorB, contactImpulse);
+	}
+	
+	public abstract void onPostSolve(ZootActor actorA, ZootActor actorB, ContactImpulse contactImpulse);
 	
 	@Override
 	public boolean isEnabled()

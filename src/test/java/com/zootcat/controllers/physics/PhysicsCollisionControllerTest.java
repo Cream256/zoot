@@ -20,34 +20,42 @@ import com.zootcat.scene.ZootActor;
 public class PhysicsCollisionControllerTest
 {
 	private PhysicsCollisionController ctrl;
-
+	private boolean onPreSolveCalled;
+	private boolean onPostSolveCalled;
+	private boolean onEndContactCalled;
+	private boolean onBeginContactCalled;
+	
 	@Before
 	public void setup()
 	{
+		onPreSolveCalled = false;
+		onPostSolveCalled = false;
+		onEndContactCalled = false;
+		onBeginContactCalled = false;
 		ctrl = new PhysicsCollisionController()
 		{
 			@Override
-			public void preSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
+			public void onPreSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
 			{
-				//noop
+				onPreSolveCalled = true;
 			}
 			
 			@Override
-			public void postSolve(ZootActor actorA, ZootActor actorB, ContactImpulse contactImpulse)
+			public void onPostSolve(ZootActor actorA, ZootActor actorB, ContactImpulse contactImpulse)
 			{
-				//noop
+				onPostSolveCalled = true;
 			}
 			
 			@Override
-			public void endContact(ZootActor actorA, ZootActor actorB, Contact contact)
+			public void onEndContact(ZootActor actorA, ZootActor actorB, Contact contact)
 			{
-				//noop
+				onEndContactCalled = true;
 			}
 			
 			@Override
-			public void beginContact(ZootActor actorA, ZootActor actorB, Contact contact)
+			public void onBeginContact(ZootActor actorA, ZootActor actorB, Contact contact)
 			{
-				//noop
+				onBeginContactCalled = true;
 			}
 		};
 	}
@@ -131,5 +139,109 @@ public class PhysicsCollisionControllerTest
 		
 		ctrl.setEnabled(true);
 		assertTrue(ctrl.isEnabled());
+	}
+	
+	@Test
+	public void shouldCallBeginContactWhenEnabled()
+	{
+		//given
+		ctrl.setEnabled(true);
+		
+		//when
+		ctrl.beginContact(mock(ZootActor.class), mock(ZootActor.class), mock(Contact.class));
+		
+		//then
+		assertTrue(onBeginContactCalled);		
+	}
+	
+	@Test
+	public void shouldNotCallBeginContactWhenDisabled()
+	{
+		//given
+		ctrl.setEnabled(false);
+		
+		//when
+		ctrl.beginContact(mock(ZootActor.class), mock(ZootActor.class), mock(Contact.class));
+		
+		//then
+		assertFalse(onBeginContactCalled);		
+	}
+	
+	@Test
+	public void shouldCallEndContactWhenEnabled()
+	{
+		//given
+		ctrl.setEnabled(true);
+		
+		//when
+		ctrl.endContact(mock(ZootActor.class), mock(ZootActor.class), mock(Contact.class));
+		
+		//then
+		assertTrue(onEndContactCalled);		
+	}
+	
+	@Test
+	public void shouldNotCallEndContactWhenDisabled()
+	{
+		//given
+		ctrl.setEnabled(false);
+		
+		//when
+		ctrl.endContact(mock(ZootActor.class), mock(ZootActor.class), mock(Contact.class));
+		
+		//then
+		assertFalse(onEndContactCalled);		
+	}
+	
+	@Test
+	public void shouldCallPreSolveWhenEnabled()
+	{
+		//given
+		ctrl.setEnabled(true);
+		
+		//when
+		ctrl.preSolve(mock(ZootActor.class), mock(ZootActor.class), mock(Contact.class), mock(Manifold.class));
+		
+		//then
+		assertTrue(onPreSolveCalled);
+	}
+	
+	@Test
+	public void shouldNotCallPreSolveWhenDisabled()
+	{
+		//given
+		ctrl.setEnabled(false);
+		
+		//when
+		ctrl.preSolve(mock(ZootActor.class), mock(ZootActor.class), mock(Contact.class), mock(Manifold.class));
+		
+		//then
+		assertFalse(onPreSolveCalled);
+	}
+	
+	@Test
+	public void shouldCallPostSolveWhenEnabled()
+	{
+		//given
+		ctrl.setEnabled(true);
+		
+		//when
+		ctrl.postSolve(mock(ZootActor.class), mock(ZootActor.class), mock(ContactImpulse.class));
+		
+		//then
+		assertTrue(onPostSolveCalled);
+	}
+	
+	@Test
+	public void shouldNotCallPostSolveWhenDisabled()
+	{
+		//given
+		ctrl.setEnabled(false);
+		
+		//when
+		ctrl.postSolve(mock(ZootActor.class), mock(ZootActor.class), mock(ContactImpulse.class));
+		
+		//then
+		assertFalse(onPostSolveCalled);
 	}
 }
