@@ -10,6 +10,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -85,6 +86,8 @@ public class ZootActorTest
 		ZootActor actor = new ZootActor();
 		
 		//when
+		when(ctrl1.isEnabled()).thenReturn(true);
+		when(ctrl2.isEnabled()).thenReturn(true);
 		actor.addController(ctrl1);
 		actor.addController(ctrl2);		
 		actor.act(0.5f);
@@ -92,6 +95,26 @@ public class ZootActorTest
 		//then
 		verify(ctrl1, times(1)).onUpdate(0.5f, actor);
 		verify(ctrl2, times(1)).onUpdate(0.5f, actor);
+	}
+	
+	@Test
+	public void shouldOnlyUpdateEnabledControllers()
+	{
+		//given
+		Controller ctrl1 = mock(Controller.class);
+		Controller ctrl2 = mock(Controller.class);		
+		ZootActor actor = new ZootActor();
+		
+		//when
+		when(ctrl1.isEnabled()).thenReturn(true);
+		when(ctrl2.isEnabled()).thenReturn(false);
+		actor.addController(ctrl1);
+		actor.addController(ctrl2);		
+		actor.act(0.5f);
+		
+		//then
+		verify(ctrl1, times(1)).onUpdate(0.5f, actor);
+		verify(ctrl2, never()).onUpdate(0.5f, actor);		
 	}
 	
     @Test
@@ -267,8 +290,9 @@ public class ZootActorTest
 		//given
 		ZootActor actor = new ZootActor();
 		ChangeListenerController controller = mock(ChangeListenerController.class);
-		
+				
 		//when
+		when(controller.isEnabled()).thenReturn(true);
 		actor.addController(controller);
 		actor.act(0.0f);
 		actor.setPosition(5, 5);
@@ -302,28 +326,56 @@ public class ZootActorTest
 		ChangeListenerController changeListenerController = mock(ChangeListenerController.class);
 		
 		//when
+		when(renderCtrl1.isEnabled()).thenReturn(true);
+		when(renderCtrl2.isEnabled()).thenReturn(true);
+		when(changeListenerController.isEnabled()).thenReturn(true);
 		actor.addController(renderCtrl1);
 		actor.addController(changeListenerController);
 		actor.addController(renderCtrl2);
 		actor.act(0.0f);
 		
 		//then
-		verify(renderCtrl1, times(0)).onRender(anyObject(), anyFloat(), anyObject(), anyFloat());;
-		verify(renderCtrl2, times(0)).onRender(anyObject(), anyFloat(), anyObject(), anyFloat());;
+		verify(renderCtrl1, times(0)).onRender(anyObject(), anyFloat(), anyObject(), anyFloat());
+		verify(renderCtrl2, times(0)).onRender(anyObject(), anyFloat(), anyObject(), anyFloat());
 		
 		//when
 		actor.draw(batch, 1.0f);
 				
 		//then
-		verify(renderCtrl1, times(1)).onRender(eq(batch), eq(parentAlpha), anyObject(), anyFloat());;
-		verify(renderCtrl2, times(1)).onRender(eq(batch), eq(parentAlpha), anyObject(), anyFloat());;
+		verify(renderCtrl1, times(1)).onRender(eq(batch), eq(parentAlpha), anyObject(), anyFloat());
+		verify(renderCtrl2, times(1)).onRender(eq(batch), eq(parentAlpha), anyObject(), anyFloat());
 		
 		//when
 		actor.draw(batch, 1.0f);
 		
 		//then
-		verify(renderCtrl1, times(2)).onRender(eq(batch), eq(parentAlpha), anyObject(), anyFloat());;
-		verify(renderCtrl2, times(2)).onRender(eq(batch), eq(parentAlpha), anyObject(), anyFloat());;
+		verify(renderCtrl1, times(2)).onRender(eq(batch), eq(parentAlpha), anyObject(), anyFloat());
+		verify(renderCtrl2, times(2)).onRender(eq(batch), eq(parentAlpha), anyObject(), anyFloat());
+	}
+	
+	@Test
+	public void shouldOnlyExecuteEnabledRenderControllersOnDraw()
+	{
+		//given
+		final float parentAlpha = 1.0f;
+		final Batch batch = mock(Batch.class);
+		
+		ZootActor actor = new ZootActor();
+		RenderController renderCtrl1 = mock(RenderController.class);
+		RenderController renderCtrl2 = mock(RenderController.class);
+		
+		//when
+		when(renderCtrl1.isEnabled()).thenReturn(true);
+		when(renderCtrl2.isEnabled()).thenReturn(false);
+		actor.addController(renderCtrl1);
+		actor.addController(renderCtrl2);
+		
+		//when
+		actor.draw(batch, 1.0f);
+				
+		//then
+		verify(renderCtrl1, times(1)).onRender(eq(batch), eq(parentAlpha), anyObject(), anyFloat());
+		verify(renderCtrl2, never()).onRender(eq(batch), eq(parentAlpha), anyObject(), anyFloat());
 	}
 	
 	@Test

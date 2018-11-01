@@ -51,7 +51,7 @@ public class ZootActor extends Actor
 	@Override
 	public void act(float delta)
 	{				
-		controllers.forEach(ctrl -> ctrl.onUpdate(delta, this));
+		controllers.stream().filter(ctrl -> ctrl.isEnabled()).forEach(ctrl -> ctrl.onUpdate(delta, this));
 		stateMachine.update(delta);
 		super.act(delta);
 	}
@@ -68,6 +68,7 @@ public class ZootActor extends Actor
 	{
 		float delta = Gdx.graphics.getDeltaTime();
 		controllers.stream().filter(ctrl -> ClassReflection.isInstance(RenderController.class, ctrl))
+							.filter(ctrl -> ctrl.isEnabled())
 							.map(ctrl -> (RenderController)ctrl)
 							.forEach(ctrl -> ctrl.onRender(batch, parentAlpha, this, delta));
 	}
@@ -76,6 +77,7 @@ public class ZootActor extends Actor
 	protected void positionChanged() 
 	{
 		controllers.stream().filter(ctrl -> ClassReflection.isInstance(ChangeListenerController.class, ctrl))
+							.filter(ctrl -> ctrl.isEnabled())
 							.map(ctrl -> (ChangeListenerController)ctrl)
 							.forEach(ctrl -> ctrl.onPositionChange(this));
 	}
@@ -84,6 +86,7 @@ public class ZootActor extends Actor
 	protected void sizeChanged() 
 	{
 		controllers.stream().filter(ctrl -> ClassReflection.isInstance(ChangeListenerController.class, ctrl))
+							.filter(ctrl -> ctrl.isEnabled())
 							.map(ctrl -> (ChangeListenerController)ctrl)
 							.forEach(ctrl -> ctrl.onSizeChange(this));
 	}
@@ -92,6 +95,7 @@ public class ZootActor extends Actor
 	protected void rotationChanged() 
 	{
 		controllers.stream().filter(ctrl -> ClassReflection.isInstance(ChangeListenerController.class, ctrl))
+							.filter(ctrl -> ctrl.isEnabled())
 							.map(ctrl -> (ChangeListenerController)ctrl)
 							.forEach(ctrl -> ctrl.onRotationChange(this));
 	}
