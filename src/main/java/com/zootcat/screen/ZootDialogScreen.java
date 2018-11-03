@@ -53,9 +53,9 @@ public class ZootDialogScreen extends ZootScreenAdapter
 		
 		//input
 		ZootBindableInputProcessor inputProcessor = new ZootBindableInputProcessor();
-		inputProcessor.bindDown(Keys.ENTER, () -> advanceDialog());
-		inputProcessor.bindDown(Keys.SPACE, () -> advanceDialog());
-		inputProcessor.bindDown(Keys.ESCAPE, () -> quitDialog());
+		inputProcessor.bindUp(Keys.ENTER, () -> advanceDialog());
+		inputProcessor.bindUp(Keys.SPACE, () -> advanceDialog());
+		inputProcessor.bindUp(Keys.ESCAPE, () -> quitDialog());
 		game.getInputManager().addProcessor(inputProcessor);
 	}
 	
@@ -67,7 +67,7 @@ public class ZootDialogScreen extends ZootScreenAdapter
 	}
 		
 	private boolean advanceDialog()
-	{		
+	{
 		dialog.nextFrame();	
 		return true;
 	}
