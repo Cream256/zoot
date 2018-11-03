@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -17,6 +18,8 @@ import com.zootcat.gfx.ZootRender;
 
 public class ZootTiledMapRender extends OrthogonalTiledMapRenderer implements ZootRender 
 {
+	private static final String COLLISION_LAYER_NAME = "Collision";
+	
 	private Color backgroundColor;
 	private ZootTiledMapRenderConfig config;
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
@@ -63,6 +66,17 @@ public class ZootTiledMapRender extends OrthogonalTiledMapRenderer implements Zo
 	public void renderObject (MapObject object) 
 	{
 		//noop, unused
+	}
+	
+	@Override
+	public void renderTileLayer (TiledMapTileLayer layer) 
+	{
+		if(!config.renderCollisionLayer && layer.getName().equalsIgnoreCase(COLLISION_LAYER_NAME))
+		{
+			return;
+		}
+		
+		super.renderTileLayer(layer);
 	}
 	
 	@Override

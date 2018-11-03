@@ -4,6 +4,7 @@ public class ZootTiledMapRenderConfig
 {
 	public boolean renderTextureObjects = true;
 	public boolean renderRectangleObjects = true;
+	public boolean renderCollisionLayer = false;
 	public boolean clearBackground = true;
 	public float unitScale = 1.0f;
 }
