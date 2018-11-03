@@ -98,10 +98,10 @@ public class ControllerFactoryTest
 		ControllerFactory factory = new ControllerFactory(false);
 				
 		factory.addFromPackage("com.zootcat.controllers.factory.mocks", false);
-		assertEquals("Should only include package without subpackages", 12, factory.getSize());
+		assertEquals("Should only include package without subpackages", 13, factory.getSize());
 		
 		factory.addFromPackage("com.zootcat.controllers.factory.mocks", true);
-		assertEquals("Should include package and subpackages", 13, factory.getSize());
+		assertEquals("Should include package and subpackages", 14, factory.getSize());
 	}
 	
 	@Test

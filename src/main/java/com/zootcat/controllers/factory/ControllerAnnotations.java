@@ -11,9 +11,12 @@ import com.zootcat.exceptions.RuntimeZootException;
 
 public class ControllerAnnotations
 {
-	public static List<Field> getControllerParameterFields(Controller controller)
+	public static List<ControllerParameter> getControllerParameterFields(Controller controller)
 	{
-		return getAllFields(controller).stream().filter(field -> field.isAnnotationPresent(CtrlParam.class)).collect(Collectors.toList());
+		return getAllFields(controller).stream()
+									   .filter(field -> field.isAnnotationPresent(CtrlParam.class))
+									   .map(field -> new ControllerParameter(field))
+									   .collect(Collectors.toList());
 	}
 	
 	public static List<Field> getControllerDebugFields(Controller controller)
@@ -28,11 +31,13 @@ public class ControllerAnnotations
 	{
 		try
 		{
-			Field field = getControllerParameterFields(controller)
-				.stream().filter(f -> f.getName().equalsIgnoreCase(paramName))
-				.findFirst().orElseThrow(() -> new RuntimeZootException("Controller param not found: " + paramName));	
-			field.setAccessible(true);
-			field.set(controller, value);
+			ControllerParameter parameterField = getControllerParameterFields(controller)
+				.stream()
+				.filter(f -> f.field.getName().equalsIgnoreCase(paramName))
+				.findFirst()
+				.orElseThrow(() -> new RuntimeZootException("Controller param not found: " + paramName));	
+			parameterField.field.setAccessible(true);
+			parameterField.field.set(controller, value);
 		} 
 		catch (IllegalArgumentException | IllegalAccessException e)
 		{
@@ -42,13 +47,19 @@ public class ControllerAnnotations
 	
 	private static List<Field> getAllFields(Controller controller)
 	{
-		List<Field> allClassFields = new ArrayList<Field>();    	
+		List<Field> allClassFields = new ArrayList<Field>();
+		
 		Class<?> currentClass = controller.getClass();
 		while(currentClass != null)
 		{
-			allClassFields.addAll(Arrays.asList(currentClass.getDeclaredFields()));
+			Field[] currentClassFields = currentClass.getDeclaredFields();
+			Arrays.stream(currentClassFields)
+				.filter(newField -> !allClassFields.stream().anyMatch(existingField -> existingField.getName().equals(newField.getName())))
+				.forEach(newField -> allClassFields.add(newField));			
+			
 			currentClass = currentClass.getSuperclass();
 		}	
+		
 		return allClassFields;
 	}
 }

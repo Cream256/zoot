@@ -1,6 +1,8 @@
 package com.zootcat.controllers.factory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -9,6 +11,9 @@ import org.junit.Test;
 
 import com.zootcat.controllers.factory.mocks.ControllerWithDebugFieldsMock;
 import com.zootcat.controllers.factory.mocks.Mock2Controller;
+import com.zootcat.controllers.factory.mocks.MockGlobalParamController;
+import com.zootcat.controllers.factory.mocks.MockOverrideRequiredParamController;
+import com.zootcat.controllers.factory.mocks.MockRequiredParamController;
 import com.zootcat.exceptions.RuntimeZootException;
 
 public class ControllerAnnotationsTest 
@@ -52,18 +57,55 @@ public class ControllerAnnotationsTest
 	}
 	
 	@Test
-	public void shouldGetControllerParameterFields()
+	public void shouldReturnValidGlobalParameters()
 	{
-		List<Field> fields = ControllerAnnotations.getControllerParameterFields(new Mock2Controller());
-		assertEquals(3, fields.size());
+		List<ControllerParameter> params = ControllerAnnotations.getControllerParameterFields(new MockGlobalParamController());
 		
-		assertEquals("a", fields.get(0).getName());
-		assertEquals(int.class, fields.get(0).getType());
+		assertEquals(2, params.size());
+		assertFalse(params.get(0).global);
+		assertTrue(params.get(1).global);
+	}
+	
+	@Test
+	public void shouldReturnValidRequiredParameters()
+	{
+		List<ControllerParameter> params = ControllerAnnotations.getControllerParameterFields(new MockRequiredParamController());
 		
-		assertEquals("b", fields.get(1).getName());
-		assertEquals(float.class, fields.get(1).getType());
+		assertEquals(2, params.size());
+		assertFalse(params.get(0).required);
+		assertTrue(params.get(1).required);
+	}
+	
+	@Test
+	public void shouldGetControllerParameterFieldsInOrder()
+	{
+		List<ControllerParameter> params = ControllerAnnotations.getControllerParameterFields(new Mock2Controller());
+		assertEquals(3, params.size());
 		
-		assertEquals("c", fields.get(2).getName());
-		assertEquals(String.class, fields.get(2).getType());
+		assertEquals("a", params.get(0).field.getName());
+		assertEquals(int.class, params.get(0).field.getType());
+		
+		assertEquals("b", params.get(1).field.getName());
+		assertEquals(float.class, params.get(1).field.getType());
+		
+		assertEquals("c", params.get(2).field.getName());
+		assertEquals(String.class, params.get(2).field.getType());
+	}
+		
+	@Test
+	public void shouldOverrideParameterFields()
+	{
+		List<ControllerParameter> params = ControllerAnnotations.getControllerParameterFields(new MockOverrideRequiredParamController());
+		assertEquals(2, params.size());
+		
+		assertEquals("required", params.get(0).field.getName());
+		assertEquals(int.class, params.get(0).field.getType());
+		assertFalse(params.get(0).global);
+		assertFalse(params.get(0).required);
+		
+		assertEquals("optional", params.get(1).field.getName());
+		assertEquals(int.class, params.get(1).field.getType());
+		assertFalse(params.get(1).global);
+		assertFalse(params.get(1).required);
 	}
 }

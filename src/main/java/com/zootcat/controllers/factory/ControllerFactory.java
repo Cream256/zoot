@@ -1,6 +1,5 @@
 package com.zootcat.controllers.factory;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,35 +116,32 @@ public class ControllerFactory
     
     private void assignParamsToClassFields(Controller controller, Map<String, Object> params) throws IllegalArgumentException, IllegalAccessException 
     {
-    	List<Field> annotatedFields = ControllerAnnotations.getControllerParameterFields(controller);     	
-    	for(Field field : annotatedFields)
+    	List<ControllerParameter> annotatedFields = ControllerAnnotations.getControllerParameterFields(controller);     	
+    	for(ControllerParameter parameter : annotatedFields)
     	{
-			String fieldName = field.getName();
-			CtrlParam ctrlParam = field.getAnnotation(CtrlParam.class);								
-			Object param = ctrlParam.global() ? globalParameters.get(fieldName) : params.get(fieldName);
-			
-			if(param == null)
+			String fieldName = parameter.field.getName();								
+			Object paramValue = parameter.global ? globalParameters.get(fieldName) : params.get(fieldName);			
+			if(paramValue == null)
 			{
-				if(ctrlParam.required() || ctrlParam.global())
+				if(parameter.required || parameter.global)
 				{				
-					throw new IllegalArgumentException("Parameter " + field.getName() + " is required for " + controller.getClass().getSimpleName());
+					throw new IllegalArgumentException("Parameter " + fieldName + " is required for " + controller.getClass().getSimpleName());
 				}
 				continue;
 			}
-			field.setAccessible(true);
+			parameter.field.setAccessible(true);
 							
-			if(field.getType().isEnum())
+			if(parameter.field.getType().isEnum())
 			{
 				@SuppressWarnings("unchecked")
-				Enum<?> enumeration = ZootUtils.searchEnum((Class<? extends Enum<?>>)field.getType(), param.toString());					
-				field.set(controller, enumeration);
+				Enum<?> enumeration = ZootUtils.searchEnum((Class<? extends Enum<?>>)parameter.field.getType(), paramValue.toString());					
+				parameter.field.set(controller, enumeration);
 			}
 			else
 			{				
-				field.set(controller, param);
+				parameter.field.set(controller, paramValue);
 			}		
-    	}
-		
+    	}	
 	}
     
 	private String normalizeName(String name)
