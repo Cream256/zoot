@@ -11,5 +11,4 @@ public @interface CtrlParam
 {
 	boolean required() default false;
 	boolean global() default false;
-	boolean debug() default false;
 }

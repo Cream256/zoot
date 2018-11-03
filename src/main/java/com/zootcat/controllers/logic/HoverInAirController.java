@@ -8,8 +8,8 @@ import com.zootcat.scene.ZootActor;
 
 public class HoverInAirController extends ControllerAdapter
 {
-	@CtrlParam(debug = true) private float vy = 1.0f;
-	@CtrlParam(debug = true) private float timeScale = 1.0f;
+	@CtrlParam private float vy = 1.0f;
+	@CtrlParam private float timeScale = 1.0f;
 		
 	private float time = 0.0f;
 	private float radians = 0.0f;

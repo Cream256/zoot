@@ -7,9 +7,9 @@ import com.zootcat.scene.ZootActor;
 
 public class IntValueController extends ControllerAdapter
 {
-	@CtrlParam(debug = true) private int value = 0;
-	@CtrlParam(debug = true) private int maxValue = 0;
-	@CtrlParam(debug = true) private int minValue = 0;
+	@CtrlParam private int value = 0;
+	@CtrlParam private int maxValue = 0;
+	@CtrlParam private int minValue = 0;
 	
 	@Override
 	public void init(ZootActor actor) 

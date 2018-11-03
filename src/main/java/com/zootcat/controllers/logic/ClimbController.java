@@ -31,9 +31,9 @@ import com.zootcat.scene.ZootDirection;
  */
 public class ClimbController extends OnCollideWithSensorController
 {		
-	@CtrlParam(debug = true) protected float timeout = 1.0f;
-	@CtrlParam(debug = true) protected float maxVelocity = 1.0f;
-	@CtrlParam(debug = true) protected float treshold = 0.15f;
+	@CtrlParam protected float timeout = 1.0f;
+	@CtrlParam protected float maxVelocity = 1.0f;
+	@CtrlParam protected float treshold = 0.15f;
 	
 	private Joint grabJoint;
 	private float climbTimeout;

@@ -26,15 +26,15 @@ import com.zootcat.utils.ZootUtils;
  */
 public class WalkableController extends ControllerAdapter
 {
-	@CtrlParam(debug = true) private float walkVel = 1.0f;
-	@CtrlParam(debug = true) private float runVel = 2.0f;
-	@CtrlParam(debug = true) private float jumpUpVel = 1.0f;
-	@CtrlParam(debug = true) private float jumpForwardVelX = 1.0f;
-	@CtrlParam(debug = true) private float jumpForwardVelY = 1.0f;	
-	@CtrlParam(debug = true) private float inAirVelX = 1.0f;			
-	@CtrlParam(debug = true) private int jumpTimeout = 100;
-	@CtrlParam(debug = true) private boolean canJump = true;
-	@CtrlParam(debug = true) private boolean canRun = true;
+	@CtrlParam private float walkVel = 1.0f;
+	@CtrlParam private float runVel = 2.0f;
+	@CtrlParam private float jumpUpVel = 1.0f;
+	@CtrlParam private float jumpForwardVelX = 1.0f;
+	@CtrlParam private float jumpForwardVelY = 1.0f;	
+	@CtrlParam private float inAirVelX = 1.0f;			
+	@CtrlParam private int jumpTimeout = 100;
+	@CtrlParam private boolean canJump = true;
+	@CtrlParam private boolean canRun = true;
 	@CtrlDebug private int timeout = 0;
 	
 	private PhysicsBodyController physicsCtrl;

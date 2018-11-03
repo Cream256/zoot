@@ -9,7 +9,7 @@ import com.zootcat.scene.ZootActor;
 
 public class SpriteController extends RenderControllerAdapter
 {
-	@CtrlParam(required = true, debug = true) private String file;
+	@CtrlParam(required = true) private String file;
 	@CtrlParam(global = true) private AssetManager assetManager;
 	
 	private Sprite sprite;

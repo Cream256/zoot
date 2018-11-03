@@ -20,8 +20,7 @@ public class ControllerAnnotations
 	{		
 		return getAllFields(controller)
 				.stream()
-				.filter((field -> (field.isAnnotationPresent(CtrlParam.class) && field.getAnnotation(CtrlParam.class).debug()) 
-						|| field.isAnnotationPresent(CtrlDebug.class)))
+				.filter((field -> field.isAnnotationPresent(CtrlParam.class) || field.isAnnotationPresent(CtrlDebug.class)))
 				.collect(Collectors.toList());
 	}
 	

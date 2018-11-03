@@ -8,7 +8,7 @@ import com.zootcat.scene.ZootActor;
 
 public class MassButtonController extends ButtonController
 {
-	@CtrlParam(required = true, debug = true) private float requiredMass;
+	@CtrlParam(required = true) private float requiredMass;
 	@CtrlDebug private float currentMass;
 	
 	@Override

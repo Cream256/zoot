@@ -6,7 +6,7 @@ import com.zootcat.scene.ZootDirection;
 
 public class DirectionController extends ControllerAdapter
 {
-	@CtrlParam(debug = true) private ZootDirection direction = ZootDirection.Right;
+	@CtrlParam private ZootDirection direction = ZootDirection.Right;
 		
 	public ZootDirection getDirection()
 	{

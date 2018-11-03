@@ -5,8 +5,8 @@ import com.zootcat.scene.ZootActor;
 
 public class CollectForLifeController extends CollectOnCollideController
 {
-	@CtrlParam(debug = true) private int life = 1;
-	@CtrlParam(debug = true) private int maxLife = 0;
+	@CtrlParam private int life = 1;
+	@CtrlParam private int maxLife = 0;
 	
 	public boolean onCollect(ZootActor collectible, ZootActor collector)
 	{

@@ -7,10 +7,10 @@ import com.zootcat.scene.ZootScene;
 
 public class MoveActorsTriggerController extends TriggerEventListener
 {
-	@CtrlParam(debug = true, required = true) private String actorName;
-	@CtrlParam(debug = true, required = true) private float mx;
-	@CtrlParam(debug = true, required = true) private float my;
-	@CtrlParam(debug = true) private boolean canRevert = false;
+	@CtrlParam(required = true) private String actorName;
+	@CtrlParam(required = true) private float mx;
+	@CtrlParam(required = true) private float my;
+	@CtrlParam private boolean canRevert = false;
 	@CtrlParam(global = true) private ZootScene scene;
 	
 	private boolean moved = false;

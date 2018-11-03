@@ -24,10 +24,10 @@ import com.zootcat.scene.ZootScene;
 
 public class AnimatedSpriteController extends RenderControllerAdapter 
 {
-	@CtrlParam(required = true, debug = true) private String file;
-	@CtrlParam(debug = true) private boolean useActorSize = true;
-	@CtrlParam(debug = true) private boolean keepAspectRatio = false;
-	@CtrlParam(debug = true) private String startingAnimation = "Idle";
+	@CtrlParam(required = true) private String file;
+	@CtrlParam private boolean useActorSize = true;
+	@CtrlParam private boolean keepAspectRatio = false;
+	@CtrlParam private String startingAnimation = "Idle";
 	@CtrlParam(global = true) private ZootScene scene;
 	@CtrlParam(global = true) private AssetManager assetManager;
 	@CtrlDebug private ZootAnimation currentAnimation;

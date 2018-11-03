@@ -331,7 +331,21 @@ public class OnCollideControllerTest
 	}
 	
 	@Test
-	public void shouldSetCategory()
+	public void shouldSetCategoryParameter()
+	{
+		ctrl.setCategoryParameter("ABC");
+		assertEquals("ABC", ctrl.getCategoryParameter());		
+	}
+	
+	@Test
+	public void shouldSetMaskParameter()
+	{
+		ctrl.setMaskParameter("CBA");
+		assertEquals("CBA", ctrl.getMaskParameter());		
+	}
+	
+	@Test
+	public void shouldInitializeFilterUsingProvidedCategory()
 	{
 		//given
 		ctrl.setCategoryParameter("ABC");
@@ -344,7 +358,7 @@ public class OnCollideControllerTest
 	}
 	
 	@Test
-	public void shouldSetMask()
+	public void shouldInitializeFilterUsingProvidedMask()
 	{
 		//given
 		ctrl.setMaskParameter("DEF");

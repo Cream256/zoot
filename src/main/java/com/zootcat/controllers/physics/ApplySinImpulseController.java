@@ -7,9 +7,9 @@ import com.zootcat.scene.ZootActor;
 
 public class ApplySinImpulseController extends ControllerAdapter
 {
-	@CtrlParam(debug = true) private float impulseX = 1.0f;
-	@CtrlParam(debug = true) private float impulseY = 1.0f;
-	@CtrlParam(debug = true) private float mul = 1.0f;
+	@CtrlParam private float impulseX = 1.0f;
+	@CtrlParam private float impulseY = 1.0f;
+	@CtrlParam private float mul = 1.0f;
 
 	private float time = 0.0f;
 		

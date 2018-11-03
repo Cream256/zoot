@@ -8,5 +8,5 @@ public class ControllerWithDebugFieldsMock extends ControllerAdapter
 {
 	@CtrlDebug private int intDebugField;
 	@CtrlDebug private float floatDebugField;
-	@CtrlParam(debug = true) private boolean boolDebugField;
+	@CtrlParam private boolean boolDebugField;
 }

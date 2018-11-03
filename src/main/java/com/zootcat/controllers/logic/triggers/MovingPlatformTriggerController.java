@@ -7,7 +7,7 @@ import com.zootcat.scene.ZootScene;
 
 public class MovingPlatformTriggerController extends TriggerEventListener
 {
-	@CtrlParam(debug = true, required = true) private String platformActorName;
+	@CtrlParam(required = true) private String platformActorName;
 	@CtrlParam(global = true) private ZootScene scene;
 		
 	@Override

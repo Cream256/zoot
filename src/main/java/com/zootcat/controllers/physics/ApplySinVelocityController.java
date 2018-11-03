@@ -7,11 +7,11 @@ import com.zootcat.scene.ZootActor;
 
 public class ApplySinVelocityController extends ControllerAdapter
 {
-	@CtrlParam(debug = true) private float velocityX = 1.0f;
-	@CtrlParam(debug = true) private float velocityY = 1.0f;
-	@CtrlParam(debug = true) private boolean useX = true;
-	@CtrlParam(debug = true) private boolean useY = true;
-	@CtrlParam(debug = true) private float mul = 1.0f;
+	@CtrlParam private float velocityX = 1.0f;
+	@CtrlParam private float velocityY = 1.0f;
+	@CtrlParam private boolean useX = true;
+	@CtrlParam private boolean useY = true;
+	@CtrlParam private float mul = 1.0f;
 
 	private float time = 0.0f;
 		

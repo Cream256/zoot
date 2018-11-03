@@ -6,8 +6,8 @@ import com.zootcat.scene.ZootActor;
 
 public abstract class OnTimerController extends ControllerAdapter
 {
-	@CtrlParam(debug = true) private boolean repeat = false;
-	@CtrlParam(debug = true, required = true) private float interval; 
+	@CtrlParam private boolean repeat = false;
+	@CtrlParam(required = true) private float interval; 
 		
 	private float time = 0.0f;
 	private boolean done = false;

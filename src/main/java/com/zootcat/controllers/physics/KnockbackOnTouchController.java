@@ -19,9 +19,9 @@ import com.zootcat.scene.ZootActor;
  */
 public class KnockbackOnTouchController extends OnCollideController
 {
-	@CtrlParam(debug = true) private float knockbackX = 1.0f;
-	@CtrlParam(debug = true) private float knockbackY = 1.0f;
-	@CtrlParam(debug = true) private boolean varyHorizontal = false;
+	@CtrlParam private float knockbackX = 1.0f;
+	@CtrlParam private float knockbackY = 1.0f;
+	@CtrlParam private boolean varyHorizontal = false;
 		
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)

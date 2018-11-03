@@ -11,12 +11,12 @@ import com.zootcat.scene.ZootScene;
 public class WaterController extends OnCollideController
 {	
 	@CtrlParam(global = true) private ZootScene scene;
-    @CtrlParam(debug = true) public boolean isFluidFixed = true;
-    @CtrlParam(debug = true) public float fluidDrag = 0.25f;
-    @CtrlParam(debug = true) public float fluidLift = 0.25f;
-    @CtrlParam(debug = true) public float linearDrag = 0;
-    @CtrlParam(debug = true) public float maxFluidDrag = 5000;
-    @CtrlParam(debug = true) public float maxFluidLift = 2000;
+    @CtrlParam public boolean isFluidFixed = true;
+    @CtrlParam public float fluidDrag = 0.25f;
+    @CtrlParam public float fluidLift = 0.25f;
+    @CtrlParam public float linearDrag = 0;
+    @CtrlParam public float maxFluidDrag = 5000;
+    @CtrlParam public float maxFluidLift = 2000;
 	
 	private BuoyancyController buoyancyCtrl;
 		

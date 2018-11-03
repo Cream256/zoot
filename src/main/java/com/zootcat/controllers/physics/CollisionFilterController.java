@@ -15,8 +15,8 @@ import com.zootcat.utils.BitMaskConverter;
  */
 public class CollisionFilterController extends ControllerAdapter
 {
-	@CtrlParam(debug = true) private String category;
-	@CtrlParam(debug = true) private String mask;
+	@CtrlParam private String category;
+	@CtrlParam private String mask;
 	
 	private Filter collisionFilter;
 	

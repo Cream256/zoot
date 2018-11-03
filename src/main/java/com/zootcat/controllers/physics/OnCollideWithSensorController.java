@@ -38,11 +38,11 @@ import com.zootcat.scene.ZootScene;
  */
 public abstract class OnCollideWithSensorController extends OnCollideController
 {
-	@CtrlParam(debug = true) protected float sensorWidth = 1.0f;
-	@CtrlParam(debug = true) protected float sensorHeight = 1.0f;
-	@CtrlParam(debug = true) protected float sensorX = 0.0f;
-	@CtrlParam(debug = true) protected float sensorY = 0.0f;
-	@CtrlParam(debug = true) protected boolean useActorFilter = true;
+	@CtrlParam protected float sensorWidth = 1.0f;
+	@CtrlParam protected float sensorHeight = 1.0f;
+	@CtrlParam protected float sensorX = 0.0f;
+	@CtrlParam protected float sensorY = 0.0f;
+	@CtrlParam protected boolean useActorFilter = true;
 	@CtrlParam(global = true) protected ZootScene scene;
 	
 	public enum SensorCollisionResult { ProcessNext, StopProcessing };

@@ -38,10 +38,10 @@ import com.zootcat.utils.BitMaskConverter;
  */
 public abstract class OnCollideController extends PhysicsCollisionController
 {
-	@CtrlParam(debug = true) private String category = null;
-	@CtrlParam(debug = true) private String mask = null;
-	@CtrlParam(debug = true) private boolean collideWithSensors = true;
-	@CtrlParam(debug = true) private boolean collidePerActor = false;
+	@CtrlParam private String category = null;
+	@CtrlParam private String mask = null;
+	@CtrlParam private boolean collideWithSensors = true;
+	@CtrlParam private boolean collidePerActor = false;
 	
 	private Filter filter;
 	private Set<ZootActor> collidingActors = new HashSet<ZootActor>();
@@ -61,9 +61,19 @@ public abstract class OnCollideController extends PhysicsCollisionController
 		this.category = category;
 	}
 	
+	public String getCategoryParameter()
+	{
+		return category;
+	}
+	
 	public void setMaskParameter(String mask)
 	{
 		this.mask = mask;
+	}
+	
+	public String getMaskParameter()
+	{
+		return mask;
 	}
 	
 	public void setFilter(Filter filter)

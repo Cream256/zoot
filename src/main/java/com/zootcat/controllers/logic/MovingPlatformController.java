@@ -13,11 +13,11 @@ import com.zootcat.scene.ZootScene;
 
 public class MovingPlatformController extends OnCollideFromAboveOrBelowController
 {
-	@CtrlParam(debug = true) private float range = 0.0f;
-	@CtrlParam(debug = true) private float speed = 1.0f;
-	@CtrlParam(debug = true) private boolean enabled = true;
-	@CtrlParam(debug = true) private boolean comeback = true;
-	@CtrlParam(debug = true) private ZootDirection direction = ZootDirection.Right;
+	@CtrlParam private float range = 0.0f;
+	@CtrlParam private float speed = 1.0f;
+	@CtrlParam private boolean enabled = true;
+	@CtrlParam private boolean comeback = true;
+	@CtrlParam private ZootDirection direction = ZootDirection.Right;
 	@CtrlParam(global = true) private ZootScene scene;
 	
 	private Vector2 start;

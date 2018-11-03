@@ -7,7 +7,7 @@ import com.zootcat.scene.ZootDirection;
 
 public class FlyableController extends ControllerAdapter
 {
-	@CtrlParam(debug = true) private float flyVel = 1.0f;
+	@CtrlParam private float flyVel = 1.0f;
 	
 	private PhysicsBodyController physicsCtrl;
 	

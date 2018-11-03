@@ -18,7 +18,7 @@ import com.zootcat.scene.ZootScene;
 //TODO BETA use box2d utility class for rendering polygon (https://bitbucket.org/dermetfan/libgdx-utils/wiki/Home)
 public class PolygonRenderController extends RenderControllerAdapter 
 {
-	@CtrlParam(required = true, debug = true) private String textureFile;
+	@CtrlParam(required = true) private String textureFile;
 	@CtrlParam(global = true) private AssetManager assetManager;
 	@CtrlParam(global = true) private ZootScene scene;
 	

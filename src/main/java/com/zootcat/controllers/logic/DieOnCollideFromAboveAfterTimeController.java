@@ -6,7 +6,7 @@ import com.zootcat.scene.ZootActor;
 
 public class DieOnCollideFromAboveAfterTimeController extends DieOnCollideFromAboveController
 {
-	@CtrlParam(debug = true) private float time = 1.0f;
+	@CtrlParam private float time = 1.0f;
 	
 	private float elapsedTime = 0.0f;
 	private boolean done = false;

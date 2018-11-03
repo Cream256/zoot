@@ -8,8 +8,8 @@ import com.zootcat.scene.ZootScene;
 
 public class SizeController extends ControllerAdapter
 {
-	@CtrlParam(debug = true, required = true) private float width;
-	@CtrlParam(debug = true, required = true) private float height;
+	@CtrlParam(required = true) private float width;
+	@CtrlParam(required = true) private float height;
 	@CtrlParam(global = true) private ZootScene scene;
 	
 	@Override

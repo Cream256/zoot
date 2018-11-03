@@ -6,7 +6,7 @@ import com.zootcat.scene.ZootActor;
 
 public class TimedButtonController extends ButtonController
 {
-	@CtrlParam(debug = true, required = true) private float revertAfter;
+	@CtrlParam(required = true) private float revertAfter;
 	@CtrlDebug private float time = 0.0f;
 	@CtrlDebug private boolean trackingTime = false; 
 	

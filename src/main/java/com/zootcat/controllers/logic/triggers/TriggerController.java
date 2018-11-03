@@ -25,7 +25,7 @@ import com.zootcat.scene.ZootActor;
  */
 public class TriggerController extends OnCollideController
 {
-	@CtrlParam(debug = true) private boolean active = false;
+	@CtrlParam private boolean active = false;
 		
 	private boolean firstTriggerDone;
 	private boolean firstTriggerState;

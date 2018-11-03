@@ -19,8 +19,8 @@ import com.zootcat.scene.ZootActor;
  */
 public class HurtOnCollideController extends OnCollideController
 {
-	@CtrlParam(debug = true) private int damage = 1;
-	@CtrlParam(debug = true) private boolean hurtOwner = false;
+	@CtrlParam private int damage = 1;
+	@CtrlParam private boolean hurtOwner = false;
 	
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)

@@ -7,7 +7,7 @@ import com.zootcat.scene.ZootScene;
 
 public class KillActorsTriggerController extends TriggerEventListener
 {
-	@CtrlParam(debug = true, required = true) private String actorName;
+	@CtrlParam(required = true) private String actorName;
 	@CtrlParam(global = true) private ZootScene scene;
 	
 	@Override

@@ -10,7 +10,7 @@ import com.zootcat.scene.ZootActor;
 public class DetectFallController extends ControllerAdapter
 {
 	@CtrlDebug private boolean falling;
-	@CtrlParam(debug = true) private float threshold = -0.5f;
+	@CtrlParam private float threshold = -0.5f;
 	
 	private DetectGroundController groundCtrl;	
 		
