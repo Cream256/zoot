@@ -107,4 +107,12 @@ public class ZootActions
 		ZootLambdaAction lambdaAction = new ZootLambdaAction(lambda);
 		return lambdaAction;
 	}
+	
+	public static ZootLoadLevelAction loadLevel(ZootGame game, String levelPath)
+	{
+		ZootLoadLevelAction loadLevelAction = new ZootLoadLevelAction();
+		loadLevelAction.setZootGame(game);
+		loadLevelAction.setLevelPath(levelPath);
+		return loadLevelAction;
+	}
 }

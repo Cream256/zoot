@@ -111,9 +111,11 @@ public abstract class ZootGame extends Game
     
     public void loadLevel(String levelFile)
     {
+    	Gdx.app.debug("ZootGame", "Loading level " + levelFile);
+    	
     	currentLevelPath = levelFile;
     	
-    	ZootLoadingScreen loadingScreen = loadingScreenSupplier.apply(this); 	
+    	ZootLoadingScreen loadingScreen = createLoadingScreen(); 	
     	loadingScreen.addTask((assetManager) -> assetManager.load(levelFile, ZootTiledMap.class));
     	
     	loadingScreen.onFinishLoading((game) -> 
@@ -126,7 +128,7 @@ public abstract class ZootGame extends Game
     				game.getViewportWidth(), 
     				game.getViewportHeight(), 
     				game.getUnitPerTile());
-    		game.setScreen(sceneScreenSupplier.apply(this, scene));
+    		game.setScreen(createSceneScreen(scene));
     	});
     	
     	setScreen(loadingScreen);
@@ -177,10 +179,20 @@ public abstract class ZootGame extends Game
     	loadingScreenSupplier = supplier;
     }
     
+    public ZootLoadingScreen createLoadingScreen()
+    {
+    	return loadingScreenSupplier.apply(this);
+    }
+    
     public void setSceneScreenSupplier(BiFunction<ZootGame, ZootScene, ZootSceneScreen> supplier)
     {
     	sceneScreenSupplier = supplier;
     }    
+    
+    public ZootSceneScreen createSceneScreen(ZootScene scene)
+    {
+		return sceneScreenSupplier.apply(this, scene);
+    }
     
     public ZootInputManager getInputManager()
     {

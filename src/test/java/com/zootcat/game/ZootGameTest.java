@@ -20,6 +20,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.exceptions.RuntimeZootException;
+import com.zootcat.scene.ZootScene;
+import com.zootcat.screen.ZootLoadingScreen;
+import com.zootcat.screen.ZootSceneScreen;
 import com.zootcat.screen.ZootScreen;
 
 public class ZootGameTest
@@ -210,5 +213,32 @@ public class ZootGameTest
 		
 		//then
 		assertEquals(screen2, game.getPreviousScreen());		
+	}
+	
+	@Test
+	public void shouldCreateLoadingScreen()
+	{
+		//given
+		ZootLoadingScreen screen = mock(ZootLoadingScreen.class);
+		
+		//when
+		game.setLoadingScreenSupplier(game -> screen);
+		
+		//then
+		assertEquals(screen, game.createLoadingScreen());
+	}
+	
+	@Test
+	public void shouldCreateSceenScreen()
+	{
+		//given
+		ZootScene scene = mock(ZootScene.class);
+		ZootSceneScreen screen = mock(ZootSceneScreen.class);
+		
+		//when
+		game.setSceneScreenSupplier((g, s) -> screen);
+		
+		//then
+		assertEquals(screen, game.createSceneScreen(scene));
 	}
 }

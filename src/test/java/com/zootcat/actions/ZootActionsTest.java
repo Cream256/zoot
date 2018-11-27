@@ -137,4 +137,14 @@ public class ZootActionsTest
 		assertTrue(action.act(1.0f));
 		assertEquals(lambda, action.getLambda());
 	}
+	
+	@Test
+	public void shouldCreateLoadLevelAction()
+	{
+		ZootGame game = mock(ZootGame.class);
+		String levelPath = "/data/level.tmx";		
+		ZootLoadLevelAction action = ZootActions.loadLevel(game, levelPath);
+		assertEquals(game, action.getZootGame());
+		assertEquals(levelPath, action.getLevelPath());
+	}
 }
