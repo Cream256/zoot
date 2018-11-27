@@ -88,7 +88,7 @@ public class ZootActions
 	
 	public static ZootCameraFocusAction cameraFocus(ZootCamera camera, ZootActor target)
 	{
-		ZootCameraFocusAction cameraFocusAction = new ZootCameraFocusAction();
+		ZootCameraFocusAction cameraFocusAction = zootAction(ZootCameraFocusAction.class);
 		cameraFocusAction.setTarget(target);
 		cameraFocusAction.setCamera(camera);
 		return cameraFocusAction;		
@@ -96,7 +96,7 @@ public class ZootActions
 	
 	public static ZootFireEventAction fireEvent(ZootActor target, ZootEvent event)
 	{
-		ZootFireEventAction fireEventAction = new ZootFireEventAction();
+		ZootFireEventAction fireEventAction = zootAction(ZootFireEventAction.class);
 		fireEventAction.setTarget(target);
 		fireEventAction.setEvent(event);
 		return fireEventAction;
@@ -110,7 +110,7 @@ public class ZootActions
 	
 	public static ZootLoadLevelAction loadLevel(ZootGame game, String levelPath)
 	{
-		ZootLoadLevelAction loadLevelAction = new ZootLoadLevelAction();
+		ZootLoadLevelAction loadLevelAction = zootAction(ZootLoadLevelAction.class);
 		loadLevelAction.setZootGame(game);
 		loadLevelAction.setLevelPath(levelPath);
 		return loadLevelAction;
@@ -118,7 +118,7 @@ public class ZootActions
 	
 	public static ZootShowDialogScreenAction showDialog(String dialogPath, String dialogToken, ZootGame game, ZootActor target)
 	{
-		ZootShowDialogScreenAction showDialogAction = new ZootShowDialogScreenAction();
+		ZootShowDialogScreenAction showDialogAction = zootAction(ZootShowDialogScreenAction.class);
 		showDialogAction.setTarget(target);
 		showDialogAction.setDialogPath(dialogPath);
 		showDialogAction.setDialogToken(dialogToken);
