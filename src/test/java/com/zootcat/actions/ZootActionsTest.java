@@ -147,4 +147,18 @@ public class ZootActionsTest
 		assertEquals(game, action.getZootGame());
 		assertEquals(levelPath, action.getLevelPath());
 	}
+	
+	@Test
+	public void shouldCreateShowDialogScreenAction()
+	{
+		ZootGame game = mock(ZootGame.class);
+		String dialogPath = "/data/dialog.txt";
+		String dialogToken = "Token";
+		
+		ZootShowDialogScreenAction action = ZootActions.showDialog(dialogPath, dialogToken, game, actor);
+		assertEquals(actor, action.getTargetZootActor());
+		assertEquals(dialogPath, action.getDialogPath());
+		assertEquals(dialogToken, action.getDialogToken());
+		assertEquals(game, action.getZootGame());
+	}
 }

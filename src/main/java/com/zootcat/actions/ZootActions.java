@@ -115,4 +115,14 @@ public class ZootActions
 		loadLevelAction.setLevelPath(levelPath);
 		return loadLevelAction;
 	}
+	
+	public static ZootShowDialogScreenAction showDialog(String dialogPath, String dialogToken, ZootGame game, ZootActor target)
+	{
+		ZootShowDialogScreenAction showDialogAction = new ZootShowDialogScreenAction();
+		showDialogAction.setTarget(target);
+		showDialogAction.setDialogPath(dialogPath);
+		showDialogAction.setDialogToken(dialogToken);
+		showDialogAction.setZootGame(game);		
+		return showDialogAction;
+	}
 }

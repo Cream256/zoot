@@ -6,7 +6,6 @@ import java.util.function.Function;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.controllers.factory.ControllerFactory;
 import com.zootcat.exceptions.RuntimeZootException;
@@ -28,6 +27,7 @@ public abstract class ZootGame extends Game
 	private String currentLevelPath;	
 	private ZootAssetManager assetManager;
 	private ZootInputManager inputManager;
+	private ZootGraphicsFactory graphicsFactory;
 	private ControllerFactory controllerFactory;
 	private Function<ZootGame, ZootLoadingScreen> loadingScreenSupplier;
 	private BiFunction<ZootGame, ZootScene, ZootSceneScreen> sceneScreenSupplier;
@@ -36,6 +36,7 @@ public abstract class ZootGame extends Game
 	{
 		assetManager = new ZootAssetManager();		
 		inputManager = new ZootInputManager();
+		graphicsFactory = new ZootGraphicsFactory();
 		
 		controllerFactory = new ControllerFactory();
 		controllerFactory.addGlobalParameter("game", this);
@@ -134,7 +135,7 @@ public abstract class ZootGame extends Game
     	setScreen(loadingScreen);
     }
     
-    public AssetManager getAssetManager()
+    public ZootAssetManager getAssetManager()
     {
     	return assetManager;
     }
@@ -142,6 +143,11 @@ public abstract class ZootGame extends Game
     public ControllerFactory getControllerFactory()
     {
     	return controllerFactory;
+    }
+    
+    public ZootGraphicsFactory getGraphicsFactory()
+    {
+    	return graphicsFactory;
     }
     
     public void setViewportWidth(float width)

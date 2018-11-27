@@ -13,12 +13,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.game.ZootGame;
 
 public class ZootLoadingScreenTest
 {
 	@Mock private ZootGame game;
-	@Mock private AssetManager assetManager;	
+	@Mock private ZootAssetManager assetManager;	
 	@Mock private Consumer<AssetManager> task;
 	
 	private boolean success;

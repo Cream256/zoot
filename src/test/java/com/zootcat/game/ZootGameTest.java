@@ -241,4 +241,10 @@ public class ZootGameTest
 		//then
 		assertEquals(screen, game.createSceneScreen(scene));
 	}
+	
+	@Test
+	public void shouldReturnGraphicsFactory()
+	{
+		assertNotNull(game.getGraphicsFactory());
+	}
 }

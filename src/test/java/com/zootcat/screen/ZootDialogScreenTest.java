@@ -33,8 +33,9 @@ public class ZootDialogScreenTest
 	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);
+		when(game.getGraphicsFactory()).thenReturn(spriteFactory);
 		
-		dialogScreen = new ZootDialogScreen(game, spriteFactory);
+		dialogScreen = new ZootDialogScreen(game);
 	}
 	
 	@Ignore

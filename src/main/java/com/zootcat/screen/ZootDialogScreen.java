@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.zootcat.dialogs.ZootDialog;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.game.ZootGame;
-import com.zootcat.gfx.ZootGraphicsFactory;
 import com.zootcat.input.ZootBindableInputProcessor;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
@@ -34,12 +33,12 @@ public class ZootDialogScreen extends ZootScreenAdapter
 	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
 		
-	public ZootDialogScreen(ZootGame game, ZootGraphicsFactory graphicsFactory)
+	public ZootDialogScreen(ZootGame game)
 	{
 		this.game = game;
-		this.batch = graphicsFactory.createSpriteBatch();
-		this.shapeRenderer = graphicsFactory.createShapeRenderer();
-		this.font = graphicsFactory.createBitmapFont();
+		this.batch = game.getGraphicsFactory().createSpriteBatch();
+		this.shapeRenderer = game.getGraphicsFactory().createShapeRenderer();
+		this.font = game.getGraphicsFactory().createBitmapFont();
 	}
 	
 	@Override
