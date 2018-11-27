@@ -10,6 +10,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
@@ -21,9 +22,9 @@ import com.zootcat.gfx.ZootRender;
 import com.zootcat.hud.ZootHud;
 import com.zootcat.map.ZootMap;
 import com.zootcat.map.tiled.ZootTiledMap;
-import com.zootcat.map.tiled.ZootTiledSceneActorFactory;
 import com.zootcat.map.tiled.ZootTiledMapRender;
 import com.zootcat.map.tiled.ZootTiledMapRenderConfig;
+import com.zootcat.map.tiled.ZootTiledSceneActorFactory;
 import com.zootcat.map.tiled.ZootTiledWorldScaleCalculator;
 import com.zootcat.map.tiled.optimizer.ZootLayerOptimizer;
 import com.zootcat.map.tiled.optimizer.ZootLayerRegion;
@@ -138,7 +139,7 @@ public class ZootTiledScene implements ZootScene
 	@Override
 	public void addActor(ZootActor actor)
 	{
-		stage.addActor(actor);
+		stage.addActor(actor);		
 		actor.setScene(this);
 	}
 	
@@ -326,5 +327,11 @@ public class ZootTiledScene implements ZootScene
 	public ZootSceneActorSpawner getActorSpawner()
 	{
 		return spawner;
+	}
+
+	@Override
+	public void addRootAction(Action action)
+	{
+		stage.getRoot().addAction(action);
 	}
 }

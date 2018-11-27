@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zootcat.camera.ZootCamera;
@@ -157,5 +158,11 @@ public class ZootSceneMock implements ZootScene
 	public ZootSceneActorSpawner getActorSpawner() 
 	{
 		return null;
+	}
+
+	@Override
+	public void addRootAction(Action action)
+	{
+		//noop
 	}
 }

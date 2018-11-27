@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -24,6 +25,8 @@ public interface ZootScene extends Disposable
 	List<ZootActor> getActors();
 	List<ZootActor> getActors(Predicate<ZootActor> filter);
 	ZootActor getFirstActor(Predicate<ZootActor> filter);
+	
+	void addRootAction(Action action);
 	
 	ZootCamera getCamera();
 	ZootPhysics getPhysics();
