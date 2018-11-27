@@ -1,8 +1,10 @@
 package com.zootcat.actions;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,7 +19,6 @@ import org.mockito.MockitoAnnotations;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
-import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.game.ZootGame;
 import com.zootcat.gfx.ZootGraphicsFactory;
 import com.zootcat.scene.ZootActor;
@@ -75,27 +76,46 @@ public class ZootShowDialogScreenActionTest
 	{
 		assertEquals(DIALOG_TOKEN, action.getDialogToken());
 	}
-	
-	@Test
-	public void shouldStopTriggeringActor()
-	{
-		action.act(0.0f);
-				
-		assertEquals(1, eventCounter.getCount());
-		assertEquals(ZootEventType.Stop, eventCounter.getLastZootEvent().getType());
-	}
-		
+			
 	@Test
 	public void shouldSetDialogScreenForGame()
 	{
-		action.act(0.0f);
-		
+		//given
 		ArgumentCaptor<ZootDialogScreen> captor = ArgumentCaptor.forClass(ZootDialogScreen.class);
 		
+		//when
+		action.act(0.0f);
+		
+		//then
 		verify(game).setScreen(captor.capture());
 		assertNotNull(captor.getValue());
 		assertNotNull(captor.getValue().getDialog());
 		assertEquals(triggeringActor, captor.getValue().getTriggeringActor());
+	}
+	
+	@Test
+	public void shouldEndActionWhenDialogEnds()
+	{		
+		//given
+		ArgumentCaptor<ZootDialogScreen> captor = ArgumentCaptor.forClass(ZootDialogScreen.class);
+		
+		//when		
+		assertFalse("Action should not end when dialog is created", action.act(0.0f));
+		
+		//then
+		verify(game).setScreen(captor.capture());
+		
+		//when
+		when(game.getScreen()).thenReturn(captor.getValue());
+		
+		//then
+		assertFalse("Action should not end while dialog is running", action.act(0.0f));
+		
+		//when
+		when(game.getScreen()).thenReturn(null);
+		
+		//then
+		assertTrue("Action should end after dialog ends", action.act(0.0f));		
 	}
 	
 	@Test
@@ -158,7 +178,7 @@ public class ZootShowDialogScreenActionTest
 		action.setZootGame(null);
 		action.act(0.0f);
 	}
-	
+		
 	@Test
 	public void shouldReset()
 	{
