@@ -84,5 +84,14 @@ public class ZootUtils
 	    			 .findFirst()
 	    			 .orElseThrow(() -> new RuntimeZootException("Enum '" + value + "' not found for " + enumeration.getClass().getSimpleName()));
 	}
+	
+	public static String trimLeadingSlashes(String input)
+	{
+		if(input.startsWith("/") || input.startsWith("\\"))
+		{
+			return input.substring(1);
+		}
+		return input;		
+	}
 
 }

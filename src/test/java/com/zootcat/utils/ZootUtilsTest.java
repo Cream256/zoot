@@ -140,4 +140,12 @@ public class ZootUtilsTest
 			}
 		}
 	}
+	
+	@Test
+	public void trimLeadingSlashesTest()
+	{
+		assertEquals("data/somefile/test/", ZootUtils.trimLeadingSlashes("/data/somefile/test/"));
+		assertEquals("data\\somefile\\test\\", ZootUtils.trimLeadingSlashes("\\data\\somefile\\test\\"));
+		assertEquals(" data somefile test ", ZootUtils.trimLeadingSlashes(" data somefile test "));	
+	}
 }

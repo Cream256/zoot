@@ -35,14 +35,14 @@ public class ZootDialogTest
 	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);
-		when(assetManager.getOrLoad("/data/gfx/characters/First.png", Texture.class)).thenReturn(firstFace);
-		when(assetManager.getOrLoad("/data/gfx/characters/Second.png", Texture.class)).thenReturn(secondFace);
-		when(assetManager.getOrLoad("/data/gfx/characters/Third.png", Texture.class)).thenReturn(thirdFace);
-		when(assetManager.getOrLoad("/data/gfx/items/FirstDialogImage.jpg", Texture.class)).thenReturn(firstImage);
-		when(assetManager.getOrLoad("/data/gfx/items/SecondDialogImage.jpg", Texture.class)).thenReturn(secondImage);
-		when(assetManager.getOrLoad("/data/gfx/items/ThirdDialogImage.jpg", Texture.class)).thenReturn(thirdImage);
-		when(assetManager.getOrLoad("/data/gfx/characters/NoFace.png", Texture.class)).thenThrow(new GdxRuntimeException("Asset not loaded"));
-		when(assetManager.getOrLoad("/data/gfx/items/NoImage.jpg", Texture.class)).thenThrow(new GdxRuntimeException("Asset not loaded"));
+		when(assetManager.getOrLoad("data/gfx/characters/First.png", Texture.class)).thenReturn(firstFace);
+		when(assetManager.getOrLoad("data/gfx/characters/Second.png", Texture.class)).thenReturn(secondFace);
+		when(assetManager.getOrLoad("data/gfx/characters/Third.png", Texture.class)).thenReturn(thirdFace);
+		when(assetManager.getOrLoad("data/gfx/items/FirstDialogImage.jpg", Texture.class)).thenReturn(firstImage);
+		when(assetManager.getOrLoad("data/gfx/items/SecondDialogImage.jpg", Texture.class)).thenReturn(secondImage);
+		when(assetManager.getOrLoad("data/gfx/items/ThirdDialogImage.jpg", Texture.class)).thenReturn(thirdImage);
+		when(assetManager.getOrLoad("data/gfx/characters/NoFace.png", Texture.class)).thenThrow(new GdxRuntimeException("Asset not loaded"));
+		when(assetManager.getOrLoad("data/gfx/items/NoImage.jpg", Texture.class)).thenThrow(new GdxRuntimeException("Asset not loaded"));
 		
 		dialogPath = ZootTestUtils.getResourcePath("dialogs/TestDialog.dialog", this);
 		dialogWithSettingsPath = ZootTestUtils.getResourcePath("dialogs/TestDialogWithSettings.dialog", this);
@@ -150,7 +150,7 @@ public class ZootDialogTest
 		assertEquals(3, dialog.getFrames().size());		
 		assertEquals("First", dialog.getCurrentName());
 		assertEquals(ZootDirection.Left, dialog.getFacePosition());
-		assertEquals("/data/gfx/characters/First.png", dialog.getCurrentFaceFileName());
+		assertEquals("data/gfx/characters/First.png", dialog.getCurrentFaceFileName());
 		assertEquals(firstFace, dialog.getCurrentFace());
 		assertEquals(firstImage, dialog.getCurrentImage());
 		
@@ -160,7 +160,7 @@ public class ZootDialogTest
 		//then		
 		assertEquals("Second", dialog.getCurrentName());
 		assertEquals(ZootDirection.Right, dialog.getFacePosition());
-		assertEquals("/data/gfx/characters/Second.png", dialog.getCurrentFaceFileName());
+		assertEquals("data/gfx/characters/Second.png", dialog.getCurrentFaceFileName());
 		assertEquals(secondFace, dialog.getCurrentFace());
 		assertEquals(secondImage, dialog.getCurrentImage());
 		
@@ -170,7 +170,7 @@ public class ZootDialogTest
 		//then		
 		assertEquals("Third", dialog.getCurrentName());
 		assertEquals(ZootDirection.None, dialog.getFacePosition());
-		assertEquals("/data/gfx/characters/Third.png", dialog.getCurrentFaceFileName());
+		assertEquals("data/gfx/characters/Third.png", dialog.getCurrentFaceFileName());
 		assertEquals(thirdFace, dialog.getCurrentFace());
 		assertEquals(thirdImage, dialog.getCurrentImage());
 	}	

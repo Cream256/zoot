@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -27,11 +28,12 @@ public class ZootDialogScreen extends ZootScreenAdapter
 	private ZootGame game;
 	private ZootDialog dialog;
 	private ZootActor triggeringActor;
-	private ZootScreen previousScreen;
+	private ZootScreen previousScreen;	
 	
 	private BitmapFont font;
 	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
+	private Sprite faceSprite;
 		
 	public ZootDialogScreen(ZootGame game)
 	{
@@ -39,6 +41,7 @@ public class ZootDialogScreen extends ZootScreenAdapter
 		this.batch = game.getGraphicsFactory().createSpriteBatch();
 		this.shapeRenderer = game.getGraphicsFactory().createShapeRenderer();
 		this.font = game.getGraphicsFactory().createBitmapFont();
+		this.faceSprite = game.getGraphicsFactory().createSprite();
 	}
 	
 	@Override
@@ -106,9 +109,14 @@ public class ZootDialogScreen extends ZootScreenAdapter
 		//draw face		
 		batch.begin();		
 		if(face != null) 
-		{			
+		{						
+			faceSprite.setTexture(face);
+			faceSprite.setRegion(face);
+			faceSprite.flip(dialog.getFacePosition() == ZootDirection.Left ? false : true, false);
+			
 			float faceX = dialog.getFacePosition() == ZootDirection.Left ? 0.0f : backWidth - face.getWidth();
-			batch.draw(face, faceX, 0);
+			faceSprite.setBounds(faceX, 0, face.getWidth(), face.getHeight());
+			faceSprite.draw(batch);
 		}
 		
 		//draw text

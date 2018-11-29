@@ -9,6 +9,7 @@ import com.zootcat.exceptions.ZootException;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.textdata.TextDataFile;
 import com.zootcat.textdata.TextDataSection;
+import com.zootcat.utils.ZootUtils;
 
 public class ZootDialog 
 {
@@ -73,7 +74,7 @@ public class ZootDialog
         facePosition = ZootDirection.fromString(currentFrame.getString("facePosition", "left"));
         try
         {
-            currentFaceFileName = currentFrame.getString("faceImage", "");            
+            currentFaceFileName = ZootUtils.trimLeadingSlashes(currentFrame.getString("faceImage", ""));            
             currentFace = assetManager.getOrLoad(currentFaceFileName, Texture.class);
         }
         catch(Exception e)
@@ -82,7 +83,7 @@ public class ZootDialog
         }
         try
         {
-        	String currentImageFileName = currentFrame.getString("dialogImage", "");
+        	String currentImageFileName = ZootUtils.trimLeadingSlashes(currentFrame.getString("dialogImage", ""));
         	currentImage = assetManager.getOrLoad(currentImageFileName, Texture.class);
         }
         catch(Exception e)
