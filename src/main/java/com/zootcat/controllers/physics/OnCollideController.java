@@ -166,22 +166,7 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	public abstract void onEnter(ZootActor actorA, ZootActor actorB, Contact contact);
 	
 	public abstract void onLeave(ZootActor actorA, ZootActor actorB, Contact contact);
-	
-	protected ZootActor getOtherActor(ZootActor actorA, ZootActor actorB)
-	{
-		return actorA == getControllerActor() ? actorB : actorA;
-	}
-	
-	protected Fixture getOtherFixture(ZootActor actorA, ZootActor actorB, Contact contact)
-	{
-		return (actorA == getControllerActor()) ? contact.getFixtureB() : contact.getFixtureA();
-	}
-	
-	protected Fixture getControllerActorFixture(ZootActor actorA, ZootActor actorB, Contact contact)
-	{
-		return (actorA == getControllerActor()) ? contact.getFixtureA() : contact.getFixtureB();
-	}
-		
+			
 	private boolean collides(ZootActor actorA, ZootActor actorB, Contact contact)
 	{				
 		Fixture otherFixture = getOtherFixture(actorA, actorB, contact);

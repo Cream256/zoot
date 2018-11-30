@@ -75,7 +75,7 @@ public class ClimbController extends OnCollideWithSensorController
 	{
 		//noop
 	}
-				
+	
 	@Override
 	protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
 	{
@@ -84,7 +84,7 @@ public class ClimbController extends OnCollideWithSensorController
 		{
 			return SensorCollisionResult.StopProcessing;
 		}
-				
+						
 		if(isFixtureGrabbable(controllerActor, getSensor(), fixture))
 		{
 			climbingFixture = fixture;
@@ -125,7 +125,7 @@ public class ClimbController extends OnCollideWithSensorController
 		def.localAnchorA.y = grabbingActor.getHeight() / 2.0f;
 		def.localAnchorA.x = halfClimbOffset;	
 		
-		//climabable fixture anchor		
+		//climabble fixture anchor		
 		def.localAnchorB.x = actorBody.getPosition().x - climbingFixture.getBody().getPosition().x + halfClimbOffset;
 		def.localAnchorB.y = ZootBoundingBoxFactory.create(climbingFixture).getHeight() / 2.0f;
 		
@@ -264,7 +264,7 @@ public class ClimbController extends OnCollideWithSensorController
 		boolean notSensor = !grabbableFixture.isSensor();
 		boolean collidingWithFixtureTop = isCollidingWithFixtureTop(sensorFixture, grabbableFixture);		
 		boolean hasGrabbableProperty = hasGrabbableProperty(grabbableFixture);
-		boolean isEnoughSpaceToGrab = isEnoughSpaceToGrab(sensorFixture, actor);
+		boolean isEnoughSpaceToGrab = isEnoughSpaceToGrab(sensorFixture, actor);		
 		return notSensor && collidingWithFixtureTop && hasGrabbableProperty && isEnoughSpaceToGrab;
 	}
 	

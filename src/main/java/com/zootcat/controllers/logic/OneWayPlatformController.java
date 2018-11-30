@@ -21,6 +21,8 @@ import com.zootcat.scene.ZootScene;
 public class OneWayPlatformController extends PhysicsCollisionController
 {
 	@CtrlParam(global = true) private ZootScene scene;
+	@CtrlParam private boolean collideWithSensors = true;
+	
 	private Set<ZootActor> shouldCollide = new HashSet<ZootActor>();
 	private Set<ZootActor> ignorePlatforms = new HashSet<ZootActor>();
 	
@@ -30,14 +32,21 @@ public class OneWayPlatformController extends PhysicsCollisionController
 	@Override
 	public void init(ZootActor actor)
 	{
+		super.init(actor);
 		tmp = new Vector2();
-		platform = actor;
+		platform = actor;		
 	}
 	
 	@Override
 	public void onBeginContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		shouldCollide.add(getOtherActor(actorA, actorB));
+		
+		//should always collide with sensors?
+		if(collideWithSensors && getOtherFixture(actorA, actorB, contact).isSensor())
+		{
+			return;
+		}
 		
 		//get bodies
 		ZootActor platformActor = actorA == platform ? actorA : actorB; 
@@ -104,12 +113,7 @@ public class OneWayPlatformController extends PhysicsCollisionController
 	{
 		//noop
 	}
-	
-	protected ZootActor getOtherActor(ZootActor actorA, ZootActor actorB)
-	{
-		return actorA == platform ? actorB : actorA;
-	}
-	
+		
 	private float getPlatformFixtureFrontFace(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		Fixture platformFixture = contact.getFixtureA().getBody().getUserData() == platform ? contact.getFixtureA() : contact.getFixtureB(); 

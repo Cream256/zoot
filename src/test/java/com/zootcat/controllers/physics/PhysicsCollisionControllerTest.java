@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import org.junit.Before;
@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.exceptions.RuntimeZootException;
@@ -244,4 +245,72 @@ public class PhysicsCollisionControllerTest
 		//then
 		assertFalse(onPostSolveCalled);
 	}
+	
+	@Test
+	public void shouldReturnOtherActor()
+	{
+		//given
+		ZootActor otherActor = mock(ZootActor.class);
+		ZootActor ctrlActor = mock(ZootActor.class);
+		
+		//when
+		ctrl.init(ctrlActor);
+		
+		//then
+		assertEquals(otherActor, ctrl.getOtherActor(ctrlActor, otherActor));
+		assertEquals(otherActor, ctrl.getOtherActor(otherActor, ctrlActor));
+	}
+	
+	@Test
+	public void shouldReturnControllerActorFixture()
+	{
+		//given
+		ZootActor otherActor = mock(ZootActor.class);
+		ZootActor ctrlActor = mock(ZootActor.class);
+		Fixture otherActorFixture = mock(Fixture.class);
+		Fixture ctrlActorFixture = mock(Fixture.class);		
+		Contact contact = mock(Contact.class);
+		
+		//when
+		when(contact.getFixtureA()).thenReturn(ctrlActorFixture);
+		when(contact.getFixtureB()).thenReturn(otherActorFixture);
+		ctrl.init(ctrlActor);
+		
+		//then
+		assertEquals(ctrlActorFixture, ctrl.getControllerActorFixture(ctrlActor, otherActor, contact));
+		
+		//when
+		when(contact.getFixtureA()).thenReturn(otherActorFixture);
+		when(contact.getFixtureB()).thenReturn(ctrlActorFixture);
+		
+		//then
+		assertEquals(ctrlActorFixture, ctrl.getControllerActorFixture(otherActor, ctrlActor, contact));
+	}
+	
+	@Test
+	public void shouldReturnOtherActorFixture()
+	{
+		//given
+		ZootActor otherActor = mock(ZootActor.class);
+		ZootActor ctrlActor = mock(ZootActor.class);
+		Fixture otherActorFixture = mock(Fixture.class);
+		Fixture ctrlActorFixture = mock(Fixture.class);		
+		Contact contact = mock(Contact.class);
+		
+		//when
+		when(contact.getFixtureA()).thenReturn(ctrlActorFixture);
+		when(contact.getFixtureB()).thenReturn(otherActorFixture);
+		ctrl.init(ctrlActor);
+		
+		//then
+		assertEquals(otherActorFixture, ctrl.getOtherFixture(ctrlActor, otherActor, contact));
+		
+		//when
+		when(contact.getFixtureA()).thenReturn(otherActorFixture);
+		when(contact.getFixtureB()).thenReturn(ctrlActorFixture);
+		
+		//then
+		assertEquals(otherActorFixture, ctrl.getOtherFixture(otherActor, ctrlActor, contact));		
+	}
+	
 }

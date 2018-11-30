@@ -2,6 +2,7 @@ package com.zootcat.controllers.physics;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.zootcat.controllers.Controller;
 import com.zootcat.exceptions.RuntimeZootException;
@@ -83,6 +84,21 @@ public abstract class PhysicsCollisionController extends ZootCollisionListener i
 	public void setEnabled(boolean value)
 	{
 		enabled = value;
+	}
+	
+	public ZootActor getOtherActor(ZootActor actorA, ZootActor actorB)
+	{
+		return actorA == getControllerActor() ? actorB : actorA;
+	}
+	
+	public Fixture getOtherFixture(ZootActor actorA, ZootActor actorB, Contact contact)
+	{
+		return (actorA == getControllerActor()) ? contact.getFixtureB() : contact.getFixtureA();
+	}
+	
+	public Fixture getControllerActorFixture(ZootActor actorA, ZootActor actorB, Contact contact)
+	{
+		return (actorA == getControllerActor()) ? contact.getFixtureA() : contact.getFixtureB();
 	}
 	
 	public ZootActor getControllerActor()
