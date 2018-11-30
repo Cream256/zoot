@@ -140,7 +140,7 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	
 	public abstract void postUpdate(float delta, ZootActor actor);
 	
-	private boolean shouldCollide(Fixture fixture)
+	protected boolean shouldCollide(Fixture fixture)
 	{
 		boolean contactEnabled = !disabledFixtures.contains(fixture);	
 		return contactEnabled;

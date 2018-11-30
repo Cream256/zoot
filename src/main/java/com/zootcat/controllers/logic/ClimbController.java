@@ -77,6 +77,14 @@ public class ClimbController extends OnCollideWithSensorController
 	}
 	
 	@Override
+	protected boolean shouldCollide(Fixture fixture)
+	{
+		//we must ignore disabled contacts, so one way platforms
+		//will have continous collision, not only when moving downward
+		return true;
+	}
+	
+	@Override
 	protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
 	{
 		ZootActor controllerActor = getControllerActor(); 
