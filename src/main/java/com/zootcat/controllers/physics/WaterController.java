@@ -4,7 +4,6 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.leakedbits.codelabs.box2d.controllers.BuoyancyController;
 import com.zootcat.controllers.factory.CtrlParam;
-import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
@@ -27,9 +26,7 @@ public class WaterController extends OnCollideController
 		
 		Fixture actorFixture = actor.getController(PhysicsBodyController.class)
 									.getFixtures()
-									.stream()
-									.findFirst()
-									.orElseThrow(() -> new RuntimeZootException("Water Controller must have a fixture"));
+									.first();
 		
 		buoyancyCtrl = new BuoyancyController(scene.getPhysics().getWorld(), actorFixture);
 		buoyancyCtrl.isFluidFixed = isFluidFixed;

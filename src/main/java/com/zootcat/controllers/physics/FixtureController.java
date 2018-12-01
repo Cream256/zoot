@@ -4,6 +4,7 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.utils.Array;
 import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.exceptions.RuntimeZootException;
@@ -25,16 +26,16 @@ public class FixtureController extends ControllerAdapter
 	@CtrlParam protected ZootBodyShape shape = ZootBodyShape.BOX;
 	@CtrlParam(global = true) protected ZootScene scene;
 	
-	private FixtureDef fixtureDef;
-	private Fixture fixture;
+	private Array<FixtureDef> fixtureDefs;
+	private Array<Fixture> fixtures;
 	
 	@Override
 	public void init(ZootActor actor)
 	{
-		fixtureDef = createFixtureDef(actor);
+		fixtureDefs = createFixtureDefs(actor);
 	}
 	
-	protected FixtureDef createFixtureDef(ZootActor actor) 
+	protected Array<FixtureDef> createFixtureDefs(ZootActor actor) 
 	{		
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.density = density;
@@ -42,7 +43,10 @@ public class FixtureController extends ControllerAdapter
 		fixtureDef.restitution = restitution;
 		fixtureDef.isSensor = sensor;
 		fixtureDef.shape = createShape(actor, shape);
-		return fixtureDef;
+		
+		Array<FixtureDef> fixtureDefs = new Array<FixtureDef>(1);
+		fixtureDefs.add(fixtureDef);
+		return fixtureDefs;
 	}
 	
 	protected Shape createShape(ZootActor actor, ZootBodyShape shape)
@@ -85,13 +89,19 @@ public class FixtureController extends ControllerAdapter
 	@Override
 	public void onAdd(ZootActor actor)
 	{
-		fixture = actor.getController(PhysicsBodyController.class).addFixture(fixtureDef, actor);		
+		fixtures = new Array<Fixture>(fixtureDefs.size);
+		fixtureDefs.forEach(def -> 
+		{
+			Fixture newFixture = actor.getController(PhysicsBodyController.class).addFixture(def, actor);
+			fixtures.add(newFixture);
+		});
 	}
 	
 	@Override
 	public void onRemove(ZootActor actor)
 	{
-		actor.getController(PhysicsBodyController.class).removeFixture(fixture);
-		fixture = null;
+		fixtures.forEach(fixture -> actor.getController(PhysicsBodyController.class).removeFixture(fixture));
+		fixtures.clear();
+		fixtures = null;
 	}
 }

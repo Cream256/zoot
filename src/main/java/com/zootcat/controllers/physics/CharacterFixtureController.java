@@ -1,37 +1,31 @@
 package com.zootcat.controllers.physics;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.utils.Array;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.utils.ZootUtils;
 
-public class CharacterBodyController extends PhysicsBodyController
+public class CharacterFixtureController extends FixtureController
 {	
 	@CtrlParam private boolean vertical = true;
 	
 	@Override
 	public void init(ZootActor actor)
 	{
-		super.type = BodyType.DynamicBody;
-		super.canRotate = false;
 		super.init(actor);
 	}
 			
 	@Override
-	protected List<FixtureDef> createFixtureDefs(ZootActor actor)
+	protected Array<FixtureDef> createFixtureDefs(ZootActor actor)
 	{
 		return vertical ? createVerticalCharacterFixtures(actor) : createHorizontalCharacterFixtures(actor);
 	}
 	
-	private List<FixtureDef> createVerticalCharacterFixtures(ZootActor actor)
+	private Array<FixtureDef> createVerticalCharacterFixtures(ZootActor actor)
 	{
 		//feet fixture def
 		FixtureDef feetDef = new FixtureDef();
@@ -63,14 +57,16 @@ public class CharacterBodyController extends PhysicsBodyController
 		bodyDef.shape = bodyShape;
 		
 		//result
-		return Arrays.asList(feetDef, bodyDef);
+		Array<FixtureDef> fixtureDefs = new Array<FixtureDef>(2);
+		fixtureDefs.add(feetDef, bodyDef);
+		return fixtureDefs;
 	}
 	
-	private List<FixtureDef> createHorizontalCharacterFixtures(ZootActor actor) 
+	private Array<FixtureDef> createHorizontalCharacterFixtures(ZootActor actor) 
 	{		
 		float circleRadius = actor.getHeight() / 4.0f;		
 		int circleCount = ZootUtils.trunc(actor.getWidth() / circleRadius);			
-		List<FixtureDef> fixtureDefs = new ArrayList<FixtureDef>(circleCount + 1);
+		Array<FixtureDef> fixtureDefs = new Array<FixtureDef>(circleCount + 1);
 		
 		//feet fixture 
 		float sx = -(actor.getWidth() / 2.0f) + circleRadius;

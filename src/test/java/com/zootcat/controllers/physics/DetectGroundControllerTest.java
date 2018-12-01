@@ -108,7 +108,7 @@ public class DetectGroundControllerTest
 		groundCtrl.onAdd(ctrlActor);
 		
 		//then
-		assertTrue(physicsCtrl.getFixtures().contains(groundCtrl.getSensor()));
+		assertTrue(physicsCtrl.getFixtures().contains(groundCtrl.getSensor(), true));
 	}
 	
 	@Test
@@ -120,7 +120,7 @@ public class DetectGroundControllerTest
 		groundCtrl.onRemove(ctrlActor);
 		
 		//then
-		assertFalse("Sensor fixture should be removed", physicsCtrl.getFixtures().contains(groundCtrl.getSensor()));
+		assertFalse("Sensor fixture should be removed", physicsCtrl.getFixtures().contains(groundCtrl.getSensor(), true));
 		assertFalse("Actor should have deregistered ground detector listener", ctrlActor.getListeners().contains(groundCtrl, true));
 	}
 	
