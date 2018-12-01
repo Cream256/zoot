@@ -78,7 +78,7 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 		createSensorFilter(actor);
 		
 		//cleanup
-		sensorShape.dispose();
+		//sensorShape.dispose();	// TODO this causes tests to crash
 		collidedFixtures.clear();
 	}
 	

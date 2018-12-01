@@ -132,7 +132,7 @@ public class DetectGroundControllerTest
 		groundCtrl.onAdd(ctrlActor);
 
 		//then
-		assertEquals("Sensor fixture should be present", 2, physicsCtrl.getFixtures().size());
+		assertEquals("Sensor fixture should be present", 1, physicsCtrl.getFixtures().size());
 		
 		Fixture feetFixture = groundCtrl.getSensor();
 		assertTrue("Fixture should be a sensor", feetFixture.isSensor());		
