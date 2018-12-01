@@ -2,6 +2,7 @@ package com.zootcat.controllers.physics;
 
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.zootcat.controllers.ControllerAdapter;
+import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.utils.BitMaskConverter;
@@ -32,6 +33,12 @@ public class CollisionFilterController extends ControllerAdapter
 	public void onAdd(ZootActor actor)
 	{		
 		actor.controllerAction(PhysicsBodyController.class, ctrl -> ctrl.setCollisionFilter(collisionFilter));
+	}
+	
+	@Override
+	public ControllerPriority getPriority()
+	{
+		return ControllerPriority.Low;
 	}
 	
 	public Filter getCollisionFilter()

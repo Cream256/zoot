@@ -70,7 +70,7 @@ public class FixtureController extends ControllerAdapter
 		return fixtureDefs;
 	}
 	
-	private void setupFilter(Filter filter)
+	protected void setupFilter(Filter filter)
 	{
 		if(category != null && !category.isEmpty())
 		{

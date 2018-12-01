@@ -2,6 +2,7 @@ package com.zootcat.controllers.physics;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.badlogic.gdx.physics.box2d.Filter;
+import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.utils.BitMaskConverter;
@@ -71,5 +73,18 @@ public class CollisionFilterControllerTest
 	public void shouldReturnMask()
 	{
 		assertEquals(MASK, ctrl.getMask());
+	}
+	
+	@Test
+	public void shouldReturnLowControllerPriority()
+	{
+		assertEquals(ControllerPriority.Low, ctrl.getPriority());
+	}
+	
+	@Test
+	public void shouldHaveLowerPriorityThanOtherControllers()
+	{
+		assertTrue(ctrl.getPriority().getValue() < new PhysicsBodyController().getPriority().getValue());
+		assertTrue(ctrl.getPriority().getValue() < new FixtureController().getPriority().getValue());
 	}
 }
