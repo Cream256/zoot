@@ -57,7 +57,7 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeZootException("Unable to initialize animated sprite", e);
+			throw new RuntimeZootException("Unable to initialize animated sprite for " + actor.getName(), e);
 		}
 	}
 
