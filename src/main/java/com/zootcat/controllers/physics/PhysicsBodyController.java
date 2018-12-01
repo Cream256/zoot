@@ -1,10 +1,6 @@
 package com.zootcat.controllers.physics;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.badlogic.gdx.maps.objects.PolygonMapObject;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -13,51 +9,40 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.utils.Array;
 import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
-import com.zootcat.exceptions.RuntimeZootException;
-import com.zootcat.physics.ZootBodyShape;
 import com.zootcat.physics.ZootPhysicsUtils;
-import com.zootcat.physics.ZootShapeFactory;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
 public class PhysicsBodyController extends ControllerAdapter
 {
-	@CtrlParam protected float density = 1.0f;
-	@CtrlParam protected float friction = 0.2f;
-	@CtrlParam protected float restitution = 0.0f;
 	@CtrlParam protected float linearDamping = 0.0f;
 	@CtrlParam protected float angularDamping = 0.0f;	
 	@CtrlParam protected float gravityScale = 1.0f;
-	@CtrlParam protected float shapeOffsetX = 0.0f;
-	@CtrlParam protected float shapeOffsetY = 0.0f;
-	@CtrlParam protected float width = 0.0f;
-	@CtrlParam protected float height = 0.0f;
-	@CtrlParam protected boolean sensor = false;	
 	@CtrlParam protected boolean bullet = false;
 	@CtrlParam protected boolean canRotate = true;
 	@CtrlParam protected boolean canSleep = true;
+	@CtrlParam protected float width = 0.0f;
+	@CtrlParam protected float height = 0.0f;
 	@CtrlParam protected BodyType type = BodyType.DynamicBody;
-	@CtrlParam protected ZootBodyShape shape = ZootBodyShape.BOX;
 	@CtrlParam(global = true) protected ZootScene scene;
+
 	@CtrlDebug private float velocityX = 0.0f;
-	@CtrlDebug private float velocityY = 0.0f;
-		
+	@CtrlDebug private float velocityY = 0.0f;	
 	private Body body;
-	private List<Fixture> fixtures;
+	private Array<Fixture> fixtures;
 	
 	@Override
 	public void init(ZootActor actor)
 	{
+		fixtures = new Array<Fixture>(false, 4);
 		body = scene.getPhysics().createBody(createBodyDef(actor));
 		body.setActive(false);
-		
-		fixtures = scene.getPhysics().createFixtures(body, createFixtureDefs(actor));
-		assignUserData(actor, body, fixtures);
+		body.setUserData(actor);
 	}
 	
 	@Override
@@ -98,9 +83,9 @@ public class PhysicsBodyController extends ControllerAdapter
 		return body;
 	}
 	
-	public List<Fixture> getFixtures()
+	public ImmutableArray<Fixture> getFixtures()
 	{
-		return Collections.unmodifiableList(fixtures);
+		return new ImmutableArray<Fixture>(fixtures);
 	}
 	
 	public void setCollisionFilter(Filter collisionFilter) 
@@ -133,10 +118,10 @@ public class PhysicsBodyController extends ControllerAdapter
 	{
 		body.setAngularVelocity(omega);
 	}
-	
+		
 	public Fixture addFixture(FixtureDef fixtureDef, ZootActor actor)
 	{
-		Fixture fixture = body.createFixture(fixtureDef);
+		Fixture fixture = scene.getPhysics().createFixture(body, fixtureDef);
 		fixture.setUserData(actor);
 		
 		fixtures.add(fixture);		
@@ -145,10 +130,10 @@ public class PhysicsBodyController extends ControllerAdapter
 	
 	public void removeFixture(Fixture fixture)
 	{
-		if(body != null && fixtures != null)
+		if(body != null && fixtures != null && fixture != null)
 		{
 			body.destroyFixture(fixture);
-			fixtures.remove(fixture);
+			fixtures.removeValue(fixture, true);
 		}
 	}
 	
@@ -223,61 +208,5 @@ public class PhysicsBodyController extends ControllerAdapter
 		bodyDef.linearDamping = linearDamping;
 		bodyDef.type = type;		
 		return bodyDef;
-	}
-	
-	protected List<FixtureDef> createFixtureDefs(ZootActor actor) 
-	{
-		List<FixtureDef> fixtureDefs = new ArrayList<FixtureDef>(1);		
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.density = density;
-		fixtureDef.friction = friction;
-		fixtureDef.restitution = restitution;
-		fixtureDef.isSensor = sensor;
-		fixtureDef.shape = createShape(actor, shape);
-		fixtureDefs.add(fixtureDef);
-		return fixtureDefs;
-	}
-	
-	protected Shape createShape(ZootActor actor, ZootBodyShape shape)
-	{		
-		switch(shape)
-		{
-		case BOX:
-			return ZootShapeFactory.createBox(
-					getBodyWidth(actor), 
-					getBodyHeight(actor), 
-					shapeOffsetX * scene.getUnitScale(), 
-					shapeOffsetY * scene.getUnitScale());
-			
-		case CIRCLE:
-			return ZootShapeFactory.createCircle(getBodyWidth(actor));
-			
-		case SLOPE_LEFT:
-		case SLOPE_RIGHT:
-			return ZootShapeFactory.createSlope(getBodyWidth(actor), getBodyHeight(actor), shape == ZootBodyShape.SLOPE_LEFT);
-			
-		case POLYGON:
-			PolygonMapObject polygonObj = (PolygonMapObject) scene.getMap().getObjectById(actor.getId());
-			return ZootShapeFactory.createPolygon(polygonObj.getPolygon(), actor.getX(), actor.getY(), scene.getUnitScale());
-			
-		default:
-			throw new RuntimeZootException("Unknown fixture shape type for for actor: " + actor);
-		}
-	}
-	
-	protected float getBodyWidth(ZootActor actor)
-	{
-		return width == 0.0f ? actor.getWidth() : width * scene.getUnitScale();
-	}
-	
-	protected float getBodyHeight(ZootActor actor)
-	{
-		return height == 0.0f ? actor.getHeight() : height * scene.getUnitScale();
-	}
-	
-	protected void assignUserData(ZootActor actor, Body body, List<Fixture> fixtures)
-	{
-		body.setUserData(actor);
-		fixtures.forEach(fixture -> fixture.setUserData(actor));
 	}
 }
