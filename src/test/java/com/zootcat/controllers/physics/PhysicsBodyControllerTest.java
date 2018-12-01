@@ -86,9 +86,7 @@ public class PhysicsBodyControllerTest
 	{
 		assertEquals(0.0f, physicsBodyCtrl.linearDamping, 0.0f);
 		assertEquals(0.0f, physicsBodyCtrl.angularDamping, 0.0f);	
-		assertEquals(0.0f, physicsBodyCtrl.gravityScale, 1.0f);
-		assertEquals(0.0f, physicsBodyCtrl.width, 0.0f);
-		assertEquals(0.0f, physicsBodyCtrl.height, 0.0f);	
+		assertEquals(0.0f, physicsBodyCtrl.gravityScale, 1.0f);	
 		assertFalse(physicsBodyCtrl.bullet);
 		assertTrue(physicsBodyCtrl.canRotate);
 		assertTrue(physicsBodyCtrl.canSleep);

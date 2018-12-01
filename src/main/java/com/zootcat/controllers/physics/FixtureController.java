@@ -1,6 +1,7 @@
 package com.zootcat.controllers.physics;
 
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -12,7 +13,24 @@ import com.zootcat.physics.ZootBodyShape;
 import com.zootcat.physics.ZootShapeFactory;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.utils.BitMaskConverter;
 
+/**
+ * Fixture controller - adds new fixture to box2d body.
+ * @ctrlParam density - box2d fixture density
+ * @ctrlParam friction - box2d fixture friction
+ * @ctrlParam restitution - box2d fixture restitution
+ * @ctrlParam offsetX - box2d fixture x offset from the center of body
+ * @ctrlParam offsetY - box2d fixture y offset from the center of body
+ * @ctrlParam width - box2d fixture width, if not set actor width will be used
+ * @ctrlParam height - box2d fixture height, if not set actor height will be used
+ * @ctrlParam sensor - if true, box2d fixture will be sensor 
+ * @ctrlParam shape - box2d fixture shape (box, circle, polygon, slope left, slope right)
+ * @ctrlParam category - box2d filter category (e.g. "myCategory") 
+ * @ctrlParam mask - box2d filter mask (e.g. "myCategory | otherCategory")
+ * @author Cream
+ *
+ */
 public class FixtureController extends ControllerAdapter
 {
 	@CtrlParam protected float density = 1.0f;
@@ -24,6 +42,8 @@ public class FixtureController extends ControllerAdapter
 	@CtrlParam protected float height = 0.0f;
 	@CtrlParam protected boolean sensor = false;
 	@CtrlParam protected ZootBodyShape shape = ZootBodyShape.BOX;
+	@CtrlParam protected String category = "";
+	@CtrlParam protected String mask = "";
 	@CtrlParam(global = true) protected ZootScene scene;
 	
 	private Array<FixtureDef> fixtureDefs;
@@ -43,12 +63,25 @@ public class FixtureController extends ControllerAdapter
 		fixtureDef.restitution = restitution;
 		fixtureDef.isSensor = sensor;
 		fixtureDef.shape = createShape(actor, shape);
+		setupFilter(fixtureDef.filter);		
 		
 		Array<FixtureDef> fixtureDefs = new Array<FixtureDef>(1);
 		fixtureDefs.add(fixtureDef);
 		return fixtureDefs;
 	}
 	
+	private void setupFilter(Filter filter)
+	{
+		if(category != null && !category.isEmpty())
+		{
+			filter.categoryBits = BitMaskConverter.Instance.fromString(category);	
+		}
+		if(mask != null && !mask.isEmpty())
+		{
+			filter.maskBits = BitMaskConverter.Instance.fromString(mask);
+		}
+	}
+		
 	protected Shape createShape(ZootActor actor, ZootBodyShape shape)
 	{		
 		switch(shape)

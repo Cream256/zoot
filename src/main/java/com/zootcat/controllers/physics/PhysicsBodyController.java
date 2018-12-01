@@ -26,8 +26,6 @@ public class PhysicsBodyController extends ControllerAdapter
 	@CtrlParam protected boolean bullet = false;
 	@CtrlParam protected boolean canRotate = true;
 	@CtrlParam protected boolean canSleep = true;
-	@CtrlParam protected float width = 0.0f;
-	@CtrlParam protected float height = 0.0f;
 	@CtrlParam protected BodyType type = BodyType.DynamicBody;
 	@CtrlParam(global = true) protected ZootScene scene;
 
@@ -88,7 +86,7 @@ public class PhysicsBodyController extends ControllerAdapter
 		return new ImmutableArray<Fixture>(fixtures);
 	}
 	
-	public void setCollisionFilter(Filter collisionFilter) 
+	public void setCollisionFilter(Filter collisionFilter)
 	{
 		fixtures.forEach((fixture) -> fixture.setFilterData(collisionFilter));
 	}	

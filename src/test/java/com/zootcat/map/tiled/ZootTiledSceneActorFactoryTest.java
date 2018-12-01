@@ -3,6 +3,7 @@ package com.zootcat.map.tiled;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -29,10 +30,7 @@ import com.zootcat.controllers.factory.mocks.Mock1Controller;
 import com.zootcat.controllers.factory.mocks.Mock2Controller;
 import com.zootcat.controllers.factory.mocks.SimpleController;
 import com.zootcat.controllers.factory.mocks.inner.Mock3Controller;
-import com.zootcat.controllers.physics.StaticBodyController;
 import com.zootcat.exceptions.RuntimeZootException;
-import com.zootcat.map.tiled.ZootTiledSceneActorFactory;
-import com.zootcat.map.tiled.ZootTiledMapCell;
 import com.zootcat.map.tiled.optimizer.ZootLayerRegion;
 import com.zootcat.physics.ZootPhysics;
 import com.zootcat.scene.ZootActor;
@@ -241,7 +239,6 @@ public class ZootTiledSceneActorFactoryTest
 		assertFalse(actor.getName().isEmpty());
 	}
 
-	@Test(expected = RuntimeZootException.class)
 	public void createFromMapCellShouldNotSetAnyControllersWhenThereAreNoneInPropertiesTest()
 	{
 		//given
@@ -252,7 +249,7 @@ public class ZootTiledSceneActorFactoryTest
 		
 		//then
 		assertNotNull(actor);
-		actor.getController(StaticBodyController.class);
+		assertTrue(actor.getAllControllers().isEmpty());
 	}
 	
 	@Test

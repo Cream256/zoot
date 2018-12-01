@@ -11,9 +11,7 @@ import org.junit.Test;
 import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.physics.CharacterFixtureController;
-import com.zootcat.controllers.physics.DynamicBodyController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
-import com.zootcat.controllers.physics.StaticBodyController;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
@@ -75,8 +73,6 @@ public class SizeControllerTest
 	public void shouldHaveHigherPriorityThanPhysicsBodyControllers()
 	{
 		assertTrue(ctrl.getPriority().getValue() > new PhysicsBodyController().getPriority().getValue());
-		assertTrue(ctrl.getPriority().getValue() > new DynamicBodyController().getPriority().getValue());
-		assertTrue(ctrl.getPriority().getValue() > new StaticBodyController().getPriority().getValue());
 		assertTrue(ctrl.getPriority().getValue() > new CharacterFixtureController().getPriority().getValue());
 	}
 }

@@ -27,6 +27,7 @@ import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.physics.ZootBodyShape;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.utils.BitMaskConverter;
 
 public class FixtureControllerTest
 {
@@ -70,6 +71,8 @@ public class FixtureControllerTest
 		assertEquals(0.0f, ctrl.width, 0.0f);
 		assertEquals(0.0f, ctrl.height, 0.0f);
 		assertFalse(ctrl.sensor);
+		assertEquals("", ctrl.category);
+		assertEquals("", ctrl.mask);
 		assertEquals(ZootBodyShape.BOX, ctrl.shape);	
 	}
 	
@@ -121,9 +124,29 @@ public class FixtureControllerTest
 		assertEquals(1.0f, def.density, 0.0f);
 		assertEquals(0.2f, def.friction, 0.0f);
 		assertEquals(0.0f, def.restitution, 0.0f);
-		assertEquals("Filter should have default values", 1, def.filter.categoryBits);
-		assertEquals("Filter should have default values", 0, def.filter.groupIndex);
-		assertEquals("Filter should have default values", -1, def.filter.maskBits);
+		assertEquals("Filter should have default category", 1, def.filter.categoryBits);
+		assertEquals("Filter should have default group", 0, def.filter.groupIndex);
+		assertEquals("Filter should have default mask", -1, def.filter.maskBits);
+	}
+	
+	@Test
+	public void shouldCreateFixtureDefinitionWithCustomFilter()
+	{
+		//given
+		ControllerAnnotations.setControllerParameter(ctrl, "category", "CAT");
+		ControllerAnnotations.setControllerParameter(ctrl, "mask", "MASK");
+		
+		//when
+		ctrl.init(actor);
+		ctrl.onAdd(actor);
+		
+		//then
+		verify(physicsBodyCtrl).addFixture(fixtureDefCaptor.capture(), eq(actor));
+		FixtureDef def = fixtureDefCaptor.getValue();
+		
+		assertEquals("Filter should have custom category", BitMaskConverter.Instance.fromString("CAT"), def.filter.categoryBits);
+		assertEquals("Filter should have default group", 0, def.filter.groupIndex);
+		assertEquals("Filter should have custom mask", BitMaskConverter.Instance.fromString("MASK"), def.filter.maskBits);
 	}
 	
 	@Test
