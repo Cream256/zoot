@@ -131,8 +131,8 @@ public class ZootActions
 		ZootKnockbackAction knockbackAction = zootAction(ZootKnockbackAction.class);
 		knockbackAction.setKnockback(knockbackX, knockbackY);
 		knockbackAction.setVaryHorizontal(varyHorizontal);
-		knockbackAction.setTarget(target);
-		knockbackAction.setActor(owner);		
-		return knockbackAction;		
+		knockbackAction.setKnockbackActor(target);		
+		knockbackAction.setAttackActor(owner);
+		return knockbackAction;
 	}
 }

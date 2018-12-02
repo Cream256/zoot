@@ -9,14 +9,13 @@ public class ZootKnockbackAction extends ZootAction
 	private float knockbackX = 0.0f;
 	private float knockbackY = 0.0f;
 	private boolean varyHorizontal = false;
+	private ZootActor attackActor = null;
+	private ZootActor knockbackActor = null;
 	
 	@Override
 	public boolean act(float delta)
-	{		
-		ZootActor actionActor = getActionZootActor();
-		ZootActor knockbackActor = getTargetZootActor();
-		
-		float kx = varyHorizontal ? calculateHorizontalKnockback(actionActor, knockbackActor) : knockbackX;		
+	{				
+		float kx = varyHorizontal ? calculateHorizontalKnockback(attackActor, knockbackActor) : knockbackX;		
 		knockbackActor.controllerAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(kx, knockbackY, kx != 0.0f, knockbackY != 0.0f));
 		
 		return true;
@@ -35,6 +34,8 @@ public class ZootKnockbackAction extends ZootAction
 		knockbackX = 0.0f;
 		knockbackY = 0.0f;
 		varyHorizontal = false;
+		knockbackActor = null;
+		attackActor = null;
 		super.reset();
 	}
 	
@@ -62,5 +63,25 @@ public class ZootKnockbackAction extends ZootAction
 	public boolean getVaryHorizontal()
 	{
 		return varyHorizontal;
+	}
+	
+	public void setAttackActor(ZootActor actor)
+	{
+		attackActor = actor;
+	}
+	
+	public ZootActor getAttackActor()
+	{
+		return attackActor;
+	}
+	
+	public void setKnockbackActor(ZootActor actor)
+	{
+		knockbackActor = actor;
+	}
+	
+	public ZootActor getKnockbackActor()
+	{
+		return knockbackActor;
 	}
 }

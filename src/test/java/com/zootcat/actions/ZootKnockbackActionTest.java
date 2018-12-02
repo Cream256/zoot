@@ -34,8 +34,8 @@ public class ZootKnockbackActionTest
 		targetActor.addController(targetActorPhysicsCtrl);
 		
 		action = new ZootKnockbackAction();
-		action.setActor(actionActor);
-		action.setTarget(targetActor);
+		action.setAttackActor(actionActor);
+		action.setKnockbackActor(targetActor);
 	}
 	
 	@Test
@@ -66,8 +66,8 @@ public class ZootKnockbackActionTest
 		assertEquals(0.0f, action.getKnockbackX(), 0.0f);
 		assertEquals(0.0f, action.getKnockbackY(), 0.0f);
 		assertFalse(action.getVaryHorizontal());		
-		assertNull(action.getTarget());
-		assertNull(action.getActor());
+		assertNull(action.getKnockbackActor());
+		assertNull(action.getAttackActor());
 	}
 		
 	@Test
@@ -150,5 +150,25 @@ public class ZootKnockbackActionTest
 		//then
 		assertEquals(expectedKnockbackX, action.getKnockbackX(), 0.0f);
 		assertEquals(expectedKnockbackY, action.getKnockbackY(), 0.0f);
+	}
+	
+	@Test
+	public void shouldSetKnockbackActor()
+	{
+		action.setKnockbackActor(targetActor);
+		assertEquals(targetActor, action.getKnockbackActor());
+		
+		action.setKnockbackActor(null);
+		assertNull(action.getKnockbackActor());
+	}
+	
+	@Test
+	public void shouldSetAttackActor()
+	{
+		action.setAttackActor(targetActor);
+		assertEquals(targetActor, action.getAttackActor());
+		
+		action.setAttackActor(null);
+		assertNull(action.getAttackActor());
 	}
 }

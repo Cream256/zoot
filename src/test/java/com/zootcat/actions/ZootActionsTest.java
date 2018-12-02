@@ -175,7 +175,7 @@ public class ZootActionsTest
 		assertEquals(knockbackX, action.getKnockbackX(), 0.0f);
 		assertEquals(knockbackY, action.getKnockbackY(), 0.0f);
 		assertEquals(varyHorizontal, action.getVaryHorizontal());
-		assertEquals(owner, action.getActionZootActor());
-		assertEquals(target, action.getTargetZootActor());
+		assertEquals(owner, action.getAttackActor());
+		assertEquals(target, action.getKnockbackActor());
 	}
 }
