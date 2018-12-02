@@ -161,4 +161,21 @@ public class ZootActionsTest
 		assertEquals(dialogToken, action.getDialogToken());
 		assertEquals(game, action.getZootGame());
 	}
+	
+	@Test
+	public void shouldCreateKnockbackAction()
+	{
+		float knockbackX = 1.23f;
+		float knockbackY = 2.35f;
+		boolean varyHorizontal = true;
+		ZootActor owner = mock(ZootActor.class);
+		ZootActor target = mock(ZootActor.class);
+		
+		ZootKnockbackAction action = ZootActions.knockback(knockbackX, knockbackY, varyHorizontal, target, owner);
+		assertEquals(knockbackX, action.getKnockbackX(), 0.0f);
+		assertEquals(knockbackY, action.getKnockbackY(), 0.0f);
+		assertEquals(varyHorizontal, action.getVaryHorizontal());
+		assertEquals(owner, action.getActionZootActor());
+		assertEquals(target, action.getTargetZootActor());
+	}
 }

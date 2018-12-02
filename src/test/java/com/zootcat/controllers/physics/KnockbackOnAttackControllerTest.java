@@ -3,8 +3,6 @@ package com.zootcat.controllers.physics;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -12,18 +10,20 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.actions.ZootKnockbackAction;
+import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
 
-public class KnockbackOnTouchControllerTest
+public class KnockbackOnAttackControllerTest
 {
 	@Mock private ZootActor ctrlActor;
 	@Mock private PhysicsBodyController otherActorPhysicsBodyCtrl;
 	@Mock private PhysicsBodyController ctrlActorPhysicsBodyCtrl;
 	
 	private ZootActor otherActor;	
-	private KnockbackOnTouchController ctrl;
+	private KnockbackOnAttackController ctrl;
 	
 	@Before
 	public void setup()
@@ -35,7 +35,7 @@ public class KnockbackOnTouchControllerTest
 		
 		when(ctrlActor.getController(PhysicsBodyController.class)).thenReturn(ctrlActorPhysicsBodyCtrl);
 				
-		ctrl = new KnockbackOnTouchController();
+		ctrl = new KnockbackOnAttackController();
 		ctrl.init(ctrlActor);
 	}
 	
@@ -50,26 +50,16 @@ public class KnockbackOnTouchControllerTest
 	@Test
 	public void shouldAddKnockbackAction()
 	{
+		//given
+		ZootEvent attackEvent = ZootEvents.get(ZootEventType.Attack);
+		attackEvent.setUserObject(otherActor);
+		
 		//when		
-		ctrl.onEnter(ctrlActor, otherActor, mock(Contact.class));
+		ctrl.onZootEvent(ctrlActor, attackEvent);
 		
 		//then
 		assertEquals(1, otherActor.getActions().size);
 		assertEquals(ZootKnockbackAction.class, otherActor.getActions().get(0).getClass());
-	}
-		
-	@Test
-	public void shouldDoNothinOnLeave()
-	{
-		//given
-		Contact contact = mock(Contact.class);
-		ZootActor otherActor = mock(ZootActor.class);
-				
-		//when
-		ctrl.onLeave(ctrlActor, otherActor, contact);
-		
-		//then
-		verifyZeroInteractions(ctrlActor, otherActor, contact);
 	}
 	
 	@Test

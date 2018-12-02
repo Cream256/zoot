@@ -1,7 +1,8 @@
 package com.zootcat.controllers.physics;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.zootcat.actions.ZootActions;
+import com.zootcat.actions.ZootKnockbackAction;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 
@@ -10,9 +11,9 @@ import com.zootcat.scene.ZootActor;
  * between two fixtures. It is best to set collidePerActor = true and collideWithSensors = false
  * for collision between player and enemy characters.
  * 
- * @ctrlParam knockbackX - knockback force in X axis
- * @ctrlParam knockbackY - knockback force in Y axis
- * @ctrlParam varyHorizontal - true if knockbackX signum should be calculated based on collision position
+ * @ctrlParam knockbackX - knockback force in X axis, default 1.0f
+ * @ctrlParam knockbackY - knockback force in Y axis, default 1.0f
+ * @ctrlParam varyHorizontal - true if knockbackX signum should be calculated based on collision position, default false
  * 
  * @author Cream
  * @see OnCollideController
@@ -26,20 +27,11 @@ public class KnockbackOnTouchController extends OnCollideController
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 	{				
-		ZootActor actorToKnockback = getOtherActor(actorA, actorB);		
-		float kx = varyHorizontal ? calculateHorizontalKnockback(actorA, actorB) : knockbackX;		
-		actorToKnockback.controllerAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(kx, knockbackY, kx != 0.0f, knockbackY != 0.0f));		
-	}
-
-	private float calculateHorizontalKnockback(ZootActor actorA, ZootActor actorB)
-	{
-		ZootActor ctrlActor = getControllerActor();
-		ZootActor otherActor = getOtherActor(actorA, actorB);
+		ZootActor target = getOtherActor(actorA, actorB);
+		ZootActor owner = getControllerActor();		
 		
-		Vector2 ctrlActorPos = ctrlActor.getController(PhysicsBodyController.class).getCenterPositionRef();
-		Vector2 otherActorPos = otherActor.getController(PhysicsBodyController.class).getCenterPositionRef();
-		
-		return ctrlActorPos.x <= otherActorPos.x ? knockbackX : -knockbackX;
+		ZootKnockbackAction knockback = ZootActions.knockback(knockbackX, knockbackY, varyHorizontal, target, owner);
+		target.addAction(knockback);		
 	}
 
 	@Override
@@ -67,5 +59,10 @@ public class KnockbackOnTouchController extends OnCollideController
 	public void setVaryHorizontal(boolean value)
 	{
 		varyHorizontal = value;
+	}
+	
+	public boolean getVaryHorizontal()
+	{
+		return varyHorizontal;
 	}
 }

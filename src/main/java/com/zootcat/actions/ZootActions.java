@@ -125,4 +125,14 @@ public class ZootActions
 		showDialogAction.setZootGame(game);		
 		return showDialogAction;
 	}
+	
+	public static ZootKnockbackAction knockback(float knockbackX, float knockbackY, boolean varyHorizontal, ZootActor target, ZootActor owner)
+	{
+		ZootKnockbackAction knockbackAction = zootAction(ZootKnockbackAction.class);
+		knockbackAction.setKnockback(knockbackX, knockbackY);
+		knockbackAction.setVaryHorizontal(varyHorizontal);
+		knockbackAction.setTarget(target);
+		knockbackAction.setActor(owner);		
+		return knockbackAction;		
+	}
 }

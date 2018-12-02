@@ -70,7 +70,8 @@ public class EnemyCollisionControllerTest
 		
 		//then
 		assertEquals(1, eventCounter.getCount());
-		assertEquals(ZootEventType.Attack, eventCounter.getLastZootEvent().getType());		
+		assertEquals(ZootEventType.Attack, eventCounter.getLastZootEvent().getType());
+		assertEquals(player, eventCounter.getLastZootEvent().getUserObject(ZootActor.class));
 	}
 	
 	@Test

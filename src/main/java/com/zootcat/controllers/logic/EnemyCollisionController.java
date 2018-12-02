@@ -2,6 +2,7 @@ package com.zootcat.controllers.logic;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.CtrlParam;
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
@@ -52,7 +53,7 @@ public class EnemyCollisionController extends OnCollideFromAboveOrBelowControlle
 	public void onCollidedFromBelow(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		hurtPlayerCtrl.onEnter(actorA, actorB, contact);
-		ZootEvents.fireAndFree(getControllerActor(), ZootEventType.Attack);
+		ZootEvents.fireAndFree(getControllerActor(), ZootEventType.Attack, getOtherActor(actorA, actorB));
 	}
 	
 	public int getDamageToEnemy()
