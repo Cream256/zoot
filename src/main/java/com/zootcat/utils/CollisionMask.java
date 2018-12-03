@@ -23,21 +23,24 @@ public class CollisionMask
 		Arrays.stream(masksFromString).forEach(m -> add(m));
 	}
 	
-	public void add(String value)
+	public CollisionMask add(String value)
 	{
 		String sanitizedValue = value.trim().toUpperCase();
-		if(sanitizedValue.isEmpty()) return;
+		if(sanitizedValue.isEmpty()) return this;
 		
 		if(!masks.contains(sanitizedValue, false))
 		{
 			masks.add(sanitizedValue);	
 			masksLength += sanitizedValue.length();
 		}
+		
+		return this;
 	}
 	
-	public void remove(String value)
+	public CollisionMask remove(String value)
 	{
 		masks.removeValue(value, false);
+		return this;
 	}
 	
 	public short toBitMask()

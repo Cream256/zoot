@@ -81,6 +81,26 @@ public class FixtureControllerTest
 		assertEquals(ZootBodyShape.BOX, ctrl.shape);	
 	}
 	
+	@Test
+	public void shouldReturnCollisionMask()
+	{
+		//given
+		ControllerAnnotations.setControllerParameter(ctrl, "mask", "PLAYER|ENEMY");
+		
+		//when
+		assertEquals("PLAYER|ENEMY", ctrl.getCollisionMask());
+	}
+	
+	@Test
+	public void shouldReturnCollisionCategory()
+	{
+		//given
+		ControllerAnnotations.setControllerParameter(ctrl, "category", "SOLID");
+		
+		//when
+		assertEquals("SOLID", ctrl.getCollisionCategory());		
+	}
+	
 	@Test(expected = RuntimeZootException.class)
 	public void shouldThrowWhenBodyShapeIsNone()
 	{

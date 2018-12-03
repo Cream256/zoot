@@ -89,4 +89,17 @@ public class CollisionMaskTest
 		//then
 		assertEquals(BitMaskConverter.Instance.fromString("PLAYER"), collisionMask.toBitMask());
 	}
+	
+	@Test
+	public void shouldChainProperly()
+	{
+		//given
+		CollisionMask collisionMask = new CollisionMask();
+		
+		//when
+		collisionMask.add("SOLID").add("PLAYER").add("ENEMY").remove("SOLID");
+		
+		//then
+		assertEquals("PLAYER|ENEMY", collisionMask.toString());		
+	}
 }

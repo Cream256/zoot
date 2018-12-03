@@ -130,17 +130,27 @@ public class FixtureController extends ControllerAdapter
 			fixtures.add(newFixture);
 		});
 	}
-	
-	public ImmutableArray<Fixture> getFixtures()
-	{
-		return new ImmutableArray<Fixture>(fixtures);
-	}
-	
+		
 	@Override
 	public void onRemove(ZootActor actor)
 	{
 		fixtures.forEach(fixture -> actor.getController(PhysicsBodyController.class).removeFixture(fixture));
 		fixtures.clear();
 		fixtures = null;
+	}
+	
+	public ImmutableArray<Fixture> getFixtures()
+	{
+		return new ImmutableArray<Fixture>(fixtures);
+	}
+	
+	public String getCollisionMask()
+	{
+		return mask;
+	}
+	
+	public String getCollisionCategory()
+	{
+		return category;
 	}
 }
