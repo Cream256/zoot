@@ -1,5 +1,6 @@
 package com.zootcat.controllers.physics;
 
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -128,6 +129,11 @@ public class FixtureController extends ControllerAdapter
 			Fixture newFixture = actor.getController(PhysicsBodyController.class).addFixture(def, actor);
 			fixtures.add(newFixture);
 		});
+	}
+	
+	public ImmutableArray<Fixture> getFixtures()
+	{
+		return new ImmutableArray<Fixture>(fixtures);
 	}
 	
 	@Override

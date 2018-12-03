@@ -1,7 +1,10 @@
 package com.zootcat.controllers.physics;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -16,9 +19,11 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -147,6 +152,24 @@ public class FixtureControllerTest
 		assertEquals("Filter should have custom category", BitMaskConverter.Instance.fromString("CAT"), def.filter.categoryBits);
 		assertEquals("Filter should have default group", 0, def.filter.groupIndex);
 		assertEquals("Filter should have custom mask", BitMaskConverter.Instance.fromString("MASK"), def.filter.maskBits);
+	}
+	
+	@Test
+	public void shouldReturnFixtures()
+	{
+		//given
+		Fixture expectedFixture = mock(Fixture.class);
+		when(physicsBodyCtrl.addFixture(any(), any())).thenReturn(expectedFixture);
+		
+		//when
+		ctrl.init(actor);
+		ctrl.onAdd(actor);
+		
+		//then
+		ImmutableArray<Fixture> fixtures = ctrl.getFixtures();
+		assertNotNull(fixtures);
+		assertEquals(1, fixtures.size());
+		assertEquals(expectedFixture, fixtures.get(0));
 	}
 	
 	@Test
