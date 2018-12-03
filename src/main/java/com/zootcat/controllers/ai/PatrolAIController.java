@@ -15,6 +15,7 @@ import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 
+//TODO remove
 public class PatrolAIController extends ZootEventListenerController
 {	
 	public static final float DEFAULT_TURN_COOLDOWN = 0.5f;

@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.fsm.states.NullState;
 import com.zootcat.scene.ZootActor;
 
@@ -26,7 +27,7 @@ public class ZootStateMachine implements EventListener
 		previousState = null;
 		currentState = state;
 		addState(state);		
-		currentState.onEnter(owner, new ZootEvent(ZootEventType.InitEvent));		
+		currentState.onEnter(owner, ZootEvents.get(ZootEventType.InitEvent));		
 	}
 	
 	public void addState(ZootState state)
