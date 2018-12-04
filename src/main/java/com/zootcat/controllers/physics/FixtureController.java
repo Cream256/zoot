@@ -15,6 +15,7 @@ import com.zootcat.physics.ZootShapeFactory;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.utils.BitMaskConverter;
+import com.zootcat.utils.CollisionMask;
 
 /**
  * Fixture controller - adds new fixture to box2d body.
@@ -48,12 +49,13 @@ public class FixtureController extends ControllerAdapter
 	@CtrlParam(global = true) protected ZootScene scene;
 	
 	private Array<FixtureDef> fixtureDefs;
-	private Array<Fixture> fixtures;
+	private Array<Fixture> fixtures = new Array<Fixture>(0);
+	private CollisionMask collisionMask = new CollisionMask();
 	
 	@Override
 	public void init(ZootActor actor)
 	{
-		fixtureDefs = createFixtureDefs(actor);
+		fixtureDefs = createFixtureDefs(actor);		
 	}
 	
 	protected Array<FixtureDef> createFixtureDefs(ZootActor actor) 
@@ -77,9 +79,11 @@ public class FixtureController extends ControllerAdapter
 		{
 			filter.categoryBits = BitMaskConverter.Instance.fromString(category);	
 		}
+		
 		if(mask != null && !mask.isEmpty())
 		{
-			filter.maskBits = BitMaskConverter.Instance.fromString(mask);
+			collisionMask = new CollisionMask(mask);			
+			filter.maskBits = collisionMask.toBitMask();
 		}
 	}
 		
@@ -146,9 +150,31 @@ public class FixtureController extends ControllerAdapter
 	
 	public String getCollisionMask()
 	{
-		return mask;
+		return collisionMask.toString();
+	}
+
+	public void addCollisionMaskValue(String value)
+	{
+		collisionMask.add(value);
+		updateFixturesFilter(collisionMask.toBitMask());
+	}	
+	
+	public void removeCollisionMaskValue(String value)
+	{
+		collisionMask.remove(value);
+		updateFixturesFilter(collisionMask.toBitMask());		
 	}
 	
+	private void updateFixturesFilter(short newMask)
+	{
+		fixtures.forEach(fixture -> 
+		{
+			Filter filter = fixture.getFilterData();
+			filter.maskBits = newMask;		
+			fixture.setFilterData(filter);	
+		});
+	}
+			
 	public String getCollisionCategory()
 	{
 		return category;

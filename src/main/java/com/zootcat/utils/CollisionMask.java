@@ -39,7 +39,11 @@ public class CollisionMask
 	
 	public CollisionMask remove(String value)
 	{
-		masks.removeValue(value, false);
+		if(masks.contains(value, false))
+		{
+			masks.removeValue(value, false);
+			masksLength -= value.length();
+		}
 		return this;
 	}
 	

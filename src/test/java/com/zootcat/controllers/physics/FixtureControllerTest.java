@@ -1,13 +1,13 @@
 package com.zootcat.controllers.physics;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,6 +23,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -42,7 +43,8 @@ public class FixtureControllerTest
 	
 	@Mock private PhysicsBodyController physicsBodyCtrl;
 	@Mock private ZootScene scene;
-	@Captor private ArgumentCaptor<FixtureDef> fixtureDefCaptor;	
+	@Captor private ArgumentCaptor<FixtureDef> fixtureDefCaptor;
+	@Captor private ArgumentCaptor<Filter> filterCaptor;
 	private ZootActor actor;
 	private FixtureController ctrl;
 			
@@ -57,6 +59,8 @@ public class FixtureControllerTest
 	{
 		MockitoAnnotations.initMocks(this);		
 		when(scene.getUnitScale()).thenReturn(SCENE_UNIT_SCALE);
+		
+		BitMaskConverter.Instance.clear();
 		
 		actor = new ZootActor();
 		actor.addController(physicsBodyCtrl);
@@ -86,6 +90,7 @@ public class FixtureControllerTest
 	{
 		//given
 		ControllerAnnotations.setControllerParameter(ctrl, "mask", "PLAYER|ENEMY");
+		ctrl.init(actor);
 		
 		//when
 		assertEquals("PLAYER|ENEMY", ctrl.getCollisionMask());
@@ -298,5 +303,110 @@ public class FixtureControllerTest
 		assertEquals("Radius should be equal to width parameter scaled by scene unit scale", 
 					widthParam * SCENE_UNIT_SCALE, 
 					def.shape.getRadius(), 0.0f);
+	}
+	
+	@Test
+	public void shouldAddValueToCollisionMask()
+	{		
+		//when
+		ctrl.addCollisionMaskValue("PLAYER");
+		
+		//then
+		assertEquals("PLAYER", ctrl.getCollisionMask());
+		
+		//when
+		ctrl.addCollisionMaskValue("ENEMY");
+
+		//then
+		assertEquals("PLAYER|ENEMY", ctrl.getCollisionMask());		
+	}
+	
+	@Test
+	public void shouldAddValueToFixtureFiltersMask()
+	{
+		//given
+		Fixture expectedFixture = mock(Fixture.class);
+		when(expectedFixture.getFilterData()).thenReturn(new Filter());		
+		when(physicsBodyCtrl.addFixture(any(), any())).thenReturn(expectedFixture);
+		
+		//when
+		ctrl.init(actor);
+		ctrl.onAdd(actor);
+		
+		//then
+		ImmutableArray<Fixture> fixtures = ctrl.getFixtures();
+		assertTrue("Some fixtures were created", fixtures.size() > 0);
+		assertEquals(expectedFixture, fixtures.get(0));
+		
+		//when		
+		ctrl.addCollisionMaskValue("PLAYER");
+		
+		//then
+		verify(expectedFixture).setFilterData(filterCaptor.capture());
+		assertEquals(BitMaskConverter.Instance.fromString("PLAYER"), filterCaptor.getValue().maskBits);
+		
+		//when
+		ctrl.addCollisionMaskValue("ENEMY");
+		
+		//then
+		verify(expectedFixture, times(2)).setFilterData(filterCaptor.capture());
+		assertEquals(BitMaskConverter.Instance.fromString("PLAYER|ENEMY"), filterCaptor.getValue().maskBits);
+	}
+	
+	@Test
+	public void shouldRemoveValueFromCollisionMask()
+	{
+		//given
+		Fixture expectedFixture = mock(Fixture.class);
+		when(expectedFixture.getFilterData()).thenReturn(new Filter());		
+		when(physicsBodyCtrl.addFixture(any(), any())).thenReturn(expectedFixture);		
+		ControllerAnnotations.setControllerParameter(ctrl, "mask", "PLAYER|ENEMY");
+		
+		//when
+		ctrl.init(actor);
+		ctrl.onAdd(actor);
+		ctrl.removeCollisionMaskValue("PLAYER");
+		
+		//then
+		assertEquals("ENEMY", ctrl.getCollisionMask());
+		
+		//when
+		ctrl.removeCollisionMaskValue("ENEMY");
+		
+		//then
+		assertEquals("", ctrl.getCollisionMask());
+	}
+	
+	@Test
+	public void shouldRemoveMaskValueFromFixtureFilters()
+	{
+		//given
+		Fixture expectedFixture = mock(Fixture.class);
+		when(expectedFixture.getFilterData()).thenReturn(new Filter());		
+		when(physicsBodyCtrl.addFixture(any(), any())).thenReturn(expectedFixture);		
+		ControllerAnnotations.setControllerParameter(ctrl, "mask", "PLAYER|ENEMY");
+		
+		//when
+		ctrl.init(actor);
+		ctrl.onAdd(actor);
+		
+		//then
+		ImmutableArray<Fixture> fixtures = ctrl.getFixtures();
+		assertTrue("Some fixtures were created", fixtures.size() > 0);
+		assertEquals(expectedFixture, fixtures.get(0));
+		
+		//when
+		ctrl.removeCollisionMaskValue("PLAYER");
+		
+		//then
+		verify(expectedFixture).setFilterData(filterCaptor.capture());
+		assertEquals(BitMaskConverter.Instance.fromString("ENEMY"), filterCaptor.getValue().maskBits);
+		
+		//when
+		ctrl.removeCollisionMaskValue("ENEMY");
+		
+		//then
+		verify(expectedFixture, times(2)).setFilterData(filterCaptor.capture());
+		assertEquals(BitMaskConverter.Instance.fromString(""), filterCaptor.getValue().maskBits);
 	}
 }
