@@ -9,20 +9,20 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.zootcat.controllers.factory.ControllerAnnotations;
-import com.zootcat.controllers.logic.DieOnCollideFromAboveAfterTimeController;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 
-public class DieOnCollideFromAboveAfterTimeControllerTest
+//TODO
+public class DieOnCollideAfterTimeControllerTest
 {
 	private static final float TIME = 5.0f;
 		
 	@Mock private ZootActor otherActor;
 	private ZootActor ctrlActor;
-	private DieOnCollideFromAboveAfterTimeController ctrl;
+	private DieOnCollideAfterTimeController ctrl;
 		
 	@Before
 	public void setup()
@@ -30,7 +30,7 @@ public class DieOnCollideFromAboveAfterTimeControllerTest
 		MockitoAnnotations.initMocks(this);
 		ctrlActor = new ZootActor();
 		
-		ctrl = new DieOnCollideFromAboveAfterTimeController();
+		ctrl = new DieOnCollideAfterTimeController();
 		ControllerAnnotations.setControllerParameter(ctrl, "time", TIME);
 	}
 	
@@ -50,7 +50,7 @@ public class DieOnCollideFromAboveAfterTimeControllerTest
 		ctrl.init(ctrlActor);
 		
 		//when
-		ctrl.onCollidedFromAbove(ctrlActor, otherActor, mock(Contact.class));
+		ctrl.onCollideWithSensor(mock(Fixture.class));
 		ctrl.onUpdate(TIME, ctrlActor);
 		
 		//then
@@ -78,7 +78,7 @@ public class DieOnCollideFromAboveAfterTimeControllerTest
 		ctrl.init(ctrlActor);
 		
 		//when
-		ctrl.onCollidedFromAbove(ctrlActor, otherActor, mock(Contact.class));
+		ctrl.onCollideWithSensor(mock(Fixture.class));
 		ctrl.onUpdate(TIME - 0.1f, ctrlActor);
 		
 		//then

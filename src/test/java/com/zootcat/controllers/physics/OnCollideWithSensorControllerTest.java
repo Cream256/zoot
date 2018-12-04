@@ -1,7 +1,6 @@
 package com.zootcat.controllers.physics;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -603,59 +602,7 @@ public class OnCollideWithSensorControllerTest
 		assertEquals(SENSOR_WIDTH * expectedScale, box.getWidth(), 0.0f);
 		assertEquals(SENSOR_HEIGHT * expectedScale, box.getHeight(), 0.0f);		
 	}
-	
-	@Test
-	public void shouldCreateSensorFixtureWithTheSameCollisionFilterAsForControllerActor()
-	{
-		//given
-		ControllerAnnotations.setControllerParameter(ctrl, "useActorFilter", true);
-		Filter expectedFilter = mock(Filter.class);
-		expectedFilter.categoryBits = 1;
-		expectedFilter.maskBits = 2;
-		expectedFilter.groupIndex = 3;
-		
-		CollisionFilterController filterCtrl = mock(CollisionFilterController.class);
-		when(filterCtrl.getCollisionFilter()).thenReturn(expectedFilter);
-		
-		//when
-		ctrlActor.addController(filterCtrl);
-		ctrl.init(ctrlActor);
-		ctrl.onAdd(ctrlActor);
-		
-		//then		
-		Filter sensorFilter = ctrl.getSensor().getFilterData();
-		assertNotNull(sensorFilter);
-		assertEquals(expectedFilter.categoryBits, sensorFilter.categoryBits);
-		assertEquals(expectedFilter.maskBits, sensorFilter.maskBits);
-		assertEquals(expectedFilter.groupIndex, sensorFilter.groupIndex);
-	}
-	
-	@Test
-	public void shouldNotCreateSesorFixtureWithTheSameCollisionFilterAsForControllerActor()
-	{
-		//given
-		ControllerAnnotations.setControllerParameter(ctrl, "useActorFilter", false);
-		Filter expectedFilter = mock(Filter.class);
-		expectedFilter.categoryBits = 1;
-		expectedFilter.maskBits = 2;
-		expectedFilter.groupIndex = 3;
-		
-		CollisionFilterController filterCtrl = mock(CollisionFilterController.class);
-		when(filterCtrl.getCollisionFilter()).thenReturn(expectedFilter);
-		
-		//when
-		ctrlActor.addController(filterCtrl);
-		ctrl.init(ctrlActor);
-		ctrl.onAdd(ctrlActor);
-		
-		//then		
-		Filter sensorFilter = ctrl.getSensor().getFilterData();
-		assertNotNull(sensorFilter);
-		assertEquals(0x0001, sensorFilter.categoryBits);
-		assertEquals(-1, sensorFilter.maskBits);
-		assertEquals(0, sensorFilter.groupIndex);		
-	}
-	
+			
 	@Test
 	public void shouldCallPreUpdateAndPostUpdate()
 	{
@@ -663,15 +610,5 @@ public class OnCollideWithSensorControllerTest
 		
 		assertTrue(preUpdateCalled);
 		assertTrue(postUpdateCalled);		
-	}
-	
-	@Test
-	public void shouldSetUseActorFilter()
-	{
-		ctrl.setUseActorFilter(false);
-		assertFalse(ctrl.getUseActorFilter());
-		
-		ctrl.setUseActorFilter(true);
-		assertTrue(ctrl.getUseActorFilter());		
 	}
 }

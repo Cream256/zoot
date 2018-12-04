@@ -6,12 +6,14 @@ import java.util.Set;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.CtrlParam;
+import com.zootcat.controllers.physics.OnCollideController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 
-public class MovingPlatformController extends OnCollideFromAboveOrBelowController
+//TODO remake this + tests
+public class MovingPlatformController extends OnCollideController
 {
 	@CtrlParam private float range = 0.0f;
 	@CtrlParam private float speed = 1.0f;
@@ -86,18 +88,6 @@ public class MovingPlatformController extends OnCollideFromAboveOrBelowControlle
 	{
 		return direction;
 	}
-
-	@Override
-	public void onCollidedFromAbove(ZootActor actorA, ZootActor actorB, Contact contact)
-	{
-		connectedActors.add(getControllerActor() == actorA ? actorB : actorA);
-	}
-	
-	@Override
-	public void onCollidedFromBelow(ZootActor actorA, ZootActor actorB, Contact contact)
-	{
-		//noop
-	}
 	
 	@Override
 	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
@@ -121,5 +111,16 @@ public class MovingPlatformController extends OnCollideFromAboveOrBelowControlle
 			
 			bodyCtrl.setVelocity(actorVelocity.x, actorVelocity.y);
 		}
+	}
+
+	@Override
+	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
+	{
+		
+		//if(collidedFromAbove)	//TODO
+		{
+			connectedActors.add(getControllerActor() == actorA ? actorB : actorA);
+		}
+		
 	}
 }

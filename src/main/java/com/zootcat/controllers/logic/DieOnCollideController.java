@@ -1,26 +1,34 @@
 package com.zootcat.controllers.logic;
 
-import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.zootcat.actions.ZootActions;
-import com.zootcat.controllers.physics.OnCollideController;
+import com.zootcat.controllers.physics.OnCollideWithSensorController;
 import com.zootcat.scene.ZootActor;
 
-public class DieOnCollideController extends OnCollideController
-{
+//TODO remake tests
+public class DieOnCollideController extends OnCollideWithSensorController
+{	
 	@Override
-	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
+	protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
 	{
 		die();
-	}
-
-	@Override
-	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
-	{
-		//noop
+		return SensorCollisionResult.StopProcessing;
 	}
 	
 	protected void die()
 	{
 		getControllerActor().addAction(ZootActions.killActor(getControllerActor()));
+	}
+
+	@Override
+	public void preUpdate(float delta, ZootActor actor)
+	{
+		//noop
+	}
+
+	@Override
+	public void postUpdate(float delta, ZootActor actor)
+	{
+		//noop
 	}
 }

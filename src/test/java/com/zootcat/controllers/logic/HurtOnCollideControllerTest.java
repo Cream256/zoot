@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
@@ -29,6 +31,8 @@ public class HurtOnCollideControllerTest
 	private static final int DAMAGE = 122;
 	
 	@Mock private Contact contact;
+	@Mock private Fixture hurtActorFixture;
+	
 	private ZootActor hurtActor;
 	private ZootActor controllerActor;
 	private LifeController lifeCtrl;			
@@ -48,6 +52,8 @@ public class HurtOnCollideControllerTest
 		lifeCtrl.setValue(ACTOR_LIFE);
 		hurtActor.addController(lifeCtrl);
 		
+		when(hurtActorFixture.getUserData()).thenReturn(hurtActor);
+		
 		ctrl = new HurtOnCollideController();
 		ctrl.init(controllerActor);
 	}
@@ -57,10 +63,12 @@ public class HurtOnCollideControllerTest
 	{
 		//given
 		ZootActor hurtActor = mock(ZootActor.class);
+		when(hurtActorFixture.getUserData()).thenReturn(hurtActor);
+		
 		ArgumentCaptor<Event> captor = ArgumentCaptor.forClass(Event.class);		
 		
 		//when
-		ctrl.onEnter(controllerActor, hurtActor, contact);
+		ctrl.onCollideWithSensor(hurtActorFixture);
 		
 		//then		
 		verify(hurtActor, times(1)).fire(captor.capture());
@@ -72,13 +80,15 @@ public class HurtOnCollideControllerTest
 	{
 		//given
 		ZootActor hurtActor = mock(ZootActor.class);
+		when(hurtActorFixture.getUserData()).thenReturn(hurtActor);
+		
 		ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();
 		controllerActor.addListener(eventCounter);
 				
 		//when
 		ctrl.setHurtOwner(true);
 		ctrl.setDamage(DAMAGE);
-		ctrl.onEnter(controllerActor, hurtActor, contact);
+		ctrl.onCollideWithSensor(hurtActorFixture);
 		
 		//then		
 		assertNotNull(eventCounter.getLastZootEvent());
@@ -87,17 +97,29 @@ public class HurtOnCollideControllerTest
 	}
 	
 	@Test
-	public void shouldNotInteract()
+	public void shouldDoNothingOnPreUpdate()
 	{
 		//given
-		ZootActor hurtActor = mock(ZootActor.class);
 		ZootActor ctrlActor = mock(ZootActor.class);
 		
 		//when
-		ctrl.onLeave(hurtActor, ctrlActor, contact);
+		ctrl.preUpdate(0.0f, ctrlActor);
 		
 		//then
-		verifyZeroInteractions(hurtActor, ctrlActor, contact);
+		verifyZeroInteractions(ctrlActor);
+	}
+	
+	@Test
+	public void shouldDoNothingOnPostUpdate()
+	{
+		//given
+		ZootActor ctrlActor = mock(ZootActor.class);
+		
+		//when
+		ctrl.postUpdate(0.0f, ctrlActor);
+		
+		//then
+		verifyZeroInteractions(ctrlActor);
 	}
 	
 	@Test

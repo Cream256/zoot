@@ -1,11 +1,6 @@
 package com.zootcat.controllers.logic;
 
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.fsm.events.ZootEvent;
-import com.zootcat.fsm.events.ZootEventType;
-import com.zootcat.fsm.events.ZootEvents;
-import com.zootcat.scene.ZootActor;
 
 /**
  * Most typical collision controller for enemies. When player jumps on the enemy
@@ -19,9 +14,11 @@ import com.zootcat.scene.ZootActor;
  * @author Cream
  *
  */
-public class EnemyCollisionController extends OnCollideFromAboveOrBelowController
+public class EnemyCollisionController //extends OnCollideFromAboveOrBelowController
 {
-	@CtrlParam private int damageToEnemy = 1;
+//TODO use hurtoncollide ctrl
+//TODO make HurtAndAttackOnCollide ctrl for dealing dmg to player
+/*	@CtrlParam private int damageToEnemy = 1;
 	@CtrlParam private int damageToPlayer = 1;
 	
 	private HurtOnCollideController hurtEnemyCtrl;
@@ -65,4 +62,5 @@ public class EnemyCollisionController extends OnCollideFromAboveOrBelowControlle
 	{
 		return damageToPlayer;
 	}
+	*/
 }

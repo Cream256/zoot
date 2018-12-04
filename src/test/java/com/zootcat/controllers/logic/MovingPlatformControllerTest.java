@@ -22,6 +22,7 @@ import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 
+//TODO
 public class MovingPlatformControllerTest
 {		
 	private static final float SPEED = 2.5f;
@@ -115,8 +116,8 @@ public class MovingPlatformControllerTest
 	{		
 		//given
 		ctrl.setEnabled(false);
-		ctrl.onCollidedFromAbove(ctrlActor, actorOnPlatform1, mock(Contact.class));
-		ctrl.onCollidedFromAbove(ctrlActor, actorOnPlatform2, mock(Contact.class));
+		ctrl.onEnter(ctrlActor, actorOnPlatform1, mock(Contact.class));
+		ctrl.onEnter(ctrlActor, actorOnPlatform2, mock(Contact.class));
 		
 		//when
 		ctrl.onUpdate(1.0f, ctrlActor);
@@ -131,8 +132,8 @@ public class MovingPlatformControllerTest
 	{
 		//given		
 		ControllerAnnotations.setControllerParameter(ctrl, "direction", ZootDirection.Right);
-		ctrl.onCollidedFromAbove(ctrlActor, actorOnPlatform1, mock(Contact.class));
-		ctrl.onCollidedFromAbove(ctrlActor, actorOnPlatform2, mock(Contact.class));
+		ctrl.onEnter(ctrlActor, actorOnPlatform1, mock(Contact.class));
+		ctrl.onEnter(ctrlActor, actorOnPlatform2, mock(Contact.class));
 		
 		//when
 		ctrl.onUpdate(1.0f, ctrlActor);
@@ -223,16 +224,5 @@ public class MovingPlatformControllerTest
 		
 		ctrl.setComeback(true);
 		assertTrue(ctrl.getComeback());
-	}
-	
-	@Test
-	public void shouldDoNothingWhenCollidedFromBelow()
-	{
-		ZootActor actorA = mock(ZootActor.class);
-		ZootActor actorB = mock(ZootActor.class);
-		Contact contact = mock(Contact.class);
-		
-		ctrl.onCollidedFromBelow(actorA, actorB, contact);
-		verifyZeroInteractions(actorA, actorB, contact);
 	}
 }

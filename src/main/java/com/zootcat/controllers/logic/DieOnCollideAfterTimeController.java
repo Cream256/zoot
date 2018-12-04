@@ -1,10 +1,10 @@
 package com.zootcat.controllers.logic;
 
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 
-public class DieOnCollideFromAboveAfterTimeController extends DieOnCollideFromAboveController
+//TODO remake tests
+public class DieOnCollideAfterTimeController extends DieOnCollideController
 {
 	@CtrlParam private float time = 1.0f;
 	
@@ -22,7 +22,7 @@ public class DieOnCollideFromAboveAfterTimeController extends DieOnCollideFromAb
 	}
 	
 	@Override
-	public void onUpdate(float delta, ZootActor actor)
+	public void postUpdate(float delta, ZootActor actor)	
 	{
 		super.onUpdate(delta, actor);
 		
@@ -34,14 +34,8 @@ public class DieOnCollideFromAboveAfterTimeController extends DieOnCollideFromAb
 		elapsedTime += delta;
 		if(elapsedTime >= time)
 		{
-			super.killControllerActor();
+			super.die();
 			done = true;
 		}
 	}
-	
-	@Override
-	public void onCollidedFromAbove(ZootActor actorA, ZootActor actorB, Contact contact)
-	{				
-		timerStarted = true;
-	}	
 }
