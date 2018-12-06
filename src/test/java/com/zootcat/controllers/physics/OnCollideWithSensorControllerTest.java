@@ -131,6 +131,53 @@ public class OnCollideWithSensorControllerTest
 	}
 	
 	@Test
+	public void shouldCreateSensorUsingActorScaledSize()
+	{
+		//given
+		final float actorWidth = 128.0f;
+		final float actorHeight = 256.0f;
+		final float scaleX = 2.0f;
+		final float scaleY = 0.5f;
+		final float posScaleX = 0.5f;
+		final float posScaleY = 0.5f;
+		
+		ControllerAnnotations.setControllerParameter(ctrl, "useScaledSize", true);
+		ControllerAnnotations.setControllerParameter(ctrl, "sensorX", posScaleX);
+		ControllerAnnotations.setControllerParameter(ctrl, "sensorY", posScaleY);
+		ControllerAnnotations.setControllerParameter(ctrl, "sensorWidth", scaleX);
+		ControllerAnnotations.setControllerParameter(ctrl, "sensorHeight", scaleY);
+		ctrlActor.setSize(actorWidth, actorHeight);
+		
+		//when
+		ctrl.init(ctrlActor);
+		ctrl.onAdd(ctrlActor);
+		Fixture sensor = ctrl.getSensor();
+		
+		//then
+		assertNotNull("Sensor should be created", sensor);
+		assertEquals("Should be polygon fixture", Type.Polygon, sensor.getType());
+		
+		//then
+		PolygonShape fixtureShape = (PolygonShape) sensor.getShape();
+		assertEquals("Should have 4 vertices", 4, fixtureShape.getVertexCount());
+				
+		//when
+		Vector2 vertex1 = new Vector2();
+		Vector2 vertex2 = new Vector2();
+		Vector2 vertex3 = new Vector2();
+		fixtureShape.getVertex(0, vertex1);
+		fixtureShape.getVertex(1, vertex2);
+		fixtureShape.getVertex(2, vertex3);
+		
+		//then
+		assertEquals("Should create sensor with proper width", actorWidth * scaleX, vertex2.x - vertex1.x , 0.0f);
+		assertEquals("Should create sensor with proper height", actorHeight * scaleY, vertex3.y - vertex1.y, 0.0f);
+		assertEquals("Should create sensor at proper X position", -actorWidth * posScaleX, vertex1.x, 0.0f);
+		assertEquals("Should create sensor at proper Y position", actorHeight * (posScaleY * 0.5f), vertex1.y, 0.0f);		
+		
+	}
+	
+	@Test
 	public void shouldCreateSensorWithActorSize()
 	{
 		//given
