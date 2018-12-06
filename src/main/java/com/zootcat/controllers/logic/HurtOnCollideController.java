@@ -15,6 +15,8 @@ import com.zootcat.scene.ZootActor;
  * actor collide with it, Hurt {@link ZootEvent} is sent to lower the health
  * of an collided actor.
  * 
+ * It always collides per actor.
+ * 
  * @ctrlParam damage - amout of damage dealt to the collided actor, default 1
  * 
  * @author Cream
@@ -28,8 +30,7 @@ public class HurtOnCollideController extends OnCollideWithSensorController
 	@Override
 	public void init(ZootActor actor)
 	{		
-		setCollideWithSensors(false);
-		
+		setCollidePerActor(true);		
 		super.init(actor);
 	}
 		
