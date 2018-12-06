@@ -29,7 +29,7 @@ public class AttackOnCollideControllerTest
 	@Test
 	public void shouldProcessOnlyOneCollision()
 	{
-		assertEquals(SensorCollisionResult.StopProcessing, ctrl.onCollideWithSensor(mock(Fixture.class)));
+		assertEquals(SensorCollisionResult.StopProcessing, ctrl.onCollision(mock(Fixture.class)));
 	}
 	
 	@Test
@@ -41,7 +41,7 @@ public class AttackOnCollideControllerTest
 		when(fixture.getUserData()).thenReturn(actorBeingAttacked);
 		
 		//when
-		ctrl.onCollideWithSensor(fixture);
+		ctrl.onCollision(fixture);
 		
 		//then
 		assertEquals(1, ctrlActor.getActions().size);

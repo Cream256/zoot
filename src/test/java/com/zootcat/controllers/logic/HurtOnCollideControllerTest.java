@@ -47,7 +47,7 @@ public class HurtOnCollideControllerTest
 				
 		//when
 		ctrl.setDamage(DAMAGE);
-		ctrl.onCollideWithSensor(hurtActorFixture);
+		ctrl.onEnterCollision(hurtActorFixture);
 		
 		//then
 		assertEquals(1, hurtActor.getActions().size);
@@ -70,7 +70,7 @@ public class HurtOnCollideControllerTest
 		//when
 		ctrl.setHurtOwner(true);
 		ctrl.setDamage(DAMAGE);
-		ctrl.onCollideWithSensor(hurtActorFixture);
+		ctrl.onEnterCollision(hurtActorFixture);
 				
 		//then
 		assertEquals(1, controllerActor.getActions().size);

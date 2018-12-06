@@ -54,6 +54,8 @@ public class OnCollideWithSensorControllerTest
 	private int positiveResultsCount = 0;
 	private boolean preUpdateCalled;
 	private boolean postUpdateCalled;
+	private boolean onEnterCollisionCalled;
+	private boolean onLeaveCollisionCalled;
 		
 	@BeforeClass
 	public static void setupClass()
@@ -88,10 +90,12 @@ public class OnCollideWithSensorControllerTest
 		positiveResultsCount = 0;
 		preUpdateCalled = false;
 		postUpdateCalled = false;
+		onEnterCollisionCalled = false;
+		onLeaveCollisionCalled = true;
 		ctrl = new OnCollideWithSensorController() 
 		{
 			@Override
-			protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
+			public SensorCollisionResult onCollision(Fixture fixture)
 			{
 				fixture.testPoint(0.0f, 0.0f);	//required to check for interactions with fixture				
 				return --positiveResultsCount > 0 ? SensorCollisionResult.ProcessNext : SensorCollisionResult.StopProcessing;
@@ -107,6 +111,18 @@ public class OnCollideWithSensorControllerTest
 			public void postUpdate(float delta, ZootActor actor)
 			{
 				postUpdateCalled = true;
+			}
+			
+			@Override
+			public void onEnterCollision(Fixture fixture)
+			{
+				onEnterCollisionCalled = true;
+			}
+			
+			@Override
+			public void onLeaveCollision(Fixture fixture)
+			{
+				onLeaveCollisionCalled = true;
 			}
 		};
 		ControllerAnnotations.setControllerParameter(ctrl, "scene", scene);
@@ -597,26 +613,7 @@ public class OnCollideWithSensorControllerTest
 		final float y = 456.0f;
 		
 		//when		
-		ctrl = new OnCollideWithSensorController(width, height, x, y) {
-			@Override
-			protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
-			{
-				return null;
-			}
-
-			@Override
-			public void preUpdate(float delta, ZootActor actor)
-			{
-				//noop
-				
-			}
-
-			@Override
-			public void postUpdate(float delta, ZootActor actor)
-			{
-				//noop
-				
-			}};
+		ctrl = new OnCollideWithSensorController(width, height, x, y);
 		
 		//then		
 		assertEquals(width, ctrl.sensorWidth, 0.0f);
@@ -696,5 +693,23 @@ public class OnCollideWithSensorControllerTest
 		
 		assertTrue(preUpdateCalled);
 		assertTrue(postUpdateCalled);		
+	}
+	
+	@Test
+	public void shouldCallOnEnterCollision()
+	{
+		ctrl.init(ctrlActor);
+		ctrl.onEnter(ctrlActor, otherActor, contact);
+		
+		assertTrue(onEnterCollisionCalled);
+	}
+	
+	@Test
+	public void shouldCallOnLeaveCollision()
+	{
+		ctrl.init(ctrlActor);
+		ctrl.onLeave(ctrlActor, otherActor, contact);
+		
+		assertTrue(onLeaveCollisionCalled);
 	}
 }

@@ -79,7 +79,7 @@ public class ClimbController extends OnCollideWithSensorController
 	}
 	
 	@Override
-	protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
+	public SensorCollisionResult onCollision(Fixture fixture)
 	{
 		ZootActor controllerActor = getControllerActor(); 
 		if(!canActorGrab(controllerActor))

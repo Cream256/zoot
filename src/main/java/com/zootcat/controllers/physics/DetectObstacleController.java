@@ -25,7 +25,7 @@ public class DetectObstacleController extends OnCollideWithSensorController
 	}
 	
 	@Override
-	protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
+	public SensorCollisionResult onCollision(Fixture fixture)
 	{
 		ZootEvents.fireAndFree(getControllerActor(), ZootEventType.Obstacle);		
 		return SensorCollisionResult.StopProcessing;

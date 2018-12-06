@@ -72,7 +72,7 @@ public class DetectGroundAheadController extends OnCollideWithSensorController
 	}
 	
 	@Override
-	protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
+	public SensorCollisionResult onCollision(Fixture fixture)
 	{
 		if(fixture.isSensor())
 		{

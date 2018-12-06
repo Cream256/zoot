@@ -34,7 +34,7 @@ public class DieOnCollideControllerTest
 		//when
 		ControllerAnnotations.setControllerParameter(ctrl, "delay", TIME);
 		ctrl.init(ctrlActor);
-		ctrl.onCollideWithSensor(mock(Fixture.class));
+		ctrl.onEnterCollision(mock(Fixture.class));
 		ctrlActor.act(TIME);
 				
 		//then
@@ -52,7 +52,7 @@ public class DieOnCollideControllerTest
 		//when
 		ctrl.init(ctrlActor);
 		ControllerAnnotations.setControllerParameter(ctrl, "delay", TIME);
-		ctrl.onCollideWithSensor(mock(Fixture.class));
+		ctrl.onCollision(mock(Fixture.class));
 		ctrlActor.act(TIME / 2);
 				
 		//then
@@ -70,7 +70,7 @@ public class DieOnCollideControllerTest
 		//when
 		ctrl.init(ctrlActor);
 		ControllerAnnotations.setControllerParameter(ctrl, "delay", TIME);
-		ctrl.onCollideWithSensor(mock(Fixture.class));
+		ctrl.onEnterCollision(mock(Fixture.class));
 		ctrlActor.act(TIME * 2);
 				
 		//then

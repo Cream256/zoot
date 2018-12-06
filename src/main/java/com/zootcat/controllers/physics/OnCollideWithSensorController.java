@@ -35,7 +35,7 @@ import com.zootcat.scene.ZootScene;
  * @author Cream
  *
  */
-public abstract class OnCollideWithSensorController extends OnCollideController
+public class OnCollideWithSensorController extends OnCollideController
 {
 	@CtrlParam protected float sensorWidth = 1.0f;
 	@CtrlParam protected float sensorHeight = 1.0f;
@@ -96,15 +96,12 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	{
 		if(collidedWithSensor(contact))
 		{			
-			collidedFixtures.add(getOtherFixture(actorA, actorB, contact));
+			Fixture otherFixture = getOtherFixture(actorA, actorB, contact); 
+			collidedFixtures.add(otherFixture);
+			onEnterCollision(otherFixture);
 		}
 	}
 	
-	private boolean collidedWithSensor(Contact contact)
-	{
-		return contact.getFixtureA() == sensor || contact.getFixtureB() == sensor;
-	}
-
 	@Override
 	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
 	{		
@@ -112,10 +109,11 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 		{
 			Fixture otherFixture = getOtherFixture(actorA, actorB, contact);
 			collidedFixtures.remove(otherFixture);
-			disabledFixtures.remove(otherFixture);	
+			disabledFixtures.remove(otherFixture);
+			onLeaveCollision(otherFixture);
 		}
 	}
-
+			
 	@Override
 	public final void onUpdate(float delta, ZootActor actor)
 	{
@@ -124,13 +122,29 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 		List<Fixture> collided = collidedFixtures.stream().filter(fix -> shouldCollide(fix)).collect(Collectors.toList());		
 		for(Fixture fixture : collided)
 		{
-			if(onCollideWithSensor(fixture) == SensorCollisionResult.StopProcessing)
+			if(onCollision(fixture) == SensorCollisionResult.StopProcessing)
 			{
 				break;
 			}
 		}
 		
 		postUpdate(delta, actor);
+	}
+	
+	public SensorCollisionResult onCollision(Fixture fixture)
+	{
+		//noop, to be overriden by derived classes		
+		return SensorCollisionResult.StopProcessing;
+	}
+	
+	public void onEnterCollision(Fixture fixture)
+	{
+		//noop
+	}
+	
+	public void onLeaveCollision(Fixture fixture)
+	{
+		//noop
 	}
 	
 	public void preUpdate(float delta, ZootActor actor)
@@ -141,6 +155,11 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	public void postUpdate(float delta, ZootActor actor)
 	{
 		//noop, to be overriden by derived classes		
+	}
+	
+	private boolean collidedWithSensor(Contact contact)
+	{
+		return contact.getFixtureA() == sensor || contact.getFixtureB() == sensor;
 	}
 	
 	protected boolean shouldCollide(Fixture fixture)
@@ -200,9 +219,7 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	{
 		return scene;
 	}
-		
-	protected abstract SensorCollisionResult onCollideWithSensor(Fixture fixture);
-			
+					
 	private FixtureDef createSensorFixtureDef(ZootActor actor, Shape sensorShape)
 	{
 		FixtureDef fixtureDef = new FixtureDef();

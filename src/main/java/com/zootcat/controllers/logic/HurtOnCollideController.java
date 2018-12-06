@@ -24,13 +24,12 @@ public class HurtOnCollideController extends OnCollideWithSensorController
 {
 	@CtrlParam private int damage = 1;
 	@CtrlParam private boolean hurtOwner = false;
-	
+		
 	@Override
-	protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
+	public void onEnterCollision(Fixture fixture)
 	{
 		ZootActor actorToHurt = hurtOwner ? getControllerActor() : (ZootActor) fixture.getUserData();
-		hurt(actorToHurt);
-		return SensorCollisionResult.StopProcessing;
+		hurt(actorToHurt);		
 	}
 	
 	public void hurt(ZootActor actorToHurt)

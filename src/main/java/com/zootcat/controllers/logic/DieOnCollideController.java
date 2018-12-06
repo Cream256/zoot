@@ -20,14 +20,13 @@ public class DieOnCollideController extends OnCollideWithSensorController
 	private boolean done = false;
 	
 	@Override
-	protected SensorCollisionResult onCollideWithSensor(Fixture fixture)
+	public void onEnterCollision(Fixture fixture)
 	{
 		if(!done)
 		{
 			ZootActor ctrlActor = getControllerActor();		
 			ctrlActor.addAction(Actions.delay(delay, ZootActions.killActor(ctrlActor)));
 			done = true;
-		}
-		return SensorCollisionResult.StopProcessing;
+		}		
 	}
 }
