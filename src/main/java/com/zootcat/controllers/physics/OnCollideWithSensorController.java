@@ -41,6 +41,7 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 	@CtrlParam protected float sensorHeight = 1.0f;
 	@CtrlParam protected float sensorX = 0.0f;
 	@CtrlParam protected float sensorY = 0.0f;
+	@CtrlParam protected boolean useActorSize = false;
 	@CtrlParam(global = true) protected ZootScene scene;
 	
 	public enum SensorCollisionResult { ProcessNext, StopProcessing };
@@ -214,9 +215,8 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 
 	private Shape createSensorShape(ZootActor actor)
 	{
-		return ZootShapeFactory.createBox(sensorWidth * scene.getUnitScale(), 
-										  sensorHeight * scene.getUnitScale(), 
-										  sensorX * scene.getUnitScale(), 
-										  sensorY * scene.getUnitScale());		
+		float width = useActorSize ? actor.getWidth() : sensorWidth * scene.getUnitScale();
+		float height = useActorSize ? actor.getHeight() : sensorHeight * scene.getUnitScale();
+		return ZootShapeFactory.createBox(width, height, sensorX * scene.getUnitScale(), sensorY * scene.getUnitScale());		
 	}
 }
