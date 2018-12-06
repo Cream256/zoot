@@ -69,13 +69,7 @@ public class ClimbController extends OnCollideWithSensorController
 		}		
 		climbTimeout = Math.max(0.0f, climbTimeout - delta);
 	}
-	
-	@Override
-	public void postUpdate(float delta, ZootActor actor)
-	{
-		//noop
-	}
-	
+		
 	@Override
 	protected boolean shouldCollide(Fixture fixture)
 	{

@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
+import com.zootcat.actions.ZootKillActorAction;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
@@ -25,8 +25,10 @@ public class DieOnTimerControllerTest
 		ctrl.onUpdate(1.0f, actor);
 		
 		//then	
-		assertEquals("Dead event should be send", 1, eventCounter.getCount());
 		assertEquals("Remove actor action should be present", 1, actor.getActions().size);
-		assertEquals(RemoveActorAction.class, actor.getActions().get(0).getClass());
+		assertEquals(ZootKillActorAction.class, actor.getActions().get(0).getClass());
+		
+		ZootKillActorAction killActorAction = (ZootKillActorAction) actor.getActions().get(0);
+		assertEquals(actor, killActorAction.getTargetZootActor());
 	}
 }

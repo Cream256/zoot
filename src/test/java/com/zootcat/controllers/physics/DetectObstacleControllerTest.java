@@ -130,12 +130,4 @@ public class DetectObstacleControllerTest
 		Vector2 sensorCenter = ZootPhysicsUtils.getPolygonCentroid((PolygonShape) detectObstacleCtrl.getSensor().getShape());
 		assertEquals(ACTOR_WIDTH / 2.0f, sensorCenter.x, 0.0f);
 	}
-	
-	@Test
-	public void shouldDoNothingOnPreUpdate()
-	{
-		ZootActor actor = mock(ZootActor.class);		
-		detectObstacleCtrl.preUpdate(1.0f, actor);		
-		verifyZeroInteractions(actor);
-	}
 }

@@ -1,6 +1,7 @@
 package com.zootcat.controllers.logic;
 
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.zootcat.actions.ZootActions;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.controllers.physics.OnCollideController;
 import com.zootcat.controllers.physics.OnCollideWithSensorController;
@@ -34,21 +35,10 @@ public class HurtOnCollideController extends OnCollideWithSensorController
 	
 	public void hurt(ZootActor actorToHurt)
 	{		
-		ZootEvents.fireAndFree(actorToHurt, ZootEventType.Hurt, damage);
+		ZootEvent hurtEvent = ZootEvents.get(ZootEventType.Hurt, damage);		
+		actorToHurt.addAction(ZootActions.fireEvent(actorToHurt, hurtEvent));
 	}
-	
-	@Override
-	public void preUpdate(float delta, ZootActor actor)
-	{
-		//noop
-	}
-
-	@Override
-	public void postUpdate(float delta, ZootActor actor)
-	{
-		//noop
-	}
-	
+		
 	public void setDamage(int value)
 	{
 		damage = value;

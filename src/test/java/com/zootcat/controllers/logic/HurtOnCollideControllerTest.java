@@ -2,85 +2,67 @@ package com.zootcat.controllers.logic;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.zootcat.actions.ZootFireEventAction;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
-import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
 public class HurtOnCollideControllerTest
 {
-	private static final int ACTOR_LIFE = 3;
 	private static final int DAMAGE = 122;
 	
 	@Mock private Contact contact;
 	@Mock private Fixture hurtActorFixture;
 	
-	private ZootActor hurtActor;
-	private ZootActor controllerActor;
-	private LifeController lifeCtrl;			
+	private ZootActor controllerActor;		
 	private HurtOnCollideController ctrl = new HurtOnCollideController();
 		
 	@Before
 	public void setup()
 	{
-		MockitoAnnotations.initMocks(this);
-		
-		controllerActor = new ZootActor();
-		hurtActor = new ZootActor();		
-		
-		lifeCtrl = new LifeController();
-		lifeCtrl.init(hurtActor);
-		lifeCtrl.setMaxValue(ACTOR_LIFE);
-		lifeCtrl.setValue(ACTOR_LIFE);
-		hurtActor.addController(lifeCtrl);
-		
-		when(hurtActorFixture.getUserData()).thenReturn(hurtActor);
+		MockitoAnnotations.initMocks(this);		
+		controllerActor = new ZootActor();							
 		
 		ctrl = new HurtOnCollideController();
 		ctrl.init(controllerActor);
 	}
 			
 	@Test
-	public void shouldSendHurtEvent()
+	public void shouldAddSendHurtEventAction()
 	{
 		//given
-		ZootActor hurtActor = mock(ZootActor.class);
+		ZootActor hurtActor = new ZootActor();
 		when(hurtActorFixture.getUserData()).thenReturn(hurtActor);
-		
-		ArgumentCaptor<Event> captor = ArgumentCaptor.forClass(Event.class);		
-		
+				
 		//when
+		ctrl.setDamage(DAMAGE);
 		ctrl.onCollideWithSensor(hurtActorFixture);
 		
-		//then		
-		verify(hurtActor, times(1)).fire(captor.capture());
-		assertTrue(ClassReflection.isInstance(ZootEvent.class, captor.getValue()));
+		//then
+		assertEquals(1, hurtActor.getActions().size);
+		assertEquals(ZootFireEventAction.class, hurtActor.getActions().get(0).getClass());
+		ZootFireEventAction fireEventAction = (ZootFireEventAction) hurtActor.getActions().get(0);
+		assertEquals(hurtActor, fireEventAction.getTarget());
+		assertEquals(ZootEventType.Hurt, fireEventAction.getEvent().getType());
+		assertEquals((int)DAMAGE, (int)fireEventAction.getEvent().getUserObject(Integer.class));
 	}
 			
 	@Test
 	public void shouldSendHurtEventToOwner()
 	{
 		//given
-		ZootActor hurtActor = mock(ZootActor.class);
-		when(hurtActorFixture.getUserData()).thenReturn(hurtActor);
+		when(hurtActorFixture.getUserData()).thenReturn(mock(ZootActor.class));
 		
 		ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();
 		controllerActor.addListener(eventCounter);
@@ -89,37 +71,14 @@ public class HurtOnCollideControllerTest
 		ctrl.setHurtOwner(true);
 		ctrl.setDamage(DAMAGE);
 		ctrl.onCollideWithSensor(hurtActorFixture);
-		
-		//then		
-		assertNotNull(eventCounter.getLastZootEvent());
-		assertEquals(ZootEventType.Hurt, eventCounter.getLastZootEvent().getType());
-		assertEquals(DAMAGE, (int)eventCounter.getLastZootEvent().getUserObject(Integer.class));
-	}
-	
-	@Test
-	public void shouldDoNothingOnPreUpdate()
-	{
-		//given
-		ZootActor ctrlActor = mock(ZootActor.class);
-		
-		//when
-		ctrl.preUpdate(0.0f, ctrlActor);
-		
+				
 		//then
-		verifyZeroInteractions(ctrlActor);
-	}
-	
-	@Test
-	public void shouldDoNothingOnPostUpdate()
-	{
-		//given
-		ZootActor ctrlActor = mock(ZootActor.class);
-		
-		//when
-		ctrl.postUpdate(0.0f, ctrlActor);
-		
-		//then
-		verifyZeroInteractions(ctrlActor);
+		assertEquals(1, controllerActor.getActions().size);
+		assertEquals(ZootFireEventAction.class, controllerActor.getActions().get(0).getClass());
+		ZootFireEventAction fireEventAction = (ZootFireEventAction) controllerActor.getActions().get(0);
+		assertEquals(controllerActor, fireEventAction.getTarget());
+		assertEquals(ZootEventType.Hurt, fireEventAction.getEvent().getType());
+		assertEquals((int)DAMAGE, (int)fireEventAction.getEvent().getUserObject(Integer.class));
 	}
 	
 	@Test

@@ -13,6 +13,7 @@ import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 
 //TODO remake this + tests
+//Being sticky should be moved to other controller
 public class MovingPlatformController extends OnCollideController
 {
 	@CtrlParam private float range = 0.0f;
@@ -115,12 +116,10 @@ public class MovingPlatformController extends OnCollideController
 
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
-	{
-		
+	{		
 		//if(collidedFromAbove)	//TODO
 		{
 			connectedActors.add(getControllerActor() == actorA ? actorB : actorA);
 		}
-		
 	}
 }

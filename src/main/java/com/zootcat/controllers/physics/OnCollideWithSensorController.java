@@ -131,9 +131,15 @@ public abstract class OnCollideWithSensorController extends OnCollideController
 		postUpdate(delta, actor);
 	}
 	
-	public abstract void preUpdate(float delta, ZootActor actor);
+	public void preUpdate(float delta, ZootActor actor)
+	{
+		//noop, to be overriden by derived classes
+	}
 	
-	public abstract void postUpdate(float delta, ZootActor actor);
+	public void postUpdate(float delta, ZootActor actor)
+	{
+		//noop, to be overriden by derived classes		
+	}
 	
 	protected boolean shouldCollide(Fixture fixture)
 	{
