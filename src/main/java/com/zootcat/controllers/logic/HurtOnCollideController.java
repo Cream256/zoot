@@ -26,6 +26,14 @@ public class HurtOnCollideController extends OnCollideWithSensorController
 	@CtrlParam private boolean hurtOwner = false;
 		
 	@Override
+	public void init(ZootActor actor)
+	{		
+		setCollideWithSensors(false);
+		
+		super.init(actor);
+	}
+		
+	@Override
 	public void onEnterCollision(Fixture fixture)
 	{
 		ZootActor actorToHurt = hurtOwner ? getControllerActor() : (ZootActor) fixture.getUserData();

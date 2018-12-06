@@ -100,7 +100,7 @@ public class OnCollideControllerTest
 	public void shouldCollideOnlyPerActor()
 	{
 		//given
-		ctrl = new OnCollideController(true)
+		ctrl = new OnCollideController()
 		{
 			@Override
 			public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
@@ -114,6 +114,7 @@ public class OnCollideControllerTest
 				++leaveCount;
 			}
 		};		
+		ctrl.setCollidePerActor(true);
 		ctrl.init(ctrlActor);
 		
 		//when
@@ -396,5 +397,15 @@ public class OnCollideControllerTest
 		
 		ctrl.setCollideWithSensors(true);
 		assertTrue(ctrl.getCollideWithSensors());		
+	}
+	
+	@Test
+	public void shouldSetCollidePerActor()
+	{
+		ctrl.setCollidePerActor(true);
+		assertTrue(ctrl.getCollidePerActor());
+		
+		ctrl.setCollidePerActor(false);
+		assertFalse(ctrl.getCollidePerActor());		
 	}
 }

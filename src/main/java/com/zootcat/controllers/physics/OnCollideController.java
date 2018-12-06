@@ -50,12 +50,7 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	{
 		//noop
 	}
-	
-	public OnCollideController(boolean collidePerActor)
-	{
-		this.collidePerActor = collidePerActor;
-	}
-	
+		
 	public void setCategoryParameter(String category)
 	{
 		this.category = category;
@@ -94,6 +89,16 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	public boolean getCollideWithSensors()
 	{
 		return collideWithSensors;
+	}
+	
+	public void setCollidePerActor(boolean value)
+	{
+		collidePerActor = value;
+	}
+	
+	public boolean getCollidePerActor()
+	{
+		return collidePerActor;
 	}
 	
 	@Override

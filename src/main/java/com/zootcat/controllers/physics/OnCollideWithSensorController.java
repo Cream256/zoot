@@ -50,12 +50,12 @@ public class OnCollideWithSensorController extends OnCollideController
 	private Fixture sensor;
 	private Set<Fixture> collidedFixtures = new LinkedHashSet<Fixture>();
 	private Set<Fixture> disabledFixtures = new HashSet<Fixture>();
-	
+
 	public OnCollideWithSensorController()
 	{
 		//noop
 	}
-
+	
 	public OnCollideWithSensorController(float sensorWidth, float sensorHeight, float sensorX, float sensorY)
 	{
 		this.sensorX = sensorX;
