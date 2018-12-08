@@ -92,26 +92,42 @@ public class OnCollideWithSensorController extends OnCollideController
 	}
 	
 	@Override
+	public void onBeginContact(ZootActor actorA, ZootActor actorB, Contact contact)
+	{						
+		ZootActor otherActor = getOtherActor(actorA, actorB);
+		if(collidedWithSensor(contact) && beginCollisionCounts(otherActor))
+		{
+			collidingActors.add(otherActor);
+			onEnter(actorA, actorB, contact);
+		}
+	}
+	
+	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
-	{
-		if(collidedWithSensor(contact))
+	{	
+		Fixture otherFixture = getOtherFixture(actorA, actorB, contact); 
+		collidedFixtures.add(otherFixture);
+		onEnterCollision(otherFixture);
+	}
+	
+	@Override
+	public void onEndContact(ZootActor actorA, ZootActor actorB, Contact contact)
+	{		
+		ZootActor otherActor = getOtherActor(actorA, actorB);
+		if(collidedWithSensor(contact) && endCollisionCounts(otherActor))
 		{			
-			Fixture otherFixture = getOtherFixture(actorA, actorB, contact); 
-			collidedFixtures.add(otherFixture);
-			onEnterCollision(otherFixture);
+			onLeave(actorA, actorB, contact);
+			collidingActors.remove(otherActor);
 		}
 	}
 	
 	@Override
 	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
 	{		
-		if(collidedWithSensor(contact))
-		{
-			Fixture otherFixture = getOtherFixture(actorA, actorB, contact);
-			collidedFixtures.remove(otherFixture);
-			disabledFixtures.remove(otherFixture);
-			onLeaveCollision(otherFixture);
-		}
+		Fixture otherFixture = getOtherFixture(actorA, actorB, contact);
+		collidedFixtures.remove(otherFixture);
+		disabledFixtures.remove(otherFixture);
+		onLeaveCollision(otherFixture);
 	}
 			
 	@Override
