@@ -16,10 +16,9 @@ import com.zootcat.fsm.events.ZootEvents;
 public class AttackOnCollideController extends OnCollideWithSensorController
 {
 	@Override
-	public SensorCollisionResult onCollision(Fixture fixture)
+	public void onEnterCollision(Fixture fixture)
 	{
 		ZootEvent attackEvent = ZootEvents.get(ZootEventType.Attack, fixture.getUserData());
 		getControllerActor().addAction(ZootActions.fireEvent(getControllerActor(), attackEvent));
-		return SensorCollisionResult.StopProcessing;
 	}
 }

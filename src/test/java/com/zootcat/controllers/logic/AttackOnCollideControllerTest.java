@@ -41,7 +41,7 @@ public class AttackOnCollideControllerTest
 		when(fixture.getUserData()).thenReturn(actorBeingAttacked);
 		
 		//when
-		ctrl.onCollision(fixture);
+		ctrl.onEnterCollision(fixture);
 		
 		//then
 		assertEquals(1, ctrlActor.getActions().size);

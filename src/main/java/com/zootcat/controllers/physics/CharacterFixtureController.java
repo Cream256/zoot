@@ -86,6 +86,7 @@ public class CharacterFixtureController extends FixtureController
 			feetShape.setRadius(circleRadius);
 			feetShape.setPosition(new Vector2(sx, -y));
 			feetPartDef.shape = feetShape;
+			setupFilter(feetPartDef.filter);
 			
 			fixtureDefs.add(feetPartDef);
 			
@@ -98,6 +99,7 @@ public class CharacterFixtureController extends FixtureController
 		bodyDef.friction = super.friction;
 		bodyDef.restitution = super.restitution;
 		bodyDef.isSensor = super.sensor;	
+		setupFilter(bodyDef.filter);
 		
 		//body shape
 		float bodyWidth = actor.getWidth();

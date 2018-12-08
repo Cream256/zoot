@@ -22,7 +22,6 @@ import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 
-//TODO
 public class MovingPlatformControllerTest
 {		
 	private static final float SPEED = 2.5f;

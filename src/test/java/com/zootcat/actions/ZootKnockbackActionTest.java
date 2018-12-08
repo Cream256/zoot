@@ -28,7 +28,7 @@ public class ZootKnockbackActionTest
 	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);
-		when(actionActor.getController(PhysicsBodyController.class)).thenReturn(actionActorPhysicsCtrl);
+		when(actionActor.tryGetController(PhysicsBodyController.class)).thenReturn(actionActorPhysicsCtrl);
 		
 		targetActor = new ZootActor();
 		targetActor.addController(targetActorPhysicsCtrl);
@@ -135,6 +135,21 @@ public class ZootKnockbackActionTest
 		
 		//then
 		verify(targetActorPhysicsCtrl).setVelocity(1.0f, 1.0f, true, true);
+	}
+	
+	@Test
+	public void shouldReturnZeroKnockbackIfPhysicsBodyCtrlAreNotSet()
+	{
+		//given
+		when(actionActor.tryGetController(PhysicsBodyController.class)).thenReturn(null);
+		
+		//when
+		action.setVaryHorizontal(true);
+		action.setKnockback(1.0f, 1.0f);
+		action.act(0.0f);
+		
+		//then
+		verify(targetActorPhysicsCtrl).setVelocity(0.0f, 1.0f, false, true);		
 	}
 		
 	@Test

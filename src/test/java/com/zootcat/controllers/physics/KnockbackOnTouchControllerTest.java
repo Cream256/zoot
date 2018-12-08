@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -12,7 +11,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.zootcat.actions.ZootKnockbackAction;
 import com.zootcat.scene.ZootActor;
 
@@ -50,28 +49,18 @@ public class KnockbackOnTouchControllerTest
 	@Test
 	public void shouldAddKnockbackAction()
 	{
+		//given
+		Fixture otherFixture = mock(Fixture.class);
+		when(otherFixture.getUserData()).thenReturn(otherActor);
+		
 		//when		
-		ctrl.onEnter(ctrlActor, otherActor, mock(Contact.class));
+		ctrl.onEnterCollision(otherFixture);
 		
 		//then
 		assertEquals(1, otherActor.getActions().size);
 		assertEquals(ZootKnockbackAction.class, otherActor.getActions().get(0).getClass());
 	}
-		
-	@Test
-	public void shouldDoNothinOnLeave()
-	{
-		//given
-		Contact contact = mock(Contact.class);
-		ZootActor otherActor = mock(ZootActor.class);
-				
-		//when
-		ctrl.onLeave(ctrlActor, otherActor, contact);
-		
-		//then
-		verifyZeroInteractions(ctrlActor, otherActor, contact);
-	}
-	
+			
 	@Test
 	public void shouldSetKnockback()
 	{

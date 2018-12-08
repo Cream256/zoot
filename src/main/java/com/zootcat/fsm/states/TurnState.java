@@ -51,6 +51,10 @@ public class TurnState extends AnimationBasedState
 		{
 			changeState(event, HurtState.ID);
 		}
+		else if(event.getType() == ZootEventType.Attack)
+		{
+			changeState(event, AttackState.ID);
+		}
 		
 		return true;
 	}

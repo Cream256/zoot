@@ -23,8 +23,15 @@ public class ZootKnockbackAction extends ZootAction
 	
 	private float calculateHorizontalKnockback(ZootActor actionActor, ZootActor knockbackActor)
 	{		
-		Vector2 ctrlActorPos = actionActor.getController(PhysicsBodyController.class).getCenterPositionRef();
-		Vector2 otherActorPos = knockbackActor.getController(PhysicsBodyController.class).getCenterPositionRef();		
+		PhysicsBodyController actionActorPhysBodyCtrl = actionActor.tryGetController(PhysicsBodyController.class);
+		PhysicsBodyController knockbackActorPhysBodyCtrl = knockbackActor.tryGetController(PhysicsBodyController.class);
+		if(actionActorPhysBodyCtrl == null || knockbackActorPhysBodyCtrl == null)
+		{
+			return 0.0f;
+		}
+				
+		Vector2 ctrlActorPos = actionActorPhysBodyCtrl.getCenterPositionRef();
+		Vector2 otherActorPos = knockbackActorPhysBodyCtrl.getCenterPositionRef();		
 		return ctrlActorPos.x <= otherActorPos.x ? knockbackX : -knockbackX;
 	}
 

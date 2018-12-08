@@ -1,7 +1,6 @@
 package com.zootcat.controllers.logic;
 
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.zootcat.actions.ZootActions;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.controllers.physics.OnCollideController;
 import com.zootcat.controllers.physics.OnCollideWithSensorController;
@@ -15,7 +14,7 @@ import com.zootcat.scene.ZootActor;
  * actor collide with it, Hurt {@link ZootEvent} is sent to lower the health
  * of an collided actor.
  * 
- * It always collides per actor.
+ * It always collides per actor. It never collides with sensors.
  * 
  * @ctrlParam damage - amout of damage dealt to the collided actor, default 1
  * 
@@ -24,27 +23,27 @@ import com.zootcat.scene.ZootActor;
  */
 public class HurtOnCollideController extends OnCollideWithSensorController
 {
-	@CtrlParam private int damage = 1;
-	@CtrlParam private boolean hurtOwner = false;
-		
+	@CtrlParam protected int damage = 1;
+	@CtrlParam protected boolean hurtOwner = false;
+					
 	@Override
-	public void init(ZootActor actor)
-	{		
-		setCollidePerActor(true);		
-		super.init(actor);
-	}
-		
-	@Override
-	public void onEnterCollision(Fixture fixture)
+	public final void onEnterCollision(Fixture fixture)
 	{
-		ZootActor actorToHurt = hurtOwner ? getControllerActor() : (ZootActor) fixture.getUserData();
-		hurt(actorToHurt);		
+		if(canHurt(fixture))
+		{
+			ZootActor actorToHurt = hurtOwner ? getControllerActor() : (ZootActor) fixture.getUserData();
+			hurt(actorToHurt);
+		}
+	}
+	
+	public boolean canHurt(Fixture otherFixture)
+	{
+		return true;
 	}
 	
 	public void hurt(ZootActor actorToHurt)
-	{		
-		ZootEvent hurtEvent = ZootEvents.get(ZootEventType.Hurt, damage);		
-		actorToHurt.addAction(ZootActions.fireEvent(actorToHurt, hurtEvent));
+	{				
+		ZootEvents.fireAndFree(actorToHurt, ZootEventType.Hurt, damage);
 	}
 		
 	public void setDamage(int value)

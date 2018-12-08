@@ -1,6 +1,6 @@
 package com.zootcat.controllers.physics;
 
-import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.zootcat.actions.ZootActions;
 import com.zootcat.actions.ZootKnockbackAction;
 import com.zootcat.controllers.factory.CtrlParam;
@@ -18,26 +18,20 @@ import com.zootcat.scene.ZootActor;
  * @author Cream
  * @see OnCollideController
  */
-public class KnockbackOnTouchController extends OnCollideController
+public class KnockbackOnTouchController extends OnCollideWithSensorController
 {
 	@CtrlParam private float knockbackX = 1.0f;
 	@CtrlParam private float knockbackY = 1.0f;
 	@CtrlParam private boolean varyHorizontal = false;
-		
+			
 	@Override
-	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
-	{				
-		ZootActor target = getOtherActor(actorA, actorB);
+	public void onEnterCollision(Fixture otherFixture)
+	{
+		ZootActor target = (ZootActor) otherFixture.getUserData();
 		ZootActor owner = getControllerActor();		
 		
 		ZootKnockbackAction knockback = ZootActions.knockback(knockbackX, knockbackY, varyHorizontal, target, owner);
-		target.addAction(knockback);		
-	}
-
-	@Override
-	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
-	{		
-		//noop
+		target.addAction(knockback);
 	}
 	
 	public void setKnockback(float knockbackX, float knockbackY)

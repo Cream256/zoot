@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.zootcat.actions.ZootFireEventAction;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
@@ -24,9 +23,10 @@ public class HurtOnCollideControllerTest
 	
 	@Mock private Contact contact;
 	@Mock private Fixture hurtActorFixture;
-	
+		
 	private ZootActor controllerActor;		
 	private HurtOnCollideController ctrl = new HurtOnCollideController();
+	private ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();
 		
 	@Before
 	public void setup()
@@ -39,23 +39,21 @@ public class HurtOnCollideControllerTest
 	}
 			
 	@Test
-	public void shouldAddSendHurtEventAction()
+	public void shouldSendHurtEventAction()
 	{
 		//given
 		ZootActor hurtActor = new ZootActor();
 		when(hurtActorFixture.getUserData()).thenReturn(hurtActor);
+		hurtActor.addListener(eventCounter);
 				
 		//when
 		ctrl.setDamage(DAMAGE);
 		ctrl.onEnterCollision(hurtActorFixture);
 		
 		//then
-		assertEquals(1, hurtActor.getActions().size);
-		assertEquals(ZootFireEventAction.class, hurtActor.getActions().get(0).getClass());
-		ZootFireEventAction fireEventAction = (ZootFireEventAction) hurtActor.getActions().get(0);
-		assertEquals(hurtActor, fireEventAction.getTarget());
-		assertEquals(ZootEventType.Hurt, fireEventAction.getEvent().getType());
-		assertEquals((int)DAMAGE, (int)fireEventAction.getEvent().getUserObject(Integer.class));
+		assertEquals("Event should be send", 1, eventCounter.getCount());
+		assertEquals(ZootEventType.Hurt, eventCounter.getLastZootEvent().getType());
+		assertEquals((int)DAMAGE, (int)eventCounter.getLastZootEvent().getUserObject(Integer.class));
 	}
 			
 	@Test
@@ -63,8 +61,6 @@ public class HurtOnCollideControllerTest
 	{
 		//given
 		when(hurtActorFixture.getUserData()).thenReturn(mock(ZootActor.class));
-		
-		ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();
 		controllerActor.addListener(eventCounter);
 				
 		//when
@@ -73,12 +69,9 @@ public class HurtOnCollideControllerTest
 		ctrl.onEnterCollision(hurtActorFixture);
 				
 		//then
-		assertEquals(1, controllerActor.getActions().size);
-		assertEquals(ZootFireEventAction.class, controllerActor.getActions().get(0).getClass());
-		ZootFireEventAction fireEventAction = (ZootFireEventAction) controllerActor.getActions().get(0);
-		assertEquals(controllerActor, fireEventAction.getTarget());
-		assertEquals(ZootEventType.Hurt, fireEventAction.getEvent().getType());
-		assertEquals((int)DAMAGE, (int)fireEventAction.getEvent().getUserObject(Integer.class));
+		assertEquals("Event should be send", 1, eventCounter.getCount());
+		assertEquals(ZootEventType.Hurt, eventCounter.getLastZootEvent().getType());
+		assertEquals((int)DAMAGE, (int)eventCounter.getLastZootEvent().getUserObject(Integer.class));
 	}
 	
 	@Test
@@ -96,5 +89,11 @@ public class HurtOnCollideControllerTest
 		
 		ctrl.setHurtOwner(false);
 		assertFalse(ctrl.getHurtOwner());
+	}
+	
+	@Test
+	public void shouldReturnTrueForCanHurt()
+	{
+		assertTrue(ctrl.canHurt(mock(Fixture.class)));
 	}
 }
