@@ -28,14 +28,10 @@ public class ForwardingState extends BasicState
 			entryEvent.setType(event.getType());		
 			entryEvent.setUserObject(event.getUserObject(Object.class));
 		}
+		
+		changeState(entryEvent, forwardedStateId);		
 	}
-	
-	@Override
-	public void onUpdate(ZootActor actor, float delta)
-	{				
-		changeState(entryEvent, forwardedStateId);
-	}
-	
+		
 	@Override
 	public int getId()
 	{

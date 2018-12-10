@@ -62,7 +62,6 @@ public class ForwardingStateTest
 		when(stateMachine.getStateById(ORIGINAL_STATE_ID)).thenReturn(initialState);
 		when(stateMachine.getStateById(FORWARDED_STATE_ID)).thenReturn(expectedState);		
 		forwardingState.onEnter(actor, expectedEvent);		
-		forwardingState.onUpdate(actor, 0.0f);
 		
 		//then
 		verify(stateMachine).changeState(eq(expectedState), captor.capture());
@@ -82,7 +81,6 @@ public class ForwardingStateTest
 		when(stateMachine.getStateById(ORIGINAL_STATE_ID)).thenReturn(initialState);
 		when(stateMachine.getStateById(FORWARDED_STATE_ID)).thenReturn(expectedState);		
 		forwardingState.onEnter(actor, null);		
-		forwardingState.onUpdate(actor, 0.0f);
 		
 		//then
 		verify(stateMachine).changeState(eq(expectedState), captor.capture());
