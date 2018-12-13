@@ -12,6 +12,9 @@ import org.mockito.Mock;
 
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.states.DeadState;
+import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.ground.IdleState;
 import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.testing.ZootStateTestCase;
 

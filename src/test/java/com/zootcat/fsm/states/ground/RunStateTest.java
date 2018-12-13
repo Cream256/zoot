@@ -1,4 +1,4 @@
-package com.zootcat.fsm.states;
+package com.zootcat.fsm.states.ground;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,6 +10,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.ground.FallState;
+import com.zootcat.fsm.states.ground.IdleState;
+import com.zootcat.fsm.states.ground.JumpForwardState;
+import com.zootcat.fsm.states.ground.JumpState;
+import com.zootcat.fsm.states.ground.RunState;
+import com.zootcat.fsm.states.ground.StunState;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootStateTestCase;
 

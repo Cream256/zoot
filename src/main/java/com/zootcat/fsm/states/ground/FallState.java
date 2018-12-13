@@ -1,4 +1,4 @@
-package com.zootcat.fsm.states;
+package com.zootcat.fsm.states.ground;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +9,9 @@ import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.ZootState;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.states.BasicState;
+import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.ZootStateUtils;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 

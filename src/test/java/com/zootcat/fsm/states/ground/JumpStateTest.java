@@ -1,4 +1,4 @@
-package com.zootcat.fsm.states;
+package com.zootcat.fsm.states.ground;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,6 +15,12 @@ import org.mockito.Mock;
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.logic.ClimbController;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.ground.ClimbState;
+import com.zootcat.fsm.states.ground.FallState;
+import com.zootcat.fsm.states.ground.IdleState;
+import com.zootcat.fsm.states.ground.JumpState;
+import com.zootcat.fsm.states.ground.StunState;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootStateTestCase;

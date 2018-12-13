@@ -1,28 +1,30 @@
-package com.zootcat.fsm.states;
+package com.zootcat.fsm.states.flying;
 
 import com.zootcat.controllers.logic.DirectionController;
-import com.zootcat.controllers.physics.WalkableController;
+import com.zootcat.controllers.physics.FlyableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.states.BasicState;
+import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.ZootStateUtils;
+import com.zootcat.fsm.states.ground.AttackState;
+import com.zootcat.fsm.states.ground.StunState;
+import com.zootcat.fsm.states.ground.TurnState;
+import com.zootcat.fsm.states.ground.WalkState;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 
-public class WalkState extends BasicState
-{	
-	public static final int ID = WalkState.class.hashCode();
+public class FlyState extends BasicState
+{
+	public static final int ID = WalkState.ID;
 	
 	protected ZootDirection moveDirection = ZootDirection.None;
-		
-	public WalkState()
+	
+	public FlyState()
 	{
-		super("Walk");
+		super("Fly");
 	}
 	
-	protected WalkState(String name)
-	{
-		super(name);
-	}
-
 	@Override
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{
@@ -34,7 +36,7 @@ public class WalkState extends BasicState
 	@Override
 	public void onUpdate(ZootActor actor, float delta)
 	{
-		actor.controllerAction(WalkableController.class, (mvCtrl) -> mvCtrl.walk(moveDirection));		
+		actor.controllerAction(FlyableController.class, (ctrl) -> ctrl.fly(moveDirection));		
 	}
 	
 	@Override
@@ -42,9 +44,9 @@ public class WalkState extends BasicState
 	{
 		if(event.getType() == ZootEventType.Stop)
 		{
-			changeState(event, IdleState.ID);
+			changeState(event, FlyIdleState.ID);
 		}
-		else if(ZootStateUtils.isMoveEvent(event))
+		else if(ZootStateUtils.isFlyEvent(event))
 		{
 			ZootDirection eventDirection = ZootStateUtils.getDirectionFromEvent(event);
 			if(eventDirection != moveDirection)
@@ -52,27 +54,11 @@ public class WalkState extends BasicState
 				changeState(event, TurnState.ID);
 				moveDirection = eventDirection;
 			}
-			else if(ZootStateUtils.isRunEvent(event) && ZootStateUtils.canActorRun(event))
-			{
-				changeState(event, RunState.ID);
-			}
 		}		
-		else if(event.getType() == ZootEventType.JumpUp && ZootStateUtils.canActorJump(event))
-		{		
-			changeState(event, JumpState.ID);
-		}
-		else if(event.getType() == ZootEventType.JumpForward && ZootStateUtils.canActorJump(event))
-		{
-			changeState(event, JumpForwardState.ID);
-		}	
-		else if(event.getType() == ZootEventType.Fall || event.getType() == ZootEventType.InAir)
-		{
-			changeState(event, FallState.ID);
-		}
 		else if(event.getType() == ZootEventType.Attack)
 		{
 			changeState(event, AttackState.ID);
-		}	
+		}
 		else if(event.getType() == ZootEventType.Hurt)
 		{
 			changeState(event, HurtState.ID);
@@ -81,7 +67,6 @@ public class WalkState extends BasicState
 		{
 			changeState(event, StunState.ID);
 		}
-		
 		return true;
 	}
 	

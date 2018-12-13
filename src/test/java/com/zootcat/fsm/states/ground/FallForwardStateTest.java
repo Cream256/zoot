@@ -1,10 +1,11 @@
-package com.zootcat.fsm.states;
+package com.zootcat.fsm.states.ground;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.zootcat.fsm.states.ground.FallForwardState;
 import com.zootcat.testing.ZootStateTestCase;
 
 public class FallForwardStateTest extends ZootStateTestCase

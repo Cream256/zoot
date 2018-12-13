@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.states.ground.IdleState;
 import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootStateTestCase;

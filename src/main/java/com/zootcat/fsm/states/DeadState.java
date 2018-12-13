@@ -2,6 +2,7 @@ package com.zootcat.fsm.states;
 
 import com.zootcat.controllers.logic.LifeController;
 import com.zootcat.fsm.events.ZootEvent;
+import com.zootcat.fsm.states.ground.IdleState;
 import com.zootcat.scene.ZootActor;
 
 public class DeadState extends AnimationBasedState

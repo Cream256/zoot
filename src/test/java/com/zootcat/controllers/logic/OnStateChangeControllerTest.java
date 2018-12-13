@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.zootcat.fsm.ZootState;
 import com.zootcat.fsm.states.DeadState;
-import com.zootcat.fsm.states.IdleState;
+import com.zootcat.fsm.states.ground.IdleState;
 import com.zootcat.scene.ZootActor;
 
 public class OnStateChangeControllerTest

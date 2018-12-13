@@ -12,8 +12,6 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.physics.PhysicsBodyController;
-import com.zootcat.fsm.states.ForwardingState;
-import com.zootcat.fsm.states.IdleState;
 import com.zootcat.fsm.states.PatrolState;
 import com.zootcat.scene.ZootActor;
 
@@ -34,21 +32,7 @@ public class PatrolStateMachineControllerTest
 		
 		ctrl = new PatrolStateMachineController();		
 	}
-	
-	@Test
-	public void shouldInitializeWithForwardingState()
-	{
-		//when		
-		ctrl.onAdd(actor);
 		
-		//then
-		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
-		assertEquals(ForwardingState.class, actor.getStateMachine().getCurrentState().getClass());
-		
-		ForwardingState forwardingState = (ForwardingState)actor.getStateMachine().getCurrentState(); 
-		assertEquals(PatrolState.ID, forwardingState.getForwardedStateId());
-	}
-	
 	@Test
 	public void shouldAddPatrolState()
 	{

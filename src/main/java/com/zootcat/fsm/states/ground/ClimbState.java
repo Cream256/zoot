@@ -1,9 +1,11 @@
-package com.zootcat.fsm.states;
+package com.zootcat.fsm.states.ground;
 
 import com.zootcat.controllers.gfx.AnimatedSpriteController;
 import com.zootcat.controllers.logic.ClimbController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.states.BasicState;
+import com.zootcat.fsm.states.HurtState;
 import com.zootcat.scene.ZootActor;
 
 public class ClimbState extends BasicState

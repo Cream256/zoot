@@ -1,19 +1,27 @@
-package com.zootcat.fsm.states;
+package com.zootcat.fsm.states.flying;
 
 import com.zootcat.controllers.logic.DirectionController;
-import com.zootcat.controllers.physics.WalkableController;
+import com.zootcat.controllers.physics.FlyableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.states.BasicState;
+import com.zootcat.fsm.states.DeadState;
+import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.ZootStateUtils;
+import com.zootcat.fsm.states.ground.AttackState;
+import com.zootcat.fsm.states.ground.IdleState;
+import com.zootcat.fsm.states.ground.StunState;
+import com.zootcat.fsm.states.ground.TurnState;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 
-public class IdleState extends BasicState
+public class FlyIdleState extends BasicState
 {	
-	public static final int ID = IdleState.class.hashCode();
+	public static final int ID = IdleState.ID;
 	
 	private ZootDirection actorDirection;
 	
-	public IdleState()
+	public FlyIdleState()
 	{
 		super("Idle");
 	}
@@ -22,7 +30,7 @@ public class IdleState extends BasicState
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{
 		setAnimationBasedOnStateName(actor);
-		actor.controllerAction(WalkableController.class, (ctrl) -> ctrl.stop());
+		actor.controllerAction(FlyableController.class, (ctrl) -> ctrl.stop());
 		
 		actorDirection = ZootDirection.None;
 		actor.controllerAction(DirectionController.class, c -> actorDirection = c.getDirection());
@@ -31,26 +39,11 @@ public class IdleState extends BasicState
 	@Override
 	public boolean handle(ZootEvent event)
 	{		
-		if(ZootStateUtils.isMoveEvent(event))
+		if(ZootStateUtils.isFlyEvent(event))
 		{
 			ZootDirection eventDirection = ZootStateUtils.getDirectionFromEvent(event);			
 			boolean turn = eventDirection != actorDirection && actorDirection != ZootDirection.None;
-			boolean fly = ZootStateUtils.isFlyEvent(event);
-			boolean run = ZootStateUtils.isRunEvent(event) && ZootStateUtils.canActorRun(event);
-			int nextStateId = turn ? TurnState.ID : (fly ? FlyState.ID : (run ? RunState.ID : WalkState.ID));
-			changeState(event, nextStateId);
-		}
-		else if(event.getType() == ZootEventType.JumpUp && ZootStateUtils.canActorJump(event))
-		{		
-			changeState(event, JumpState.ID);
-		}
-		else if(event.getType() == ZootEventType.JumpForward && ZootStateUtils.canActorJump(event))
-		{
-			changeState(event, JumpForwardState.ID);
-		}		
-		else if(event.getType() == ZootEventType.Fall || event.getType() == ZootEventType.InAir)
-		{
-			changeState(event, FallState.ID);
+			changeState(event, turn ? TurnState.ID : FlyState.ID);
 		}
 		else if(event.getType() == ZootEventType.Attack)
 		{
@@ -59,10 +52,6 @@ public class IdleState extends BasicState
 		else if(event.getType() == ZootEventType.Hurt)
 		{
 			changeState(event, HurtState.ID);
-		}
-		else if(event.getType() == ZootEventType.Down)
-		{
-			changeState(event, DownState.ID);
 		}
 		else if(event.getType() == ZootEventType.Dead)
 		{

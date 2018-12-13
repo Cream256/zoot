@@ -1,4 +1,4 @@
-package com.zootcat.fsm.states;
+package com.zootcat.fsm.states.ground;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,6 +10,11 @@ import org.junit.Test;
 
 import com.zootcat.controllers.physics.PhysicsBodyScale;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.ground.CrouchState;
+import com.zootcat.fsm.states.ground.DownState;
+import com.zootcat.fsm.states.ground.FallState;
+import com.zootcat.fsm.states.ground.IdleState;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootStateTestCase;
 

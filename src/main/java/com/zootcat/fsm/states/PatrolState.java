@@ -5,6 +5,8 @@ import com.zootcat.controllers.logic.DirectionController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.states.ground.TurnState;
+import com.zootcat.fsm.states.ground.WalkState;
 import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.scene.ZootActor;
 

@@ -1,9 +1,12 @@
-package com.zootcat.fsm.states;
+package com.zootcat.fsm.states.ground;
 
 import com.zootcat.controllers.physics.FlyableController;
 import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.states.AnimationBasedState;
+import com.zootcat.fsm.states.DeadState;
+import com.zootcat.fsm.states.HurtState;
 import com.zootcat.scene.ZootActor;
 
 /*

@@ -1,4 +1,4 @@
-package com.zootcat.fsm.states;
+package com.zootcat.fsm.states.ground;
 
 import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.events.ZootEventType;

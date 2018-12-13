@@ -1,23 +1,31 @@
-package com.zootcat.fsm.states;
+package com.zootcat.fsm.states.ground;
 
 import com.zootcat.controllers.logic.DirectionController;
-import com.zootcat.controllers.physics.FlyableController;
+import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.fsm.states.BasicState;
+import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.ZootStateUtils;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 
-public class FlyState extends BasicState
-{
-	public static final int ID = FlyState.class.hashCode();
+public class WalkState extends BasicState
+{	
+	public static final int ID = WalkState.class.hashCode();
 	
 	protected ZootDirection moveDirection = ZootDirection.None;
-	
-	public FlyState()
+		
+	public WalkState()
 	{
-		super("Fly");
+		super("Walk");
 	}
 	
+	protected WalkState(String name)
+	{
+		super(name);
+	}
+
 	@Override
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{
@@ -29,13 +37,7 @@ public class FlyState extends BasicState
 	@Override
 	public void onUpdate(ZootActor actor, float delta)
 	{
-		actor.controllerAction(FlyableController.class, (ctrl) -> ctrl.fly(moveDirection));		
-	}
-	
-	@Override
-	public int getId()
-	{
-		return ID;
+		actor.controllerAction(WalkableController.class, (mvCtrl) -> mvCtrl.walk(moveDirection));		
 	}
 	
 	@Override
@@ -45,7 +47,7 @@ public class FlyState extends BasicState
 		{
 			changeState(event, IdleState.ID);
 		}
-		else if(ZootStateUtils.isFlyEvent(event))
+		else if(ZootStateUtils.isMoveEvent(event))
 		{
 			ZootDirection eventDirection = ZootStateUtils.getDirectionFromEvent(event);
 			if(eventDirection != moveDirection)
@@ -53,11 +55,27 @@ public class FlyState extends BasicState
 				changeState(event, TurnState.ID);
 				moveDirection = eventDirection;
 			}
+			else if(ZootStateUtils.isRunEvent(event) && ZootStateUtils.canActorRun(event))
+			{
+				changeState(event, RunState.ID);
+			}
 		}		
+		else if(event.getType() == ZootEventType.JumpUp && ZootStateUtils.canActorJump(event))
+		{		
+			changeState(event, JumpState.ID);
+		}
+		else if(event.getType() == ZootEventType.JumpForward && ZootStateUtils.canActorJump(event))
+		{
+			changeState(event, JumpForwardState.ID);
+		}	
+		else if(event.getType() == ZootEventType.Fall || event.getType() == ZootEventType.InAir)
+		{
+			changeState(event, FallState.ID);
+		}
 		else if(event.getType() == ZootEventType.Attack)
 		{
 			changeState(event, AttackState.ID);
-		}
+		}	
 		else if(event.getType() == ZootEventType.Hurt)
 		{
 			changeState(event, HurtState.ID);
@@ -68,5 +86,11 @@ public class FlyState extends BasicState
 		}
 		
 		return true;
+	}
+	
+	@Override
+	public int getId()
+	{
+		return ID;
 	}
 }

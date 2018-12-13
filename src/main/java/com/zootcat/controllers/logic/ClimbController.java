@@ -14,7 +14,7 @@ import com.zootcat.controllers.physics.OnCollideWithSensorController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEvents;
-import com.zootcat.fsm.states.ClimbState;
+import com.zootcat.fsm.states.ground.ClimbState;
 import com.zootcat.math.ZootBoundingBoxFactory;
 import com.zootcat.physics.ZootDefaultContactFilter;
 import com.zootcat.physics.ZootPhysicsUtils;
