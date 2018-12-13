@@ -15,7 +15,6 @@ import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.fsm.states.HurtState;
 import com.zootcat.fsm.states.ground.ClimbState;
 import com.zootcat.fsm.states.ground.FallState;
-import com.zootcat.fsm.states.ground.IdleState;
 import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.testing.ZootStateTestCase;
 

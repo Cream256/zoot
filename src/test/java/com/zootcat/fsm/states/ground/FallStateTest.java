@@ -12,7 +12,6 @@ import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.HurtState;
 import com.zootcat.fsm.states.ground.ClimbState;
 import com.zootcat.fsm.states.ground.FallState;
-import com.zootcat.fsm.states.ground.IdleState;
 import com.zootcat.fsm.states.ground.JumpForwardState;
 import com.zootcat.fsm.states.ground.JumpState;
 import com.zootcat.scene.ZootDirection;

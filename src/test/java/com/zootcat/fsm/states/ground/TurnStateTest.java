@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.HurtState;
 import com.zootcat.fsm.states.ground.AttackState;
-import com.zootcat.fsm.states.ground.IdleState;
 import com.zootcat.fsm.states.ground.JumpForwardState;
 import com.zootcat.fsm.states.ground.JumpState;
 import com.zootcat.fsm.states.ground.TurnState;

@@ -13,7 +13,7 @@ import com.zootcat.scene.ZootDirection;
 public class ZootStateUtils
 {
 	private static final List<ZootEventType> MOVE_EVENTS = Arrays.asList(ZootEventType.WalkRight, 
-			ZootEventType.WalkLeft, ZootEventType.RunLeft, ZootEventType.RunRight, ZootEventType.FlyLeft, ZootEventType.FlyRight);
+			ZootEventType.WalkLeft, ZootEventType.RunLeft, ZootEventType.RunRight);
 
 	private static final List<ZootEventType> RUN_EVENTS = Arrays.asList(ZootEventType.RunRight, ZootEventType.RunLeft);
 	private static final List<ZootEventType> WALK_EVENTS = Arrays.asList(ZootEventType.WalkRight, ZootEventType.WalkLeft);	
@@ -24,7 +24,7 @@ public class ZootStateUtils
 	{
 		return MOVE_EVENTS.contains(event.getType());
 	}
-	
+		
 	public static boolean isWalkEvent(ZootEvent event)
 	{
 		return WALK_EVENTS.contains(event.getType());

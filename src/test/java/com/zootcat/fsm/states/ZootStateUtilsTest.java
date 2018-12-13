@@ -42,8 +42,6 @@ public class ZootStateUtilsTest
 		assertTrue(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.WalkRight)));
 		assertTrue(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.RunLeft)));
 		assertTrue(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.RunRight)));
-		assertTrue(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.FlyLeft)));
-		assertTrue(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.FlyRight)));
 		assertFalse(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.Attack)));
 		assertFalse(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.Collide)));
 		assertFalse(ZootStateUtils.isMoveEvent(new ZootEvent(ZootEventType.Dead)));

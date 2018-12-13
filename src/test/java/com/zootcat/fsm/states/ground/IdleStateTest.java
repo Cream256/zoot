@@ -11,17 +11,7 @@ import org.junit.Test;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.DeadState;
 import com.zootcat.fsm.states.HurtState;
-import com.zootcat.fsm.states.flying.FlyState;
-import com.zootcat.fsm.states.ground.AttackState;
-import com.zootcat.fsm.states.ground.DownState;
-import com.zootcat.fsm.states.ground.FallState;
-import com.zootcat.fsm.states.ground.IdleState;
-import com.zootcat.fsm.states.ground.JumpForwardState;
-import com.zootcat.fsm.states.ground.JumpState;
-import com.zootcat.fsm.states.ground.RunState;
-import com.zootcat.fsm.states.ground.StunState;
-import com.zootcat.fsm.states.ground.TurnState;
-import com.zootcat.fsm.states.ground.WalkState;
+import com.zootcat.fsm.states.StunState;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootStateTestCase;
 
@@ -81,19 +71,7 @@ public class IdleStateTest extends ZootStateTestCase
 		assertTrue(idleState.handle(createEvent(ZootEventType.RunRight)));
 		assertEquals(WalkState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
-	
-	@Test
-	public void handleFlyEvent()
-	{
-		//when
-		when(directionCtrlMock.getDirection()).thenReturn(ZootDirection.Right);
-		idleState.onEnter(actor, null);
 		
-		//then
-		assertTrue(idleState.handle(createEvent(ZootEventType.FlyRight)));
-		assertEquals(FlyState.ID, actor.getStateMachine().getCurrentState().getId());		
-	}
-	
 	@Test
 	public void handleWalkEventAtTheSameDirection()
 	{

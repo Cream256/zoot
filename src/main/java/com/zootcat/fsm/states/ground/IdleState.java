@@ -7,8 +7,8 @@ import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.BasicState;
 import com.zootcat.fsm.states.DeadState;
 import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.StunState;
 import com.zootcat.fsm.states.ZootStateUtils;
-import com.zootcat.fsm.states.flying.FlyState;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 
@@ -40,9 +40,8 @@ public class IdleState extends BasicState
 		{
 			ZootDirection eventDirection = ZootStateUtils.getDirectionFromEvent(event);			
 			boolean turn = eventDirection != actorDirection && actorDirection != ZootDirection.None;
-			boolean fly = ZootStateUtils.isFlyEvent(event);
 			boolean run = ZootStateUtils.isRunEvent(event) && ZootStateUtils.canActorRun(event);
-			int nextStateId = turn ? TurnState.ID : (fly ? FlyState.ID : (run ? RunState.ID : WalkState.ID));
+			int nextStateId = turn ? TurnState.ID : (run ? RunState.ID : WalkState.ID);
 			changeState(event, nextStateId);
 		}
 		else if(event.getType() == ZootEventType.JumpUp && ZootStateUtils.canActorJump(event))
