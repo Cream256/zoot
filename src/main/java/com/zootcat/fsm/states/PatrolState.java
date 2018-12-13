@@ -3,6 +3,7 @@ package com.zootcat.fsm.states;
 import com.zootcat.controllers.gfx.AnimatedSpriteController;
 import com.zootcat.controllers.logic.DirectionController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
+import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.ground.TurnState;
@@ -49,8 +50,13 @@ public class PatrolState extends WalkState
 		}
 		else
 		{
-			super.onUpdate(actor, delta);	//walk	
+			move(actor, delta);	
 		}
+	}
+	
+	protected void move(ZootActor actor, float delta)
+	{
+		actor.controllerAction(WalkableController.class, (mvCtrl) -> mvCtrl.walk(moveDirection));
 	}
 	
 	private boolean canTurnAround()
