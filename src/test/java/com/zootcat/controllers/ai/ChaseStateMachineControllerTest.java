@@ -13,12 +13,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.fsm.states.PatrolState;
+import com.zootcat.fsm.states.ground.PatrolAndChaseState;
 import com.zootcat.scene.ZootActor;
 
-public class PatrolStateMachineControllerTest
+public class ChaseStateMachineControllerTest
 {
 	private ZootActor actor;
-	private PatrolStateMachineController ctrl;
+	private ChaseStateMachineController ctrl;
 	@Mock private PhysicsBodyController physicsBodyCtrl;
 	
 	@Before
@@ -30,7 +31,7 @@ public class PatrolStateMachineControllerTest
 		actor.addController(physicsBodyCtrl);
 		when(physicsBodyCtrl.getCenterPositionRef()).thenReturn(new Vector2());
 		
-		ctrl = new PatrolStateMachineController();		
+		ctrl = new ChaseStateMachineController();		
 	}
 		
 	@Test
@@ -44,7 +45,7 @@ public class PatrolStateMachineControllerTest
 	}
 	
 	@Test
-	public void shouldSetStartingPositionForPatrolState()
+	public void shouldSetStartingPositionForChaseState()
 	{
 		//given
 		final float expectedStartX = 128.0f;
@@ -54,12 +55,12 @@ public class PatrolStateMachineControllerTest
 		ctrl.onAdd(actor);
 		
 		//then
-		PatrolState patrolState = (PatrolState) actor.getStateMachine().getStateById(PatrolState.ID);
-		assertEquals(expectedStartX, patrolState.getStartX(), 0.0f);
+		PatrolAndChaseState patrolAndChaseState = (PatrolAndChaseState) actor.getStateMachine().getStateById(PatrolAndChaseState.ID);
+		assertEquals(expectedStartX, patrolAndChaseState.getStartX(), 0.0f);
 	}
 	
 	@Test
-	public void shouldSetPatrolRangeForPatrolState()
+	public void shouldSetPatrolRangeForChaseState()
 	{
 		//given
 		final int expectedPatrolRange = 256;
@@ -69,7 +70,22 @@ public class PatrolStateMachineControllerTest
 		ctrl.onAdd(actor);
 		
 		//then
-		PatrolState patrolState = (PatrolState) actor.getStateMachine().getStateById(PatrolState.ID);
-		assertEquals(expectedPatrolRange, patrolState.getPatrolRange(), 0.0f);		
+		PatrolAndChaseState patrolAndChaseState = (PatrolAndChaseState) actor.getStateMachine().getStateById(PatrolAndChaseState.ID);
+		assertEquals(expectedPatrolRange, patrolAndChaseState.getPatrolRange());		
+	}
+	
+	@Test
+	public void shouldSetLookRangeForChaseState()
+	{
+		//given
+		final int expectedLookRange = 256;
+		ControllerAnnotations.setControllerParameter(ctrl, "lookRange", expectedLookRange);
+		
+		//when
+		ctrl.onAdd(actor);
+		
+		//then
+		PatrolAndChaseState patrolAndChaseState = (PatrolAndChaseState) actor.getStateMachine().getStateById(PatrolAndChaseState.ID);
+		assertEquals(expectedLookRange, patrolAndChaseState.getLookRange());				
 	}
 }

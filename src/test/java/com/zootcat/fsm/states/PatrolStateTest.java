@@ -60,15 +60,15 @@ public class PatrolStateTest extends ZootStateTestCase
 	@Test
 	public void shouldSetPatrolRange()
 	{
-		patrolState.setPatrolRange(100.0f);
-		assertEquals(100.0f, patrolState.getPatrolRange(), 0.0f);
+		patrolState.setPatrolRange(100);
+		assertEquals(100, patrolState.getPatrolRange());
 	}
 	
 	@Test
 	public void shouldSetZeroPatrolRangeIfValueIsNegative()
 	{
-		patrolState.setPatrolRange(-1.0f);
-		assertEquals(0.0f, patrolState.getPatrolRange(), 0.0f);
+		patrolState.setPatrolRange(-1);
+		assertEquals(0, patrolState.getPatrolRange());
 	}
 	
 	@Test
@@ -152,7 +152,7 @@ public class PatrolStateTest extends ZootStateTestCase
 		when(physicsBodyCtrlMock.getCenterPositionRef()).thenReturn(new Vector2(0.0f, 0.0f));
 		
 		//when
-		patrolState.setPatrolRange(100.0f);
+		patrolState.setPatrolRange(100);
 		patrolState.setStartX(0.0f);
 		patrolState.onUpdate(actor, 0.0f);
 		
@@ -167,7 +167,7 @@ public class PatrolStateTest extends ZootStateTestCase
 		when(physicsBodyCtrlMock.getCenterPositionRef()).thenReturn(new Vector2(101.0f, 0.0f));
 		
 		//when
-		patrolState.setPatrolRange(100.0f);
+		patrolState.setPatrolRange(100);
 		patrolState.setStartX(0.0f);
 		patrolState.onUpdate(actor, 0.0f);
 		

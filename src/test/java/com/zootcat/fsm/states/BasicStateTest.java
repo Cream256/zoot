@@ -138,4 +138,74 @@ public class BasicStateTest
 		//then
 		assertEquals(animation, state.getActorAnimation(actor));
 	}
+	
+	@Test
+	public void shouldSetActorAnimation()
+	{
+		//given
+		BasicState state = new BasicState("test");
+		ZootActor actor = new ZootActor();
+		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
+		
+		//when
+		actor.addController(spriteCtrl);
+		state.setActorAnimation(actor, "Hurt");
+		
+		//then
+		verify(spriteCtrl).setAnimation("Hurt");		
+	}
+	
+	@Test
+	public void shouldSetActorAnimationBasedOnStateName()
+	{
+		//given
+		BasicState state = new BasicState("test");
+		ZootActor actor = new ZootActor();
+		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
+		
+		//when
+		actor.addController(spriteCtrl);
+		state.setAnimationBasedOnStateName(actor);
+		
+		//then
+		verify(spriteCtrl).setAnimation("test");		
+	}
+	
+	@Test
+	public void shouldNotSetActorAnimationIfPlayingTheSameOne()
+	{
+		//given
+		BasicState state = new BasicState("test");
+		ZootActor actor = new ZootActor();
+		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
+		ZootAnimation currentAnimation = mock(ZootAnimation.class);
+		
+		//when
+		actor.addController(spriteCtrl);
+		when(spriteCtrl.getCurrentAnimation()).thenReturn(currentAnimation);
+		when(currentAnimation.getName()).thenReturn("Run");
+		
+		//then
+		state.setActorAnimationIfNotSet(actor, "Run");
+		verify(spriteCtrl, never()).setAnimation("Run");
+	}
+	
+	@Test
+	public void shouldSetActorAnimationIfPlayingDifferentOne()
+	{
+		//given
+		BasicState state = new BasicState("test");
+		ZootActor actor = new ZootActor();
+		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
+		ZootAnimation currentAnimation = mock(ZootAnimation.class);
+		
+		//when
+		actor.addController(spriteCtrl);
+		when(spriteCtrl.getCurrentAnimation()).thenReturn(currentAnimation);
+		when(currentAnimation.getName()).thenReturn("Walk");
+		
+		//then
+		state.setActorAnimationIfNotSet(actor, "Run");
+		verify(spriteCtrl).setAnimation("Run");		
+	}
 }

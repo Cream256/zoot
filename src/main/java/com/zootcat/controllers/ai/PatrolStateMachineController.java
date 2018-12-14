@@ -11,8 +11,8 @@ import com.zootcat.scene.ZootActor;
 
 public class PatrolStateMachineController extends DefaultStateMachineController
 {
-	@CtrlParam(required = true) private float patrolRange = 0.0f;
-	@CtrlParam private boolean flying = false;	
+	@CtrlParam(required = true) private int patrolRange;
+	@CtrlParam private boolean flying = false;
 	
 	@Override
 	public void onAdd(ZootActor actor)

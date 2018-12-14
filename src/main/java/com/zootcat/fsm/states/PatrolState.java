@@ -17,7 +17,7 @@ public class PatrolState extends WalkState
 	private static final float DEFAULT_TURN_COOLDOWN = 1.0f;
 	
 	private float startX = 0.0f;
-	private float patrolRange = 0.0f;
+	private int patrolRange = 0;
 	private float turnCooldown = 0.0f;
 			
 	public PatrolState()
@@ -38,13 +38,9 @@ public class PatrolState extends WalkState
 	@Override
 	public void onUpdate(ZootActor actor, float delta)
 	{		
-		turnCooldown = Math.max(0.0f, turnCooldown - delta);
+		updateCooldown(delta);
 		
-		PhysicsBodyController physicsCtrl = actor.getController(PhysicsBodyController.class);		
-		float distance = Math.abs(physicsCtrl.getCenterPositionRef().x - startX);
-		float realRange = patrolRange * actor.getScene().getUnitScale(); 
-				
-		if(distance > realRange && canTurnAround())
+		if(outOfPatrolRange(actor) && canTurnAround())
 		{			
 			turnAround(actor);
 		}
@@ -54,17 +50,30 @@ public class PatrolState extends WalkState
 		}
 	}
 	
+	protected void updateCooldown(float delta)
+	{
+		turnCooldown = Math.max(0.0f, turnCooldown - delta);
+	}
+	
 	protected void move(ZootActor actor, float delta)
 	{
 		actor.controllerAction(WalkableController.class, (mvCtrl) -> mvCtrl.walk(moveDirection));
 	}
 	
-	private boolean canTurnAround()
+	protected boolean outOfPatrolRange(ZootActor actor)
+	{
+		PhysicsBodyController physicsCtrl = actor.getController(PhysicsBodyController.class);		
+		float distance = Math.abs(physicsCtrl.getCenterPositionRef().x - startX);
+		float realRange = patrolRange * actor.getScene().getUnitScale(); 
+		return distance > realRange;
+	}
+	
+	protected boolean canTurnAround()
 	{
 		return turnCooldown == 0.0f;
 	}
 	
-	private void turnAround(ZootActor actor)
+	protected void turnAround(ZootActor actor)
 	{
 		setTurnCooldown(actor);		
 		changeState(actor, TurnState.ID);
@@ -94,12 +103,12 @@ public class PatrolState extends WalkState
 		return super.handle(event);
 	}
 	
-	public void setPatrolRange(float range)
+	public void setPatrolRange(int range)
 	{
-		patrolRange = Math.max(0.0f, range);
+		patrolRange = Math.max(0, range);
 	}
 	
-	public float getPatrolRange()
+	public int getPatrolRange()
 	{
 		return patrolRange;
 	}
