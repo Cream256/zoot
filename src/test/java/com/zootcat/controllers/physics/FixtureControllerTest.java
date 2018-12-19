@@ -18,6 +18,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
@@ -41,7 +42,7 @@ public class FixtureControllerTest
 	private static final float ACTOR_HEIGHT = 20.0f;
 	private static final float SCENE_UNIT_SCALE = 0.5f;
 	
-	@Mock private PhysicsBodyController physicsBodyCtrl;
+	@Spy private PhysicsBodyController physicsBodyCtrl;
 	@Mock private ZootScene scene;
 	@Captor private ArgumentCaptor<FixtureDef> fixtureDefCaptor;
 	@Captor private ArgumentCaptor<Filter> filterCaptor;

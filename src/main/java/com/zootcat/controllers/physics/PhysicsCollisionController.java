@@ -89,15 +89,15 @@ public abstract class PhysicsCollisionController extends ZootCollisionListener i
 	@Override
 	public int hashCode()
 	{
-		return Controller.getControllerId(this);
+		return getClass().hashCode();
 	}
 	
 	@Override
 	public boolean equals(Object object)
 	{
 		if(object == this) return true;
-		if(!(object instanceof Controller)) return false;
-		return Controller.areEqual(this, (Controller)object);
+		if(object == null || object.getClass() != getClass()) return false;
+		return hashCode() == object.hashCode();
 	}
 	
 	public ZootActor getOtherActor(ZootActor actorA, ZootActor actorB)

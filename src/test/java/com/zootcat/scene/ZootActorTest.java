@@ -9,7 +9,7 @@ import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -34,16 +34,24 @@ import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.mocks.MockBaseController;
 import com.zootcat.controllers.factory.mocks.MockDerivedController;
+import com.zootcat.controllers.factory.mocks.MockEmptyController;
+import com.zootcat.controllers.factory.mocks.RenderControllerMock1;
+import com.zootcat.controllers.factory.mocks.RenderControllerMock2;
 import com.zootcat.controllers.factory.mocks.SimpleController;
 import com.zootcat.controllers.gfx.RenderController;
+import com.zootcat.controllers.recognizer.ControllerRecognizer;
+import com.zootcat.controllers.recognizer.DefaultControllerRecognizer;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.exceptions.ZootDuplicatedControllerException;
+import com.zootcat.testing.MockControllerRecognizer;
 
 public class ZootActorTest 
 {	
-	private Controller mockCtrl1;
-	private Controller mockCtrl2;
-	private Controller mockCtrl3;
+	private Controller ctrl1;
+	private Controller ctrl2;
+	private Controller ctrl3;
+	
+	private ZootActor actor;
 	
 	@BeforeClass
 	public static void setupClass()
@@ -59,19 +67,21 @@ public class ZootActorTest
 	
 	@Before
 	public void setup()
-	{
-		mockCtrl1 = mock(Controller.class);
-		mockCtrl2 = mock(Controller.class);
-		mockCtrl3 = mock(Controller.class);	
-		when(mockCtrl1.getPriority()).thenReturn(ControllerPriority.Normal);
-		when(mockCtrl2.getPriority()).thenReturn(ControllerPriority.Normal);
-		when(mockCtrl3.getPriority()).thenReturn(ControllerPriority.Normal);
+	{		
+		ctrl1 = mock(Controller.class);
+		ctrl2 = mock(RenderController.class);
+		ctrl3 = mock(MockEmptyController.class);
+		when(ctrl1.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(ctrl2.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(ctrl3.getPriority()).thenReturn(ControllerPriority.Normal);
+		
+		actor = new ZootActor();
+		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 	}
 	
 	@Test
 	public void shouldCreateProperDefaultValuesAfterConstruction()
 	{
-		ZootActor actor = new ZootActor();
 		assertEquals("Should have default name", ZootActor.DEFAULT_NAME, actor.getName());
 		assertNotNull("Should have state machine", actor.getStateMachine());
 		assertEquals("State machine should listen to events", 1, actor.getListeners().size);
@@ -80,12 +90,7 @@ public class ZootActorTest
 	
 	@Test
 	public void shouldUpdateControllersAndStateMachineTest()
-	{
-		//given
-		Controller ctrl1 = mock(Controller.class);
-		Controller ctrl2 = mock(Controller.class);		
-		ZootActor actor = new ZootActor();
-		
+	{		
 		//when
 		when(ctrl1.isEnabled()).thenReturn(true);
 		when(ctrl2.isEnabled()).thenReturn(true);
@@ -100,12 +105,7 @@ public class ZootActorTest
 	
 	@Test
 	public void shouldOnlyUpdateEnabledControllers()
-	{
-		//given
-		Controller ctrl1 = mock(Controller.class);
-		Controller ctrl2 = mock(Controller.class);		
-		ZootActor actor = new ZootActor();
-		
+	{		
 		//when
 		when(ctrl1.isEnabled()).thenReturn(true);
 		when(ctrl2.isEnabled()).thenReturn(false);
@@ -120,10 +120,7 @@ public class ZootActorTest
 	
     @Test
     public void shouldProperlyAddAndRemoveActorTypes()
-    {
-        //given
-        ZootActor actor = new ZootActor();
-        
+    {        
         //then
         assertTrue("New actor should have empty types", actor.getTypes().isEmpty());
         
@@ -150,62 +147,68 @@ public class ZootActorTest
         assertFalse(actor.isType("xyz"));
     }
 	
+    @Test
+    public void shouldHaveEmptyControllersListAfterCreation()
+    {
+    	assertEquals("After creation controller list should be empty", 0, actor.getAllControllers().size());
+    }
+    
 	@Test
-	public void shouldProperlyAddController()
-	{
-		ZootActor actor = new ZootActor();
-		assertEquals("After creation controller list should be empty", 0, actor.getAllControllers().size());
+	public void shouldProperlyAddControllers()
+	{		
+		//when
+		actor.addController(ctrl1);
 		
-		actor.addController(mockCtrl1);
+		//then
 		assertEquals("Controller should be added immediatelly", 1, actor.getAllControllers().size());
-				
-		actor.addController(mockCtrl2);
-		assertEquals("Controllers should  be added immediatelly", 2, actor.getAllControllers().size());
+		assertEquals(ctrl1, actor.getAllControllers().get(0));
+		
+		//when
+		actor.addController(ctrl2);
+		
+		//then
+		assertEquals("Controller should be added immediatelly", 2, actor.getAllControllers().size());
+		assertEquals(ctrl2, actor.getAllControllers().get(1));
 	}
 	
 	@Test(expected = ZootDuplicatedControllerException.class)
-	public void shouldNotAddDuplicateControllers()
+	public void shouldNotAddControllerDuplicates()
 	{
-		ZootActor actor = new ZootActor();
-		actor.addController(mockCtrl1);
-		actor.addController(mockCtrl2);
-		actor.addController(mockCtrl1);
+		actor.addController(mock(Controller.class));
+		actor.addController(mock(RenderController.class));
+		actor.addController(mock(Controller.class));
 	}
 	
 	@Test
 	public void shouldProperlyRemoveControllers()
-	{
-		//given
-		ZootActor actor = new ZootActor();
-		
+	{		
 		//when
-		actor.addController(mockCtrl1);
-		actor.addController(mockCtrl2);
+		actor.addController(ctrl1);
+		actor.addController(ctrl2);
 		
 		//then
 		assertEquals(2, actor.getAllControllers().size());
 		
 		//when, then
-		actor.removeController(mockCtrl1);
+		actor.removeController(ctrl1);
 		assertEquals(1, actor.getAllControllers().size());
 
 		//when, then
 		assertEquals(1, actor.getAllControllers().size());
-		assertEquals(mockCtrl2, actor.getAllControllers().get(0));
+		assertEquals(ctrl2, actor.getAllControllers().get(0));
 		
 		//when, then		
-		actor.removeController(mockCtrl2);
+		actor.removeController(ctrl2);
 		assertEquals(0, actor.getAllControllers().size());
 	}	
 	
 	@Test
 	public void shouldDoNothingWhenRemovingControllersFromActorWithNoControllers()
 	{
-		ZootActor actor = new ZootActor();
 		assertEquals(0, actor.getAllControllers().size());
 		
-		actor.removeController(mockCtrl1);
-		actor.removeController(mockCtrl2);
+		actor.removeController(ctrl1);
+		actor.removeController(ctrl2);
 		assertEquals(0, actor.getAllControllers().size());
 		
 		actor.act(0.0f);
@@ -214,49 +217,40 @@ public class ZootActorTest
 		
 	@Test
 	public void shouldInvokeControllerOnAddMethodWhenAddingControllerToActor()
-	{
-		//given
-		ZootActor actor = new ZootActor();
-		
-		//then
-		verify(mockCtrl1, times(0)).onAdd(actor);
-		verify(mockCtrl2, times(0)).onAdd(actor);
-		
+	{		
 		//when
-		actor.addController(mockCtrl1);
-		actor.addController(mockCtrl2);	
+		actor.addController(ctrl1);
+		actor.addController(ctrl2);	
 				
 		//then
-		verify(mockCtrl1, times(1)).onAdd(actor);
-		verify(mockCtrl2, times(1)).onAdd(actor);
+		verify(ctrl1, times(1)).onAdd(actor);
+		verify(ctrl2, times(1)).onAdd(actor);
 	}
 	
 	@Test
 	public void shouldInvokeControllerOnRemoveMethodWhenRemovingControllersFromActor()
 	{
 		//given
-		ZootActor actor = new ZootActor();
-		actor.addController(mockCtrl1);
-		actor.addController(mockCtrl2);
+		actor.addController(ctrl1);
+		actor.addController(ctrl2);
 		
 		//then
-		verify(mockCtrl1, times(1)).onAdd(actor);
-		verify(mockCtrl2, times(1)).onAdd(actor);
+		verify(ctrl1, times(1)).onAdd(actor);
+		verify(ctrl2, times(1)).onAdd(actor);
 		
 		//when
-		actor.removeController(mockCtrl1);
-		actor.removeController(mockCtrl2);	
+		actor.removeController(ctrl1);
+		actor.removeController(ctrl2);	
 				
 		//then
-		verify(mockCtrl1, times(1)).onRemove(actor);
-		verify(mockCtrl2, times(1)).onRemove(actor);
+		verify(ctrl1, times(1)).onRemove(actor);
+		verify(ctrl2, times(1)).onRemove(actor);
 	}
 	
 	@Test	
 	public void shouldNotifyChangeListenerWhenActorChanges()
 	{
 		//given
-		ZootActor actor = new ZootActor();
 		ChangeListenerController controller = mock(ChangeListenerController.class);
 				
 		//when
@@ -286,11 +280,9 @@ public class ZootActorTest
 	{
 		//given
 		final float parentAlpha = 1.0f;
-		final Batch batch = mock(Batch.class);
-		
-		ZootActor actor = new ZootActor();
-		RenderController renderCtrl1 = mock(RenderController.class);
-		RenderController renderCtrl2 = mock(RenderController.class);
+		final Batch batch = mock(Batch.class);		
+		RenderController renderCtrl1 = spy(new RenderControllerMock1());
+		RenderController renderCtrl2 = spy(new RenderControllerMock2());
 		ChangeListenerController changeListenerController = mock(ChangeListenerController.class);
 		
 		//when
@@ -328,9 +320,8 @@ public class ZootActorTest
 		final float parentAlpha = 1.0f;
 		final Batch batch = mock(Batch.class);
 		
-		ZootActor actor = new ZootActor();
-		RenderController renderCtrl1 = mock(RenderController.class);
-		RenderController renderCtrl2 = mock(RenderController.class);
+		RenderController renderCtrl1 = spy(new RenderControllerMock1());
+		RenderController renderCtrl2 = spy(new RenderControllerMock2());
 		
 		//when
 		when(renderCtrl1.isEnabled()).thenReturn(true);
@@ -347,12 +338,8 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void shouldReturnStateMachine()
+	public void shouldHaveDefaultStateMachine()
 	{
-		//when
-		ZootActor actor = new ZootActor();
-		
-		//then
 		assertNotNull(actor.getStateMachine());
 		assertEquals(actor, actor.getStateMachine().getOwner());
 	}
@@ -362,7 +349,6 @@ public class ZootActorTest
 	{
 		//given
 		Controller ctrl = new SimpleController();
-		ZootActor actor = new ZootActor();
 
 		//when
 		actor.addController(ctrl);
@@ -378,8 +364,6 @@ public class ZootActorTest
 		Controller ctrl1 = new MockBaseController();
 		Controller ctrl2 = new MockDerivedController();
 		
-		ZootActor actor = new ZootActor();
-
 		//when
 		actor.addController(ctrl1);
 		actor.addController(ctrl2);
@@ -392,7 +376,6 @@ public class ZootActorTest
 	@Test(expected = RuntimeZootException.class)
 	public void shuoldThrowIfControllerIsNotFound()
 	{
-		ZootActor actor = new ZootActor();
 		actor.getController(SimpleController.class);
 	}
 	
@@ -401,7 +384,6 @@ public class ZootActorTest
 	{
 		//given
 		Controller ctrl = new SimpleController();
-		ZootActor actor = new ZootActor();
 
 		//when
 		actor.addController(ctrl);
@@ -413,14 +395,12 @@ public class ZootActorTest
 	@Test
 	public void shouldReturnNullAndNotThrow()
 	{
-		ZootActor actor = new ZootActor();
 		assertNull(actor.tryGetController(SimpleController.class));
 	}
 			
 	@Test
 	public void shouldNotThrowOnControllerActionIfControllerIsNotFoundTest()
 	{
-		ZootActor actor = new ZootActor();
 		actor.controllerAction(SimpleController.class, (ctrl) -> {});
 	}
 	
@@ -428,7 +408,6 @@ public class ZootActorTest
 	public void shouldExecuteControllerAction()
 	{
 		//given
-		ZootActor actor = new ZootActor();		
 		SimpleController ctrl = new SimpleController();
 		
 		//when
@@ -443,7 +422,6 @@ public class ZootActorTest
 	public void shouldReturnProperControllerCondition()
 	{
 		//given
-		ZootActor actor = new ZootActor();		
 		SimpleController ctrl = new SimpleController();		
 		
 		//when
@@ -458,7 +436,6 @@ public class ZootActorTest
 	@Test
 	public void shouldReturnFalseIfControllerIsNotFoundForControllerCondition()
 	{
-		ZootActor actor = new ZootActor();
 		assertFalse(actor.controllerCondition(SimpleController.class, (c) -> true));
 	}
 	
@@ -472,7 +449,6 @@ public class ZootActorTest
 		when(ctrl1.getPriority()).thenReturn(ControllerPriority.Normal);
 		when(ctrl2.getPriority()).thenReturn(ControllerPriority.Low);
 		when(ctrl3.getPriority()).thenReturn(ControllerPriority.High);		
-		ZootActor actor = new ZootActor();
 				
 		//when
 		actor.addControllers(Arrays.asList(ctrl1, ctrl2, ctrl3));
@@ -495,7 +471,6 @@ public class ZootActorTest
 		when(ctrl1.getPriority()).thenReturn(ControllerPriority.Normal);
 		when(ctrl2.getPriority()).thenReturn(ControllerPriority.Low);
 		when(ctrl3.getPriority()).thenReturn(ControllerPriority.High);		
-		ZootActor actor = new ZootActor();
 		
 		//when
 		InOrder inOrder = inOrder(ctrl1, ctrl2, ctrl3);
@@ -513,7 +488,6 @@ public class ZootActorTest
 		//given
 		Controller ctrl1 = new ControllerAdapter();
 		Controller ctrl2 = new ControllerAdapter();
-		ZootActor actor = new ZootActor();
 		
 		//when
 		actor.addController(ctrl1);
@@ -526,7 +500,6 @@ public class ZootActorTest
 		//given
 		Controller ctrl1 = new ControllerAdapter();
 		Controller ctrl2 = new ControllerAdapter();
-		ZootActor actor = new ZootActor();
 		
 		//when
 		actor.addControllers(Arrays.asList(ctrl1, ctrl2));		
@@ -538,7 +511,6 @@ public class ZootActorTest
 		//given
 		Controller ctrl1 = new ControllerAdapter();
 		Controller ctrl2 = new ControllerAdapter();
-		ZootActor actor = new ZootActor();
 		
 		//when
 		actor.addController(ctrl1);
@@ -549,16 +521,15 @@ public class ZootActorTest
 	public void shouldRemoveAllControllersWhenRemovingActor()
 	{
 		//given
-		ZootActor actor = new ZootActor();
-		actor.addControllers(Arrays.asList(mockCtrl1, mockCtrl2, mockCtrl3));
+		actor.addControllers(Arrays.asList(ctrl1, ctrl2, ctrl3));
 		
 		//when
 		actor.remove();
 		
 		//then
-		verify(mockCtrl1, times(1)).onRemove(actor);
-		verify(mockCtrl2, times(1)).onRemove(actor);
-		verify(mockCtrl3, times(1)).onRemove(actor);
+		verify(ctrl1, times(1)).onRemove(actor);
+		verify(ctrl2, times(1)).onRemove(actor);
+		verify(ctrl3, times(1)).onRemove(actor);
 		assertEquals(0, actor.getAllControllers().size());
 	}
 	
@@ -566,45 +537,40 @@ public class ZootActorTest
 	public void shouldRemoveAllControllersInDescendingPriorityOrder()
 	{
 		//given
-		when(mockCtrl1.getPriority()).thenReturn(ControllerPriority.Normal);
-		when(mockCtrl2.getPriority()).thenReturn(ControllerPriority.High);
-		when(mockCtrl3.getPriority()).thenReturn(ControllerPriority.Low);
-		
-		InOrder inOrder = inOrder(mockCtrl1, mockCtrl2, mockCtrl3);
-		
-		ZootActor actor = new ZootActor();
-		actor.addControllers(Arrays.asList(mockCtrl1, mockCtrl2, mockCtrl3));
+		when(ctrl1.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(ctrl2.getPriority()).thenReturn(ControllerPriority.High);
+		when(ctrl3.getPriority()).thenReturn(ControllerPriority.Low);		
+		InOrder inOrder = inOrder(ctrl1, ctrl2, ctrl3);
 		
 		//when
+		actor.addControllers(Arrays.asList(ctrl1, ctrl2, ctrl3));
 		actor.remove();
 		
 		//then
-		inOrder.verify(mockCtrl3).onRemove(actor);
-		inOrder.verify(mockCtrl1).onRemove(actor);
-		inOrder.verify(mockCtrl2).onRemove(actor);
+		inOrder.verify(ctrl3).onRemove(actor);
+		inOrder.verify(ctrl1).onRemove(actor);
+		inOrder.verify(ctrl2).onRemove(actor);
 	}
 	
 	@Test
 	public void shouldRemoveAllControllers()
 	{
 		//given
-		ZootActor actor = new ZootActor();
-		actor.addControllers(Arrays.asList(mockCtrl1, mockCtrl2, mockCtrl3));
+		actor.addControllers(Arrays.asList(ctrl1, ctrl2, ctrl3));
 		
 		//when
 		actor.removeAllControllers();
 		
 		//then
-		verify(mockCtrl1, times(1)).onRemove(actor);
-		verify(mockCtrl2, times(1)).onRemove(actor);
-		verify(mockCtrl3, times(1)).onRemove(actor);
+		verify(ctrl1, times(1)).onRemove(actor);
+		verify(ctrl2, times(1)).onRemove(actor);
+		verify(ctrl3, times(1)).onRemove(actor);
 		assertEquals(0, actor.getAllControllers().size());
 	}
 	
 	@Test
 	public void shouldSetId()
 	{
-		ZootActor actor = new ZootActor();
 		assertEquals(0, actor.getId());
 		
 		actor.setId(1);
@@ -614,7 +580,6 @@ public class ZootActorTest
 	@Test
 	public void shouldSetGid()
 	{
-		ZootActor actor = new ZootActor();
 		assertEquals(-1, actor.getGid());
 		
 		actor.setGid(1);
@@ -624,7 +589,6 @@ public class ZootActorTest
 	@Test
 	public void shuouldSetOpacity()
 	{
-		ZootActor actor = new ZootActor();
 		assertEquals(1.0f, actor.getOpacity(), 0.0f);
 		
 		actor.setOpacity(0.5f);
@@ -644,7 +608,6 @@ public class ZootActorTest
 	public void shouldReturnAllControllersOfGivenType()
 	{
 		//given
-		ZootActor actor = new ZootActor();
 		MockBaseController baseCtrl = new MockBaseController();
 		MockDerivedController derivedCtrl = new MockDerivedController();
 		SimpleController simpleCtrl = new SimpleController();
@@ -667,7 +630,6 @@ public class ZootActorTest
 	public void shouldInvokeActionOnAllControllersOfGivenType()
 	{
 		//given
-		ZootActor actor = new ZootActor();
 		MockBaseController ctrl1 = mock(MockBaseController.class);
 		MockDerivedController ctrl2 = mock(MockDerivedController.class);		
 		SimpleController ctrl3 = mock(SimpleController.class);
@@ -689,7 +651,6 @@ public class ZootActorTest
 	public void shouldSetScene()
 	{
 		//given
-		ZootActor actor = new ZootActor();
 		ZootScene scene = mock(ZootScene.class);
 		
 		//when
@@ -701,14 +662,35 @@ public class ZootActorTest
 	
 	@Test
 	public void shouldReturnValidString()
-	{
-		//given
-		ZootActor actor = new ZootActor();
-		
+	{		
 		//when
 		actor.setName("Name");
 		
 		//then		
 		assertEquals("Name", actor.toString());
+	}
+	
+	@Test
+	public void shouldSetControllerRecognizer()
+	{
+		//given
+		ControllerRecognizer recognizer = mock(ControllerRecognizer.class);
+		
+		//when
+		ZootActor actor = new ZootActor();
+		actor.setControllerRecognizer(recognizer);
+		
+		//then
+		assertEquals(recognizer, actor.getControllerRecognizer());
+	}
+	
+	@Test
+	public void shouldUseDefaultControllerRecognizer()
+	{
+		//when
+		ZootActor actor = new ZootActor();
+		
+		//then
+		assertEquals(DefaultControllerRecognizer.Instance, actor.getControllerRecognizer());
 	}
 }

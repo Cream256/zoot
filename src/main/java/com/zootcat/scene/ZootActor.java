@@ -18,6 +18,8 @@ import com.zootcat.controllers.ChangeListenerController;
 import com.zootcat.controllers.Controller;
 import com.zootcat.controllers.ControllerComparator;
 import com.zootcat.controllers.gfx.RenderController;
+import com.zootcat.controllers.recognizer.ControllerRecognizer;
+import com.zootcat.controllers.recognizer.DefaultControllerRecognizer;
 import com.zootcat.exceptions.ZootControllerNotFoundException;
 import com.zootcat.exceptions.ZootDuplicatedControllerException;
 import com.zootcat.fsm.ZootStateMachine;
@@ -40,7 +42,8 @@ public class ZootActor extends Actor
 	private int gid = -1;
 	private ZootScene scene;
 	private ZootStateMachine stateMachine = new ZootStateMachine();
-
+	private ControllerRecognizer controllerRecognizer = DefaultControllerRecognizer.Instance;
+	
 	public ZootActor()
 	{
 		setName(DEFAULT_NAME);
@@ -153,11 +156,7 @@ public class ZootActor extends Actor
 	
 	private boolean isDuplicate(Controller controller)
 	{
-		//TODO remove
-		//Controller duplicate = controllers.stream().filter(ctrl -> ctrl.equals(controller)).findAny().orElse(null);
-		//System.out.println("dup " + duplicate);
-		//return duplicate != null;		
-		return controllers.stream().anyMatch(ctrl -> ctrl.equals(controller));
+		return controllers.stream().anyMatch(ctrl -> controllerRecognizer.areEqual(ctrl, controller));
 	}
 	
 	/**
@@ -167,7 +166,7 @@ public class ZootActor extends Actor
 	 * 
 	 */
 	public void addController(Controller newController)
-	{
+	{		
 		if(isDuplicate(newController)) throw new ZootDuplicatedControllerException(newController.getClass().getName(), getName()); 
 		
 		controllers.add(newController);
@@ -208,8 +207,7 @@ public class ZootActor extends Actor
 	public <T extends Controller> T getController(Class<T> controllerClass)
 	{
 		Controller result = controllers.stream()
-				  //.filter(ctrl -> ClassReflection.isInstance(controllerClass, ctrl))
-				  .filter(ctrl -> Controller.areEqual(ctrl.getClass(), controllerClass))
+				  .filter(ctrl -> controllerRecognizer.areEqual(ctrl.getClass(), controllerClass))
 				  .reduce((u, v) -> { throw new ZootDuplicatedControllerException(controllerClass.getName(), getName()); })
 				  .orElseThrow(() -> new ZootControllerNotFoundException(controllerClass.getName(), getName()));
 		return (T)result;
@@ -277,6 +275,16 @@ public class ZootActor extends Actor
 	public ZootStateMachine getStateMachine()
 	{
 		return stateMachine;
+	}
+	
+	public void setControllerRecognizer(ControllerRecognizer recognizer)
+	{
+		controllerRecognizer = recognizer;
+	}
+	
+	public ControllerRecognizer getControllerRecognizer()
+	{
+		return controllerRecognizer;
 	}
 	
     @Override
