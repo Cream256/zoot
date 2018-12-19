@@ -41,4 +41,18 @@ public class ControllerAdapter implements Controller
 	{
 		enabled = value;
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getClass().hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object object)
+	{
+		if(object == this) return true;
+		if(!(object instanceof Controller)) return false;
+		return hashCode() == object.hashCode();
+	}
 }

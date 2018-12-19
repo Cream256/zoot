@@ -1,7 +1,6 @@
 package com.zootcat.scene;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -19,7 +18,8 @@ import com.zootcat.controllers.ChangeListenerController;
 import com.zootcat.controllers.Controller;
 import com.zootcat.controllers.ControllerComparator;
 import com.zootcat.controllers.gfx.RenderController;
-import com.zootcat.exceptions.RuntimeZootException;
+import com.zootcat.exceptions.ZootControllerNotFoundException;
+import com.zootcat.exceptions.ZootDuplicatedControllerException;
 import com.zootcat.fsm.ZootStateMachine;
 
 /**
@@ -109,12 +109,7 @@ public class ZootActor extends Actor
 			action.accept((T) ctrl);
 		}
 	}
-	
-	public <T extends Controller> void controllersOfTypeAction(Class<T> clazz, Consumer<T> action)
-	{
-		getControllersOfType(clazz).forEach(action);
-	}
-	
+		
 	@SuppressWarnings("unchecked")
 	public <T extends Controller> boolean controllerCondition(Class<T> clazz, Function<T, Boolean> func)
 	{		
@@ -128,24 +123,46 @@ public class ZootActor extends Actor
 	
 	public void addControllers(Collection<Controller> newControllers)
 	{
-		//firstly all controllers must be added to actor
+		//check for duplicates inside new controllers
+		if(new HashSet<Controller>(newControllers).size() != newControllers.size())
+		{
+			throw new ZootDuplicatedControllerException("Controllers must be unique: " + newControllers.toString());
+		}
+		
+		//check for duplicates on actor		
+		newControllers.forEach(newCtrl -> 
+		{
+			if(isDuplicate(newCtrl)) throw new ZootDuplicatedControllerException(newCtrl.getClass().getName(), getName());
+		});
+				
+		//controllers must be added to actor
 		newControllers.forEach((ctrl) -> controllers.add(ctrl));
 		
-		//secondly, they must be invoked in proper order
+		//must be invoked in proper order
 		newControllers.stream().sorted(ControllerComparator.Instance)
 							   .forEach((ctrl) -> ctrl.onAdd(this));
+		
+		//reorder controllers
+		controllers.sort(ControllerComparator.Instance);
 	}
 	
-	public void addController(Controller controller)
+	private boolean isDuplicate(Controller controller)
 	{
-		controllers.add(controller);
-		controller.onAdd(this);		
+		return controllers.stream().anyMatch(ctrl -> ctrl.equals(controller));
+	}
+	
+	public void addController(Controller newController)
+	{
+		if(isDuplicate(newController)) throw new ZootDuplicatedControllerException(newController.getClass().getName(), getName()); 
+		
+		controllers.add(newController);
+		newController.onAdd(this);		
 	}
 	
 	public void removeController(Controller controller)
 	{
 		controller.onRemove(this);
-		controllers.removeAll(Arrays.asList(controller));
+		controllers.remove(controller);
 	}
 	
 	public void removeAllControllers()
@@ -166,7 +183,7 @@ public class ZootActor extends Actor
 		{
 			return (T) getController(controllerClass);
 		}
-		catch(RuntimeZootException e)
+		catch(ZootControllerNotFoundException e)
 		{
 			return null;
 		}
@@ -177,8 +194,8 @@ public class ZootActor extends Actor
 	{
 		Controller result = controllers.stream()
 				  .filter(ctrl -> ClassReflection.isInstance(controllerClass, ctrl))
-				  .reduce((u, v) -> { throw new RuntimeZootException("More than one controllers found for " + controllerClass);})
-				  .orElseThrow(() -> new RuntimeZootException("Controller " + controllerClass + " not found for " + this));
+				  .reduce((u, v) -> { throw new ZootDuplicatedControllerException(controllerClass.getName(), getName()); })
+				  .orElseThrow(() -> new ZootControllerNotFoundException(controllerClass.getName(), getName()));
 		return (T)result;
 	}
 	

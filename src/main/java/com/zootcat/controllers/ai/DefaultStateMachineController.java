@@ -1,6 +1,7 @@
 package com.zootcat.controllers.ai;
 
 import com.zootcat.controllers.ControllerAdapter;
+import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.fsm.ZootState;
 import com.zootcat.fsm.ZootStateMachine;
@@ -52,6 +53,13 @@ public class DefaultStateMachineController extends ControllerAdapter
 	public void onUpdate(float delta, ZootActor actor)
 	{
 		currentState = actor.getStateMachine().getCurrentState();
+	}
+	
+	@Override
+	public ControllerPriority getPriority() 
+	{ 
+		//high priority because other controllers can access or modify states
+		return ControllerPriority.High; 
 	}
 	
 	public ZootState getCurrentState()

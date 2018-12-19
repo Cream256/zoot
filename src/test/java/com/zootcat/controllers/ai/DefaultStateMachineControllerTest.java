@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.fsm.ZootState;
 import com.zootcat.fsm.ZootStateMachine;
 import com.zootcat.fsm.events.ZootEventType;
@@ -93,5 +94,11 @@ public class DefaultStateMachineControllerTest
 		
 		//then
 		assertEquals(WalkState.ID, ctrl.getCurrentState().getId());		
+	}
+	
+	@Test
+	public void shouldHaveHighPriority()
+	{
+		assertEquals(ControllerPriority.High, ctrl.getPriority());
 	}
 }

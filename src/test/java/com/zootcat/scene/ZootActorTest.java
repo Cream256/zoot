@@ -13,7 +13,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -30,13 +29,16 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.zootcat.controllers.ChangeListenerController;
 import com.zootcat.controllers.Controller;
+import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.ControllerPriority;
-import com.zootcat.controllers.factory.mocks.CountingController;
 import com.zootcat.controllers.factory.mocks.MockBaseController;
 import com.zootcat.controllers.factory.mocks.MockDerivedController;
 import com.zootcat.controllers.factory.mocks.SimpleController;
 import com.zootcat.controllers.gfx.RenderController;
+import com.zootcat.controllers.logic.IntValueController;
+import com.zootcat.controllers.logic.LifeController;
 import com.zootcat.exceptions.RuntimeZootException;
+import com.zootcat.exceptions.ZootDuplicatedControllerException;
 
 public class ZootActorTest 
 {	
@@ -162,20 +164,13 @@ public class ZootActorTest
 		assertEquals("Controllers should  be added immediatelly", 2, actor.getAllControllers().size());
 	}
 	
-	@Test
-	public void shouldAddDuplicateControllerInstances()
+	@Test(expected = ZootDuplicatedControllerException.class)
+	public void shouldNotAddDuplicateControllers()
 	{
 		ZootActor actor = new ZootActor();
 		actor.addController(mockCtrl1);
 		actor.addController(mockCtrl2);
 		actor.addController(mockCtrl1);
-		actor.addController(mockCtrl2);
-		actor.act(0.0f);
-		
-		List<Controller> actual = actor.getAllControllers();
-		List<Controller> expected = Arrays.asList(mockCtrl1, mockCtrl2, mockCtrl1, mockCtrl2);
-		
-		assertEquals(expected, actual);
 	}
 	
 	@Test
@@ -217,33 +212,7 @@ public class ZootActorTest
 		actor.act(0.0f);
 		assertEquals(0, actor.getAllControllers().size());
 	}
-	
-	@Test
-	public void shouldRemoveAllControllersWithGivenType()
-	{
-		//given
-		ZootActor actor = new ZootActor();
 		
-		//when
-		actor.addController(mockCtrl1);
-		actor.addController(mockCtrl2);
-		actor.addController(mockCtrl3);
-		actor.addController(mockCtrl1);
-		actor.addController(mockCtrl2);
-		actor.addController(mockCtrl3);
-		
-		//then
-		assertEquals(6, actor.getAllControllers().size());
-		
-		//when
-		actor.removeController(mockCtrl1);
-		
-		//then
-		List<Controller> expected = Arrays.asList(mockCtrl2, mockCtrl3, mockCtrl2, mockCtrl3);
-		assertEquals(4, actor.getAllControllers().size());
-		assertEquals(expected, actor.getAllControllers());
-	}
-	
 	@Test
 	public void shouldInvokeControllerOnAddMethodWhenAddingControllerToActor()
 	{
@@ -447,6 +416,22 @@ public class ZootActorTest
 		ZootActor actor = new ZootActor();
 		assertNull(actor.tryGetController(SimpleController.class));
 	}
+	
+	@Test(expected = ZootDuplicatedControllerException.class)
+	public void shouldThrowWhenTryingToGetTooGenericTypeOfController()
+	{
+		//given
+		LifeController lifeCtrl = new LifeController();
+		IntValueController intValCtrl = new IntValueController();
+		
+		//when
+		ZootActor actor = new ZootActor();
+		actor.addController(lifeCtrl);
+		actor.addController(intValCtrl);
+		
+		//then
+		actor.getController(IntValueController.class);		
+	}
 		
 	@Test
 	public void shouldNotThrowOnControllerActionIfControllerIsNotFoundTest()
@@ -494,21 +479,26 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void shouldAddControllersFirstAndThenInvokeOnAddMethods()
+	public void shouldSortControllersAfterAddingThemToActor()
 	{
 		//given
-		CountingController ctrl1 = new CountingController();
-		CountingController ctrl2 = new CountingController();
-		CountingController ctrl3 = new CountingController();
+		Controller ctrl1 = mock(Controller.class);
+		Controller ctrl2 = mock(Controller.class);
+		Controller ctrl3 = mock(Controller.class);
+		when(ctrl1.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(ctrl2.getPriority()).thenReturn(ControllerPriority.Low);
+		when(ctrl3.getPriority()).thenReturn(ControllerPriority.High);		
 		ZootActor actor = new ZootActor();
-		
+				
 		//when
 		actor.addControllers(Arrays.asList(ctrl1, ctrl2, ctrl3));
 		
 		//then
-		assertEquals(3, ctrl1.getControllersCountOnAdd());
-		assertEquals(3, ctrl2.getControllersCountOnAdd());
-		assertEquals(3, ctrl3.getControllersCountOnAdd());
+		List<Controller> controllers = actor.getAllControllers();
+		assertEquals(3, controllers.size());
+		assertTrue(ctrl3 == controllers.get(0));
+		assertTrue(ctrl1 == controllers.get(1));
+		assertTrue(ctrl2 == controllers.get(2));
 	}
 	
 	@Test
@@ -518,9 +508,9 @@ public class ZootActorTest
 		Controller ctrl1 = mock(Controller.class);
 		Controller ctrl2 = mock(Controller.class);
 		Controller ctrl3 = mock(Controller.class);
-		when(ctrl1.getPriority()).thenReturn(ControllerPriority.High);
-		when(ctrl2.getPriority()).thenReturn(ControllerPriority.Normal);
-		when(ctrl3.getPriority()).thenReturn(ControllerPriority.Low);		
+		when(ctrl1.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(ctrl2.getPriority()).thenReturn(ControllerPriority.Low);
+		when(ctrl3.getPriority()).thenReturn(ControllerPriority.High);		
 		ZootActor actor = new ZootActor();
 		
 		//when
@@ -528,9 +518,47 @@ public class ZootActorTest
 		actor.addControllers(Arrays.asList(ctrl2, ctrl3, ctrl1));
 		
 		//then
+		inOrder.verify(ctrl3).onAdd(actor);
 		inOrder.verify(ctrl1).onAdd(actor);
 		inOrder.verify(ctrl2).onAdd(actor);
-		inOrder.verify(ctrl3).onAdd(actor);
+	}
+	
+	@Test(expected = ZootDuplicatedControllerException.class)
+	public void shouldThrowWhenAddingControllersThatAlreadyExistOnActor()
+	{
+		//given
+		Controller ctrl1 = new ControllerAdapter();
+		Controller ctrl2 = new ControllerAdapter();
+		ZootActor actor = new ZootActor();
+		
+		//when
+		actor.addController(ctrl1);
+		actor.addControllers(Arrays.asList(ctrl2));		
+	}
+	
+	@Test(expected = ZootDuplicatedControllerException.class)
+	public void shouldThrowWhenAddingDuplicatedControllers()
+	{
+		//given
+		Controller ctrl1 = new ControllerAdapter();
+		Controller ctrl2 = new ControllerAdapter();
+		ZootActor actor = new ZootActor();
+		
+		//when
+		actor.addControllers(Arrays.asList(ctrl1, ctrl2));		
+	}
+	
+	@Test(expected = ZootDuplicatedControllerException.class)
+	public void shouldThrowWhenAddingDuplicatedControllerType()
+	{
+		//given
+		Controller ctrl1 = new ControllerAdapter();
+		Controller ctrl2 = new ControllerAdapter();
+		ZootActor actor = new ZootActor();
+		
+		//when
+		actor.addController(ctrl1);
+		actor.addController(ctrl2);
 	}
 	
 	@Test
@@ -650,29 +678,7 @@ public class ZootActorTest
 		assertTrue(ctrls.contains(derivedCtrl));
 		assertFalse(ctrls.contains(simpleCtrl));
 	}
-	
-	@Test
-	public void shouldInvokeActionOnAllControllersOfGivenType()
-	{
-		//given
-		ZootActor actor = new ZootActor();
-		MockBaseController ctrl1 = mock(MockBaseController.class);
-		MockDerivedController ctrl2 = mock(MockDerivedController.class);		
-		SimpleController ctrl3 = mock(SimpleController.class);
 		
-		//when
-		actor.addController(ctrl1);
-		actor.addController(ctrl2);
-		actor.addController(ctrl3);
-		actor.controllersOfTypeAction(MockBaseController.class, ctrl -> ctrl.getBaseParam());
-		
-		//then
-		verify(ctrl1).getBaseParam();
-		verify(ctrl2).getBaseParam();
-		verify(ctrl3).onAdd(actor);
-		verifyNoMoreInteractions(ctrl3);
-	}
-	
 	@Test
 	public void shouldSetScene()
 	{
@@ -685,5 +691,18 @@ public class ZootActorTest
 		
 		//then
 		assertEquals(scene, actor.getScene());
+	}
+	
+	@Test
+	public void shouldReturnValidString()
+	{
+		//given
+		ZootActor actor = new ZootActor();
+		
+		//when
+		actor.setName("Name");
+		
+		//then		
+		assertEquals("Name", actor.toString());
 	}
 }
