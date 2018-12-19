@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.logic.MovingPlatformController;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.testing.ZootSceneMock;
 
@@ -29,6 +30,7 @@ public class MovingPlatformTriggerControllerTest
 		platformActor = new ZootActor();
 		platformActor.addController(movingPlatformCtrl);
 		platformActor.setName("platform");
+		platformActor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		
 		scene = new ZootSceneMock();
 		scene.addActor(platformActor);

@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.ControllerAnnotations;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.scene.ZootActor;
 
 public class ChangeApplyImpulseDirectionOnCollideControllerTest
@@ -33,6 +34,7 @@ public class ChangeApplyImpulseDirectionOnCollideControllerTest
 		
 		otherActor = new ZootActor();
 		otherActor.addController(applyImpulseCtrl);
+		otherActor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		
 		controller = new ChangeApplyImpulseDirectionOnCollideController();
 		controller.init(controllerActor);

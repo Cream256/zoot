@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.scene.ZootActor;
 
 public class ApplySinImpulseControllerTest
@@ -22,8 +23,9 @@ public class ApplySinImpulseControllerTest
 		MockitoAnnotations.initMocks(this);
 		
 		actor = new ZootActor();
+		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		actor.addController(physicsBodyCtrl);
-		
+				
 		ctrl = new ApplySinImpulseController();
 	}
 

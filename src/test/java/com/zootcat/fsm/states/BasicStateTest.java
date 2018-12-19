@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import org.junit.Test;
 
 import com.zootcat.controllers.gfx.AnimatedSpriteController;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.scene.ZootActor;
@@ -145,6 +146,7 @@ public class BasicStateTest
 		//given
 		BasicState state = new BasicState("test");
 		ZootActor actor = new ZootActor();
+		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
 		
 		//when
@@ -161,6 +163,7 @@ public class BasicStateTest
 		//given
 		BasicState state = new BasicState("test");
 		ZootActor actor = new ZootActor();
+		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
 		
 		//when
@@ -196,6 +199,7 @@ public class BasicStateTest
 		//given
 		BasicState state = new BasicState("test");
 		ZootActor actor = new ZootActor();
+		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
 		ZootAnimation currentAnimation = mock(ZootAnimation.class);
 		

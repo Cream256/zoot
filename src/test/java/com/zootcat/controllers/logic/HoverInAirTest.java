@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.physics.PhysicsBodyController;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.scene.ZootActor;
 
 public class HoverInAirTest
@@ -24,6 +25,7 @@ public class HoverInAirTest
 	{		
 		physicsCtrl = mock(PhysicsBodyController.class);		
 		actor = new ZootActor();
+		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		actor.addController(physicsCtrl);
 		
 		ctrl = new HoverInAirController();

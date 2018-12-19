@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.physics.PhysicsBodyController;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.scene.ZootActor;
 
 public class ZootKnockbackActionTest
@@ -31,6 +32,7 @@ public class ZootKnockbackActionTest
 		when(actionActor.tryGetController(PhysicsBodyController.class)).thenReturn(actionActorPhysicsCtrl);
 		
 		targetActor = new ZootActor();
+		targetActor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		targetActor.addController(targetActorPhysicsCtrl);
 		
 		action = new ZootKnockbackAction();

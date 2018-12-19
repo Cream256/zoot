@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.zootcat.controllers.physics.DetectFallController;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.scene.ZootActor;
 
 public class HurtOnJumpControllerTest
@@ -26,6 +27,7 @@ public class HurtOnJumpControllerTest
 		MockitoAnnotations.initMocks(this);				
 		actor = new ZootActor();
 		actor.addController(detectFall);
+		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		when(otherFixture.getUserData()).thenReturn(actor);
 		
 		ctrl = new HurtOnJumpController();		

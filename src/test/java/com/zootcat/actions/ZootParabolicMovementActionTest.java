@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.physics.PhysicsBodyController;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.math.ParaboleMovementPattern;
 import com.zootcat.scene.ZootActor;
 
@@ -53,6 +54,7 @@ public class ZootParabolicMovementActionTest
 		//given
 		PhysicsBodyController bodyCtrl = mock(PhysicsBodyController.class);
 		ZootActor actor = new ZootActor();
+		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		actor.addController(bodyCtrl);
 		action.setTarget(actor);
 		

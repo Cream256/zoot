@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.physics.PhysicsBodyController;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.fsm.states.PatrolState;
 import com.zootcat.scene.ZootActor;
 
@@ -27,6 +28,7 @@ public class PatrolStateMachineControllerTest
 		MockitoAnnotations.initMocks(this);
 		
 		actor = new ZootActor();
+		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		actor.addController(physicsBodyCtrl);
 		when(physicsBodyCtrl.getCenterPositionRef()).thenReturn(new Vector2());
 		

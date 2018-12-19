@@ -18,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.physics.PhysicsBodyController;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
@@ -52,6 +53,7 @@ public class MovingPlatformControllerTest
 	
 		//controller actor
 		ctrlActor = new ZootActor();
+		ctrlActor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		ctrlActor.addController(ctrlActorBodyMock);
 		verify(ctrlActorBodyMock, times(1)).onAdd(ctrlActor);
 		when(ctrlActorBodyMock.getVelocity()).thenReturn(new Vector2());

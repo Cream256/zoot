@@ -1,7 +1,6 @@
-package com.zootcat.testing;
+package com.zootcat.controllers.recognizer;
 
 import com.zootcat.controllers.Controller;
-import com.zootcat.controllers.recognizer.ControllerRecognizer;
 
 public class MockControllerRecognizer implements ControllerRecognizer
 {

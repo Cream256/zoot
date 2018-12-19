@@ -18,7 +18,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
@@ -30,6 +29,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.zootcat.controllers.factory.ControllerAnnotations;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.physics.ZootBodyShape;
 import com.zootcat.scene.ZootActor;
@@ -42,7 +42,7 @@ public class FixtureControllerTest
 	private static final float ACTOR_HEIGHT = 20.0f;
 	private static final float SCENE_UNIT_SCALE = 0.5f;
 	
-	@Spy private PhysicsBodyController physicsBodyCtrl;
+	@Mock private PhysicsBodyController physicsBodyCtrl;
 	@Mock private ZootScene scene;
 	@Captor private ArgumentCaptor<FixtureDef> fixtureDefCaptor;
 	@Captor private ArgumentCaptor<Filter> filterCaptor;
@@ -64,6 +64,7 @@ public class FixtureControllerTest
 		BitMaskConverter.Instance.clear();
 		
 		actor = new ZootActor();
+		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		actor.addController(physicsBodyCtrl);
 				
 		ctrl = new FixtureController();

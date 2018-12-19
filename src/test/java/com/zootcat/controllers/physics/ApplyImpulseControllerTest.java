@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.zootcat.controllers.factory.ControllerAnnotations;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.scene.ZootActor;
 
 public class ApplyImpulseControllerTest
@@ -29,6 +30,7 @@ public class ApplyImpulseControllerTest
 		MockitoAnnotations.initMocks(this);
 		
 		controllerActor = new ZootActor();
+		controllerActor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		controllerActor.addController(physicsBodyCtrl);
 		
 		controller = new ApplyImpulseController();

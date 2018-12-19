@@ -41,9 +41,9 @@ import com.zootcat.controllers.factory.mocks.SimpleController;
 import com.zootcat.controllers.gfx.RenderController;
 import com.zootcat.controllers.recognizer.ControllerRecognizer;
 import com.zootcat.controllers.recognizer.DefaultControllerRecognizer;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.exceptions.ZootDuplicatedControllerException;
-import com.zootcat.testing.MockControllerRecognizer;
 
 public class ZootActorTest 
 {	

@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.ControllerAnnotations;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.utils.BitMaskConverter;
 
@@ -52,6 +53,8 @@ public class CollisionFilterControllerTest
 	{
 		//given		
 		ZootActor actor = new ZootActor();
+		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
+		
 		PhysicsBodyController physCtrl = mock(PhysicsBodyController.class);
 		actor.addController(physCtrl);
 		

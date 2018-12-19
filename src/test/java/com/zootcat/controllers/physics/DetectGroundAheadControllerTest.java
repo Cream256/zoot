@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.logic.DirectionController;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
@@ -64,6 +65,7 @@ public class DetectGroundAheadControllerTest
 		eventCounter = new ZootActorEventCounterListener();
 		
 		ctrlActor = new ZootActor();		
+		ctrlActor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		ctrlActor.addController(physicsCtrl);
 		ctrlActor.addController(directionCtrl);
 		ctrlActor.addListener(eventCounter);

@@ -14,6 +14,7 @@ import com.zootcat.controllers.logic.LifeController;
 import com.zootcat.controllers.physics.FlyableController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.controllers.physics.WalkableController;
+import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
@@ -43,6 +44,7 @@ public class ZootStateTestCase
 		DefaultStateMachineController smCtrl = new DefaultStateMachineController();
 		smCtrl.init(actor);
 		actor.addController(smCtrl);
+		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		
 		//state machine init can have side effects, reset them
 		reset(animatedSpriteCtrlMock);
