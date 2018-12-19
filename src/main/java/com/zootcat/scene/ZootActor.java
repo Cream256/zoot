@@ -121,6 +121,11 @@ public class ZootActor extends Actor
 		return false;
 	}
 	
+	public <T extends Controller> void controllersOfTypeAction(Class<T> clazz, Consumer<T> action)
+	{
+		getControllersOfType(clazz).forEach(action);
+	}
+	
 	public void addControllers(Collection<Controller> newControllers)
 	{
 		//check for duplicates inside new controllers
@@ -151,6 +156,12 @@ public class ZootActor extends Actor
 		return controllers.stream().anyMatch(ctrl -> ctrl.equals(controller));
 	}
 	
+	/**
+	 * Adds new controller to the actor.
+	 * @param new controller to be added
+	 * @throws ZootDuplicatedControllerException when trying to add controller type that already exists
+	 * 
+	 */
 	public void addController(Controller newController)
 	{
 		if(isDuplicate(newController)) throw new ZootDuplicatedControllerException(newController.getClass().getName(), getName()); 

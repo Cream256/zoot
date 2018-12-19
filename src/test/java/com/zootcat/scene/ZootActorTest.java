@@ -12,7 +12,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -677,6 +677,28 @@ public class ZootActorTest
 		assertTrue(ctrls.contains(baseCtrl));
 		assertTrue(ctrls.contains(derivedCtrl));
 		assertFalse(ctrls.contains(simpleCtrl));
+	}
+	
+	@Test
+	public void shouldInvokeActionOnAllControllersOfGivenType()
+	{
+		//given
+		ZootActor actor = new ZootActor();
+		MockBaseController ctrl1 = mock(MockBaseController.class);
+		MockDerivedController ctrl2 = mock(MockDerivedController.class);		
+		SimpleController ctrl3 = mock(SimpleController.class);
+		
+		//when
+		actor.addController(ctrl1);
+		actor.addController(ctrl2);
+		actor.addController(ctrl3);
+		actor.controllersOfTypeAction(MockBaseController.class, ctrl -> ctrl.getBaseParam());
+		
+		//then
+		verify(ctrl1).getBaseParam();
+		verify(ctrl2).getBaseParam();
+		verify(ctrl3).onAdd(actor);
+		verifyNoMoreInteractions(ctrl3);
 	}
 		
 	@Test
