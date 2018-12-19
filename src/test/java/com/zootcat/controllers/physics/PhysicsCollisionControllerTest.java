@@ -4,8 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.zootcat.controllers.ControllerPriority;
+import com.zootcat.controllers.logic.LifeController;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.scene.ZootActor;
 
@@ -313,4 +315,32 @@ public class PhysicsCollisionControllerTest
 		assertEquals(otherActorFixture, ctrl.getOtherFixture(otherActor, ctrlActor, contact));		
 	}
 	
+	@Test
+	public void shouldReturnValidHashCode()
+	{
+		assertEquals(ctrl.getClass().hashCode(), ctrl.hashCode());
+	}
+	
+	@Test
+	public void shouldNotBeEqualToOtherTypes()
+	{
+		assertFalse(ctrl.equals(null));
+		assertFalse(ctrl.equals("string"));
+		assertFalse(ctrl.equals(42));
+		assertFalse(ctrl.equals(1.25f));
+	}
+	
+	@Test
+	public void shouldNotBeEqualToOtherControllerType()
+	{
+		LifeController lifeCtrl = new LifeController();
+		assertFalse(ctrl.equals(lifeCtrl));
+		assertFalse(lifeCtrl.equals(ctrl));
+	}
+	
+	@Test
+	public void shouldBeEqualToItself()
+	{
+		assertTrue(ctrl.equals(ctrl));
+	}
 }

@@ -1,5 +1,6 @@
 package com.zootcat.controllers;
 
+import com.zootcat.controllers.gfx.RenderController;
 import com.zootcat.scene.ZootActor;
 
 /**
@@ -22,5 +23,25 @@ public interface Controller
 	default ControllerPriority getPriority() 
 	{ 
 		return ControllerPriority.Normal; 
+	}
+	
+	static int getControllerId(Controller ctrl)
+	{
+		return ctrl.getClass().hashCode();
+	}
+
+	static int getControllerId(Class<? extends Controller> ctrlClass)
+	{
+		return ctrlClass.hashCode();
+	}
+	
+	static boolean areEqual(Class<? extends Controller> ctrlClass1, Class<? extends Controller> ctrlClass2)
+	{
+		return getControllerId(ctrlClass1) == getControllerId(ctrlClass2);
+	}
+	
+	static boolean areEqual(Controller ctrl1, Controller ctrl2)
+	{
+		return getControllerId(ctrl1) == getControllerId(ctrl2);
 	}
 }

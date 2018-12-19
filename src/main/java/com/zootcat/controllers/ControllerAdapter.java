@@ -45,7 +45,7 @@ public class ControllerAdapter implements Controller
 	@Override
 	public int hashCode()
 	{
-		return getClass().hashCode();
+		return Controller.getControllerId(this);
 	}
 	
 	@Override
@@ -53,6 +53,6 @@ public class ControllerAdapter implements Controller
 	{
 		if(object == this) return true;
 		if(!(object instanceof Controller)) return false;
-		return hashCode() == object.hashCode();
+		return Controller.areEqual(this, (Controller)object);
 	}
 }

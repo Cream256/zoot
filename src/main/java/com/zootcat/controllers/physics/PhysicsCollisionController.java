@@ -86,6 +86,20 @@ public abstract class PhysicsCollisionController extends ZootCollisionListener i
 		enabled = value;
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		return Controller.getControllerId(this);
+	}
+	
+	@Override
+	public boolean equals(Object object)
+	{
+		if(object == this) return true;
+		if(!(object instanceof Controller)) return false;
+		return Controller.areEqual(this, (Controller)object);
+	}
+	
 	public ZootActor getOtherActor(ZootActor actorA, ZootActor actorB)
 	{
 		return actorA == getControllerActor() ? actorB : actorA;

@@ -153,6 +153,10 @@ public class ZootActor extends Actor
 	
 	private boolean isDuplicate(Controller controller)
 	{
+		//TODO remove
+		//Controller duplicate = controllers.stream().filter(ctrl -> ctrl.equals(controller)).findAny().orElse(null);
+		//System.out.println("dup " + duplicate);
+		//return duplicate != null;		
 		return controllers.stream().anyMatch(ctrl -> ctrl.equals(controller));
 	}
 	
@@ -204,7 +208,8 @@ public class ZootActor extends Actor
 	public <T extends Controller> T getController(Class<T> controllerClass)
 	{
 		Controller result = controllers.stream()
-				  .filter(ctrl -> ClassReflection.isInstance(controllerClass, ctrl))
+				  //.filter(ctrl -> ClassReflection.isInstance(controllerClass, ctrl))
+				  .filter(ctrl -> Controller.areEqual(ctrl.getClass(), controllerClass))
 				  .reduce((u, v) -> { throw new ZootDuplicatedControllerException(controllerClass.getName(), getName()); })
 				  .orElseThrow(() -> new ZootControllerNotFoundException(controllerClass.getName(), getName()));
 		return (T)result;

@@ -12,7 +12,8 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -35,8 +36,6 @@ import com.zootcat.controllers.factory.mocks.MockBaseController;
 import com.zootcat.controllers.factory.mocks.MockDerivedController;
 import com.zootcat.controllers.factory.mocks.SimpleController;
 import com.zootcat.controllers.gfx.RenderController;
-import com.zootcat.controllers.logic.IntValueController;
-import com.zootcat.controllers.logic.LifeController;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.exceptions.ZootDuplicatedControllerException;
 
@@ -372,8 +371,8 @@ public class ZootActorTest
 		assertEquals(ctrl, actor.getController(SimpleController.class));		
 	}
 	
-	@Test(expected = RuntimeZootException.class)
-	public void shouldThrowIfMoreThanOneInstanceOfControllerIsAvaiable()
+	@Test
+	public void shouldNotThrowIfBaseAndDerivedControllersAreAdded()
 	{
 		//given
 		Controller ctrl1 = new MockBaseController();
@@ -386,7 +385,8 @@ public class ZootActorTest
 		actor.addController(ctrl2);
 		
 		//then
-		actor.getController(MockBaseController.class);		
+		assertEquals(ctrl1, actor.getController(MockBaseController.class));
+		assertEquals(ctrl2, actor.getController(MockDerivedController.class));
 	}
 		
 	@Test(expected = RuntimeZootException.class)
@@ -416,23 +416,7 @@ public class ZootActorTest
 		ZootActor actor = new ZootActor();
 		assertNull(actor.tryGetController(SimpleController.class));
 	}
-	
-	@Test(expected = ZootDuplicatedControllerException.class)
-	public void shouldThrowWhenTryingToGetTooGenericTypeOfController()
-	{
-		//given
-		LifeController lifeCtrl = new LifeController();
-		IntValueController intValCtrl = new IntValueController();
-		
-		//when
-		ZootActor actor = new ZootActor();
-		actor.addController(lifeCtrl);
-		actor.addController(intValCtrl);
-		
-		//then
-		actor.getController(IntValueController.class);		
-	}
-		
+			
 	@Test
 	public void shouldNotThrowOnControllerActionIfControllerIsNotFoundTest()
 	{
