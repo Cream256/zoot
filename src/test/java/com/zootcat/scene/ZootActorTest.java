@@ -234,7 +234,8 @@ public class ZootActorTest
 	@Test(expected = ZootControllerNotFoundException.class)
 	public void shouldThrowIfSingleControllerIsNotFound()
 	{
-		assertNull(actor.getSingleController(Controller.class));
+		actor.getSingleController(Controller.class);
+		//throw
 	}
 	
 	@Test(expected = ZootDuplicatedControllerException.class)
@@ -250,6 +251,40 @@ public class ZootActorTest
 		
 		//then throw
 		actor.getSingleController(Controller.class);		
+	}
+	
+	@Test
+	public void shouldReturnSingleControllerWhenTrying()
+	{
+		//given
+		Controller ctrl = mock(Controller.class);
+		
+		//when
+		actor.addController(ctrl);
+		
+		//then
+		assertEquals(ctrl, actor.tryGetSingleController(Controller.class));		
+	}
+	
+	@Test
+	public void shouldNotThrowIfSingleControllerIsNotFoundWhenTrying()
+	{
+		assertNull(actor.tryGetSingleController(Controller.class));
+	}
+	
+	@Test(expected = ZootDuplicatedControllerException.class)
+	public void shouldThrowIfThereAreMoreThanOneSingleControllersFoundWhenTryingToGetController()
+	{
+		//given
+		Controller ctrl1 = mock(Controller.class);
+		Controller ctrl2 = mock(Controller.class);
+		
+		//when
+		actor.addController(ctrl1);
+		actor.addController(ctrl2);
+		
+		//then throw
+		actor.tryGetSingleController(Controller.class);		
 	}
 	
 	@Test

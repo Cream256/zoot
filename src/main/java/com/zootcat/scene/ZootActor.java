@@ -206,10 +206,10 @@ public class ZootActor extends Actor
 	}
 	
 	/**
-	 * Returns a single controller instance. 
+	 * Returns a single controller instance.
 	 * @param controllerClass - controller class to look for
-	 * @return Controller instance, or null if controller is not found.
-	 * @throws ZootDuplicatedControllerException if more then one instance of given controller class were detected.
+	 * @return Controller instance, or throws ZootControllerNotFoundException if no controller was found
+	 * @throws ZootDuplicatedControllerException if more then one instance of given controller class were found.
 	 */
 	public <T extends Controller> T getSingleController(Class<T> controllerClass)
 	{
@@ -217,6 +217,24 @@ public class ZootActor extends Actor
 		if(controllers.isEmpty()) throw new ZootControllerNotFoundException(controllerClass.getSimpleName(), getName());
 		if(controllers.size() > 1) throw new ZootDuplicatedControllerException(controllerClass.getSimpleName(), getName());
 		return controllers.get(0);
+	}
+	
+	/**
+	 * Returns a single controller instance. 
+	 * @param controllerClass - controller class to look for
+	 * @return Controller instance, or null if controller is not found.
+	 * @throws ZootDuplicatedControllerException if more then one instance of given controller class were detected.
+	 */
+	public <T extends Controller> T tryGetSingleController(Class<T> controllerClass)
+	{
+		try
+		{
+			return getSingleController(controllerClass);
+		}
+		catch(ZootControllerNotFoundException e)
+		{
+			return null;
+		}
 	}
 	
 	public float getOpacity() 
