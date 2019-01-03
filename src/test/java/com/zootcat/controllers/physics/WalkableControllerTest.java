@@ -420,4 +420,10 @@ public class WalkableControllerTest
 		ctrl.setCanRun(true);
 		assertTrue(ctrl.canRun());		
 	}
+	
+	@Test
+	public void shouldBeSingleton()
+	{
+		assertTrue(ctrl.isSingleton());
+	}
 }

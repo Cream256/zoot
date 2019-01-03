@@ -26,6 +26,12 @@ public class LifeController extends IntValueController
 	}
 	
 	@Override
+	public boolean isSingleton()
+	{
+		return true;
+	}
+	
+	@Override
 	public void setValue(int value)
 	{
 		super.setValue(value);

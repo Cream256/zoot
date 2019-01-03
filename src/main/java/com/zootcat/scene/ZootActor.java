@@ -18,6 +18,7 @@ import com.zootcat.controllers.ChangeListenerController;
 import com.zootcat.controllers.Controller;
 import com.zootcat.controllers.ControllerComparator;
 import com.zootcat.controllers.gfx.RenderController;
+import com.zootcat.exceptions.ZootControllerNotFoundException;
 import com.zootcat.exceptions.ZootDuplicatedControllerException;
 import com.zootcat.fsm.ZootStateMachine;
 
@@ -32,7 +33,7 @@ public class ZootActor extends Actor
 {
 	public static final String DEFAULT_NAME = "Unnamed Actor";
 	
-	private List<Controller> controllers = new ArrayList<Controller>();	//TODO use ordered queue?
+	private List<Controller> controllers = new ArrayList<Controller>();
 	private Set<String> types = new HashSet<String>();	
 	private float opacity = 1.0f;
 	private int id = 0;
@@ -213,7 +214,7 @@ public class ZootActor extends Actor
 	public <T extends Controller> T getSingleController(Class<T> controllerClass)
 	{
 		List<T> controllers = getControllers(controllerClass);
-		if(controllers.isEmpty()) return null;
+		if(controllers.isEmpty()) throw new ZootControllerNotFoundException(controllerClass.getSimpleName(), getName());
 		if(controllers.size() > 1) throw new ZootDuplicatedControllerException(controllerClass.getSimpleName(), getName());
 		return controllers.get(0);
 	}

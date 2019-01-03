@@ -16,5 +16,11 @@ public class DirectionController extends ControllerAdapter
 	public void setDirection(ZootDirection direction)
 	{
 		this.direction = direction;		
-	}	
+	}
+	
+	@Override
+	public boolean isSingleton()
+	{
+		return true;
+	}
 }

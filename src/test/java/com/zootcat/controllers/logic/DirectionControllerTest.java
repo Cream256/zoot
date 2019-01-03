@@ -32,4 +32,10 @@ public class DirectionControllerTest
 		ctrl.setDirection(ZootDirection.Down);
 		assertEquals(ZootDirection.Down, ctrl.getDirection());
 	}
+	
+	@Test
+	public void shouldBeSingleton()
+	{
+		assertTrue(new DirectionController().isSingleton());
+	}
 }

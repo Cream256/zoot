@@ -39,6 +39,7 @@ import com.zootcat.controllers.factory.mocks.RenderControllerMock1;
 import com.zootcat.controllers.factory.mocks.RenderControllerMock2;
 import com.zootcat.controllers.factory.mocks.SimpleController;
 import com.zootcat.controllers.gfx.RenderController;
+import com.zootcat.exceptions.ZootControllerNotFoundException;
 import com.zootcat.exceptions.ZootDuplicatedControllerException;
 
 public class ZootActorTest 
@@ -230,8 +231,8 @@ public class ZootActorTest
 		assertEquals(ctrl, actor.getSingleController(Controller.class));		
 	}
 	
-	@Test
-	public void shouldReturnNullIfSingleControllerIsNotFound()
+	@Test(expected = ZootControllerNotFoundException.class)
+	public void shouldThrowIfSingleControllerIsNotFound()
 	{
 		assertNull(actor.getSingleController(Controller.class));
 	}

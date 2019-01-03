@@ -42,6 +42,12 @@ public class WalkableController extends ControllerAdapter
 	private DetectGroundController groundCtrl;
 	
 	@Override
+	public boolean isSingleton()
+	{
+		return true;
+	}
+	
+	@Override
 	public void onAdd(ZootActor actor)
 	{
 		timeout = 0;

@@ -137,7 +137,7 @@ public class ZootStateUtilsTest
 	}
 	
 	@Test
-	public void shouldReturnFalseForCanRunWhenNoMovementControllerIsPresent()
+	public void shouldReturnTrueForCanRunWhenNoMovementControllerIsPresent()
 	{
 		ZootActor actor = new ZootActor();
 		ZootEvent event = new ZootEvent();
@@ -147,7 +147,7 @@ public class ZootStateUtilsTest
 	}
 	
 	@Test
-	public void shouldReturnFalseForCanRunWhenEventHasNoActor()
+	public void shouldReturnTrueForCanRunWhenEventHasNoActor()
 	{
 		assertTrue(ZootStateUtils.canActorRun(new ZootEvent()));
 	}

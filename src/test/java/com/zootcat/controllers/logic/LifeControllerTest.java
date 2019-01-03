@@ -201,4 +201,11 @@ public class LifeControllerTest
 		//then
 		assertEquals("Should send dead event again", 2, counter.getCount());
 	}
+	
+	
+	@Test
+	public void shouldBeSingleton()
+	{
+		assertTrue(ctrl.isSingleton());
+	}
 }

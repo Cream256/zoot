@@ -1,5 +1,6 @@
 package com.zootcat.controllers.physics;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -69,4 +70,10 @@ public class FlyableControllerTest
 		//then
 		verify(physicsBodyCtrl).setVelocity(0.0f, 0.0f, true, false);
 	}	
+	
+	@Test
+	public void shouldBeSingleton()
+	{
+		assertTrue(flyableCtrl.isSingleton());
+	}
 }

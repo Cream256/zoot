@@ -12,6 +12,12 @@ public class FlyableController extends ControllerAdapter
 	private PhysicsBodyController physicsCtrl;
 	
 	@Override
+	public boolean isSingleton()
+	{
+		return true;
+	}
+	
+	@Override
 	public void onAdd(ZootActor actor)
 	{
 		physicsCtrl = actor.getSingleController(PhysicsBodyController.class);

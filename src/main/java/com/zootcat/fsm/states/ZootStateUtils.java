@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.zootcat.controllers.physics.WalkableController;
+import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEventTypeEnum;
@@ -47,19 +48,26 @@ public class ZootStateUtils
 	
 	public static boolean canActorRun(ZootEvent event)
 	{
-		WalkableController moveCtrl = getMoveableController(event.getTargetZootActor());
+		WalkableController moveCtrl = getWalkableController(event.getTargetZootActor());
 		return moveCtrl != null ? moveCtrl.canRun() : true;
 	}
 	
 	public static boolean canActorJump(ZootEvent event)
 	{
-		WalkableController moveCtrl = getMoveableController(event.getTargetZootActor());
+		WalkableController moveCtrl = getWalkableController(event.getTargetZootActor());
 		return moveCtrl != null ? moveCtrl.canJump() : true;
 	}
 	
-	private static WalkableController getMoveableController(ZootActor actor)
+	private static WalkableController getWalkableController(ZootActor actor)
 	{
-		return actor != null ? actor.getSingleController(WalkableController.class) : null;
+		try
+		{
+			return actor != null ? actor.getSingleController(WalkableController.class) : null;	
+		}
+		catch(RuntimeZootException e)
+		{
+			return null;
+		}		
 	}
 	
 	public static ZootDirection getDirectionFromEvent(ZootEvent event)
