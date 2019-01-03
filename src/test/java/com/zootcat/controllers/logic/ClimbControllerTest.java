@@ -19,7 +19,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.physics.PhysicsBodyController;
-import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.fsm.states.ground.ClimbState;
 import com.zootcat.fsm.states.ground.IdleState;
@@ -65,11 +64,9 @@ public class ClimbControllerTest
 		//ctrl actor
 		ctrlActor = new ZootActor();
 		ctrlActor.setSize(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
-		ctrlActor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		
 		//other actor
 		otherActor = new ZootActor();
-		otherActor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		
 		//event counter
 		eventCounter = new ZootActorEventCounterListener();

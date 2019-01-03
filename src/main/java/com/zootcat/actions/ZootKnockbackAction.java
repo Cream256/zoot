@@ -16,15 +16,15 @@ public class ZootKnockbackAction extends ZootAction
 	public boolean act(float delta)
 	{				
 		float kx = varyHorizontal ? calculateHorizontalKnockback(attackActor, knockbackActor) : knockbackX;		
-		knockbackActor.controllerAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(kx, knockbackY, kx != 0.0f, knockbackY != 0.0f));
+		knockbackActor.controllersAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(kx, knockbackY, kx != 0.0f, knockbackY != 0.0f));
 		
 		return true;
 	}
 	
 	private float calculateHorizontalKnockback(ZootActor actionActor, ZootActor knockbackActor)
 	{		
-		PhysicsBodyController actionActorPhysBodyCtrl = actionActor.tryGetController(PhysicsBodyController.class);
-		PhysicsBodyController knockbackActorPhysBodyCtrl = knockbackActor.tryGetController(PhysicsBodyController.class);
+		PhysicsBodyController actionActorPhysBodyCtrl = actionActor.getSingleController(PhysicsBodyController.class);
+		PhysicsBodyController knockbackActorPhysBodyCtrl = knockbackActor.getSingleController(PhysicsBodyController.class);
 		if(actionActorPhysBodyCtrl == null || knockbackActorPhysBodyCtrl == null)
 		{
 			return 0.0f;

@@ -22,7 +22,7 @@ public class ApplySinImpulseController extends ControllerAdapter
 		float ix = impulseX * sin;
 		float iy = impulseY * sin;
 		
-		actor.controllerAction(PhysicsBodyController.class, ctrl -> ctrl.applyImpulse(ix, iy));
+		actor.controllersAction(PhysicsBodyController.class, ctrl -> ctrl.applyImpulse(ix, iy));
 	}
 	
 	public void setImpulseX(float value)

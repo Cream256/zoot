@@ -29,7 +29,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.zootcat.controllers.factory.ControllerAnnotations;
-import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.physics.ZootBodyShape;
 import com.zootcat.scene.ZootActor;
@@ -64,7 +63,6 @@ public class FixtureControllerTest
 		BitMaskConverter.Instance.clear();
 		
 		actor = new ZootActor();
-		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		actor.addController(physicsBodyCtrl);
 				
 		ctrl = new FixtureController();

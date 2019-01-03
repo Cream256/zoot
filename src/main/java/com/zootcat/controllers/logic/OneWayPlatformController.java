@@ -37,6 +37,12 @@ public class OneWayPlatformController extends PhysicsCollisionController
 	}
 	
 	@Override
+	public boolean isSingleton()
+	{
+		return true;
+	}
+	
+	@Override
 	public void onBeginContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		shouldCollide.add(getOtherActor(actorA, actorB));
@@ -44,8 +50,8 @@ public class OneWayPlatformController extends PhysicsCollisionController
 		//get bodies
 		ZootActor platformActor = actorA == platform ? actorA : actorB; 
 		ZootActor otherActor = getOtherActor(actorA, actorB);
-		Body platformBody = platformActor.getController(PhysicsBodyController.class).getBody();
-		Body otherBody = otherActor.getController(PhysicsBodyController.class).getBody();
+		Body platformBody = platformActor.getSingleController(PhysicsBodyController.class).getBody();
+		Body otherBody = otherActor.getSingleController(PhysicsBodyController.class).getBody();
 		
 		//get platform front face height
 		float platformFaceY = getPlatformFixtureFrontFace(actorA, actorB, contact);
@@ -94,7 +100,7 @@ public class OneWayPlatformController extends PhysicsCollisionController
 	public void onPreSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
 	{
 		ZootActor otherActor = getOtherActor(actorA, actorB);		
-		if(otherActor.controllerCondition(IgnorePlatformsController.class, ctrl -> ctrl.isActive()))
+		if(otherActor.controllersAllMatch(IgnorePlatformsController.class, ctrl -> ctrl.isActive()))
 		{
 			ignorePlatforms.add(otherActor);	//we should ignore this platform until end contact
 		}

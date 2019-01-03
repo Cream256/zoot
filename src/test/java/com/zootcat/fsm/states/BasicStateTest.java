@@ -4,13 +4,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 
 import com.zootcat.controllers.gfx.AnimatedSpriteController;
-import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.scene.ZootActor;
@@ -117,7 +119,7 @@ public class BasicStateTest
 		ZootActor actor = mock(ZootActor.class);
 		
 		//when
-		when(actor.tryGetController(AnimatedSpriteController.class)).thenReturn(null);
+		when(actor.getSingleController(AnimatedSpriteController.class)).thenReturn(null);
 
 		//then
 		assertNull(state.getActorAnimation(actor));
@@ -133,7 +135,7 @@ public class BasicStateTest
 		ZootAnimation animation = mock(ZootAnimation.class);
 		
 		//when
-		when(actor.tryGetController(AnimatedSpriteController.class)).thenReturn(spriteCtrl);
+		when(actor.getSingleController(AnimatedSpriteController.class)).thenReturn(spriteCtrl);
 		when(spriteCtrl.getCurrentAnimation()).thenReturn(animation);
 		
 		//then
@@ -146,7 +148,6 @@ public class BasicStateTest
 		//given
 		BasicState state = new BasicState("test");
 		ZootActor actor = new ZootActor();
-		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
 		
 		//when
@@ -163,7 +164,6 @@ public class BasicStateTest
 		//given
 		BasicState state = new BasicState("test");
 		ZootActor actor = new ZootActor();
-		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
 		
 		//when
@@ -199,7 +199,6 @@ public class BasicStateTest
 		//given
 		BasicState state = new BasicState("test");
 		ZootActor actor = new ZootActor();
-		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
 		ZootAnimation currentAnimation = mock(ZootAnimation.class);
 		

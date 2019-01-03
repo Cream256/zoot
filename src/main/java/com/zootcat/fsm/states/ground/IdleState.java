@@ -27,10 +27,10 @@ public class IdleState extends BasicState
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{
 		setAnimationBasedOnStateName(actor);
-		actor.controllerAction(WalkableController.class, (ctrl) -> ctrl.stop());
+		actor.controllersAction(WalkableController.class, (ctrl) -> ctrl.stop());
 		
 		actorDirection = ZootDirection.None;
-		actor.controllerAction(DirectionController.class, c -> actorDirection = c.getDirection());
+		actor.controllersAction(DirectionController.class, c -> actorDirection = c.getDirection());
 	}
 	
 	@Override

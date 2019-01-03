@@ -12,7 +12,7 @@ public class ApplyImpulseController extends ControllerAdapter
 	@Override
 	public void onUpdate(float delta, ZootActor actor)
 	{
-		actor.controllerAction(PhysicsBodyController.class, ctrl -> ctrl.applyImpulse(impulseX * delta, impulseY * delta));
+		actor.controllersAction(PhysicsBodyController.class, ctrl -> ctrl.applyImpulse(impulseX * delta, impulseY * delta));
 	}
 	
 	public float getImpulseX()

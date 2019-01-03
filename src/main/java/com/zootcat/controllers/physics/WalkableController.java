@@ -3,6 +3,7 @@ package com.zootcat.controllers.physics;
 import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
+import com.zootcat.exceptions.ZootControllerNotFoundException;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.utils.ZootUtils;
@@ -44,8 +45,11 @@ public class WalkableController extends ControllerAdapter
 	public void onAdd(ZootActor actor)
 	{
 		timeout = 0;
-		physicsCtrl = actor.getController(PhysicsBodyController.class);
-		groundCtrl = actor.getController(DetectGroundController.class);
+		physicsCtrl = actor.getSingleController(PhysicsBodyController.class);
+		if(physicsCtrl == null) throw new ZootControllerNotFoundException(PhysicsBodyController.class.getSimpleName(), actor.getName());
+		
+		groundCtrl = actor.getSingleController(DetectGroundController.class);
+		if(groundCtrl == null) throw new ZootControllerNotFoundException(DetectGroundController.class.getSimpleName(), actor.getName());
 	}
 
 	@Override

@@ -17,7 +17,7 @@ public class DeadState extends AnimationBasedState
 	@Override
 	public void onUpdate(ZootActor actor, float delta)
 	{
-		boolean alive = actor.controllerCondition(LifeController.class, c -> c.isAlive());
+		boolean alive = actor.controllersAllMatch(LifeController.class, c -> c.isAlive());
 		if(alive)
 		{
 			changeState(actor, IdleState.ID);

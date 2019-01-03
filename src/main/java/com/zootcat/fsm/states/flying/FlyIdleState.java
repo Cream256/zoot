@@ -30,10 +30,10 @@ public class FlyIdleState extends BasicState
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{
 		setAnimationBasedOnStateName(actor);
-		actor.controllerAction(FlyableController.class, (ctrl) -> ctrl.stop());
+		actor.controllersAction(FlyableController.class, (ctrl) -> ctrl.stop());
 		
 		actorDirection = ZootDirection.None;
-		actor.controllerAction(DirectionController.class, c -> actorDirection = c.getDirection());
+		actor.controllersAction(DirectionController.class, c -> actorDirection = c.getDirection());
 	}
 	
 	@Override

@@ -32,7 +32,7 @@ public class CollisionFilterController extends ControllerAdapter
 	@Override
 	public void onAdd(ZootActor actor)
 	{		
-		actor.controllerAction(PhysicsBodyController.class, ctrl -> ctrl.setCollisionFilter(collisionFilter));
+		actor.controllersAction(PhysicsBodyController.class, ctrl -> ctrl.setCollisionFilter(collisionFilter));
 	}
 	
 	@Override

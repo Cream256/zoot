@@ -17,7 +17,7 @@ public class ChaseStateMachineController extends DefaultStateMachineController
 	@Override
 	public void onAdd(ZootActor actor)
 	{
-		PhysicsBodyController physicsCtrl = actor.getController(PhysicsBodyController.class);
+		PhysicsBodyController physicsCtrl = actor.getSingleController(PhysicsBodyController.class);
 		
 		PatrolAndChaseState patrolAndChaseState = new PatrolAndChaseState();
 		patrolAndChaseState.setPatrolRange(patrolRange);

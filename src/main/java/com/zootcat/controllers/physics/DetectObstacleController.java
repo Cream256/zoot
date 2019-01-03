@@ -34,7 +34,7 @@ public class DetectObstacleController extends OnCollideWithSensorController
 	protected void updateSensor(ZootActor actor)
 	{
 		ZootDirection oldDirection = direction;		
-		actor.controllerAction(DirectionController.class, ctrl -> direction = ctrl.getDirection());
+		actor.controllersAction(DirectionController.class, ctrl -> direction = ctrl.getDirection());
 		
 		if(oldDirection != direction)
 		{

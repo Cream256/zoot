@@ -17,7 +17,7 @@ public class RunState extends WalkState
 	@Override
 	public void onUpdate(ZootActor actor, float delta)
 	{
-		actor.controllerAction(WalkableController.class, (mvCtrl) -> 
+		actor.controllersAction(WalkableController.class, (mvCtrl) -> 
 		{
 			if(mvCtrl.canRun())
 			{			

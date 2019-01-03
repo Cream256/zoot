@@ -34,12 +34,8 @@ public class DownState extends BasicState
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{
 		setAnimationBasedOnStateName(actor);
-		actor.controllerAction(PhysicsBodyController.class, (ctrl) -> ctrl.setVelocity(0.0f, 0.0f, true, false));
-		
-		if(bodyScaling != null)
-		{
-			actor.controllerAction(PhysicsBodyController.class, c -> c.scale(bodyScaling));
-		}
+		actor.controllersAction(PhysicsBodyController.class, (ctrl) -> ctrl.setVelocity(0.0f, 0.0f, true, false));
+		if(bodyScaling != null) actor.controllersAction(PhysicsBodyController.class, c -> c.scale(bodyScaling));
 	}
 	
 	@Override
@@ -47,7 +43,7 @@ public class DownState extends BasicState
 	{
 		if(bodyScaling != null)
 		{
-			actor.controllerAction(PhysicsBodyController.class, c -> c.scale(bodyScaling.invert()));
+			actor.controllersAction(PhysicsBodyController.class, c -> c.scale(bodyScaling.invert()));
 		}
 	}
 	

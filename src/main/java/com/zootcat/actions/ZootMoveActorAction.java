@@ -31,7 +31,7 @@ public class ZootMoveActorAction extends ZootAction
 	@Override
 	public boolean act(float delta)
 	{
-		getTargetZootActor().controllerAction(PhysicsBodyController.class, ctrl -> 
+		getTargetZootActor().controllersAction(PhysicsBodyController.class, ctrl -> 
 		{
 			Vector2 pos = ctrl.getCenterPositionRef();
 			ctrl.setPosition(pos.x + mx, pos.y + my);

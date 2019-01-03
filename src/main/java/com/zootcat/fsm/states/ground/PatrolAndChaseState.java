@@ -71,7 +71,7 @@ public class PatrolAndChaseState extends PatrolState
 			}
 			else
 			{
-				actor.controllerAction(WalkableController.class, ctrl -> ctrl.run(moveDirection));			
+				actor.controllersAction(WalkableController.class, ctrl -> ctrl.run(moveDirection));			
 				setActorAnimationIfNotSet(actor, "Run");	
 			}
 			return;
@@ -90,8 +90,8 @@ public class PatrolAndChaseState extends PatrolState
 	
 	private boolean shouldTurnAroundToChasedActor(ZootActor chaser, ZootActor chased)
 	{
-		float chaserX = chaser.getController(PhysicsBodyController.class).getCenterPositionRef().x;
-		float chasedX = chased.getController(PhysicsBodyController.class).getCenterPositionRef().x;
+		float chaserX = chaser.getSingleController(PhysicsBodyController.class).getCenterPositionRef().x;
+		float chasedX = chased.getSingleController(PhysicsBodyController.class).getCenterPositionRef().x;
 		
 		if(moveDirection == ZootDirection.Left && chaserX < chasedX) return true;
 		if(moveDirection == ZootDirection.Right && chaserX > chasedX) return true;		
@@ -101,12 +101,12 @@ public class PatrolAndChaseState extends PatrolState
 	private ZootActor getChasedActor(ZootActor chaser)
 	{
 		float minDist = Float.MAX_VALUE;
-		float chaserX = chaser.getController(PhysicsBodyController.class).getCenterPositionRef().x;
+		float chaserX = chaser.getSingleController(PhysicsBodyController.class).getCenterPositionRef().x;
 			
 		ZootActor closestActor = null;
 		for(ZootActor act : actorsInChaseRange)
 		{
-			float posX = act.getController(PhysicsBodyController.class).getCenterPositionRef().x;
+			float posX = act.getSingleController(PhysicsBodyController.class).getCenterPositionRef().x;
 			float diff = Math.abs(posX - chaserX);
 			if(diff < minDist)
 			{

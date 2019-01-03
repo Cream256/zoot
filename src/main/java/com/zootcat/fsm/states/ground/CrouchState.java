@@ -33,17 +33,13 @@ public class CrouchState extends WalkState
 	{
 		super.onEnter(actor, event);
 		
-		if(bodyScaling != null)	actor.controllerAction(PhysicsBodyController.class, ctrl -> 
-		{
-			
-			ctrl.scale(bodyScaling);
-		});
+		if(bodyScaling != null)	actor.controllersAction(PhysicsBodyController.class, ctrl -> ctrl.scale(bodyScaling));		
 	}
 	
 	@Override
 	public void onLeave(ZootActor actor, ZootEvent event)
 	{
-		if(bodyScaling != null) actor.controllerAction(PhysicsBodyController.class, c -> c.scale(bodyScaling.invert()));
+		if(bodyScaling != null) actor.controllersAction(PhysicsBodyController.class, c -> c.scale(bodyScaling.invert()));
 	}
 	
 	@Override

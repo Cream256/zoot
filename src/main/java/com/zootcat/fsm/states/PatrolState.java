@@ -28,7 +28,7 @@ public class PatrolState extends WalkState
 	@Override
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{		
-		actor.controllerAction(DirectionController.class, ctrl ->
+		actor.controllersAction(DirectionController.class, ctrl ->
 		{
 			moveDirection = ctrl.getDirection();
 		});
@@ -57,12 +57,12 @@ public class PatrolState extends WalkState
 	
 	protected void move(ZootActor actor, float delta)
 	{
-		actor.controllerAction(WalkableController.class, (mvCtrl) -> mvCtrl.walk(moveDirection));
+		actor.controllersAction(WalkableController.class, (mvCtrl) -> mvCtrl.walk(moveDirection));
 	}
 	
 	protected boolean outOfPatrolRange(ZootActor actor)
 	{
-		PhysicsBodyController physicsCtrl = actor.getController(PhysicsBodyController.class);		
+		PhysicsBodyController physicsCtrl = actor.getSingleController(PhysicsBodyController.class);		
 		float distance = Math.abs(physicsCtrl.getCenterPositionRef().x - startX);
 		float realRange = patrolRange * actor.getScene().getUnitScale(); 
 		return distance > realRange;
@@ -81,7 +81,7 @@ public class PatrolState extends WalkState
 	
 	private void setTurnCooldown(ZootActor actor)
 	{
-		actor.controllerAction(AnimatedSpriteController.class, ctrl -> 
+		actor.controllersAction(AnimatedSpriteController.class, ctrl -> 
 		{
 			ZootAnimation turnAnimation = ctrl.getAnimation("Turn"); 
 			turnCooldown = turnAnimation == null 

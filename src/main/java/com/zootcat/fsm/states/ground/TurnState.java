@@ -28,15 +28,15 @@ public class TurnState extends AnimationBasedState
 		super.onEnter(actor, event);
 		
 		direction = ZootDirection.None;
-		actor.controllerAction(DirectionController.class, ctrl -> direction = ctrl.getDirection());
-		actor.controllerAction(WalkableController.class, ctrl -> ctrl.stop());
-		actor.controllerAction(FlyableController.class, ctrl -> ctrl.stop());
+		actor.controllersAction(DirectionController.class, ctrl -> direction = ctrl.getDirection());
+		actor.controllersAction(WalkableController.class, ctrl -> ctrl.stop());
+		actor.controllersAction(FlyableController.class, ctrl -> ctrl.stop());
 	}
 	
 	@Override
 	public void onLeave(ZootActor actor, ZootEvent event)
 	{
-		actor.controllerAction(DirectionController.class, ctrl -> ctrl.setDirection(direction.invert()));
+		actor.controllersAction(DirectionController.class, ctrl -> ctrl.setDirection(direction.invert()));
 	}
 		
 	@Override

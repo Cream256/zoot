@@ -32,8 +32,8 @@ public class JumpState extends BasicState
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{		
 		super.setAnimationBasedOnStateName(actor);
-		actor.controllerAction(WalkableController.class, ctrl -> ctrl.jumpUp());
-		actor.controllerAction(ClimbController.class, ctrl -> ctrl.setSensorPosition(ZootDirection.Up));
+		actor.controllersAction(WalkableController.class, ctrl -> ctrl.jumpUp());
+		actor.controllersAction(ClimbController.class, ctrl -> ctrl.setSensorPosition(ZootDirection.Up));
 	}
 	
 	@Override
@@ -51,15 +51,15 @@ public class JumpState extends BasicState
 		}		
 		else if(event.getType() == ZootEventType.Ground)
 		{
-			boolean falling = event.getTargetZootActor().controllerCondition(PhysicsBodyController.class, ctrl -> ctrl.getVelocity().y <= 0.0f);
+			boolean falling = event.getTargetZootActor().controllersAllMatch(PhysicsBodyController.class, ctrl -> ctrl.getVelocity().y <= 0.0f);
 			if(falling)	changeState(event, IdleState.ID);
 		}
 		else if(ZootStateUtils.isMoveEvent(event))
 		{
 			ZootDirection dir = ZootStateUtils.getDirectionFromEvent(event);
-			event.getTargetZootActor().controllerAction(WalkableController.class, ctrl -> ctrl.moveInAir(dir));
-			event.getTargetZootActor().controllerAction(DirectionController.class, ctrl -> ctrl.setDirection(dir));
-			event.getTargetZootActor().controllerAction(ClimbController.class, ctrl -> ctrl.setSensorPosition(dir));
+			event.getTargetZootActor().controllersAction(WalkableController.class, ctrl -> ctrl.moveInAir(dir));
+			event.getTargetZootActor().controllersAction(DirectionController.class, ctrl -> ctrl.setDirection(dir));
+			event.getTargetZootActor().controllersAction(ClimbController.class, ctrl -> ctrl.setSensorPosition(dir));
 		}
 		else if(event.getType() == ZootEventType.Hurt)
 		{

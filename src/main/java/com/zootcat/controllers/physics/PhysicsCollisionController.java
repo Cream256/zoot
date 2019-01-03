@@ -99,7 +99,7 @@ public abstract class PhysicsCollisionController extends ZootCollisionListener i
 		if(object == null || object.getClass() != getClass()) return false;
 		return hashCode() == object.hashCode();
 	}
-	
+		
 	public ZootActor getOtherActor(ZootActor actorA, ZootActor actorB)
 	{
 		return actorA == getControllerActor() ? actorB : actorA;

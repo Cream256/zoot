@@ -10,7 +10,7 @@ public class CollectForLifeController extends CollectOnCollideController
 	
 	public boolean onCollect(ZootActor collectible, ZootActor collector)
 	{
-		collector.controllerAction(LifeController.class, ctrl ->
+		collector.controllersAction(LifeController.class, ctrl ->
 		{
 			ctrl.addToMaxValue(maxLife);
 			ctrl.addToValue(life);

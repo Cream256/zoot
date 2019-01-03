@@ -43,4 +43,10 @@ public class InputController extends InputListener implements Controller
 	{
 		return enabled;
 	}
+
+	@Override
+	public boolean isSingleton()
+	{
+		return false;
+	}
 }

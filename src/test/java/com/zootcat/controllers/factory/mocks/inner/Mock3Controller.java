@@ -52,4 +52,10 @@ public class Mock3Controller implements Controller
 	{
 		return true;
 	}
+
+	@Override
+	public boolean isSingleton()
+	{
+		return false;
+	}
 }

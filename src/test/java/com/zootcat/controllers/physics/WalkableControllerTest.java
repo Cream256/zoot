@@ -17,7 +17,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.factory.ControllerAnnotations;
-import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
@@ -43,7 +42,6 @@ public class WalkableControllerTest
 		MockitoAnnotations.initMocks(this);
 		
 		actor = new ZootActor();
-		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		actor.addController(physicsCtrl);
 		actor.addController(groundCtrl);
 		

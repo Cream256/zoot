@@ -26,7 +26,7 @@ public class ZootPositionActorAction extends ZootAction
 	@Override
 	public boolean act(float delta)
 	{
-		getTargetZootActor().controllerAction(PhysicsBodyController.class, ctrl -> 
+		getTargetZootActor().controllersAction(PhysicsBodyController.class, ctrl -> 
 		{
 			ctrl.setPosition(posX, posY);
 		});		

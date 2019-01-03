@@ -17,7 +17,7 @@ public class PatrolStateMachineController extends DefaultStateMachineController
 	@Override
 	public void onAdd(ZootActor actor)
 	{
-		PhysicsBodyController physicsCtrl = actor.getController(PhysicsBodyController.class);
+		PhysicsBodyController physicsCtrl = actor.getSingleController(PhysicsBodyController.class);
 		
 		PatrolState patrolState = flying ? new FlyPatrolState() : new PatrolState();
 		patrolState.setPatrolRange(patrolRange);

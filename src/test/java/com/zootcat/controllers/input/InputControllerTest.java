@@ -100,5 +100,4 @@ public class InputControllerTest
 		ctrl.setEnabled(true);
 		assertTrue(ctrl.isEnabled());
 	}
-	
 }

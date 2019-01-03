@@ -25,8 +25,8 @@ public class StunState extends AnimationBasedState
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{	
 		super.onEnter(actor, event);
-		actor.controllerAction(WalkableController.class, ctrl -> ctrl.stop());
-		actor.controllerAction(FlyableController.class, ctrl -> ctrl.stop());		
+		actor.controllersAction(WalkableController.class, ctrl -> ctrl.stop());
+		actor.controllersAction(FlyableController.class, ctrl -> ctrl.stop());		
 	}
 	
 	@Override

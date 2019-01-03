@@ -12,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.physics.PhysicsBodyController;
-import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.scene.ZootActor;
 
 public class ZootPositionActorActionTest
@@ -31,7 +30,6 @@ public class ZootPositionActorActionTest
 		when(physCtrl.getCenterPositionRef()).thenReturn(new Vector2());
 		
 		actor = new ZootActor();
-		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		actor.addController(physCtrl);
 				
 		action = new ZootPositionActorAction();

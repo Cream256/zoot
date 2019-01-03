@@ -32,13 +32,13 @@ public class WalkState extends BasicState
 	{
 		setAnimationBasedOnStateName(actor);
 		moveDirection = ZootStateUtils.getDirectionFromEvent(event);
-		actor.controllerAction(DirectionController.class, (ctrl) -> ctrl.setDirection(moveDirection));
+		actor.controllersAction(DirectionController.class, (ctrl) -> ctrl.setDirection(moveDirection));
 	}
 	
 	@Override
 	public void onUpdate(ZootActor actor, float delta)
 	{
-		actor.controllerAction(WalkableController.class, (mvCtrl) -> mvCtrl.walk(moveDirection));		
+		actor.controllersAction(WalkableController.class, (mvCtrl) -> mvCtrl.walk(moveDirection));		
 	}
 	
 	@Override

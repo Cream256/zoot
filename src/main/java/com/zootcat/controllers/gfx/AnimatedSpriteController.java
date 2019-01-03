@@ -140,7 +140,7 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 		sprite.setRegion(frame);				
 		
 		ZootAnimationOffset offset = currentAnimation.getKeyFrameOffset();		
-		boolean leftOffset = actor.controllerCondition(DirectionController.class, c -> c.getDirection() == ZootDirection.Left);			
+		boolean leftOffset = actor.controllersAllMatch(DirectionController.class, c -> c.getDirection() == ZootDirection.Left);			
 		Vector2 directionOffset = leftOffset ? offset.left : offset.right;
 				
 		float sceneUnitScale = scene.getUnitScale();
@@ -176,7 +176,7 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 
 	private ZootDirection getDirection(ZootActor actor)
 	{
-		DirectionController ctrl = actor.tryGetController(DirectionController.class);
+		DirectionController ctrl = actor.getSingleController(DirectionController.class);
 		if(ctrl != null)
 		{
 			return ctrl.getDirection();

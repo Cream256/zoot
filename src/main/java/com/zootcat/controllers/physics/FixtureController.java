@@ -130,7 +130,7 @@ public class FixtureController extends ControllerAdapter
 		fixtures = new Array<Fixture>(fixtureDefs.size);
 		fixtureDefs.forEach(def -> 
 		{
-			Fixture newFixture = actor.getController(PhysicsBodyController.class).addFixture(def, actor);
+			Fixture newFixture = actor.getSingleController(PhysicsBodyController.class).addFixture(def, actor);
 			fixtures.add(newFixture);
 		});
 	}
@@ -138,7 +138,7 @@ public class FixtureController extends ControllerAdapter
 	@Override
 	public void onRemove(ZootActor actor)
 	{
-		fixtures.forEach(fixture -> actor.getController(PhysicsBodyController.class).removeFixture(fixture));
+		fixtures.forEach(fixture -> actor.getSingleController(PhysicsBodyController.class).removeFixture(fixture));
 		fixtures.clear();
 		fixtures = null;
 	}

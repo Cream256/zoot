@@ -1,7 +1,10 @@
 package com.zootcat.controllers.logic;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -18,7 +21,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.physics.PhysicsBodyController;
-import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
@@ -46,16 +48,15 @@ public class MovingPlatformControllerTest
 		//mocks
 		MockitoAnnotations.initMocks(this);
 		when(sceneMock.getUnitScale()).thenReturn(1.0f);
-		when(actorOnPlatform1.getController(PhysicsBodyController.class)).thenReturn(actorOnPlatform1BodyMock);
-		when(actorOnPlatform2.getController(PhysicsBodyController.class)).thenReturn(actorOnPlatform2BodyMock);
+		when(actorOnPlatform1.getSingleController(PhysicsBodyController.class)).thenReturn(actorOnPlatform1BodyMock);
+		when(actorOnPlatform2.getSingleController(PhysicsBodyController.class)).thenReturn(actorOnPlatform2BodyMock);
 		when(actorOnPlatform1BodyMock.getVelocity()).thenReturn(new Vector2());
 		when(actorOnPlatform2BodyMock.getVelocity()).thenReturn(new Vector2());
 	
 		//controller actor
 		ctrlActor = new ZootActor();
-		ctrlActor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		ctrlActor.addController(ctrlActorBodyMock);
-		verify(ctrlActorBodyMock, times(1)).onAdd(ctrlActor);
+		reset(ctrlActorBodyMock);
 		when(ctrlActorBodyMock.getVelocity()).thenReturn(new Vector2());
 		
 		//controller

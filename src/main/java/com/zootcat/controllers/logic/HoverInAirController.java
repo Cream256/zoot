@@ -27,7 +27,7 @@ public class HoverInAirController extends ControllerAdapter
 		time += delta * timeScale;
 		radians = time * MathUtils.PI2;
 		
-		actor.controllerAction(PhysicsBodyController.class, ctrl ->
+		actor.controllersAction(PhysicsBodyController.class, ctrl ->
 		{
 			float signum = (float) Math.signum(Math.sin(radians));
 	        float velocityY = signum * vy;	

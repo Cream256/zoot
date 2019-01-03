@@ -2,6 +2,7 @@ package com.zootcat.controllers.physics;
 
 import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlDebug;
+import com.zootcat.exceptions.ZootControllerNotFoundException;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
@@ -20,7 +21,8 @@ public class DetectInAirController extends ControllerAdapter
 	@Override
 	public void onAdd(ZootActor actor)
 	{
-		groundCtrl = actor.getController(DetectGroundController.class);
+		groundCtrl = actor.getSingleController(DetectGroundController.class);
+		if(groundCtrl == null) throw new ZootControllerNotFoundException(DetectGroundController.class.getSimpleName(), actor.getName());
 	}
 
 	@Override

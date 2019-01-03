@@ -101,7 +101,7 @@ public class BasicState implements ZootState
 			
 	protected ZootAnimation getActorAnimation(ZootActor actor)
 	{
-		AnimatedSpriteController ctrl = actor.tryGetController(AnimatedSpriteController.class);
+		AnimatedSpriteController ctrl = actor.getSingleController(AnimatedSpriteController.class);
 		return ctrl != null ? ctrl.getCurrentAnimation() : null;
 	}
 	
@@ -112,12 +112,12 @@ public class BasicState implements ZootState
 	
 	protected void setActorAnimation(ZootActor actor, String animationName)
 	{
-		actor.controllerAction(AnimatedSpriteController.class, ctrl -> ctrl.setAnimation(animationName));
+		actor.controllersAction(AnimatedSpriteController.class, ctrl -> ctrl.setAnimation(animationName));
 	}
 	
 	protected void setActorAnimationIfNotSet(ZootActor actor, String animationName)
 	{
-		actor.controllerAction(AnimatedSpriteController.class, ctrl -> 
+		actor.controllersAction(AnimatedSpriteController.class, ctrl -> 
 		{
 			if(!ctrl.getCurrentAnimation().getName().equals(animationName))
 			{

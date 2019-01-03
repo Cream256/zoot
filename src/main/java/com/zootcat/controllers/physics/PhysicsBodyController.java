@@ -44,6 +44,12 @@ public class PhysicsBodyController extends ControllerAdapter
 	}
 	
 	@Override
+	public boolean isSingleton()
+	{
+		return true;
+	}
+	
+	@Override
 	public void onAdd(ZootActor actor) 
 	{
 		body.setActive(true);

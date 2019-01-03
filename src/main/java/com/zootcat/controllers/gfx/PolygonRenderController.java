@@ -35,7 +35,7 @@ public class PolygonRenderController extends RenderControllerAdapter
 	@Override
 	public void onAdd(ZootActor actor) 
 	{
-		PhysicsBodyController ctrl = actor.getController(PhysicsBodyController.class);		
+		PhysicsBodyController ctrl = actor.getSingleController(PhysicsBodyController.class);		
 		PolygonShape polygon = (PolygonShape) ctrl.getFixtures().get(0).getShape();
 		
 		Vector2 vertex = new Vector2();

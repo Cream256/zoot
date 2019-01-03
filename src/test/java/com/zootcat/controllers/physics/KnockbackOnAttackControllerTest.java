@@ -33,7 +33,7 @@ public class KnockbackOnAttackControllerTest
 		otherActor = new ZootActor();
 		otherActor.addController(otherActorPhysicsBodyCtrl);
 		
-		when(ctrlActor.getController(PhysicsBodyController.class)).thenReturn(ctrlActorPhysicsBodyCtrl);
+		when(ctrlActor.getSingleController(PhysicsBodyController.class)).thenReturn(ctrlActorPhysicsBodyCtrl);
 				
 		ctrl = new KnockbackOnAttackController();
 		ctrl.init(ctrlActor);

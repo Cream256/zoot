@@ -19,7 +19,7 @@ public class FlyPatrolState extends PatrolState
 	@Override
 	protected void move(ZootActor actor, float delta)
 	{
-		actor.controllerAction(FlyableController.class, flyCtrl -> flyCtrl.fly(moveDirection));
+		actor.controllersAction(FlyableController.class, flyCtrl -> flyCtrl.fly(moveDirection));
 	}
 	
 	@Override

@@ -10,6 +10,6 @@ public class HurtOnJumpController extends HurtOnCollideController
 	public boolean canHurt(Fixture otherFixture)
 	{
 		ZootActor otherActor = (ZootActor) otherFixture.getUserData();		
-		return otherActor.controllerCondition(DetectFallController.class, ctrl -> ctrl.isFalling()); 			
+		return otherActor.controllersAllMatch(DetectFallController.class, ctrl -> ctrl.isFalling()); 			
 	}
 }

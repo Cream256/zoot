@@ -1,14 +1,17 @@
 package com.zootcat.actions;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.physics.PhysicsBodyController;
-import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.math.ParaboleMovementPattern;
 import com.zootcat.scene.ZootActor;
 
@@ -54,7 +57,6 @@ public class ZootParabolicMovementActionTest
 		//given
 		PhysicsBodyController bodyCtrl = mock(PhysicsBodyController.class);
 		ZootActor actor = new ZootActor();
-		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		actor.addController(bodyCtrl);
 		action.setTarget(actor);
 		

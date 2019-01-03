@@ -23,7 +23,7 @@ public class FlyableControllerTest
 	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);
-		when(ctrlActor.getController(PhysicsBodyController.class)).thenReturn(physicsBodyCtrl);
+		when(ctrlActor.getSingleController(PhysicsBodyController.class)).thenReturn(physicsBodyCtrl);
 		
 		flyableCtrl = new FlyableController();
 	}
@@ -32,7 +32,7 @@ public class FlyableControllerTest
 	public void shouldGetPhysicsBodyController()
 	{
 		flyableCtrl.onAdd(ctrlActor);
-		verify(ctrlActor).getController(PhysicsBodyController.class);
+		verify(ctrlActor).getSingleController(PhysicsBodyController.class);
 	}
 	
 	@Test

@@ -16,4 +16,10 @@ public class IgnorePlatformsController extends ControllerAdapter
 	{
 		active = value;
 	}
+	
+	@Override
+	public boolean isSingleton()
+	{
+		return true;
+	}
 }

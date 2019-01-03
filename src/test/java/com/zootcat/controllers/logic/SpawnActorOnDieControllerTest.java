@@ -33,7 +33,7 @@ public class SpawnActorOnDieControllerTest
 		when(physicsBodyCtrl.getCenterPositionRef()).thenReturn(Vector2.Zero);
 		when(scene.getActorSpawner()).thenReturn(spawner);
 		when(actor.getScene()).thenReturn(scene);
-		when(actor.getController(PhysicsBodyController.class)).thenReturn(physicsBodyCtrl);
+		when(actor.getSingleController(PhysicsBodyController.class)).thenReturn(physicsBodyCtrl);
 		
 		ctrl = new SpawnActorOnDieController();
 		ControllerAnnotations.setControllerParameter(ctrl, "tileId", TILE_ID);

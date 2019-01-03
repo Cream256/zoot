@@ -3,6 +3,7 @@ package com.zootcat.controllers.physics;
 import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
+import com.zootcat.exceptions.ZootControllerNotFoundException;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
@@ -23,7 +24,8 @@ public class DetectFallController extends ControllerAdapter
 	@Override
 	public void onAdd(ZootActor actor)
 	{
-		groundCtrl = actor.getController(DetectGroundController.class);
+		groundCtrl = actor.getSingleController(DetectGroundController.class);
+		if(groundCtrl == null) throw new ZootControllerNotFoundException(DetectGroundController.class.getSimpleName(), actor.getName());
 	}
 
 	@Override
@@ -35,7 +37,7 @@ public class DetectFallController extends ControllerAdapter
 	@Override
 	public void onUpdate(float delta, ZootActor actor)
 	{		
-		boolean fallingNow = actor.controllerCondition(PhysicsBodyController.class,	(c) -> c.getBody().getLinearVelocity().y < threshold);		
+		boolean fallingNow = actor.controllersAllMatch(PhysicsBodyController.class,	ctrl -> ctrl.getBody().getLinearVelocity().y < threshold);		
 		boolean onGround = groundCtrl.isOnGround();
 		
 		if(fallingNow && !onGround)

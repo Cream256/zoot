@@ -14,7 +14,6 @@ import com.zootcat.controllers.logic.LifeController;
 import com.zootcat.controllers.physics.FlyableController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.controllers.physics.WalkableController;
-import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
@@ -32,7 +31,10 @@ public class ZootStateTestCase
 	@Before
 	public void setup()
 	{
+		//init mocks
 		MockitoAnnotations.initMocks(this);
+		
+		//setup actor
 		actor = new ZootActor();
 		actor.addController(animatedSpriteCtrlMock);
 		actor.addController(physicsBodyCtrlMock);
@@ -40,18 +42,18 @@ public class ZootStateTestCase
 		actor.addController(walkableCtrlMock);
 		actor.addController(flyableCtrlMock);
 		actor.addController(lifeCtrlMock);
-				
+		
+		//setup state machine
 		DefaultStateMachineController smCtrl = new DefaultStateMachineController();
 		smCtrl.init(actor);
 		actor.addController(smCtrl);
-		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
-		
+				
 		//state machine init can have side effects, reset them
 		reset(animatedSpriteCtrlMock);
 		reset(walkableCtrlMock);
 		reset(flyableCtrlMock);
-				
-		//setup mocks
+		
+		//setup mocks, has to be done after reset
 		when(walkableCtrlMock.canJump()).thenReturn(true);
 		when(walkableCtrlMock.canRun()).thenReturn(true);
 	}

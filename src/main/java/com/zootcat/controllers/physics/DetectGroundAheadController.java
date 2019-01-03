@@ -91,7 +91,7 @@ public class DetectGroundAheadController extends OnCollideWithSensorController
 	private void setSensorPositionToFaceActorDirection(ZootActor actor)
 	{
 		ZootDirection oldDirection = direction;		
-		actor.controllerAction(DirectionController.class, ctrl -> direction = ctrl.getDirection());
+		actor.controllersAction(DirectionController.class, ctrl -> direction = ctrl.getDirection());
 		
 		if(direction != oldDirection)
 		{

@@ -20,7 +20,7 @@ public class AnimationBasedState extends BasicState
 	{		
 		//get animation
 		animation = null;
-		actor.controllerAction(AnimatedSpriteController.class, ctrl -> 
+		actor.controllersAction(AnimatedSpriteController.class, ctrl -> 
 		{
 			animation = ctrl.getAnimation(getName());
 			if(animation != null) ctrl.setAnimation(getName());

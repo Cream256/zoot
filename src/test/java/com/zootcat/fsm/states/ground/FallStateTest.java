@@ -30,7 +30,6 @@ public class FallStateTest extends ZootStateTestCase
 		super.setup();
 		actor.addController(climbCtrlMock);
 		fallState = new FallState();
-		
 	}
 	
 	@Test

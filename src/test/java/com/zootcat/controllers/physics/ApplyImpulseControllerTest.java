@@ -1,7 +1,7 @@
 package com.zootcat.controllers.physics;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.zootcat.controllers.factory.ControllerAnnotations;
-import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.scene.ZootActor;
 
 public class ApplyImpulseControllerTest
@@ -30,7 +29,6 @@ public class ApplyImpulseControllerTest
 		MockitoAnnotations.initMocks(this);
 		
 		controllerActor = new ZootActor();
-		controllerActor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		controllerActor.addController(physicsBodyCtrl);
 		
 		controller = new ApplyImpulseController();

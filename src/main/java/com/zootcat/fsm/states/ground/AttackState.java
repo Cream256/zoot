@@ -24,7 +24,7 @@ public class AttackState extends AnimationBasedState
 		//stop actor
 		if(animation != null)
 		{
-			actor.controllerAction(PhysicsBodyController.class, (ctrl) -> ctrl.setVelocity(0.0f, 0.0f, true, false));
+			actor.controllersAction(PhysicsBodyController.class, (ctrl) -> ctrl.setVelocity(0.0f, 0.0f, true, false));
 		}
 	}
 			

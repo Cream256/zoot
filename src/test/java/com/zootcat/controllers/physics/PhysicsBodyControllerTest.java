@@ -391,4 +391,10 @@ public class PhysicsBodyControllerTest
 		physicsBodyCtrl.onUpdate(1.0f, ctrlActor);
 		assertEquals(BODY_LINEAR_VELOCITY, physicsBodyCtrl.getVelocity());
 	}
+	
+	@Test
+	public void shouldBeSingleton()
+	{
+		assertTrue(physicsBodyCtrl.isSingleton());
+	}
 }

@@ -36,7 +36,7 @@ public class ZootTiledSceneActorSpawner implements ZootSceneActorSpawner
 		}
 		
 		ZootActor spawnedActor = actorFactory.createFromTile(tile); 		
-		spawnedActor.controllerAction(PhysicsBodyController.class, ctrl -> 
+		spawnedActor.controllersAction(PhysicsBodyController.class, ctrl -> 
 		{				
 			if(position != null) ctrl.setPosition(position.x, position.y);
 			if(velocity != null) ctrl.setVelocity(velocity.x, velocity.y);

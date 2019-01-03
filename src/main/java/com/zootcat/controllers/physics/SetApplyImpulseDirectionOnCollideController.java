@@ -15,7 +15,7 @@ public class SetApplyImpulseDirectionOnCollideController extends OnCollideContro
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
-		getOtherActor(actorA, actorB).controllerAction(ApplyImpulseController.class, ctrl -> 
+		getOtherActor(actorA, actorB).controllersAction(ApplyImpulseController.class, ctrl -> 
 		{
 			if(setX && Math.signum(ctrl.getImpulseX()) != Math.signum(directionX.getHorizontalValue())) 
 			{

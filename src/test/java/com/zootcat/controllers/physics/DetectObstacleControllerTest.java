@@ -1,7 +1,7 @@
 package com.zootcat.controllers.physics;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.logic.DirectionController;
-import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.physics.ZootPhysics;
@@ -53,7 +52,6 @@ public class DetectObstacleControllerTest
 		controllerActor = new ZootActor();
 		controllerActor.setWidth(ACTOR_WIDTH);
 		controllerActor.setHeight(ACTOR_HEIGHT);
-		controllerActor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		
 		physicsBodyCtrl = new PhysicsBodyController();
 		ControllerAnnotations.setControllerParameter(physicsBodyCtrl, "scene", scene);

@@ -25,9 +25,9 @@ public class MovingPlatformTriggerController extends TriggerEventListener
 	protected void setMovingPlatformsEnabled(boolean enabled)
 	{
 		scene.getActors(actor -> actor.getName().equalsIgnoreCase(platformActorName))
-		 	 .forEach(actor -> actor.controllerAction(MovingPlatformController.class, ctrl ->
-		 	 {
-		 		 ctrl.setEnabled(enabled);
-		 	 }));
+	 		 .forEach(actor -> actor.controllersAction(MovingPlatformController.class, ctrl ->
+	 		 {
+	 			 ctrl.setEnabled(enabled);
+	 		 }));
 	}
 }

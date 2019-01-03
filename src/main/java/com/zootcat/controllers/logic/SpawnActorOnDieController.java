@@ -22,7 +22,7 @@ public class SpawnActorOnDieController extends OnDieEventController
 	protected boolean onDie(ZootActor actor, ZootEvent event)
 	{
 		ZootSceneActorSpawner spawner = actor.getScene().getActorSpawner();		
-		Vector2 position = actor.getController(PhysicsBodyController.class).getCenterPositionRef().cpy();		
+		Vector2 position = actor.getSingleController(PhysicsBodyController.class).getCenterPositionRef().cpy();		
 		
 		for(int i = 0; i < count; ++i)
 		{

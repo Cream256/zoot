@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 
 import com.zootcat.controllers.physics.WalkableController;
-import com.zootcat.controllers.recognizer.MockControllerRecognizer;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
@@ -120,7 +119,6 @@ public class ZootStateUtilsTest
 		WalkableController moveableCtrl = mock(WalkableController.class);
 		ZootActor actor = new ZootActor();
 		actor.addController(moveableCtrl);
-		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		
 		ZootEvent event = new ZootEvent();
 		event.setTarget(actor);
@@ -161,7 +159,6 @@ public class ZootStateUtilsTest
 		WalkableController moveableCtrl = mock(WalkableController.class);
 		ZootActor actor = new ZootActor();
 		actor.addController(moveableCtrl);
-		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 		
 		ZootEvent event = new ZootEvent();
 		event.setTarget(actor);

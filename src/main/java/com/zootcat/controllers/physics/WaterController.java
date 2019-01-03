@@ -24,7 +24,7 @@ public class WaterController extends OnCollideController
 	{
 		super.onAdd(actor);
 		
-		Fixture actorFixture = actor.getController(PhysicsBodyController.class)
+		Fixture actorFixture = actor.getSingleController(PhysicsBodyController.class)
 									.getFixtures()
 									.first();
 		

@@ -126,8 +126,7 @@ public class ZootTiledSceneActorFactoryTest
 		actor.act(0.0f);
 		
 		//then
-		Mock1Controller ctrl = actor.getController(Mock1Controller.class);
-		assertNotNull(ctrl);
+		assertFalse(actor.getControllers(Mock1Controller.class).isEmpty());
 	}
 
 	@Test
@@ -143,7 +142,7 @@ public class ZootTiledSceneActorFactoryTest
 		actor.act(0.0f);
 		
 		//then
-		Mock2Controller ctrl = actor.getController(Mock2Controller.class);
+		Mock2Controller ctrl = actor.getSingleController(Mock2Controller.class);
 		assertNotNull(ctrl);
 		assertEquals(1, ctrl.a);
 		assertEquals(2.2f, ctrl.b, 0.0f);
@@ -163,7 +162,7 @@ public class ZootTiledSceneActorFactoryTest
 		actor.act(0.0f);
 		
 		//then
-		Mock3Controller ctrl = actor.getController(Mock3Controller.class);
+		Mock3Controller ctrl = actor.getSingleController(Mock3Controller.class);
 		assertNotNull(ctrl);
 		assertEquals(100, ctrl.param);
 		assertEquals(sceneMock, ctrl.scene);
@@ -265,7 +264,7 @@ public class ZootTiledSceneActorFactoryTest
 		
 		//then
 		assertNotNull(actor);
-		assertNotNull(actor.getController(SimpleController.class));
+		assertNotNull(actor.getSingleController(SimpleController.class));
 	}
 		
 	@Test
@@ -297,7 +296,7 @@ public class ZootTiledSceneActorFactoryTest
 		assertEquals(tileWidth * regionWidth, actor.getWidth(), 0.0f);
 		assertEquals(tileHeight * regionHeight, actor.getHeight(), 0.0f);
 		assertFalse(actor.getName().isEmpty());
-		assertNotNull(actor.getController(SimpleController.class));		
+		assertNotNull(actor.getSingleController(SimpleController.class));		
 	}
 	
 	@Test

@@ -18,9 +18,6 @@ import com.zootcat.controllers.ChangeListenerController;
 import com.zootcat.controllers.Controller;
 import com.zootcat.controllers.ControllerComparator;
 import com.zootcat.controllers.gfx.RenderController;
-import com.zootcat.controllers.recognizer.ControllerRecognizer;
-import com.zootcat.controllers.recognizer.DefaultControllerRecognizer;
-import com.zootcat.exceptions.ZootControllerNotFoundException;
 import com.zootcat.exceptions.ZootDuplicatedControllerException;
 import com.zootcat.fsm.ZootStateMachine;
 
@@ -35,14 +32,13 @@ public class ZootActor extends Actor
 {
 	public static final String DEFAULT_NAME = "Unnamed Actor";
 	
-	private List<Controller> controllers = new ArrayList<Controller>();
+	private List<Controller> controllers = new ArrayList<Controller>();	//TODO use ordered queue?
 	private Set<String> types = new HashSet<String>();	
 	private float opacity = 1.0f;
 	private int id = 0;
 	private int gid = -1;
 	private ZootScene scene;
 	private ZootStateMachine stateMachine = new ZootStateMachine();
-	private ControllerRecognizer controllerRecognizer = DefaultControllerRecognizer.Instance;
 	
 	public ZootActor()
 	{
@@ -102,47 +98,47 @@ public class ZootActor extends Actor
 							.map(ctrl -> (ChangeListenerController)ctrl)
 							.forEach(ctrl -> ctrl.onRotationChange(this));
 	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends Controller> void controllerAction(Class<T> clazz, Consumer<T> action)
-	{		
-		Controller ctrl = tryGetController(clazz);
-		if(ctrl != null)
-		{
-			action.accept((T) ctrl);
-		}
-	}
 		
-	@SuppressWarnings("unchecked")
-	public <T extends Controller> boolean controllerCondition(Class<T> clazz, Function<T, Boolean> func)
-	{		
-		Controller ctrl = tryGetController(clazz);
-		if(ctrl != null)
-		{
-			return func.apply((T) ctrl);
-		}
-		return false;
+	/**
+	 * Check if all controllers of a given class match the provided predicate.
+	 * @param clazz - controller class to look for
+	 * @param func - predicate
+	 * @return true if all controllers match the predicate, false otherwise. False, if no controllers were found.
+	 */
+	public <T extends Controller> boolean controllersAllMatch(Class<T> clazz, Function<T, Boolean> func)
+	{				
+		List<T> controllers = getControllers(clazz);
+		if(controllers.isEmpty()) return false;		
+		return controllers.stream().allMatch(ctrl -> func.apply(ctrl));
 	}
 	
-	public <T extends Controller> void controllersOfTypeAction(Class<T> clazz, Consumer<T> action)
+	/**
+	 * Check if any controller of a given class match the provided predicate.
+	 * @param clazz - controller class to look for
+	 * @param func - predicate
+	 * @return true if any controller matches the predicate, false otherwise. False, if no controllers were found.
+	 */
+	public <T extends Controller> boolean controllersAnyMatch(Class<T> clazz, Function<T, Boolean> func)
+	{		
+		List<T> controllers = getControllers(clazz);
+		if(controllers.isEmpty()) return false;		
+		return controllers.stream().anyMatch(ctrl -> func.apply(ctrl));
+	}
+	
+	public <T extends Controller> void controllersAction(Class<T> clazz, Consumer<T> action)
 	{
-		getControllersOfType(clazz).forEach(action);
+		getControllers(clazz).forEach(action);
 	}
 	
 	public void addControllers(Collection<Controller> newControllers)
-	{
-		//check for duplicates inside new controllers
-		if(new HashSet<Controller>(newControllers).size() != newControllers.size())
-		{
-			throw new ZootDuplicatedControllerException("Controllers must be unique: " + newControllers.toString());
-		}
-		
-		//check for duplicates on actor		
+	{						
+		//check for duplicated singletons
 		newControllers.forEach(newCtrl -> 
 		{
-			if(isDuplicate(newCtrl)) throw new ZootDuplicatedControllerException(newCtrl.getClass().getName(), getName());
+			verifyNoDuplicatedSingletonControllers(newCtrl, getControllers(newCtrl.getClass()));
+			verifyNoDuplicatedSingletonControllers(newCtrl, newControllers);
 		});
-				
+		
 		//controllers must be added to actor
 		newControllers.forEach((ctrl) -> controllers.add(ctrl));
 		
@@ -153,24 +149,27 @@ public class ZootActor extends Actor
 		//reorder controllers
 		controllers.sort(ControllerComparator.Instance);
 	}
-	
-	private boolean isDuplicate(Controller controller)
-	{
-		return controllers.stream().anyMatch(ctrl -> controllerRecognizer.areEqual(ctrl, controller));
-	}
-	
+		
 	/**
-	 * Adds new controller to the actor.
+	 * Adds new controller to the actor. 
 	 * @param new controller to be added
-	 * @throws ZootDuplicatedControllerException when trying to add controller type that already exists
-	 * 
+	 * @throws ZootDuplicatedControllerException if trying to add a duplicated singleton controller.
 	 */
 	public void addController(Controller newController)
 	{		
-		if(isDuplicate(newController)) throw new ZootDuplicatedControllerException(newController.getClass().getName(), getName()); 
+		verifyNoDuplicatedSingletonControllers(newController, getControllers(newController.getClass()));
 		
 		controllers.add(newController);
+		controllers.sort(ControllerComparator.Instance);
 		newController.onAdd(this);		
+	}
+	
+	private <T extends Controller> void verifyNoDuplicatedSingletonControllers(Controller newController, Collection<T> controllers)
+	{
+		if(newController.isSingleton() && !controllers.isEmpty())
+		{
+			throw new ZootDuplicatedControllerException(newController.getClass().getSimpleName(), getName());
+		}
 	}
 	
 	public void removeController(Controller controller)
@@ -190,36 +189,33 @@ public class ZootActor extends Actor
 	{
 		return new ArrayList<Controller>(controllers);
 	}
-	
-	public <T extends Controller> T tryGetController(Class<T> controllerClass)
-	{
-		try
-		{
-			return (T) getController(controllerClass);
-		}
-		catch(ZootControllerNotFoundException e)
-		{
-			return null;
-		}
-	}
-	
+		
+	/**
+	 * Get all controllers of a given class.
+	 * @param controllerClass - controllers of given class and derived will be returned
+	 * @return List of controllers. Empty list if none are found.
+	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Controller> T getController(Class<T> controllerClass)
-	{
-		Controller result = controllers.stream()
-				  .filter(ctrl -> controllerRecognizer.areEqual(ctrl.getClass(), controllerClass))
-				  .reduce((u, v) -> { throw new ZootDuplicatedControllerException(controllerClass.getName(), getName()); })
-				  .orElseThrow(() -> new ZootControllerNotFoundException(controllerClass.getName(), getName()));
-		return (T)result;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public <T extends Controller> List<T> getControllersOfType(Class<T> controllerClass)
+	public <T extends Controller> List<T> getControllers(Class<T> controllerClass)
 	{
 		List<Controller> result = controllers.stream()
 						 .filter(ctrl -> ClassReflection.isInstance(controllerClass, ctrl))
-						 .collect(Collectors.toList());		
+						 .collect(Collectors.toList());
 		return (List<T>)result;
+	}
+	
+	/**
+	 * Returns a single controller instance. 
+	 * @param controllerClass - controller class to look for
+	 * @return Controller instance, or null if controller is not found.
+	 * @throws ZootDuplicatedControllerException if more then one instance of given controller class were detected.
+	 */
+	public <T extends Controller> T getSingleController(Class<T> controllerClass)
+	{
+		List<T> controllers = getControllers(controllerClass);
+		if(controllers.isEmpty()) return null;
+		if(controllers.size() > 1) throw new ZootDuplicatedControllerException(controllerClass.getSimpleName(), getName());
+		return controllers.get(0);
 	}
 	
 	public float getOpacity() 
@@ -276,17 +272,7 @@ public class ZootActor extends Actor
 	{
 		return stateMachine;
 	}
-	
-	public void setControllerRecognizer(ControllerRecognizer recognizer)
-	{
-		controllerRecognizer = recognizer;
-	}
-	
-	public ControllerRecognizer getControllerRecognizer()
-	{
-		return controllerRecognizer;
-	}
-	
+		
     @Override
     public String toString()
     {

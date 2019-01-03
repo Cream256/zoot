@@ -59,7 +59,7 @@ public class ZootStateUtils
 	
 	private static WalkableController getMoveableController(ZootActor actor)
 	{
-		return actor != null ? actor.tryGetController(WalkableController.class) : null;
+		return actor != null ? actor.getSingleController(WalkableController.class) : null;
 	}
 	
 	public static ZootDirection getDirectionFromEvent(ZootEvent event)

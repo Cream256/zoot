@@ -14,6 +14,8 @@ public class ControllerComparator implements Comparator<Controller>
 	@Override
 	public int compare(Controller ctrl1, Controller ctrl2)
 	{
-		return ctrl2.getPriority().getValue() - ctrl1.getPriority().getValue();
+		ControllerPriority p1 = ctrl1.getPriority() != null ? ctrl1.getPriority() : ControllerPriority.Normal;
+		ControllerPriority p2 = ctrl2.getPriority() != null ? ctrl2.getPriority() : ControllerPriority.Normal;
+		return p2.getValue() - p1.getValue();
 	}
 }

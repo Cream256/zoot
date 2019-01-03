@@ -18,8 +18,13 @@ public interface Controller
 	void onRemove(ZootActor actor);	
 	void onUpdate(float delta, ZootActor actor);
 	void setEnabled(boolean value);
-	boolean isEnabled();
-		
+	boolean isEnabled();	
+	
+	default boolean isSingleton()
+	{
+		return false;
+	}
+	
 	default ControllerPriority getPriority() 
 	{ 
 		return ControllerPriority.Normal; 

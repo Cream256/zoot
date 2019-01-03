@@ -72,7 +72,7 @@ public class OnCollideWithSensorController extends OnCollideController
 		//create sensor
 		Shape sensorShape = createSensorShape(actor);
 		FixtureDef sensorFixtureDef = createSensorFixtureDef(actor, sensorShape);		
-		sensor = actor.getController(PhysicsBodyController.class).addFixture(sensorFixtureDef, actor);
+		sensor = actor.getSingleController(PhysicsBodyController.class).addFixture(sensorFixtureDef, actor);
 
 		//cleanup
 		//sensorShape.dispose();	// TODO this causes tests to crash
@@ -85,7 +85,7 @@ public class OnCollideWithSensorController extends OnCollideController
 		collidedFixtures.clear();
 		disabledFixtures.clear();
 		
-		actor.getController(PhysicsBodyController.class).removeFixture(sensor);
+		actor.getSingleController(PhysicsBodyController.class).removeFixture(sensor);
 		sensor = null;		
 		
 		super.onRemove(actor);

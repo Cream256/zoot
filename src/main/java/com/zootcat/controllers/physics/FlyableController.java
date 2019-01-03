@@ -14,7 +14,7 @@ public class FlyableController extends ControllerAdapter
 	@Override
 	public void onAdd(ZootActor actor)
 	{
-		physicsCtrl = actor.getController(PhysicsBodyController.class);
+		physicsCtrl = actor.getSingleController(PhysicsBodyController.class);
 	}
 	
 	@Override

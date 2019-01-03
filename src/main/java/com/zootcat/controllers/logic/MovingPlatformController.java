@@ -45,7 +45,7 @@ public class MovingPlatformController extends OnCollideController
 	{
 		if(!enabled)
 		{
-			actor.controllerAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(0.0f, 0.0f));
+			actor.controllersAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(0.0f, 0.0f));
 			return;
 		}
 		
@@ -60,7 +60,7 @@ public class MovingPlatformController extends OnCollideController
 		
 		platformVx = (direction.isHorizontal() ? speed : 0.0f) * direction.getHorizontalValue();
 		platformVy = (direction.isVertical() ? speed : 0.0f) * direction.getVerticalValue();		
-		actor.controllerAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(platformVx, platformVy));
+		actor.controllersAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(platformVx, platformVy));
 		
 		updateConnectedActors();
 	}
@@ -100,7 +100,7 @@ public class MovingPlatformController extends OnCollideController
 	{
 		for(ZootActor actor : connectedActors)
 		{
-			PhysicsBodyController bodyCtrl = actor.getController(PhysicsBodyController.class);						
+			PhysicsBodyController bodyCtrl = actor.getSingleController(PhysicsBodyController.class);						
 			Vector2 actorVelocity = bodyCtrl.getVelocity();
 			
 			//horizontal velocity

@@ -30,13 +30,13 @@ public class FlyState extends BasicState
 	{
 		setAnimationBasedOnStateName(actor);
 		moveDirection = ZootStateUtils.getDirectionFromEvent(event);
-		actor.controllerAction(DirectionController.class, (ctrl) -> ctrl.setDirection(moveDirection));
+		actor.controllersAction(DirectionController.class, (ctrl) -> ctrl.setDirection(moveDirection));
 	}
 	
 	@Override
 	public void onUpdate(ZootActor actor, float delta)
 	{
-		actor.controllerAction(FlyableController.class, (ctrl) -> ctrl.fly(moveDirection));		
+		actor.controllersAction(FlyableController.class, (ctrl) -> ctrl.fly(moveDirection));		
 	}
 	
 	@Override

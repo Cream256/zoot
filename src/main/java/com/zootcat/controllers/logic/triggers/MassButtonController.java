@@ -34,7 +34,7 @@ public class MassButtonController extends ButtonController
 	private float getOtherBodyMass(ZootActor actorA, ZootActor actorB, Contact contact) 
 	{
 		ZootActor otherActor = getOtherActor(actorA, actorB);
-		PhysicsBodyController physicsBodyCtrl = otherActor.tryGetController(PhysicsBodyController.class);
+		PhysicsBodyController physicsBodyCtrl = otherActor.getSingleController(PhysicsBodyController.class);
 		return physicsBodyCtrl != null ? physicsBodyCtrl.getMass() : 0.0f;
 	}	
 }

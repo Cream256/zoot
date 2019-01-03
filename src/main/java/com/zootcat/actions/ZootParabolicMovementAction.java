@@ -45,7 +45,7 @@ public class ZootParabolicMovementAction extends ZootAction
 	public boolean act(float delta)
 	{
 		time += delta;
-		getTargetZootActor().controllerAction(PhysicsBodyController.class, ctrl -> 
+		getTargetZootActor().controllersAction(PhysicsBodyController.class, ctrl -> 
 		{
 			Vector2 pos = ctrl.getCenterPositionRef();
 			Vector2 mov = parabole.at(time);

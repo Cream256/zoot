@@ -39,7 +39,7 @@ public class MassButtonControllerTest
 		ControllerAnnotations.setControllerParameter(massBtnCtrl, "requiredMass", REQUIRED_MASS);
 		massBtnCtrl.init(controllerActor);
 		
-		when(otherActor.tryGetController(PhysicsBodyController.class)).thenReturn(physicsBodyCtrl);
+		when(otherActor.getSingleController(PhysicsBodyController.class)).thenReturn(physicsBodyCtrl);
 	}
 	
 	@Test
@@ -56,7 +56,7 @@ public class MassButtonControllerTest
 	@Test
 	public void shouldNotPressButtonWhenActorHasNoPhysicsBodyController()
 	{
-		when(otherActor.tryGetController(PhysicsBodyController.class)).thenReturn(null);
+		when(otherActor.getSingleController(PhysicsBodyController.class)).thenReturn(null);
 		when(physicsBodyCtrl.getMass()).thenReturn(REQUIRED_MASS);
 	
 		massBtnCtrl.onEnter(otherActor, controllerActor, contact);

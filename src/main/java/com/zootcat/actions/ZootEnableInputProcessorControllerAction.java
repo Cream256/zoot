@@ -9,7 +9,7 @@ public class ZootEnableInputProcessorControllerAction extends ZootAction
 	@Override
 	public boolean act(float delta)
 	{
-		getTargetZootActor().controllerAction(InputProcessorController.class, ctrl -> ctrl.setEnabled(controllerEnabled));
+		getTargetZootActor().controllersAction(InputProcessorController.class, ctrl -> ctrl.setEnabled(controllerEnabled));
 		return true;
 	}
 	

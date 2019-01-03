@@ -9,11 +9,11 @@ import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -39,10 +39,6 @@ import com.zootcat.controllers.factory.mocks.RenderControllerMock1;
 import com.zootcat.controllers.factory.mocks.RenderControllerMock2;
 import com.zootcat.controllers.factory.mocks.SimpleController;
 import com.zootcat.controllers.gfx.RenderController;
-import com.zootcat.controllers.recognizer.ControllerRecognizer;
-import com.zootcat.controllers.recognizer.DefaultControllerRecognizer;
-import com.zootcat.controllers.recognizer.MockControllerRecognizer;
-import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.exceptions.ZootDuplicatedControllerException;
 
 public class ZootActorTest 
@@ -76,7 +72,6 @@ public class ZootActorTest
 		when(ctrl3.getPriority()).thenReturn(ControllerPriority.Normal);
 		
 		actor = new ZootActor();
-		actor.setControllerRecognizer(MockControllerRecognizer.Instance);
 	}
 	
 	@Test
@@ -171,14 +166,34 @@ public class ZootActorTest
 		assertEquals(ctrl2, actor.getAllControllers().get(1));
 	}
 	
-	@Test(expected = ZootDuplicatedControllerException.class)
-	public void shouldNotAddControllerDuplicates()
+	@Test
+	public void shouldSortControllersAfterAdding()
 	{
-		actor.addController(mock(Controller.class));
-		actor.addController(mock(RenderController.class));
-		actor.addController(mock(Controller.class));
+		//given
+		Controller ctrl1 = mock(Controller.class);
+		when(ctrl1.getPriority()).thenReturn(ControllerPriority.Low);
+		Controller ctrl2 = mock(Controller.class);
+		when(ctrl2.getPriority()).thenReturn(ControllerPriority.Normal);
+		Controller ctrl3 = mock(Controller.class);
+		when(ctrl3.getPriority()).thenReturn(ControllerPriority.High);
+		
+		//when
+		actor.addController(ctrl1);
+		actor.addController(ctrl3);
+		
+		//then
+		assertEquals(ControllerPriority.High, actor.getControllers(Controller.class).get(0).getPriority());
+		assertEquals(ControllerPriority.Low, actor.getControllers(Controller.class).get(1).getPriority());
+		
+		//when
+		actor.addController(ctrl2);
+		
+		//then
+		assertEquals(ControllerPriority.High, actor.getControllers(Controller.class).get(0).getPriority());
+		assertEquals(ControllerPriority.Normal, actor.getControllers(Controller.class).get(1).getPriority());
+		assertEquals(ControllerPriority.Low, actor.getControllers(Controller.class).get(2).getPriority());
 	}
-	
+		
 	@Test
 	public void shouldProperlyRemoveControllers()
 	{		
@@ -201,6 +216,40 @@ public class ZootActorTest
 		actor.removeController(ctrl2);
 		assertEquals(0, actor.getAllControllers().size());
 	}	
+	
+	@Test
+	public void shouldReturnSingleController()
+	{
+		//given
+		Controller ctrl = mock(Controller.class);
+		
+		//when
+		actor.addController(ctrl);
+		
+		//then
+		assertEquals(ctrl, actor.getSingleController(Controller.class));		
+	}
+	
+	@Test
+	public void shouldReturnNullIfSingleControllerIsNotFound()
+	{
+		assertNull(actor.getSingleController(Controller.class));
+	}
+	
+	@Test(expected = ZootDuplicatedControllerException.class)
+	public void shouldThrowIfThereAreMoreThanOneSingleControllersFound()
+	{
+		//given
+		Controller ctrl1 = mock(Controller.class);
+		Controller ctrl2 = mock(Controller.class);
+		
+		//when
+		actor.addController(ctrl1);
+		actor.addController(ctrl2);
+		
+		//then throw
+		actor.getSingleController(Controller.class);		
+	}
 	
 	@Test
 	public void shouldDoNothingWhenRemovingControllersFromActorWithNoControllers()
@@ -284,6 +333,7 @@ public class ZootActorTest
 		RenderController renderCtrl1 = spy(new RenderControllerMock1());
 		RenderController renderCtrl2 = spy(new RenderControllerMock2());
 		ChangeListenerController changeListenerController = mock(ChangeListenerController.class);
+		when(changeListenerController.getPriority()).thenReturn(ControllerPriority.Normal);
 		
 		//when
 		when(renderCtrl1.isEnabled()).thenReturn(true);
@@ -343,20 +393,7 @@ public class ZootActorTest
 		assertNotNull(actor.getStateMachine());
 		assertEquals(actor, actor.getStateMachine().getOwner());
 	}
-	
-	@Test
-	public void shouldReturnController()
-	{
-		//given
-		Controller ctrl = new SimpleController();
-
-		//when
-		actor.addController(ctrl);
 		
-		//then
-		assertEquals(ctrl, actor.getController(SimpleController.class));		
-	}
-	
 	@Test
 	public void shouldNotThrowIfBaseAndDerivedControllersAreAdded()
 	{
@@ -369,74 +406,83 @@ public class ZootActorTest
 		actor.addController(ctrl2);
 		
 		//then
-		assertEquals(ctrl1, actor.getController(MockBaseController.class));
-		assertEquals(ctrl2, actor.getController(MockDerivedController.class));
-	}
-		
-	@Test(expected = RuntimeZootException.class)
-	public void shuoldThrowIfControllerIsNotFound()
-	{
-		actor.getController(SimpleController.class);
+		assertEquals(ctrl1, actor.getControllers(MockBaseController.class).get(0));
+		assertEquals(ctrl2, actor.getControllers(MockDerivedController.class).get(0));
 	}
 	
-	@Test
-	public void shouldReturnControllerAndNotThrow()
+	@Test	
+	public void shuoldNotThrowIfControllersAreNotFound()
 	{
-		//given
-		Controller ctrl = new SimpleController();
-
-		//when
-		actor.addController(ctrl);
-		
-		//then
-		assertEquals(ctrl, actor.tryGetController(SimpleController.class));
+		assertTrue(actor.getControllers(SimpleController.class).isEmpty());
 	}
-	
-	@Test
-	public void shouldReturnNullAndNotThrow()
-	{
-		assertNull(actor.tryGetController(SimpleController.class));
-	}
-			
+					
 	@Test
 	public void shouldNotThrowOnControllerActionIfControllerIsNotFoundTest()
 	{
-		actor.controllerAction(SimpleController.class, (ctrl) -> {});
+		actor.controllersAction(SimpleController.class, (ctrl) -> {});
 	}
 	
 	@Test
-	public void shouldExecuteControllerAction()
+	public void shouldExecuteControllersAction()
 	{
 		//given
 		SimpleController ctrl = new SimpleController();
 		
 		//when
 		actor.addController(ctrl);
-		actor.controllerAction(SimpleController.class, (c) -> c.set(100));
+		actor.controllersAction(SimpleController.class, (c) -> c.set(100));
 		
 		//then
 		assertEquals(100, ctrl.get());
 	}
-	
+		
 	@Test
-	public void shouldReturnProperControllerCondition()
+	public void shouldReturnProperValueWhenEvaluatingAllControllers()
 	{
 		//given
-		SimpleController ctrl = new SimpleController();		
+		SimpleController ctrl1 = new SimpleController();
+		SimpleController ctrl2 = new SimpleController();
 		
 		//when
-		ctrl.set(100);
-		actor.addController(ctrl);
+		ctrl1.set(100);
+		ctrl2.set(50);
+		actor.addController(ctrl1);
+		actor.addController(ctrl2);
 		
 		//then
-		assertTrue(actor.controllerCondition(SimpleController.class, (c) -> c.get() == 100));
-		assertFalse(actor.controllerCondition(SimpleController.class, (c) -> c.get() == 0));
+		assertTrue("Should be true if all controllers qualify", actor.controllersAllMatch(SimpleController.class, (c) -> c.get() >= 50));
+		assertFalse("Should be false if any controller does not qualify", actor.controllersAllMatch(SimpleController.class, (c) -> c.get() <= 50));
 	}
 	
 	@Test
-	public void shouldReturnFalseIfControllerIsNotFoundForControllerCondition()
+	public void shouldEvaluateToFalseWhenNoControllersAreFoundForAllMatch()
 	{
-		assertFalse(actor.controllerCondition(SimpleController.class, (c) -> true));
+		assertFalse(actor.controllersAllMatch(SimpleController.class, (c) -> true));
+	}
+	
+	@Test
+	public void shouldReturnProperValueWhenEvaluatingAnyController()
+	{
+		//given
+		SimpleController ctrl1 = new SimpleController();
+		SimpleController ctrl2 = new SimpleController();
+		
+		//when
+		ctrl1.set(100);
+		ctrl2.set(50);
+		actor.addController(ctrl1);
+		actor.addController(ctrl2);
+		
+		//then
+		assertTrue("Should be true if any controller qualify", actor.controllersAnyMatch(SimpleController.class, (c) -> c.get() >= 50));
+		assertTrue("Should be true if any controller qualify", actor.controllersAnyMatch(SimpleController.class, (c) -> c.get() <= 50));
+		assertFalse("Should be false if none controllers qualify", actor.controllersAnyMatch(SimpleController.class, (c) -> c.get() == 00));		
+	}
+	
+	@Test
+	public void shouldEvaluateToFalseWhenNoControllersAreFoundForAnyMatch()
+	{
+		assertFalse(actor.controllersAnyMatch(SimpleController.class, (c) -> true));
 	}
 	
 	@Test
@@ -481,32 +527,69 @@ public class ZootActorTest
 		inOrder.verify(ctrl1).onAdd(actor);
 		inOrder.verify(ctrl2).onAdd(actor);
 	}
-	
-	@Test(expected = ZootDuplicatedControllerException.class)
-	public void shouldThrowWhenAddingControllersThatAlreadyExistOnActor()
+		
+	@Test
+	public void shouldNotThrowWhenAddingDuplicatedControllers()
 	{
 		//given
 		Controller ctrl1 = new ControllerAdapter();
 		Controller ctrl2 = new ControllerAdapter();
 		
+		//when
+		actor.addControllers(Arrays.asList(ctrl1, ctrl2));
+		
+		//ok
+	}
+	
+	@Test(expected = ZootDuplicatedControllerException.class)
+	public void shouldThrowWhenAddingDuplicatedSingletonController()
+	{
+		//given
+		Controller ctrl1 = mock(Controller.class);
+		when(ctrl1.isSingleton()).thenReturn(true);
+		Controller ctrl2 = mock(Controller.class);
+		when(ctrl2.isSingleton()).thenReturn(true);
+				
 		//when
 		actor.addController(ctrl1);
-		actor.addControllers(Arrays.asList(ctrl2));		
+		actor.addController(ctrl2);
+		
+		//throw
 	}
 	
 	@Test(expected = ZootDuplicatedControllerException.class)
-	public void shouldThrowWhenAddingDuplicatedControllers()
+	public void shouldThrowWhenAddingDuplicatedSingletonControllers()
 	{
 		//given
-		Controller ctrl1 = new ControllerAdapter();
-		Controller ctrl2 = new ControllerAdapter();
-		
+		Controller ctrl1 = mock(Controller.class);
+		when(ctrl1.isSingleton()).thenReturn(true);
+		Controller ctrl2 = mock(Controller.class);
+		when(ctrl2.isSingleton()).thenReturn(true);
+				
 		//when
-		actor.addControllers(Arrays.asList(ctrl1, ctrl2));		
+		actor.addController(ctrl1);
+		actor.addControllers(Arrays.asList(ctrl2));
+		
+		//throw		
 	}
 	
 	@Test(expected = ZootDuplicatedControllerException.class)
-	public void shouldThrowWhenAddingDuplicatedControllerType()
+	public void shouldThrowWhenAddingDuplicatedSingletonControllersFromTheSameCollection()
+	{
+		//given
+		Controller ctrl1 = mock(Controller.class);
+		when(ctrl1.isSingleton()).thenReturn(true);
+		Controller ctrl2 = mock(Controller.class);
+		when(ctrl2.isSingleton()).thenReturn(true);
+				
+		//when
+		actor.addControllers(Arrays.asList(ctrl1, ctrl2));
+		
+		//throw		
+	}
+	
+	@Test
+	public void shouldNotThrowWhenAddingDuplicatedControllerType()
 	{
 		//given
 		Controller ctrl1 = new ControllerAdapter();
@@ -515,6 +598,8 @@ public class ZootActorTest
 		//when
 		actor.addController(ctrl1);
 		actor.addController(ctrl2);
+		
+		//ok
 	}
 	
 	@Test
@@ -618,7 +703,7 @@ public class ZootActorTest
 		actor.addController(simpleCtrl);
 		
 		//then
-		List<MockBaseController> ctrls = actor.getControllersOfType(MockBaseController.class);
+		List<MockBaseController> ctrls = actor.getControllers(MockBaseController.class);
 		assertNotNull(ctrls);
 		assertEquals(2, ctrls.size());
 		assertTrue(ctrls.contains(baseCtrl));
@@ -634,17 +719,20 @@ public class ZootActorTest
 		MockDerivedController ctrl2 = mock(MockDerivedController.class);		
 		SimpleController ctrl3 = mock(SimpleController.class);
 		
+		when(ctrl1.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(ctrl2.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(ctrl3.getPriority()).thenReturn(ControllerPriority.Normal);
+		
 		//when
 		actor.addController(ctrl1);
 		actor.addController(ctrl2);
 		actor.addController(ctrl3);
-		actor.controllersOfTypeAction(MockBaseController.class, ctrl -> ctrl.getBaseParam());
+		actor.controllersAction(MockBaseController.class, ctrl -> ctrl.getBaseParam());
 		
 		//then
 		verify(ctrl1).getBaseParam();
 		verify(ctrl2).getBaseParam();
 		verify(ctrl3).onAdd(actor);
-		verifyNoMoreInteractions(ctrl3);
 	}
 		
 	@Test
@@ -668,29 +756,5 @@ public class ZootActorTest
 		
 		//then		
 		assertEquals("Name", actor.toString());
-	}
-	
-	@Test
-	public void shouldSetControllerRecognizer()
-	{
-		//given
-		ControllerRecognizer recognizer = mock(ControllerRecognizer.class);
-		
-		//when
-		ZootActor actor = new ZootActor();
-		actor.setControllerRecognizer(recognizer);
-		
-		//then
-		assertEquals(recognizer, actor.getControllerRecognizer());
-	}
-	
-	@Test
-	public void shouldUseDefaultControllerRecognizer()
-	{
-		//when
-		ZootActor actor = new ZootActor();
-		
-		//then
-		assertEquals(DefaultControllerRecognizer.Instance, actor.getControllerRecognizer());
 	}
 }

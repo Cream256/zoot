@@ -23,12 +23,12 @@ public class ClimbState extends BasicState
 	@Override
 	public void onEnter(ZootActor actor, ZootEvent event)
 	{				
-		actor.controllerAction(AnimatedSpriteController.class, ctrl -> 
+		actor.controllersAction(AnimatedSpriteController.class, ctrl -> 
 		{
 			String usedAnimation = event.getType() == ZootEventType.GrabSide ? CLIMB_SIDE_ANIMATION : CLIMB_ANIMATION; 			
 			ctrl.setAnimation(usedAnimation);
 		});
-		actor.controllerAction(ClimbController.class, ctrl -> ctrl.grab());
+		actor.controllersAction(ClimbController.class, ctrl -> ctrl.grab());
 	}
 		
 	@Override
@@ -44,7 +44,7 @@ public class ClimbState extends BasicState
 		
 		if(event.getType() == ZootEventType.Up)
 		{
-			actor.controllerAction(ClimbController.class, ctrl -> 
+			actor.controllersAction(ClimbController.class, ctrl -> 
 			{
 				if(ctrl.climb()) 
 					changeState(event, IdleState.ID);
@@ -54,7 +54,7 @@ public class ClimbState extends BasicState
 		
 		if(event.getType() == ZootEventType.Down)
 		{			
-			actor.controllerAction(ClimbController.class, ctrl -> ctrl.letGo());			
+			actor.controllersAction(ClimbController.class, ctrl -> ctrl.letGo());			
 			changeState(event, FallState.ID);
 			return true;
 		}

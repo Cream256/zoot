@@ -24,7 +24,7 @@ public class ApplySinVelocityController extends ControllerAdapter
 		float vx = velocityX * sin;
 		float vy = velocityY * sin;
 		
-		actor.controllerAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(vx, vy, useX, useY));
+		actor.controllersAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(vx, vy, useX, useY));
 	}
 	
 	public void setVelocityX(float value)

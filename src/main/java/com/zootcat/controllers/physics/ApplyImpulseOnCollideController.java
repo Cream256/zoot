@@ -31,7 +31,7 @@ public class ApplyImpulseOnCollideController extends OnCollideController
 	public void onUpdate(float delta, ZootActor actor) 
 	{
 		super.onUpdate(delta, actor);		
-		collidedActors.forEach(act -> act.controllerAction(PhysicsBodyController.class, ctrl -> ctrl.applyImpulse(impulseX * delta, impulseY * delta)));
+		collidedActors.forEach(act -> act.controllersAction(PhysicsBodyController.class, ctrl -> ctrl.applyImpulse(impulseX * delta, impulseY * delta)));
 		
 		if(!continous) collidedActors.clear();
 	}

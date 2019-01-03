@@ -25,4 +25,10 @@ public class IgnorePlatformsControllerTest
 		ctrl.setActive(true);
 		assertTrue(ctrl.isActive());
 	}
+	
+	@Test
+	public void shouldBeSingleton()
+	{
+		assertTrue(new IgnorePlatformsController().isSingleton());
+	}
 }
