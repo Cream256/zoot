@@ -608,22 +608,7 @@ public class ZootActorTest
 		
 		//throw		
 	}
-	
-	@Test(expected = ZootDuplicatedControllerException.class)
-	public void shouldThrowWhenAddingDuplicatedSingletonControllersFromTheSameCollection()
-	{
-		//given
-		Controller ctrl1 = mock(Controller.class);
-		when(ctrl1.isSingleton()).thenReturn(true);
-		Controller ctrl2 = mock(Controller.class);
-		when(ctrl2.isSingleton()).thenReturn(true);
-				
-		//when
-		actor.addControllers(Arrays.asList(ctrl1, ctrl2));
 		
-		//throw		
-	}
-	
 	@Test
 	public void shouldNotThrowWhenAddingDuplicatedControllerType()
 	{

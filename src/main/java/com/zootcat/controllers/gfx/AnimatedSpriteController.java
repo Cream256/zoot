@@ -176,7 +176,7 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 
 	private ZootDirection getDirection(ZootActor actor)
 	{
-		DirectionController ctrl = actor.getSingleController(DirectionController.class);
+		DirectionController ctrl = actor.tryGetSingleController(DirectionController.class);
 		if(ctrl != null)
 		{
 			return ctrl.getDirection();

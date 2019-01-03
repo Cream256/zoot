@@ -132,12 +132,11 @@ public class ZootActor extends Actor
 	}
 	
 	public void addControllers(Collection<Controller> newControllers)
-	{						
-		//check for duplicated singletons
+	{		
+		//check for duplicated singletons already added to actor
 		newControllers.forEach(newCtrl -> 
 		{
 			verifyNoDuplicatedSingletonControllers(newCtrl, getControllers(newCtrl.getClass()));
-			verifyNoDuplicatedSingletonControllers(newCtrl, newControllers);
 		});
 		
 		//controllers must be added to actor

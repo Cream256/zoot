@@ -275,7 +275,7 @@ public class ClimbController extends OnCollideWithSensorController
 		ZootActor fixtureActor = (ZootActor) grabbableFixture.getUserData();
 		if(fixtureActor == null) return true;
 		
-		ClimbPropertiesController ctrl = fixtureActor.getSingleController(ClimbPropertiesController.class);
+		ClimbPropertiesController ctrl = fixtureActor.tryGetSingleController(ClimbPropertiesController.class);
 		return ctrl == null ? true : ctrl.canGrab();
 	}
 
