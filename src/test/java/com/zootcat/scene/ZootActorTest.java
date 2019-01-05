@@ -28,6 +28,7 @@ import org.mockito.InOrder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.ChangeListenerController;
 import com.zootcat.controllers.Controller;
 import com.zootcat.controllers.ControllerAdapter;
@@ -473,6 +474,23 @@ public class ZootActorTest
 		
 		//then
 		assertEquals(100, ctrl.get());
+	}
+	
+	@Test
+	public void shouldExecuteActionOnControllersWithMatchingPredicate()
+	{
+		//given
+		SimpleController simpleCtrl = mock(SimpleController.class);
+		RenderController renderCtrl = mock(RenderController.class);
+		
+		//when
+		actor.addController(simpleCtrl);
+		actor.addController(renderCtrl);
+		actor.controllersAction(ctrl -> ClassReflection.isInstance(RenderController.class, ctrl), ctrl -> ctrl.setEnabled(false));
+		
+		//then
+		verify(renderCtrl).setEnabled(false);
+		verify(simpleCtrl, never()).setEnabled(false);
 	}
 		
 	@Test

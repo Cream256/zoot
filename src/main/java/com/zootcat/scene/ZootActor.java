@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
@@ -129,9 +130,24 @@ public class ZootActor extends Actor
 		return controllers.stream().anyMatch(ctrl -> func.apply(ctrl));
 	}
 	
+	/**
+	 * Find every controller of a given class and perform some action on it.
+	 * @param clazz - controller class to be found
+	 * @param action - action that will be preformed on found controllers
+	 */
 	public <T extends Controller> void controllersAction(Class<T> clazz, Consumer<T> action)
 	{
 		getControllers(clazz).forEach(action);
+	}
+	
+	/**
+	 * Find every controller basing on a supported predicate and perform some action on it.
+	 * @param predicate - predicate for controllers
+	 * @param action - action that will be preformed on controllers matching the predicate
+	 */
+	public void controllersAction(Predicate<Controller> predicate, Consumer<Controller> action)
+	{
+		controllers.stream().filter(predicate).forEach(action);
 	}
 	
 	public void addControllers(Collection<Controller> newControllers)
@@ -195,7 +211,7 @@ public class ZootActor extends Actor
 		
 	/**
 	 * Get all controllers of a given class.
-	 * @param controllerClass - controllers of given class and derived will be returned
+	 * @param controllerClass - controllers of given class (only) will be returned
 	 * @return List of controllers. Empty list if none are found.
 	 */
 	@SuppressWarnings("unchecked")
@@ -206,7 +222,7 @@ public class ZootActor extends Actor
 						 .collect(Collectors.toList());
 		return (List<T>)result;
 	}
-	
+		
 	/**
 	 * Returns a single controller instance.
 	 * @param controllerClass - controller class to look for
