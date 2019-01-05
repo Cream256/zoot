@@ -7,6 +7,7 @@ import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.AnimationBasedState;
 import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.StunState;
 import com.zootcat.fsm.states.ZootStateUtils;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
@@ -57,6 +58,10 @@ public class TurnState extends AnimationBasedState
 		else if(event.getType() == ZootEventType.Attack)
 		{
 			changeState(event, AttackState.ID);
+		}
+		else if(event.getType() == ZootEventType.Stun)
+		{
+			changeState(event, StunState.ID);
 		}
 		
 		return true;

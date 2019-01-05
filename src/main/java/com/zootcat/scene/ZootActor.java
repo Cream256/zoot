@@ -16,7 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.ChangeListenerController;
 import com.zootcat.controllers.Controller;
-import com.zootcat.controllers.ControllerComparator;
+import com.zootcat.controllers.ControllerClassEqualityComparator;
+import com.zootcat.controllers.ControllerOrderComparator;
 import com.zootcat.controllers.gfx.RenderController;
 import com.zootcat.exceptions.ZootControllerNotFoundException;
 import com.zootcat.exceptions.ZootDuplicatedControllerException;
@@ -143,11 +144,11 @@ public class ZootActor extends Actor
 		newControllers.forEach((ctrl) -> controllers.add(ctrl));
 		
 		//must be invoked in proper order
-		newControllers.stream().sorted(ControllerComparator.Instance)
+		newControllers.stream().sorted(ControllerOrderComparator.Instance)
 							   .forEach((ctrl) -> ctrl.onAdd(this));
 		
 		//reorder controllers
-		controllers.sort(ControllerComparator.Instance);
+		controllers.sort(ControllerOrderComparator.Instance);
 	}
 		
 	/**
@@ -160,7 +161,7 @@ public class ZootActor extends Actor
 		verifyNoDuplicatedSingletonControllers(newController, getControllers(newController.getClass()));
 		
 		controllers.add(newController);
-		controllers.sort(ControllerComparator.Instance);
+		controllers.sort(ControllerOrderComparator.Instance);
 		newController.onAdd(this);		
 	}
 	
@@ -180,7 +181,7 @@ public class ZootActor extends Actor
 	
 	public void removeAllControllers()
 	{
-		controllers.stream().sorted(ControllerComparator.Instance.reversed())
+		controllers.stream().sorted(ControllerOrderComparator.Instance.reversed())
 							.forEach(ctrl -> ctrl.onRemove(this));
 		controllers.clear();
 	}
@@ -199,7 +200,8 @@ public class ZootActor extends Actor
 	public <T extends Controller> List<T> getControllers(Class<T> controllerClass)
 	{
 		List<Controller> result = controllers.stream()
-						 .filter(ctrl -> ClassReflection.isInstance(controllerClass, ctrl))
+						 //.filter(ctrl -> ClassReflection.isInstance(controllerClass, ctrl))
+						 .filter(ctrl -> ControllerClassEqualityComparator.isControllerOfClass(ctrl, controllerClass))
 						 .collect(Collectors.toList());
 		return (List<T>)result;
 	}

@@ -5,15 +5,16 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.zootcat.controllers.Controller;
+import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.physics.ZootCollisionListener;
 import com.zootcat.scene.ZootActor;
 
 public abstract class PhysicsCollisionController extends ZootCollisionListener implements Controller 
 {
+	@CtrlParam private boolean enabled = true;
 	private ZootActor controllerActor;
-	private boolean enabled = true;
-	
+		
 	@Override
 	public void init(ZootActor actor)	
 	{
