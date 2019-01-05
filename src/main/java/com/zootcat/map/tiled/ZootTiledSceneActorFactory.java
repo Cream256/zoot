@@ -12,7 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.Controller;
-import com.zootcat.controllers.ControllerOrderComparator;
+import com.zootcat.controllers.ZootControllerOrderComparator;
 import com.zootcat.controllers.factory.ControllerFactory;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.map.tiled.optimizer.ZootLayerRegion;
@@ -176,7 +176,7 @@ public class ZootTiledSceneActorFactory
 	
 	private void addControllersToActor(ZootActor actor, List<Controller> createdControllers)
 	{
-		createdControllers.stream().sorted(ControllerOrderComparator.Instance).forEach(ctrl -> ctrl.init(actor));		
+		createdControllers.stream().sorted(ZootControllerOrderComparator.Instance).forEach(ctrl -> ctrl.init(actor));		
 		actor.addControllers(createdControllers);
 	}
 }

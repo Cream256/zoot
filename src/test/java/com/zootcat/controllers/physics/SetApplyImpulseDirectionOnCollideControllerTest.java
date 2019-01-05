@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
+import com.zootcat.testing.ZootActorStub;
 
 public class SetApplyImpulseDirectionOnCollideControllerTest
 {
@@ -30,7 +31,7 @@ public class SetApplyImpulseDirectionOnCollideControllerTest
 	{
 		MockitoAnnotations.initMocks(this);
 		
-		otherActor = new ZootActor();
+		otherActor = new ZootActorStub();
 		otherActor.addController(applyImpulseCtrl);
 		
 		ctrl = new SetApplyImpulseDirectionOnCollideController();

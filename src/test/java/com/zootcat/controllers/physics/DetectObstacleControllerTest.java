@@ -21,6 +21,7 @@ import com.zootcat.physics.ZootPhysicsUtils;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.testing.ZootActorStub;
 
 public class DetectObstacleControllerTest
 {
@@ -49,7 +50,7 @@ public class DetectObstacleControllerTest
 		when(dirCtrl.getDirection()).thenReturn(ZootDirection.None);
 				
 		//create controller actor
-		controllerActor = new ZootActor();
+		controllerActor = new ZootActorStub();
 		controllerActor.setWidth(ACTOR_WIDTH);
 		controllerActor.setHeight(ACTOR_HEIGHT);
 		

@@ -20,6 +20,7 @@ import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
+import com.zootcat.testing.ZootActorStub;
 
 public class WalkableControllerTest
 {
@@ -41,7 +42,7 @@ public class WalkableControllerTest
 	{
 		MockitoAnnotations.initMocks(this);
 		
-		actor = new ZootActor();
+		actor = new ZootActorStub();
 		actor.addController(physicsCtrl);
 		actor.addController(groundCtrl);
 		

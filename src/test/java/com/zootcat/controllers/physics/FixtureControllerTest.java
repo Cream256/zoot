@@ -33,6 +33,7 @@ import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.physics.ZootBodyShape;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.testing.ZootActorStub;
 import com.zootcat.utils.BitMaskConverter;
 
 public class FixtureControllerTest
@@ -62,7 +63,7 @@ public class FixtureControllerTest
 		
 		BitMaskConverter.Instance.clear();
 		
-		actor = new ZootActor();
+		actor = new ZootActorStub();
 		actor.addController(physicsBodyCtrl);
 				
 		ctrl = new FixtureController();

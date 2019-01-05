@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.testing.ZootActorStub;
 
 public class DetectFallControllerTest
 {
@@ -34,7 +35,7 @@ public class DetectFallControllerTest
 		MockitoAnnotations.initMocks(this);				
 		when(physicsCtrlMock.getBody()).thenReturn(bodyMock);
 		
-		actor = new ZootActor();
+		actor = new ZootActorStub();
 		actor.addController(groundCtrlMock);
 		actor.addController(physicsCtrlMock);
 		

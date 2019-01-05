@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.zootcat.controllers.physics.DetectFallController;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.testing.ZootActorStub;
 
 public class HurtOnJumpControllerTest
 {	
@@ -24,7 +25,7 @@ public class HurtOnJumpControllerTest
 	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);				
-		actor = new ZootActor();
+		actor = new ZootActorStub();
 		actor.addController(detectFall);
 		when(otherFixture.getUserData()).thenReturn(actor);
 		

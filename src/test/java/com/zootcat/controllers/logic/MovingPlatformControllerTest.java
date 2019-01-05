@@ -24,6 +24,7 @@ import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.testing.ZootActorStub;
 
 public class MovingPlatformControllerTest
 {		
@@ -54,7 +55,7 @@ public class MovingPlatformControllerTest
 		when(actorOnPlatform2BodyMock.getVelocity()).thenReturn(new Vector2());
 	
 		//controller actor
-		ctrlActor = new ZootActor();
+		ctrlActor = new ZootActorStub();
 		ctrlActor.addController(ctrlActorBodyMock);
 		reset(ctrlActorBodyMock);
 		when(ctrlActorBodyMock.getVelocity()).thenReturn(new Vector2());

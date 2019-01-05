@@ -14,6 +14,7 @@ import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.fsm.states.PatrolState;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.testing.ZootActorStub;
 
 public class PatrolStateMachineControllerTest
 {
@@ -26,7 +27,7 @@ public class PatrolStateMachineControllerTest
 	{
 		MockitoAnnotations.initMocks(this);
 		
-		actor = new ZootActor();
+		actor = new ZootActorStub();
 		actor.addController(physicsBodyCtrl);
 		when(physicsBodyCtrl.getCenterPositionRef()).thenReturn(new Vector2());
 		

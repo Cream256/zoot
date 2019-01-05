@@ -16,9 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.controllers.ChangeListenerController;
 import com.zootcat.controllers.Controller;
-import com.zootcat.controllers.ControllerClassEqualityComparator;
-import com.zootcat.controllers.ControllerOrderComparator;
+import com.zootcat.controllers.ZootControllerOrderComparator;
 import com.zootcat.controllers.gfx.RenderController;
+import com.zootcat.controllers.recognizers.ZootClassControllerRecognizer;
+import com.zootcat.controllers.recognizers.ZootControllerRecognizer;
 import com.zootcat.exceptions.ZootControllerNotFoundException;
 import com.zootcat.exceptions.ZootDuplicatedControllerException;
 import com.zootcat.fsm.ZootStateMachine;
@@ -34,13 +35,14 @@ public class ZootActor extends Actor
 {
 	public static final String DEFAULT_NAME = "Unnamed Actor";
 	
-	private List<Controller> controllers = new ArrayList<Controller>();
-	private Set<String> types = new HashSet<String>();	
-	private float opacity = 1.0f;
 	private int id = 0;
 	private int gid = -1;
 	private ZootScene scene;
+	private float opacity = 1.0f;		
+	private Set<String> types = new HashSet<String>();
+	private List<Controller> controllers = new ArrayList<Controller>();
 	private ZootStateMachine stateMachine = new ZootStateMachine();
+	private ZootControllerRecognizer controllerRecognizer = ZootClassControllerRecognizer.Instance;
 	
 	public ZootActor()
 	{
@@ -144,11 +146,11 @@ public class ZootActor extends Actor
 		newControllers.forEach((ctrl) -> controllers.add(ctrl));
 		
 		//must be invoked in proper order
-		newControllers.stream().sorted(ControllerOrderComparator.Instance)
+		newControllers.stream().sorted(ZootControllerOrderComparator.Instance)
 							   .forEach((ctrl) -> ctrl.onAdd(this));
 		
 		//reorder controllers
-		controllers.sort(ControllerOrderComparator.Instance);
+		controllers.sort(ZootControllerOrderComparator.Instance);
 	}
 		
 	/**
@@ -161,7 +163,7 @@ public class ZootActor extends Actor
 		verifyNoDuplicatedSingletonControllers(newController, getControllers(newController.getClass()));
 		
 		controllers.add(newController);
-		controllers.sort(ControllerOrderComparator.Instance);
+		controllers.sort(ZootControllerOrderComparator.Instance);
 		newController.onAdd(this);		
 	}
 	
@@ -181,7 +183,7 @@ public class ZootActor extends Actor
 	
 	public void removeAllControllers()
 	{
-		controllers.stream().sorted(ControllerOrderComparator.Instance.reversed())
+		controllers.stream().sorted(ZootControllerOrderComparator.Instance.reversed())
 							.forEach(ctrl -> ctrl.onRemove(this));
 		controllers.clear();
 	}
@@ -200,8 +202,7 @@ public class ZootActor extends Actor
 	public <T extends Controller> List<T> getControllers(Class<T> controllerClass)
 	{
 		List<Controller> result = controllers.stream()
-						 //.filter(ctrl -> ClassReflection.isInstance(controllerClass, ctrl))
-						 .filter(ctrl -> ControllerClassEqualityComparator.isControllerOfClass(ctrl, controllerClass))
+						 .filter(ctrl -> controllerRecognizer.isControllerExact(ctrl, controllerClass))
 						 .collect(Collectors.toList());
 		return (List<T>)result;
 	}
@@ -307,5 +308,15 @@ public class ZootActor extends Actor
 	public ZootScene getScene()
 	{
 		return scene;
+	}
+
+	public void setControllerRecognizer(ZootControllerRecognizer controllerRecognizer)
+	{
+		this.controllerRecognizer = controllerRecognizer;
+	}
+
+	public ZootControllerRecognizer getControllerRecognizer()
+	{
+		return controllerRecognizer;
 	}
 }

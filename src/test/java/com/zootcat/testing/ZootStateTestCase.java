@@ -35,7 +35,7 @@ public class ZootStateTestCase
 		MockitoAnnotations.initMocks(this);
 		
 		//setup actor
-		actor = new ZootActor();
+		actor = new ZootActorStub();
 		actor.addController(animatedSpriteCtrlMock);
 		actor.addController(physicsBodyCtrlMock);
 		actor.addController(directionCtrlMock);

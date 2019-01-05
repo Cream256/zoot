@@ -2,11 +2,11 @@ package com.zootcat.controllers;
 
 import java.util.Comparator;
 
-public class ControllerOrderComparator implements Comparator<Controller>
+public class ZootControllerOrderComparator implements Comparator<Controller>
 {
-	public static final ControllerOrderComparator Instance = new ControllerOrderComparator();
+	public static final ZootControllerOrderComparator Instance = new ZootControllerOrderComparator();
 	
-	private ControllerOrderComparator()
+	private ZootControllerOrderComparator()
 	{
 		//use instance
 	}

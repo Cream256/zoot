@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.zootcat.controllers.ControllerPriority;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.testing.ZootActorStub;
 import com.zootcat.utils.BitMaskConverter;
 
 public class CollisionFilterControllerTest
@@ -51,7 +52,7 @@ public class CollisionFilterControllerTest
 	public void shouldSetFilterOnAllFixtures()
 	{
 		//given		
-		ZootActor actor = new ZootActor();
+		ZootActor actor = new ZootActorStub();
 		
 		PhysicsBodyController physCtrl = mock(PhysicsBodyController.class);
 		actor.addController(physCtrl);

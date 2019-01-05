@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.testing.ZootActorStub;
 
 public class ApplyImpulseOnCollideControllerTest
 {
@@ -28,7 +29,7 @@ public class ApplyImpulseOnCollideControllerTest
 	{
 		MockitoAnnotations.initMocks(this);
 		
-		otherActor = new ZootActor();
+		otherActor = new ZootActorStub();
 		otherActor.addController(physicsBodyCtrl);
 				
 		controller = new ApplyImpulseOnCollideController();

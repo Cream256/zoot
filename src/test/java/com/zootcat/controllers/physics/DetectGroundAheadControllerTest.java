@@ -26,6 +26,7 @@ import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.testing.ZootActorStub;
 
 public class DetectGroundAheadControllerTest
 {
@@ -65,7 +66,7 @@ public class DetectGroundAheadControllerTest
 		
 		eventCounter = new ZootActorEventCounterListener();
 		
-		ctrlActor = new ZootActor();		
+		ctrlActor = new ZootActorStub();		
 		ctrlActor.addController(physicsCtrl);
 		ctrlActor.addController(directionCtrl);
 		ctrlActor.addListener(eventCounter);

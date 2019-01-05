@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.math.ParaboleMovementPattern;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.testing.ZootActorStub;
 
 public class ZootParabolicMovementActionTest
 {
@@ -56,7 +57,7 @@ public class ZootParabolicMovementActionTest
 	{
 		//given
 		PhysicsBodyController bodyCtrl = mock(PhysicsBodyController.class);
-		ZootActor actor = new ZootActor();
+		ZootActor actor = new ZootActorStub();
 		actor.addController(bodyCtrl);
 		action.setTarget(actor);
 		

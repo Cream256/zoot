@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.testing.ZootActorStub;
 
 public class ApplySinVelocityControllerTest
 {
@@ -21,7 +22,7 @@ public class ApplySinVelocityControllerTest
 	{
 		MockitoAnnotations.initMocks(this);
 		
-		actor = new ZootActor();
+		actor = new ZootActorStub();
 		actor.addController(physicsBodyCtrl);
 		
 		ctrl = new ApplySinVelocityController();

@@ -17,6 +17,7 @@ import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.testing.ZootActorStub;
 
 public class DetectInAirControllerTest
 {
@@ -63,7 +64,7 @@ public class DetectInAirControllerTest
 	public void shouldNotBeInAirAndEventShouldNotBeSend()
 	{
 		//given		
-		ZootActor actor = new ZootActor();
+		ZootActor actor = new ZootActorStub();
 		actor.addController(groundCtrl);
 		
 		ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();
@@ -84,7 +85,7 @@ public class DetectInAirControllerTest
 	public void shouldBeInAirAndEventShouldBeSend()
 	{
 		//given		
-		ZootActor actor = new ZootActor();
+		ZootActor actor = new ZootActorStub();
 		actor.addController(groundCtrl);
 		
 		ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();

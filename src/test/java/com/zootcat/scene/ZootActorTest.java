@@ -39,6 +39,8 @@ import com.zootcat.controllers.factory.mocks.RenderControllerMock1;
 import com.zootcat.controllers.factory.mocks.RenderControllerMock2;
 import com.zootcat.controllers.factory.mocks.SimpleController;
 import com.zootcat.controllers.gfx.RenderController;
+import com.zootcat.controllers.recognizers.ZootClassControllerRecognizer;
+import com.zootcat.controllers.recognizers.ZootMockitoControllerRecognizer;
 import com.zootcat.exceptions.ZootControllerNotFoundException;
 import com.zootcat.exceptions.ZootDuplicatedControllerException;
 
@@ -73,6 +75,7 @@ public class ZootActorTest
 		when(ctrl3.getPriority()).thenReturn(ControllerPriority.Normal);
 		
 		actor = new ZootActor();
+		actor.setControllerRecognizer(ZootMockitoControllerRecognizer.Instance);
 	}
 	
 	@Test
@@ -711,49 +714,66 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void shouldReturnAllControllersOfGivenType()
+	public void shouldReturnOnlyBaseControllers()
 	{
 		//given
 		MockBaseController baseCtrl = new MockBaseController();
 		MockDerivedController derivedCtrl = new MockDerivedController();
-		SimpleController simpleCtrl = new SimpleController();
+		SimpleController otherCtrl = new SimpleController();
 				
 		//when
 		actor.addController(baseCtrl);
 		actor.addController(derivedCtrl);
-		actor.addController(simpleCtrl);
+		actor.addController(otherCtrl);
 		
 		//then
 		List<MockBaseController> ctrls = actor.getControllers(MockBaseController.class);
 		assertNotNull(ctrls);
-		assertEquals(2, ctrls.size());
+		assertEquals(1, ctrls.size());
 		assertTrue(ctrls.contains(baseCtrl));
-		assertTrue(ctrls.contains(derivedCtrl));
-		assertFalse(ctrls.contains(simpleCtrl));
 	}
 	
 	@Test
-	public void shouldInvokeActionOnAllControllersOfGivenType()
+	public void shouldReturnOnlyDerivedControllers()
 	{
 		//given
-		MockBaseController ctrl1 = mock(MockBaseController.class);
-		MockDerivedController ctrl2 = mock(MockDerivedController.class);		
-		SimpleController ctrl3 = mock(SimpleController.class);
+		MockBaseController baseCtrl = new MockBaseController();
+		MockDerivedController derivedCtrl = new MockDerivedController();
+		SimpleController otherCtrl = new SimpleController();
+				
+		//when
+		actor.addController(baseCtrl);
+		actor.addController(derivedCtrl);
+		actor.addController(otherCtrl);
 		
-		when(ctrl1.getPriority()).thenReturn(ControllerPriority.Normal);
-		when(ctrl2.getPriority()).thenReturn(ControllerPriority.Normal);
-		when(ctrl3.getPriority()).thenReturn(ControllerPriority.Normal);
+		//then
+		List<MockDerivedController> ctrls = actor.getControllers(MockDerivedController.class);
+		assertNotNull(ctrls);
+		assertEquals(1, ctrls.size());
+		assertTrue(ctrls.contains(derivedCtrl));
+	}
+	
+	@Test
+	public void shouldInvokeActionOnAllControllersOfGivenTypeWithNoDerivedControllers()
+	{
+		//given
+		MockBaseController baseCtrl = mock(MockBaseController.class);
+		MockDerivedController derivedCtrl = mock(MockDerivedController.class);		
+		SimpleController otherCtrl = mock(SimpleController.class);
+		
+		when(baseCtrl.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(derivedCtrl.getPriority()).thenReturn(ControllerPriority.Normal);
+		when(otherCtrl.getPriority()).thenReturn(ControllerPriority.Normal);
 		
 		//when
-		actor.addController(ctrl1);
-		actor.addController(ctrl2);
-		actor.addController(ctrl3);
+		actor.addController(baseCtrl);
+		actor.addController(derivedCtrl);
+		actor.addController(otherCtrl);
 		actor.controllersAction(MockBaseController.class, ctrl -> ctrl.getBaseParam());
 		
 		//then
-		verify(ctrl1).getBaseParam();
-		verify(ctrl2).getBaseParam();
-		verify(ctrl3).onAdd(actor);
+		verify(baseCtrl).getBaseParam();
+		verify(derivedCtrl, never()).getBaseParam();
 	}
 		
 	@Test
@@ -777,5 +797,22 @@ public class ZootActorTest
 		
 		//then		
 		assertEquals("Name", actor.toString());
+	}
+	
+	@Test
+	public void shouldSetControllerRecognizer()
+	{
+		actor.setControllerRecognizer(null);
+		assertNull(actor.getControllerRecognizer());
+		
+		actor.setControllerRecognizer(ZootClassControllerRecognizer.Instance);
+		assertEquals(ZootClassControllerRecognizer.Instance, actor.getControllerRecognizer());
+	}
+	
+	@Test
+	public void shouldHaveClassControllerRecognizerByDefault()
+	{
+		ZootActor actor = new ZootActor();
+		assertEquals(ZootClassControllerRecognizer.Instance, actor.getControllerRecognizer());
 	}
 }

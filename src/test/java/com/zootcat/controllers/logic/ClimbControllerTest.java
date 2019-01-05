@@ -27,6 +27,7 @@ import com.zootcat.physics.ZootShapeFactory;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.testing.ZootActorStub;
 import com.zootcat.utils.BitMaskConverter;
 
 public class ClimbControllerTest 
@@ -62,11 +63,11 @@ public class ClimbControllerTest
 		when(scene.getUnitScale()).thenReturn(1.0f);
 				
 		//ctrl actor
-		ctrlActor = new ZootActor();
+		ctrlActor = new ZootActorStub();
 		ctrlActor.setSize(CTRL_ACTOR_WIDTH, CTRL_ACTOR_HEIGHT);
 		
 		//other actor
-		otherActor = new ZootActor();
+		otherActor = new ZootActorStub();
 		
 		//event counter
 		eventCounter = new ZootActorEventCounterListener();

@@ -13,6 +13,7 @@ import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
+import com.zootcat.testing.ZootActorStub;
 
 public class ZootStateUtilsTest
 {
@@ -117,7 +118,7 @@ public class ZootStateUtilsTest
 	{
 		//given
 		WalkableController moveableCtrl = mock(WalkableController.class);
-		ZootActor actor = new ZootActor();
+		ZootActor actor = new ZootActorStub();
 		actor.addController(moveableCtrl);
 		
 		ZootEvent event = new ZootEvent();
@@ -157,7 +158,7 @@ public class ZootStateUtilsTest
 	{
 		//given
 		WalkableController moveableCtrl = mock(WalkableController.class);
-		ZootActor actor = new ZootActor();
+		ZootActor actor = new ZootActorStub();
 		actor.addController(moveableCtrl);
 		
 		ZootEvent event = new ZootEvent();

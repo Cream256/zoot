@@ -16,6 +16,7 @@ import com.zootcat.controllers.gfx.AnimatedSpriteController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.testing.ZootActorStub;
 
 public class BasicStateTest
 {
@@ -147,7 +148,7 @@ public class BasicStateTest
 	{
 		//given
 		BasicState state = new BasicState("test");
-		ZootActor actor = new ZootActor();
+		ZootActor actor = new ZootActorStub();
 		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
 		
 		//when
@@ -163,7 +164,7 @@ public class BasicStateTest
 	{
 		//given
 		BasicState state = new BasicState("test");
-		ZootActor actor = new ZootActor();
+		ZootActor actor = new ZootActorStub();
 		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
 		
 		//when
@@ -198,7 +199,7 @@ public class BasicStateTest
 	{
 		//given
 		BasicState state = new BasicState("test");
-		ZootActor actor = new ZootActor();
+		ZootActor actor = new ZootActorStub();
 		AnimatedSpriteController spriteCtrl = mock(AnimatedSpriteController.class);
 		ZootAnimation currentAnimation = mock(ZootAnimation.class);
 		
