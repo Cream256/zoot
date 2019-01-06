@@ -2,7 +2,6 @@ package com.zootcat.actions;
 
 import java.util.function.Consumer;
 
-import com.badlogic.gdx.Game;
 import com.zootcat.dialogs.ZootDialog;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.exceptions.ZootException;

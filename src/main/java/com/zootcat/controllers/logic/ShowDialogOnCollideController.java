@@ -2,7 +2,6 @@ package com.zootcat.controllers.logic;
 
 import java.util.function.Consumer;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.actions.ZootActions;
 import com.zootcat.controllers.factory.CtrlParam;

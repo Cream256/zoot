@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.camera.ZootCamera;
 import com.zootcat.controllers.Controller;
