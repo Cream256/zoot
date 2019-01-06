@@ -1,5 +1,8 @@
 package com.zootcat.screen;
 
+import java.util.function.Consumer;
+
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
@@ -21,7 +24,7 @@ import com.zootcat.scene.ZootDirection;
  * of the previous screen. Previous screen and dialog must be supplied.
  * 
  * @author Cream
- * @remarks Needs BETA version improvements
+ * @remarks Needs BETA version improvements: custom layout (from file?), remove need for previous screen
  */
 public class ZootDialogScreen extends ZootScreenAdapter
 {
@@ -34,6 +37,9 @@ public class ZootDialogScreen extends ZootScreenAdapter
 	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
 	private Sprite faceSprite;
+	
+	private Consumer<Game> onShowAction;
+	private Consumer<Game> onHideAction;
 		
 	public ZootDialogScreen(ZootGame game)
 	{
@@ -59,6 +65,9 @@ public class ZootDialogScreen extends ZootScreenAdapter
 		inputProcessor.bindUp(Keys.SPACE, () -> advanceDialog());
 		inputProcessor.bindUp(Keys.ESCAPE, () -> quitDialog());
 		game.getInputManager().addProcessor(inputProcessor);
+		
+		//on show action
+		if(onShowAction != null) onShowAction.accept(game);		
 	}
 	
 	@Override
@@ -66,15 +75,16 @@ public class ZootDialogScreen extends ZootScreenAdapter
 	{
 		game.getInputManager().removeAllProcessors();
 		game.getInputManager().clearPressedKeys();
+		if(onHideAction != null) onHideAction.accept(game);
 	}
 		
-	private boolean advanceDialog()
+	public boolean advanceDialog()
 	{
 		dialog.nextFrame();	
 		return true;
 	}
 	
-	private boolean quitDialog()
+	public boolean quitDialog()
 	{
 		dialog.forceFinish();
 		return true;
@@ -155,5 +165,25 @@ public class ZootDialogScreen extends ZootScreenAdapter
 	public ZootActor getTriggeringActor()
 	{
 		return triggeringActor;
+	}
+	
+	public void setOnShowAction(Consumer<Game> action)
+	{
+		onShowAction = action;
+	}
+	
+	public Consumer<Game> getOnShowAction()
+	{
+		return onShowAction;
+	}
+	
+	public void setOnHideAction(Consumer<Game> action)
+	{
+		onHideAction = action;
+	}
+	
+	public Consumer<Game> getOnHideAction()
+	{
+		return onHideAction;
 	}
 }
