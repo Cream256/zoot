@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.zootcat.camera.ZootCamera;
+import com.zootcat.camera.ZootCameraScrollingStrategy;
 import com.zootcat.controllers.Controller;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.game.ZootGame;
@@ -85,6 +86,14 @@ public class ZootActions
 		enableInputAction.setGame(game);
 		enableInputAction.setInputEnabled(enabled);		
 		return enableInputAction;
+	}
+	
+	public static ZootCameraScrollingStrategyAction cameraStrategy(ZootCamera camera, ZootCameraScrollingStrategy strategy)
+	{
+		ZootCameraScrollingStrategyAction cameraStrategyAction = zootAction(ZootCameraScrollingStrategyAction.class);
+		cameraStrategyAction.setCamera(camera);
+		cameraStrategyAction.setStrategy(strategy);
+		return cameraStrategyAction;		
 	}
 	
 	public static ZootCameraFocusAction cameraFocus(ZootCamera camera, ZootActor target)

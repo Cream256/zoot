@@ -86,7 +86,8 @@ public class ZootTiledScene implements ZootScene
 		mapRender = new ZootTiledMapRender(map, renderConfig);
 				
 		//stage
-		camera = new ZootCamera(map.getMapWidth() * worldUnitPerTile, map.getMapHeight() * worldUnitPerTile);		
+		camera = new ZootCamera(map.getMapWidth() * worldUnitPerTile, map.getMapHeight() * worldUnitPerTile);
+		camera.setScene(this);
 		Viewport viewport = new StretchViewport(viewportWidth, viewportHeight, camera);
 		stage = new Stage(viewport);
 		

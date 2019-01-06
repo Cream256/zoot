@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.camera.ZootCamera;
+import com.zootcat.camera.ZootCameraScrollingStrategy;
 import com.zootcat.controllers.Controller;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.game.ZootGame;
@@ -119,6 +120,16 @@ public class ZootActionsTest
 		ZootCameraFocusAction action = ZootActions.cameraFocus(camera, actor);
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(camera, action.getCamera());
+	}
+	
+	@Test
+	public void shouldCreateCameraStrategyAction()
+	{
+		ZootCamera camera = mock(ZootCamera.class);
+		ZootCameraScrollingStrategy strategy = mock(ZootCameraScrollingStrategy.class);
+		ZootCameraScrollingStrategyAction action = ZootActions.cameraStrategy(camera, strategy);
+		assertEquals(camera, action.getCamera());
+		assertEquals(strategy, action.getStrategy());		
 	}
 	
 	@Test

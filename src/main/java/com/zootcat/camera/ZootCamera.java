@@ -4,19 +4,31 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.zootcat.scene.ZootActor;
+import com.zootcat.scene.ZootScene;
 
 public class ZootCamera extends OrthographicCamera
 {
+	private ZootScene scene;
 	private ZootActor target;
 	private float worldWidth;
 	private float worldHeight;
 	private boolean clipToLevel = false;
-	private ZootCameraScrollingStrategy movementStrategy = ZootNullScrollingStrategy.Instance;
+	private ZootCameraScrollingStrategy scrollingStrategy = ZootNullScrollingStrategy.Instance;
 	
 	public ZootCamera(float worldWidth, float worldHeight)
 	{
 		this.worldWidth = worldWidth;
 		this.worldHeight = worldHeight;
+	}
+	
+	public void setScene(ZootScene scene)
+	{
+		this.scene = scene;
+	}
+	
+	public ZootScene getScene()
+	{
+		return scene;
 	}
 	
 	public ZootActor getTarget()
@@ -46,13 +58,18 @@ public class ZootCamera extends OrthographicCamera
 	
 	public void update(float delta, boolean updateFrustum)
 	{
-		movementStrategy.scrollCamera(this, delta);
+		scrollingStrategy.scrollCamera(this, delta);
 		super.update(updateFrustum);
 	}
 		
 	public void setScrollingStrategy(ZootCameraScrollingStrategy strategy)
 	{
-		movementStrategy = strategy != null ? strategy : ZootNullScrollingStrategy.Instance;
+		scrollingStrategy = strategy != null ? strategy : ZootNullScrollingStrategy.Instance;
+	}
+	
+	public ZootCameraScrollingStrategy getScrollingStrategy()
+	{
+		return scrollingStrategy;
 	}
 	
 	public void setEdgeSnapping(boolean value)

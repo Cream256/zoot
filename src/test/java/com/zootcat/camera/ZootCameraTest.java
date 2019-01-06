@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.zootcat.scene.ZootActor;
+import com.zootcat.scene.ZootScene;
 import com.zootcat.testing.HeadlessGdxTestRunner;
 
 @RunWith(HeadlessGdxTestRunner.class)
@@ -35,6 +36,19 @@ public class ZootCameraTest
 		camera.setScrollingStrategy(null);
 		camera.update(1.0f, true);
 		//ok
+	}
+	
+	@Test
+	public void shouldSetScrollingStrategy()
+	{
+		//given
+		ZootCameraScrollingStrategy strategy = mock(ZootCameraScrollingStrategy.class);
+		
+		//when
+		camera.setScrollingStrategy(strategy);
+		
+		//then
+		assertEquals(strategy, camera.getScrollingStrategy());		
 	}
 	
 	@Test
@@ -139,5 +153,18 @@ public class ZootCameraTest
 		camera.setViewportSize(1.0f, 2.0f);
 		assertEquals(1.0f, camera.getViewportWidth(), 0.0f);
 		assertEquals(2.0f, camera.getViewportHeight(), 0.0f);
+	}
+	
+	@Test
+	public void shouldSetScene()
+	{
+		//given
+		ZootScene scene = mock(ZootScene.class);
+		
+		//when
+		camera.setScene(scene);
+		
+		//then
+		assertEquals(scene, camera.getScene());
 	}
 }

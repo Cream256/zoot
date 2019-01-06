@@ -2,7 +2,7 @@ package com.zootcat.camera;
 
 import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,21 +13,24 @@ import com.zootcat.scene.ZootActor;
 public class ZootPositionLockingStrategyTest
 {
 	@Test
-	public void scrollCameraTest()
+	public void shouldSetCameraPositionAtTheCenterOfTheActor()
 	{
 		//given
 		ZootActor actor = mock(ZootActor.class);
-		ZootCamera camera = mock(ZootCamera.class);				
-		ZootPositionLockingStrategy strategy = new ZootPositionLockingStrategy();
+		when(actor.getX()).thenReturn(0.0f);
+		when(actor.getY()).thenReturn(0.0f);
+		when(actor.getWidth()).thenReturn(100.0f);
+		when(actor.getHeight()).thenReturn(200.0f);
+				
+		ZootCamera camera = mock(ZootCamera.class);
+		when(camera.getTarget()).thenReturn(actor);
 		
 		//when
-		when(camera.getTarget()).thenReturn(actor);
-		when(actor.getX()).thenReturn(0.0f);
-		when(actor.getY()).thenReturn(0.0f);		
+		ZootPositionLockingStrategy strategy = new ZootPositionLockingStrategy();
 		strategy.scrollCamera(camera, 1.0f);
 		
 		//then
-		verify(camera, times(1)).setPosition(0.0f, 0.0f);
+		verify(camera).setPosition(50.0f, 100.0f);
 		
 		//when
 		when(actor.getX()).thenReturn(10.0f);
@@ -35,11 +38,11 @@ public class ZootPositionLockingStrategyTest
 		strategy.scrollCamera(camera, 1.0f);
 		
 		//then
-		verify(camera, times(1)).setPosition(10.0f, 20.0f);
+		verify(camera).setPosition(60.0f, 120.0f);
 	}
 	
 	@Test
-	public void scrollCameraOnNullTargetShouldQuitEarlyTest()
+	public void shouldNotScrollCameraIfTargetIsNotSet()
 	{
 		//given
 		ZootCamera camera = mock(ZootCamera.class);				
@@ -50,6 +53,6 @@ public class ZootPositionLockingStrategyTest
 		strategy.scrollCamera(camera, 1.0f);
 		
 		//then
-		verify(camera, times(0)).setPosition(anyFloat(), anyFloat());
+		verify(camera, never()).setPosition(anyFloat(), anyFloat());
 	}
 }

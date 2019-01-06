@@ -12,7 +12,9 @@ public class ZootPositionLockingStrategy implements ZootCameraScrollingStrategy
 		{
 			return;
 		}
-		
-		camera.setPosition(target.getX(), target.getY());
+
+		float x = target.getX() + target.getWidth() * 0.5f; 
+		float y = target.getY() + target.getHeight() * 0.5f;		
+		camera.setPosition(x, y);
 	}
 }
