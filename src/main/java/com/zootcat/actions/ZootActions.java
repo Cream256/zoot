@@ -1,7 +1,9 @@
 package com.zootcat.actions;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
@@ -116,13 +118,15 @@ public class ZootActions
 		return loadLevelAction;
 	}
 	
-	public static ZootShowDialogScreenAction showDialog(String dialogPath, String dialogToken, ZootGame game, ZootActor target)
+	public static ZootShowDialogScreenAction showDialog(String dialogPath, String dialogToken, ZootGame game, ZootActor target, Consumer<Game> onShowAction, Consumer<Game> onHideAction)
 	{
 		ZootShowDialogScreenAction showDialogAction = zootAction(ZootShowDialogScreenAction.class);
 		showDialogAction.setTarget(target);
 		showDialogAction.setDialogPath(dialogPath);
 		showDialogAction.setDialogToken(dialogToken);
 		showDialogAction.setZootGame(game);		
+		showDialogAction.setOnShowAction(onShowAction);
+		showDialogAction.setOnHideAction(onHideAction);
 		return showDialogAction;
 	}
 	

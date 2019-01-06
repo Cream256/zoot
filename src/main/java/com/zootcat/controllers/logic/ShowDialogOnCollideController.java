@@ -1,5 +1,8 @@
 package com.zootcat.controllers.logic;
 
+import java.util.function.Consumer;
+
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.actions.ZootActions;
 import com.zootcat.controllers.factory.CtrlParam;
@@ -12,8 +15,10 @@ public class ShowDialogOnCollideController extends OnCollideController
 	@CtrlParam private String token = "";
 	@CtrlParam private String path = "";	
 	@CtrlParam(global = true) private ZootGame game;
-	
+		
 	private boolean shown = false;
+	private Consumer<Game> onShowAction = null;
+	private Consumer<Game> onHideAction = null;
 		
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
@@ -21,7 +26,7 @@ public class ShowDialogOnCollideController extends OnCollideController
 		if(shown) return;
 		
 		ZootActor triggeringActor = getOtherActor(actorA, actorB);		
-		triggeringActor.addAction(ZootActions.showDialog(path, token, game, triggeringActor));
+		triggeringActor.addAction(ZootActions.showDialog(path, token, game, triggeringActor, onShowAction, onHideAction));
 		shown = true;
 	}
 
@@ -29,5 +34,25 @@ public class ShowDialogOnCollideController extends OnCollideController
 	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		//noop
+	}
+	
+	public void setOnShowAction(Consumer<Game> action)
+	{
+		onShowAction = action;
+	}
+	
+	public Consumer<Game> getOnShowAction()
+	{
+		return onShowAction;
+	}
+	
+	public void setOnHideAction(Consumer<Game> action)
+	{
+		onHideAction = action;
+	}
+	
+	public Consumer<Game> getOnHideAction()
+	{
+		return onHideAction;
 	}
 }

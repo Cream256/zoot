@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.junit.Before;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.camera.ZootCamera;
 import com.zootcat.controllers.Controller;
@@ -154,12 +156,16 @@ public class ZootActionsTest
 		ZootGame game = mock(ZootGame.class);
 		String dialogPath = "/data/dialog.txt";
 		String dialogToken = "Token";
+		Consumer<Game> onShowAction = g -> {};
+		Consumer<Game> onHideAction = g -> {};
 		
-		ZootShowDialogScreenAction action = ZootActions.showDialog(dialogPath, dialogToken, game, actor);
+		ZootShowDialogScreenAction action = ZootActions.showDialog(dialogPath, dialogToken, game, actor, onShowAction, onHideAction);
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(dialogPath, action.getDialogPath());
 		assertEquals(dialogToken, action.getDialogToken());
 		assertEquals(game, action.getZootGame());
+		assertEquals(onShowAction, action.getOnShowAction());
+		assertEquals(onHideAction, action.getOnHideAction());
 	}
 	
 	@Test

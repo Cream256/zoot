@@ -1,14 +1,18 @@
 package com.zootcat.controllers.logic;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
+
+import java.util.function.Consumer;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.actions.ZootShowDialogScreenAction;
 import com.zootcat.controllers.factory.ControllerAnnotations;
@@ -67,5 +71,30 @@ public class ShowDialogOnCollideControllerTest
 		Contact contact = mock(Contact.class);
 		controller.onLeave(triggeringActor, controllerActor, contact);
 		verifyZeroInteractions(controllerActor, contact);
+	}
+	
+	@Test
+	public void shouldHaveNullShowAndHideActionsByDefault()
+	{
+		assertNull(controller.getOnShowAction());
+		assertNull(controller.getOnHideAction());
+	}
+	
+	@Test
+	public void shouldSetOnShowAction()
+	{
+		Consumer<Game> action = game -> {};		
+		controller.setOnShowAction(action);
+		
+		assertEquals(action, controller.getOnShowAction());		
+	}
+	
+	@Test
+	public void shouldSetOnHideAction()
+	{
+		Consumer<Game> action = game -> {};		
+		controller.setOnHideAction(action);
+		
+		assertEquals(action, controller.getOnHideAction());		
 	}
 }

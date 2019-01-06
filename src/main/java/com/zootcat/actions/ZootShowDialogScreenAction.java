@@ -1,5 +1,8 @@
 package com.zootcat.actions;
 
+import java.util.function.Consumer;
+
+import com.badlogic.gdx.Game;
 import com.zootcat.dialogs.ZootDialog;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.exceptions.ZootException;
@@ -13,6 +16,8 @@ public class ZootShowDialogScreenAction extends ZootAction
 	private ZootGame game;
 	private boolean dialogRunning = false;
 	private ZootDialogScreen dialogScreen;
+	private Consumer<Game> onShowAction = null;
+	private Consumer<Game> onHideAction = null;
 	
 	public void setDialogToken(String token)
 	{
@@ -44,6 +49,26 @@ public class ZootShowDialogScreenAction extends ZootAction
 		return game;
 	}
 	
+	public void setOnShowAction(Consumer<Game> action)
+	{
+		onShowAction = action;
+	}
+	
+	public Consumer<Game> getOnShowAction()
+	{
+		return onShowAction;
+	}
+	
+	public void setOnHideAction(Consumer<Game> action)
+	{
+		onHideAction = action;
+	}
+	
+	public Consumer<Game> getOnHideAction()
+	{
+		return onHideAction;
+	}
+	
 	@Override
 	public void reset()
 	{
@@ -52,6 +77,8 @@ public class ZootShowDialogScreenAction extends ZootAction
 		game = null;
 		dialogRunning = false;
 		dialogScreen = null;
+		onShowAction = null;
+		onHideAction = null;
 		super.reset();
 	}
 	
@@ -84,6 +111,8 @@ public class ZootShowDialogScreenAction extends ZootAction
 			ZootDialogScreen dialogScreen = new ZootDialogScreen(game);
 			dialogScreen.setDialog(dialog);
 			dialogScreen.setTriggeringActor(getTargetZootActor());
+			dialogScreen.setOnShowAction(onShowAction);
+			dialogScreen.setOnHideAction(onHideAction);
 			return dialogScreen;
 		}
 		catch (ZootException e)

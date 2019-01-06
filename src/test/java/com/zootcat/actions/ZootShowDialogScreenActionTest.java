@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.function.Consumer;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,6 +18,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.badlogic.gdx.Game;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
@@ -182,11 +185,45 @@ public class ZootShowDialogScreenActionTest
 	@Test
 	public void shouldReset()
 	{
+		//given
+		action.setOnShowAction(game -> {});
+		action.setOnHideAction(game -> {});
+		
+		//when
 		action.reset();
 		
+		//then
 		assertNull(action.getTargetZootActor());
 		assertNull(action.getDialogToken());
 		assertNull(action.getDialogPath());
 		assertNull(action.getZootGame());
+		assertNull(action.getOnShowAction());
+		assertNull(action.getOnHideAction());
+	}
+	
+	@Test
+	public void shouldSetOnShowAction()
+	{
+		//given
+		Consumer<Game> onShowAction = game -> {};
+		
+		//when
+		action.setOnShowAction(onShowAction);
+		
+		//then
+		assertEquals(onShowAction, action.getOnShowAction());
+	}
+	
+	@Test
+	public void shouldSetOnHideAction()
+	{
+		//given
+		Consumer<Game> onHideAction = game -> {};
+		
+		//when
+		action.setOnHideAction(onHideAction);
+		
+		//then
+		assertEquals(onHideAction, action.getOnHideAction());		
 	}
 }
