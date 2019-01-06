@@ -25,6 +25,7 @@ public class HurtOnCollideController extends OnCollideWithSensorController
 {
 	@CtrlParam protected int damage = 1;
 	@CtrlParam protected boolean hurtOwner = false;
+	@CtrlParam protected boolean useAttackerDamage = false;
 					
 	@Override
 	public final void onEnterCollision(Fixture fixture)
@@ -32,7 +33,8 @@ public class HurtOnCollideController extends OnCollideWithSensorController
 		if(canHurt(fixture))
 		{
 			ZootActor actorToHurt = hurtOwner ? getControllerActor() : (ZootActor) fixture.getUserData();
-			hurt(actorToHurt);
+			ZootActor attacker = hurtOwner ? (ZootActor) fixture.getUserData() : getControllerActor();
+			hurt(actorToHurt, attacker);
 		}
 	}
 	
@@ -41,11 +43,16 @@ public class HurtOnCollideController extends OnCollideWithSensorController
 		return true;
 	}
 	
-	public void hurt(ZootActor actorToHurt)
+	public void hurt(ZootActor actorToHurt, ZootActor attacker)
 	{				
-		ZootEvents.fireAndFree(actorToHurt, ZootEventType.Hurt, damage);
+		ZootEvents.fireAndFree(actorToHurt, ZootEventType.Hurt, useAttackerDamage ? calculateAttackerDamage(attacker) : damage);
 	}
 		
+	private int calculateAttackerDamage(ZootActor attacker)
+	{
+		return attacker.getSingleController(DamageController.class).getValue();
+	}
+	
 	public void setDamage(int value)
 	{
 		damage = value;
@@ -64,5 +71,15 @@ public class HurtOnCollideController extends OnCollideWithSensorController
 	public boolean getHurtOwner()
 	{
 		return hurtOwner;
+	}
+	
+	public void setUseAttackerDamage(boolean value)
+	{
+		useAttackerDamage = value;
+	}
+	
+	public boolean useAttackerDamage()
+	{
+		return useAttackerDamage;
 	}
 }

@@ -75,4 +75,10 @@ public class SizeControllerTest
 		assertTrue(ctrl.getPriority().getValue() > new PhysicsBodyController().getPriority().getValue());
 		assertTrue(ctrl.getPriority().getValue() > new CharacterFixtureController().getPriority().getValue());
 	}
+	
+	@Test
+	public void shouldBeSingleton()
+	{
+		assertTrue(ctrl.isSingleton());
+	}
 }

@@ -13,6 +13,12 @@ public class SizeController extends ControllerAdapter
 	@CtrlParam(global = true) private ZootScene scene;
 	
 	@Override
+	public boolean isSingleton()
+	{
+		return true;
+	}
+	
+	@Override
 	public void init(ZootActor actor) 
 	{
 		actor.setSize(width * scene.getUnitScale(), height * scene.getUnitScale());
