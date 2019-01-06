@@ -3,6 +3,8 @@ package com.zootcat.controllers.physics;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -12,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.testing.ZootActorStub;
@@ -46,28 +47,22 @@ public class DetectFallControllerTest
 	}
 	
 	@Test
-	public void initTest()
+	public void shouldSetFallingFlagToFalse()
 	{
 		ctrl.init(actor);
-		assertFalse("Falling flag should be set to false", ctrl.isFalling());
+		assertFalse(ctrl.isFalling());
 	}
 	
 	@Test
-	public void onAddTest()
-	{
-		ctrl.onAdd(actor);
-		assertTrue("This should not throw if physics controller is present", true);
-	}
-	
-	@Test(expected = RuntimeZootException.class)
-	public void onAddShouldThrowIfDetectGroundCtrlIsNotFoundTest()
+	public void shouldNotThrowIfDetectGroundControllerIsNotAssignedToActor()
 	{
 		actor.removeController(groundCtrlMock);
 		ctrl.onAdd(actor);
+		//ok
 	}
 	
 	@Test
-	public void isFallingDownVelocityNoGroundTest()
+	public void shouldBeFallingWhenNotOnGroundAndHavingDownVelocity()
 	{
 		when(bodyMock.getLinearVelocity()).thenReturn(DOWN_VELOCITY);
 		when(groundCtrlMock.isOnGround()).thenReturn(false);
@@ -81,7 +76,21 @@ public class DetectFallControllerTest
 	}
 	
 	@Test
-	public void isFallingDownVelocityOnGroundTest()
+	public void shouldBeFallingWhenNoGroundDetectorAndHavingDownVelocity()
+	{
+		when(bodyMock.getLinearVelocity()).thenReturn(DOWN_VELOCITY);
+		actor.removeController(groundCtrlMock);
+		
+		ctrl.init(actor);
+		ctrl.onAdd(actor);
+		ctrl.onUpdate(0.0f, actor);
+		
+		assertTrue(ctrl.isFalling());
+		assertEquals(1, eventCounter.getCount());
+	}
+	
+	@Test
+	public void shouldNotBeFallingWhenOnGroundAndHavingDownVelocity()
 	{
 		when(bodyMock.getLinearVelocity()).thenReturn(DOWN_VELOCITY);
 		when(groundCtrlMock.isOnGround()).thenReturn(true);
@@ -95,7 +104,7 @@ public class DetectFallControllerTest
 	}
 	
 	@Test
-	public void isFallingUpVelocityNoGroundTest()
+	public void shouldNotBeFallingWhenInAirAndHavingUpVelocity()
 	{
 		when(bodyMock.getLinearVelocity()).thenReturn(UP_VELOCITY);
 		when(groundCtrlMock.isOnGround()).thenReturn(false);
@@ -109,7 +118,7 @@ public class DetectFallControllerTest
 	}
 	
 	@Test
-	public void isFallingUpVelocityOnGroundTest()
+	public void shouldNotBeFallingWhenOnGroundAndHavingUpVelocity()
 	{
 		when(bodyMock.getLinearVelocity()).thenReturn(UP_VELOCITY);
 		when(groundCtrlMock.isOnGround()).thenReturn(true);
@@ -123,7 +132,7 @@ public class DetectFallControllerTest
 	}
 	
 	@Test
-	public void onUpdateShouldFireEventContinouslyWhenFallingTest()
+	public void shouldFireEventContinouslyWhenFallingTest()
 	{
 		when(bodyMock.getLinearVelocity()).thenReturn(DOWN_VELOCITY);
 		when(groundCtrlMock.isOnGround()).thenReturn(false);
@@ -145,5 +154,14 @@ public class DetectFallControllerTest
 		when(groundCtrlMock.isOnGround()).thenReturn(false);
 		ctrl.onUpdate(0.0f, actor);
 		assertEquals("Falling again, third event should be fired", 3, eventCounter.getCount());
+	}
+	
+	@Test
+	public void shouldDoNothingOnRemove()
+	{
+		ZootActor actor = mock(ZootActor.class);
+		ctrl.onRemove(actor);
+		
+		verifyZeroInteractions(actor);
 	}
 }
