@@ -18,7 +18,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.badlogic.gdx.Game;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
@@ -205,7 +204,7 @@ public class ZootShowDialogScreenActionTest
 	public void shouldSetOnShowAction()
 	{
 		//given
-		Consumer<Game> onShowAction = game -> {};
+		Consumer<ZootGame> onShowAction = game -> {};
 		
 		//when
 		action.setOnShowAction(onShowAction);
@@ -218,7 +217,7 @@ public class ZootShowDialogScreenActionTest
 	public void shouldSetOnHideAction()
 	{
 		//given
-		Consumer<Game> onHideAction = game -> {};
+		Consumer<ZootGame> onHideAction = game -> {};
 		
 		//when
 		action.setOnHideAction(onHideAction);

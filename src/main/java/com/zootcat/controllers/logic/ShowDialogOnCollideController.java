@@ -17,8 +17,8 @@ public class ShowDialogOnCollideController extends OnCollideController
 	@CtrlParam(global = true) private ZootGame game;
 		
 	private boolean shown = false;
-	private Consumer<Game> onShowAction = null;
-	private Consumer<Game> onHideAction = null;
+	private Consumer<ZootGame> onShowAction = null;
+	private Consumer<ZootGame> onHideAction = null;
 		
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
@@ -36,22 +36,22 @@ public class ShowDialogOnCollideController extends OnCollideController
 		//noop
 	}
 	
-	public void setOnShowAction(Consumer<Game> action)
+	public void setOnShowAction(Consumer<ZootGame> action)
 	{
 		onShowAction = action;
 	}
 	
-	public Consumer<Game> getOnShowAction()
+	public Consumer<ZootGame> getOnShowAction()
 	{
 		return onShowAction;
 	}
 	
-	public void setOnHideAction(Consumer<Game> action)
+	public void setOnHideAction(Consumer<ZootGame> action)
 	{
 		onHideAction = action;
 	}
 	
-	public Consumer<Game> getOnHideAction()
+	public Consumer<ZootGame> getOnHideAction()
 	{
 		return onHideAction;
 	}

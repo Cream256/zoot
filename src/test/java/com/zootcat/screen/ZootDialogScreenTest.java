@@ -19,7 +19,6 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -146,7 +145,7 @@ public class ZootDialogScreenTest
 	public void shouldSetOnShowAction()
 	{
 		//given
-		Consumer<Game> action = game -> {};
+		Consumer<ZootGame> action = game -> {};
 		
 		//when
 		dialogScreen.setOnShowAction(action);
@@ -159,7 +158,7 @@ public class ZootDialogScreenTest
 	public void shouldSetOnHideAction()
 	{
 		//given
-		Consumer<Game> action = game -> {};
+		Consumer<ZootGame> action = game -> {};
 		
 		//when
 		dialogScreen.setOnHideAction(action);
@@ -173,7 +172,7 @@ public class ZootDialogScreenTest
 	{
 		//given
 		assertFalse(actionExecuted);
-		Consumer<Game> action = game -> actionExecuted = true;
+		Consumer<ZootGame> action = game -> actionExecuted = true;
 		
 		//when		
 		dialogScreen.setDialog(mock(ZootDialog.class));
@@ -189,7 +188,7 @@ public class ZootDialogScreenTest
 	{
 		//given
 		assertFalse(actionExecuted);
-		Consumer<Game> action = game -> actionExecuted = true;
+		Consumer<ZootGame> action = game -> actionExecuted = true;
 		
 		//when		
 		dialogScreen.setDialog(mock(ZootDialog.class));

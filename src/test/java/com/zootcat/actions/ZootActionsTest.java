@@ -156,8 +156,8 @@ public class ZootActionsTest
 		ZootGame game = mock(ZootGame.class);
 		String dialogPath = "/data/dialog.txt";
 		String dialogToken = "Token";
-		Consumer<Game> onShowAction = g -> {};
-		Consumer<Game> onHideAction = g -> {};
+		Consumer<ZootGame> onShowAction = g -> {};
+		Consumer<ZootGame> onHideAction = g -> {};
 		
 		ZootShowDialogScreenAction action = ZootActions.showDialog(dialogPath, dialogToken, game, actor, onShowAction, onHideAction);
 		assertEquals(actor, action.getTargetZootActor());

@@ -118,7 +118,7 @@ public class ZootActions
 		return loadLevelAction;
 	}
 	
-	public static ZootShowDialogScreenAction showDialog(String dialogPath, String dialogToken, ZootGame game, ZootActor target, Consumer<Game> onShowAction, Consumer<Game> onHideAction)
+	public static ZootShowDialogScreenAction showDialog(String dialogPath, String dialogToken, ZootGame game, ZootActor target, Consumer<ZootGame> onShowAction, Consumer<ZootGame> onHideAction)
 	{
 		ZootShowDialogScreenAction showDialogAction = zootAction(ZootShowDialogScreenAction.class);
 		showDialogAction.setTarget(target);

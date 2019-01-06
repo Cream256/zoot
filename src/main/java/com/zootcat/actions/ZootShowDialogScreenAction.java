@@ -16,8 +16,8 @@ public class ZootShowDialogScreenAction extends ZootAction
 	private ZootGame game;
 	private boolean dialogRunning = false;
 	private ZootDialogScreen dialogScreen;
-	private Consumer<Game> onShowAction = null;
-	private Consumer<Game> onHideAction = null;
+	private Consumer<ZootGame> onShowAction = null;
+	private Consumer<ZootGame> onHideAction = null;
 	
 	public void setDialogToken(String token)
 	{
@@ -49,22 +49,22 @@ public class ZootShowDialogScreenAction extends ZootAction
 		return game;
 	}
 	
-	public void setOnShowAction(Consumer<Game> action)
+	public void setOnShowAction(Consumer<ZootGame> action)
 	{
 		onShowAction = action;
 	}
 	
-	public Consumer<Game> getOnShowAction()
+	public Consumer<ZootGame> getOnShowAction()
 	{
 		return onShowAction;
 	}
 	
-	public void setOnHideAction(Consumer<Game> action)
+	public void setOnHideAction(Consumer<ZootGame> action)
 	{
 		onHideAction = action;
 	}
 	
-	public Consumer<Game> getOnHideAction()
+	public Consumer<ZootGame> getOnHideAction()
 	{
 		return onHideAction;
 	}

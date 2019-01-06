@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.actions.ZootShowDialogScreenAction;
 import com.zootcat.controllers.factory.ControllerAnnotations;
@@ -83,7 +82,7 @@ public class ShowDialogOnCollideControllerTest
 	@Test
 	public void shouldSetOnShowAction()
 	{
-		Consumer<Game> action = game -> {};		
+		Consumer<ZootGame> action = game -> {};		
 		controller.setOnShowAction(action);
 		
 		assertEquals(action, controller.getOnShowAction());		
@@ -92,7 +91,7 @@ public class ShowDialogOnCollideControllerTest
 	@Test
 	public void shouldSetOnHideAction()
 	{
-		Consumer<Game> action = game -> {};		
+		Consumer<ZootGame> action = game -> {};		
 		controller.setOnHideAction(action);
 		
 		assertEquals(action, controller.getOnHideAction());		

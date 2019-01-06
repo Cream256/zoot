@@ -38,8 +38,8 @@ public class ZootDialogScreen extends ZootScreenAdapter
 	private ShapeRenderer shapeRenderer;
 	private Sprite faceSprite;
 	
-	private Consumer<Game> onShowAction;
-	private Consumer<Game> onHideAction;
+	private Consumer<ZootGame> onShowAction;
+	private Consumer<ZootGame> onHideAction;
 		
 	public ZootDialogScreen(ZootGame game)
 	{
@@ -167,22 +167,22 @@ public class ZootDialogScreen extends ZootScreenAdapter
 		return triggeringActor;
 	}
 	
-	public void setOnShowAction(Consumer<Game> action)
+	public void setOnShowAction(Consumer<ZootGame> action)
 	{
 		onShowAction = action;
 	}
 	
-	public Consumer<Game> getOnShowAction()
+	public Consumer<ZootGame> getOnShowAction()
 	{
 		return onShowAction;
 	}
 	
-	public void setOnHideAction(Consumer<Game> action)
+	public void setOnHideAction(Consumer<ZootGame> action)
 	{
 		onHideAction = action;
 	}
 	
-	public Consumer<Game> getOnHideAction()
+	public Consumer<ZootGame> getOnHideAction()
 	{
 		return onHideAction;
 	}
