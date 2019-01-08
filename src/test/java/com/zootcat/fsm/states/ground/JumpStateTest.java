@@ -107,6 +107,15 @@ public class JumpStateTest extends ZootStateTestCase
 	}
 	
 	@Test
+	public void shouldHandleHurtEventForImmortalActor()
+	{
+		when(lifeCtrlMock.isFrozen()).thenReturn(true);
+		
+		assertTrue(jumpState.handle(createEvent(ZootEventType.Hurt)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
 	public void handleGrabEvent()
 	{
 		assertTrue(jumpState.handle(createEvent(ZootEventType.Grab)));

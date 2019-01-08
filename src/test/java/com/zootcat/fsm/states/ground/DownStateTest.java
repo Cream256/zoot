@@ -2,9 +2,6 @@ package com.zootcat.fsm.states.ground;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.*;
 
 import org.junit.Before;
@@ -142,6 +139,15 @@ public class DownStateTest extends ZootStateTestCase
 	{
 		assertTrue(downState.handle(createEvent(ZootEventType.Hurt)));
 		assertEquals(HurtState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void shouldHandleHurtEventForImmortalActor()
+	{
+		when(lifeCtrlMock.isFrozen()).thenReturn(true);
+		
+		assertTrue(downState.handle(createEvent(ZootEventType.Hurt)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test

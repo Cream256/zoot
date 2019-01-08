@@ -32,7 +32,7 @@ public class StunState extends AnimationBasedState
 	@Override
 	public boolean handle(ZootEvent event)
 	{		
-		if(event.getType() == ZootEventType.Hurt)
+		if(event.getType() == ZootEventType.Hurt && ZootStateUtils.canHurtActor(event))
 		{
 			changeState(event, HurtState.ID);
 		}

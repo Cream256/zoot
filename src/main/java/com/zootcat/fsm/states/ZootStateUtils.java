@@ -3,6 +3,7 @@ package com.zootcat.fsm.states;
 import java.util.Arrays;
 import java.util.List;
 
+import com.zootcat.controllers.logic.LifeController;
 import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.fsm.events.ZootEvent;
@@ -56,6 +57,13 @@ public class ZootStateUtils
 	{
 		WalkableController moveCtrl = getWalkableController(event.getTargetZootActor());
 		return moveCtrl != null ? moveCtrl.canJump() : true;
+	}
+	
+	public static boolean canHurtActor(ZootEvent event)
+	{
+		ZootActor actor = event.getTargetZootActor();
+		LifeController lifeCtrl = actor.tryGetSingleController(LifeController.class);
+		return lifeCtrl != null ? !lifeCtrl.isFrozen() : true;		
 	}
 	
 	private static WalkableController getWalkableController(ZootActor actor)

@@ -61,7 +61,7 @@ public class JumpState extends BasicState
 			event.getTargetZootActor().controllersAction(DirectionController.class, ctrl -> ctrl.setDirection(dir));
 			event.getTargetZootActor().controllersAction(ClimbController.class, ctrl -> ctrl.setSensorPosition(dir));
 		}
-		else if(event.getType() == ZootEventType.Hurt)
+		else if(event.getType() == ZootEventType.Hurt && ZootStateUtils.canHurtActor(event))
 		{
 			changeState(event, HurtState.ID);
 		}

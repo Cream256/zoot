@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.HurtState;
 import com.zootcat.fsm.states.StunState;
 import com.zootcat.fsm.states.ground.AttackState;
+import com.zootcat.fsm.states.ground.IdleState;
 import com.zootcat.fsm.states.ground.TurnState;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootStateTestCase;
@@ -69,6 +71,15 @@ public class FlyStateTest extends ZootStateTestCase
 		assertTrue(flyState.handle(createEvent(ZootEventType.Attack)));
 		assertEquals(AttackState.ID, actor.getStateMachine().getCurrentState().getId());
 	}	
+	
+	@Test
+	public void shouldHandleHurtEventForImmortalActor()
+	{
+		when(lifeCtrlMock.isFrozen()).thenReturn(true);
+		
+		assertTrue(flyState.handle(createEvent(ZootEventType.Hurt)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
 	
 	@Test
 	public void handleHurtEvent()

@@ -11,7 +11,8 @@ public class LifeController extends IntValueController
 {
 	public static final int DEFAULT_LIFE = 3;
 	
-	@CtrlParam boolean removeWhenDead = true;
+	@CtrlParam boolean frozen = false;
+	@CtrlParam boolean removeWhenDead = true;	
 	@CtrlDebug boolean sendDeadEvent = false;
 	@CtrlDebug boolean deadEventSend = false;
 			
@@ -34,6 +35,7 @@ public class LifeController extends IntValueController
 	@Override
 	public void setValue(int value)
 	{
+		if(frozen) return;
 		super.setValue(value);
 		sendDeadEvent = getValue() == 0;
 		deadEventSend = deadEventSend && getValue() == 0;
@@ -42,7 +44,15 @@ public class LifeController extends IntValueController
 	@Override
 	public void setMaxValue(int newValue)
 	{
+		if(frozen) return;
 		super.setMaxValue(Math.max(newValue, 1));
+	}
+	
+	@Override
+	public void setMinValue(int newValue)
+	{
+		if(frozen) return;
+		super.setMinValue(Math.max(0, newValue));
 	}
 	
 	@Override
@@ -73,5 +83,15 @@ public class LifeController extends IntValueController
 	public void setRemoveWhenDead(boolean value)
 	{
 		removeWhenDead = value;
+	}
+	
+	public boolean isFrozen()
+	{
+		return frozen;
+	}
+
+	public void setFrozen(boolean value)
+	{
+		frozen = value;
 	}
 }

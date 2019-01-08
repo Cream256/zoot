@@ -13,6 +13,7 @@ import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.DeadState;
 import com.zootcat.fsm.states.HurtState;
 import com.zootcat.fsm.states.StunState;
+import com.zootcat.fsm.states.ground.IdleState;
 import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.testing.ZootStateTestCase;
 
@@ -67,6 +68,15 @@ public class StunStateTest extends ZootStateTestCase
 	{
 		assertTrue(stunState.handle(createEvent(ZootEventType.Hurt)));
 		assertEquals(HurtState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
+	public void shouldHandleHurtEventForImmortalActor()
+	{
+		when(lifeCtrlMock.isFrozen()).thenReturn(true);
+		
+		assertTrue(stunState.handle(createEvent(ZootEventType.Hurt)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
 	@Test

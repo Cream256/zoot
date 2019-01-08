@@ -6,6 +6,7 @@ import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.BasicState;
 import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.ZootStateUtils;
 import com.zootcat.scene.ZootActor;
 
 public class ClimbState extends BasicState
@@ -36,7 +37,7 @@ public class ClimbState extends BasicState
 	{
 		ZootActor actor = event.getTargetZootActor();
 		
-		if(event.getType() == ZootEventType.Hurt)
+		if(event.getType() == ZootEventType.Hurt && ZootStateUtils.canHurtActor(event))
 		{
 			changeState(event, HurtState.ID);
 			return true;

@@ -121,4 +121,13 @@ public class AttackStateTest extends ZootStateTestCase
 		assertTrue(attackState.handle(createEvent(ZootEventType.Hurt)));
 		assertEquals(HurtState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
+	
+	@Test
+	public void shouldHandleHurtEventForImmortalActor()
+	{
+		when(lifeCtrlMock.isFrozen()).thenReturn(true);
+		
+		assertTrue(attackState.handle(createEvent(ZootEventType.Hurt)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
 }

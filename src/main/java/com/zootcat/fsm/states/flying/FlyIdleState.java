@@ -49,7 +49,7 @@ public class FlyIdleState extends BasicState
 		{
 			changeState(event, AttackState.ID);
 		}
-		else if(event.getType() == ZootEventType.Hurt)
+		else if(event.getType() == ZootEventType.Hurt && ZootStateUtils.canHurtActor(event))	//TODO
 		{
 			changeState(event, HurtState.ID);
 		}

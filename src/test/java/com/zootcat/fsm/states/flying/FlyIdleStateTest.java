@@ -120,6 +120,15 @@ public class FlyIdleStateTest extends ZootStateTestCase
 		assertTrue(flyIdleState.handle(createEvent(ZootEventType.Hurt)));
 		assertEquals(HurtState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
+	
+	@Test
+	public void shouldHandleHurtEventForImmortalActor()
+	{
+		when(lifeCtrlMock.isFrozen()).thenReturn(true);
+		
+		assertTrue(flyIdleState.handle(createEvent(ZootEventType.Hurt)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
 		
 	@Test
 	public void handleDeadEvent()

@@ -202,10 +202,81 @@ public class LifeControllerTest
 		assertEquals("Should send dead event again", 2, counter.getCount());
 	}
 	
-	
 	@Test
 	public void shouldBeSingleton()
 	{
 		assertTrue(ctrl.isSingleton());
+	}
+	
+	@Test
+	public void shouldSetFrozenFlag()
+	{
+		ctrl.setFrozen(true);
+		assertTrue(ctrl.isFrozen());
+		ctrl.setFrozen(false);
+		assertFalse(ctrl.isFrozen());
+	}
+	
+	@Test
+	public void shouldNotSetValueIfFrozen()
+	{
+		//given
+		int initialValue = ctrl.getValue();
+		
+		//when
+		ctrl.setFrozen(true);		
+		ctrl.setValue(0);
+		
+		//then		
+		assertEquals(initialValue, ctrl.getValue());
+		
+		//when
+		ctrl.setFrozen(false);		
+		ctrl.setValue(0);
+		
+		//then
+		assertEquals(0, ctrl.getValue());
+	}
+	
+	@Test
+	public void shouldNotSetMaxValueIfFrozen()
+	{
+		//given
+		int initialValue = ctrl.getMaxValue();
+		
+		//when
+		ctrl.setFrozen(true);		
+		ctrl.setMaxValue(100);
+		
+		//then		
+		assertEquals(initialValue, ctrl.getMaxValue());
+		
+		//when
+		ctrl.setFrozen(false);		
+		ctrl.setMaxValue(100);
+		
+		//then
+		assertEquals(100, ctrl.getMaxValue());
+	}
+	
+	@Test
+	public void shouldNotSetMinValueIfFrozen()
+	{
+		//given
+		int initialValue = ctrl.getMinValue();
+		
+		//when
+		ctrl.setFrozen(true);		
+		ctrl.setMinValue(2);
+		
+		//then		
+		assertEquals(initialValue, ctrl.getMinValue());
+		
+		//when
+		ctrl.setFrozen(false);		
+		ctrl.setMinValue(2);
+		
+		//then
+		assertEquals(2, ctrl.getMinValue());		
 	}
 }

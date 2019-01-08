@@ -60,7 +60,7 @@ public class IdleState extends BasicState
 		{
 			changeState(event, AttackState.ID);
 		}
-		else if(event.getType() == ZootEventType.Hurt)
+		else if(event.getType() == ZootEventType.Hurt && ZootStateUtils.canHurtActor(event))
 		{
 			changeState(event, HurtState.ID);
 		}

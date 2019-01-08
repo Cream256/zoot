@@ -5,6 +5,7 @@ import com.zootcat.controllers.physics.PhysicsBodyScale;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.ZootStateUtils;
 import com.zootcat.scene.ZootActor;
 
 public class CrouchState extends WalkState
@@ -57,7 +58,7 @@ public class CrouchState extends WalkState
 		{
 			changeState(event, FallState.ID);
 		}
-		else if(event.getType() == ZootEventType.Hurt)
+		else if(event.getType() == ZootEventType.Hurt && ZootStateUtils.canHurtActor(event))
 		{
 			changeState(event, HurtState.ID);
 		}

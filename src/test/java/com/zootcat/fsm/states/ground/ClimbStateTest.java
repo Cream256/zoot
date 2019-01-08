@@ -77,6 +77,15 @@ public class ClimbStateTest extends ZootStateTestCase
 	}
 	
 	@Test
+	public void shouldHandleHurtEventForImmortalActor()
+	{
+		when(lifeCtrlMock.isFrozen()).thenReturn(true);
+		
+		assertTrue(climbState.handle(createEvent(ZootEventType.Hurt)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
 	public void handleUpEventShouldClimb()
 	{
 		when(climbCtrlMock.climb()).thenReturn(true);

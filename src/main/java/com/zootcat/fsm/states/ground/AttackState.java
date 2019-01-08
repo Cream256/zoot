@@ -5,6 +5,7 @@ import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.AnimationBasedState;
 import com.zootcat.fsm.states.HurtState;
+import com.zootcat.fsm.states.ZootStateUtils;
 import com.zootcat.scene.ZootActor;
 
 public class AttackState extends AnimationBasedState
@@ -31,7 +32,7 @@ public class AttackState extends AnimationBasedState
 	@Override
 	public boolean handle(ZootEvent event)
 	{	
-		if(event.getType() == ZootEventType.Hurt)
+		if(event.getType() == ZootEventType.Hurt  && ZootStateUtils.canHurtActor(event))
 		{
 			changeState(event, HurtState.ID);
 		}

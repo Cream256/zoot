@@ -168,6 +168,15 @@ public class TurnStateTest extends ZootStateTestCase
 	}
 	
 	@Test
+	public void shouldHandleHurtEventForImmortalActor()
+	{
+		when(lifeCtrlMock.isFrozen()).thenReturn(true);
+		
+		assertTrue(turnState.handle(createEvent(ZootEventType.Hurt)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
 	public void handleAttackEvent()
 	{
 		assertTrue(turnState.handle(createEvent(ZootEventType.Attack)));

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 
+import com.zootcat.controllers.logic.LifeController;
 import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
@@ -191,5 +192,53 @@ public class ZootStateUtilsTest
 	public void shouldReturnFalseForCanJumpWhenEventHasNoActor()
 	{
 		assertTrue(ZootStateUtils.canActorJump(new ZootEvent()));
+	}
+	
+	@Test
+	public void shouldBeAbleToHurtActorIfNoLifeControllerIsPresent()
+	{
+		ZootActor actor = new ZootActor();
+		ZootEvent event = new ZootEvent();
+		event.setTarget(actor);
+		
+		assertTrue(ZootStateUtils.canHurtActor(event));
+	}
+	
+	@Test
+	public void shouldBeAbleToHurtActorIfLifeControllerIsNotFrozen()
+	{
+		//given
+		LifeController lifeCtrl = new LifeController();
+		
+		ZootActor actor = new ZootActor();		
+		actor.addController(lifeCtrl);
+		
+		ZootEvent event = new ZootEvent();
+		event.setTarget(actor);
+		
+		//when
+		lifeCtrl.setFrozen(false);
+		
+		//then
+		assertTrue(ZootStateUtils.canHurtActor(event));		
+	}
+	
+	@Test
+	public void shouldNotBeAbleToHurtActorIfLifeControllerIsFrozen()
+	{
+		//given
+		LifeController lifeCtrl = new LifeController();
+		
+		ZootActor actor = new ZootActor();		
+		actor.addController(lifeCtrl);
+		
+		ZootEvent event = new ZootEvent();
+		event.setTarget(actor);
+		
+		//when
+		lifeCtrl.setFrozen(true);
+		
+		//then
+		assertFalse(ZootStateUtils.canHurtActor(event));		
 	}
 }

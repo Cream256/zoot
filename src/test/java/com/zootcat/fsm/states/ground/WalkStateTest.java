@@ -146,6 +146,15 @@ public class WalkStateTest extends ZootStateTestCase
 	}
 	
 	@Test
+	public void shouldHandleHurtEventForImmortalActor()
+	{
+		when(lifeCtrlMock.isFrozen()).thenReturn(true);
+		
+		assertTrue(walkState.handle(createEvent(ZootEventType.Hurt)));
+		assertEquals(IdleState.ID, actor.getStateMachine().getCurrentState().getId());
+	}
+	
+	@Test
 	public void handleRunEvent()
 	{
 		walkState.onEnter(actor, createEvent(ZootEventType.WalkRight));
