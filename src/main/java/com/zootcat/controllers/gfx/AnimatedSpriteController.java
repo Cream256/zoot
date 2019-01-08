@@ -94,7 +94,7 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 	@Override
 	public void onRender(Batch batch, float parentAlpha, ZootActor actor, float delta)
 	{
-		if(currentAnimation == null)
+		if(currentAnimation == null || !actor.isVisible())
 		{
 			return;
 		}
@@ -137,7 +137,9 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 		
 		TextureRegion frame = currentAnimation.getKeyFrame();		
 		sprite.setTexture(frame.getTexture());
-		sprite.setRegion(frame);				
+		sprite.setRegion(frame);
+		sprite.setColor(actor.getColor());
+		//sprite.setAlpha(actor.getOpacity());
 		
 		ZootAnimationOffset offset = currentAnimation.getKeyFrameOffset();		
 		boolean leftOffset = actor.controllersAllMatch(DirectionController.class, c -> c.getDirection() == ZootDirection.Left);			

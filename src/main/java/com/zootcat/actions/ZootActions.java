@@ -2,6 +2,7 @@ package com.zootcat.actions;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
@@ -115,6 +116,12 @@ public class ZootActions
 	public static ZootLambdaAction lambda(Function<Float, Boolean> lambda)
 	{
 		ZootLambdaAction lambdaAction = new ZootLambdaAction(lambda);
+		return lambdaAction;
+	}
+	
+	public static ZootLambdaAction lambda(Supplier<Boolean> lambda)
+	{
+		ZootLambdaAction lambdaAction = new ZootLambdaAction(unused -> lambda.get());
 		return lambdaAction;
 	}
 	

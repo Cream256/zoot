@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -148,6 +149,14 @@ public class ZootActionsTest
 		ZootLambdaAction action = ZootActions.lambda(lambda);
 		assertTrue(action.act(1.0f));
 		assertEquals(lambda, action.getLambda());
+	}
+	
+	@Test
+	public void shouldCreateLambdaActionWithNoDeltaParameter()
+	{
+		Supplier<Boolean> lambda = () -> true;		
+		ZootLambdaAction action = ZootActions.lambda(lambda);
+		assertTrue(action.act(1.0f));
 	}
 	
 	@Test

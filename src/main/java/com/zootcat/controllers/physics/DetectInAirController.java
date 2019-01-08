@@ -41,6 +41,12 @@ public class DetectInAirController extends ControllerAdapter
 		}
 	}
 	
+	@Override
+	public boolean isSingleton()
+	{
+		return true;
+	}
+	
 	public boolean isInAir()
 	{
 		return inAir;

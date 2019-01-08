@@ -103,4 +103,10 @@ public class DetectInAirControllerTest
 		assertTrue(ClassReflection.isInstance(ZootEvent.class, eventCounter.getLastEvent()));
 		assertEquals(ZootEventType.InAir, ((ZootEvent)eventCounter.getLastEvent()).getType());
 	}	
+	
+	@Test
+	public void shouldBeSingleton()
+	{
+		assertTrue(ctrl.isSingleton());
+	}
 }

@@ -714,7 +714,7 @@ public class ZootActorTest
 	}
 	
 	@Test
-	public void shuouldSetOpacity()
+	public void shouldSetOpacity()
 	{
 		assertEquals(1.0f, actor.getOpacity(), 0.0f);
 		
