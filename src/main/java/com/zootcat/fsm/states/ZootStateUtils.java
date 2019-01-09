@@ -61,9 +61,13 @@ public class ZootStateUtils
 	
 	public static boolean canHurtActor(ZootEvent event)
 	{
-		ZootActor actor = event.getTargetZootActor();
+		return canHurtActor(event.getTargetZootActor());
+	}
+	
+	public static boolean canHurtActor(ZootActor actor)
+	{
 		LifeController lifeCtrl = actor.tryGetSingleController(LifeController.class);
-		return lifeCtrl != null ? !lifeCtrl.isFrozen() : true;		
+		return lifeCtrl != null ? !lifeCtrl.isFrozen() : true;
 	}
 	
 	private static WalkableController getWalkableController(ZootActor actor)

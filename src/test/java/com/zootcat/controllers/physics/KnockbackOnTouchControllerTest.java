@@ -13,6 +13,8 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.zootcat.actions.ZootKnockbackAction;
+import com.zootcat.controllers.factory.ControllerAnnotations;
+import com.zootcat.controllers.logic.LifeController;
 import com.zootcat.scene.ZootActor;
 
 public class KnockbackOnTouchControllerTest
@@ -47,7 +49,7 @@ public class KnockbackOnTouchControllerTest
 	}
 		
 	@Test
-	public void shouldAddKnockbackAction()
+	public void shouldAddKnockbackActionIfActorHasNoLifeController()
 	{
 		//given
 		Fixture otherFixture = mock(Fixture.class);
@@ -59,6 +61,65 @@ public class KnockbackOnTouchControllerTest
 		//then
 		assertEquals(1, otherActor.getActions().size);
 		assertEquals(ZootKnockbackAction.class, otherActor.getActions().get(0).getClass());
+	}
+	
+	@Test
+	public void shouldNotAddKnockbackActionIfActorIsInvurnerable()
+	{
+		//given		
+		LifeController lifeCtrl = new LifeController();
+		lifeCtrl.setFrozen(true);
+		otherActor.addController(lifeCtrl);
+		
+		Fixture otherFixture = mock(Fixture.class);
+		when(otherFixture.getUserData()).thenReturn(otherActor);
+		
+		//when
+		ControllerAnnotations.setControllerParameter(ctrl, "filterInvulnerable", true);
+		ctrl.onEnterCollision(otherFixture);
+		
+		//then
+		assertFalse(otherActor.hasActions());		
+	}
+	
+	@Test
+	public void shouldAddKnockbackActionIfActorIsInvurnerableAndWeDontFilterIt()
+	{
+		//given		
+		LifeController lifeCtrl = new LifeController();
+		lifeCtrl.setFrozen(true);
+		otherActor.addController(lifeCtrl);
+		
+		Fixture otherFixture = mock(Fixture.class);
+		when(otherFixture.getUserData()).thenReturn(otherActor);
+		
+		//when
+		ControllerAnnotations.setControllerParameter(ctrl, "filterInvulnerable", false);
+		ctrl.onEnterCollision(otherFixture);
+		
+		//then
+		assertEquals(1, otherActor.getActions().size);
+		assertEquals(ZootKnockbackAction.class, otherActor.getActions().get(0).getClass());		
+	}
+	
+	@Test
+	public void shouldAddKnockbackActionIfActorIsNotInvurnerable()
+	{
+		//given		
+		LifeController lifeCtrl = new LifeController();
+		lifeCtrl.setFrozen(false);
+		otherActor.addController(lifeCtrl);
+		
+		Fixture otherFixture = mock(Fixture.class);
+		when(otherFixture.getUserData()).thenReturn(otherActor);
+		
+		//when
+		ControllerAnnotations.setControllerParameter(ctrl, "filterInvulnerable", true);
+		ctrl.onEnterCollision(otherFixture);
+		
+		//then
+		assertEquals(1, otherActor.getActions().size);
+		assertEquals(ZootKnockbackAction.class, otherActor.getActions().get(0).getClass());		
 	}
 			
 	@Test
