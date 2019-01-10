@@ -2,6 +2,7 @@ package com.zootcat.controllers.physics;
 
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyFloat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -14,8 +15,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.zootcat.controllers.physics.PhysicsBodyController;
-import com.zootcat.controllers.physics.StickyPlatformController;
 import com.zootcat.exceptions.ZootControllerNotFoundException;
 import com.zootcat.testing.ZootActorStub;
 
@@ -33,7 +32,6 @@ public class StickyPlatformControllerTest
 	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);
-		when(platformPhysicsBodyCtrl.getVelocity()).thenReturn(EXPECTED_PLATFORM_VELOCITY);
 		when(otherPhysicsBodyCtrl.getVelocity()).thenReturn(new Vector2(0.0f, 0.0f));
 		
 		otherActor = new ZootActorStub();
@@ -71,20 +69,99 @@ public class StickyPlatformControllerTest
 	}
 	
 	@Test
-	public void shouldUpdateOtherActorVelocity()
+	public void shouldUpdateOtherActorHorziontalVelocityIfActorIsNotMoving()
 	{
+		//given
+		when(platformPhysicsBodyCtrl.getVelocity()).thenReturn(EXPECTED_PLATFORM_VELOCITY);
+		
+		//when		
+		stickyPlatformCtrl.onEnter(platformActor, otherActor, mock(Contact.class));
+		stickyPlatformCtrl.onUpdate(0.0f, platformActor);
+		
+		//then
+		verify(otherPhysicsBodyCtrl).setVelocity(EXPECTED_PLATFORM_VELOCITY.x, EXPECTED_PLATFORM_VELOCITY.y, true, false);
+	}
+	
+	@Test
+	public void shouldMoveActorRightIfActorIsMovingSlowerThanThePlatform()
+	{
+		//given
+		when(platformPhysicsBodyCtrl.getVelocity()).thenReturn(EXPECTED_PLATFORM_VELOCITY);
+		when(otherPhysicsBodyCtrl.getVelocity()).thenReturn(new Vector2(EXPECTED_PLATFORM_VELOCITY.x / 2.0f, 0.0f));
+		
 		//when
 		stickyPlatformCtrl.onEnter(platformActor, otherActor, mock(Contact.class));
 		stickyPlatformCtrl.onUpdate(0.0f, platformActor);
 		
 		//then
-		verify(otherPhysicsBodyCtrl).setVelocity(EXPECTED_PLATFORM_VELOCITY.x, 0.0f, true, false);
+		verify(otherPhysicsBodyCtrl).setVelocity(EXPECTED_PLATFORM_VELOCITY.x, EXPECTED_PLATFORM_VELOCITY.y, true, false);		
 	}
 	
 	@Test
-	public void shouldNotUpdateOtherActorVelocityIfActorIsJumping()
+	public void shouldNotMoveActorRightIfActorIsMovingFasterThanThePlatform()
 	{
 		//given
+		when(platformPhysicsBodyCtrl.getVelocity()).thenReturn(EXPECTED_PLATFORM_VELOCITY);
+		when(otherPhysicsBodyCtrl.getVelocity()).thenReturn(new Vector2(EXPECTED_PLATFORM_VELOCITY.x * 2.0f, 0.0f));
+		
+		//when
+		stickyPlatformCtrl.onEnter(platformActor, otherActor, mock(Contact.class));
+		stickyPlatformCtrl.onUpdate(0.0f, platformActor);
+		
+		//then
+		verify(otherPhysicsBodyCtrl).setVelocity(EXPECTED_PLATFORM_VELOCITY.x, EXPECTED_PLATFORM_VELOCITY.y, false, false);		
+	}
+	
+	@Test
+	public void shouldNotMoveActorRightIfActorIsMovingAndPlatformIsNot()
+	{
+		//given
+		when(platformPhysicsBodyCtrl.getVelocity()).thenReturn(new Vector2(0.0f, 0.0f));
+		when(otherPhysicsBodyCtrl.getVelocity()).thenReturn(new Vector2(EXPECTED_PLATFORM_VELOCITY.x * 2.0f, 0.0f));
+		
+		//when
+		stickyPlatformCtrl.onEnter(platformActor, otherActor, mock(Contact.class));
+		stickyPlatformCtrl.onUpdate(0.0f, platformActor);
+		
+		//then
+		verify(otherPhysicsBodyCtrl).setVelocity(0.0f, 0.0f, false, false);		
+	}
+	
+	@Test
+	public void shouldNotMoveActorRightIfActorIsNotAndPlatformIsNotMoving()
+	{
+		//given
+		when(platformPhysicsBodyCtrl.getVelocity()).thenReturn(new Vector2(0.0f, 0.0f));
+		when(otherPhysicsBodyCtrl.getVelocity()).thenReturn(new Vector2(0.0f, 0.0f));
+		
+		//when
+		stickyPlatformCtrl.onEnter(platformActor, otherActor, mock(Contact.class));
+		stickyPlatformCtrl.onUpdate(0.0f, platformActor);
+		
+		//then
+		verify(otherPhysicsBodyCtrl).setVelocity(0.0f, 0.0f, false, false);		
+	}
+		
+	@Test
+	public void shouldNotMoveActorLeftIfActorIsMovingAndPlatformIsNot()
+	{
+		//given
+		when(platformPhysicsBodyCtrl.getVelocity()).thenReturn(new Vector2(0.0f, 0.0f));
+		when(otherPhysicsBodyCtrl.getVelocity()).thenReturn(new Vector2(-EXPECTED_PLATFORM_VELOCITY.x * 2.0f, 0.0f));
+		
+		//when
+		stickyPlatformCtrl.onEnter(platformActor, otherActor, mock(Contact.class));
+		stickyPlatformCtrl.onUpdate(0.0f, platformActor);
+		
+		//then
+		verify(otherPhysicsBodyCtrl).setVelocity(0.0f, 0.0f, false, false);		
+	}
+			
+	@Test
+	public void shouldNotUpdateOtherActorHorizontalVelocityIfActorIsJumping()
+	{
+		//given
+		when(platformPhysicsBodyCtrl.getVelocity()).thenReturn(EXPECTED_PLATFORM_VELOCITY);
 		when(otherPhysicsBodyCtrl.getVelocity()).thenReturn(new Vector2(0.0f, StickyPlatformController.VELOCITY_Y_JUMP_THRESHOLD));
 		
 		//when
@@ -92,7 +169,7 @@ public class StickyPlatformControllerTest
 		stickyPlatformCtrl.onUpdate(0.0f, platformActor);
 		
 		//then
-		verify(otherPhysicsBodyCtrl, never()).setVelocity(anyFloat(), anyFloat(), anyBoolean(), anyBoolean());		
+		verify(otherPhysicsBodyCtrl).setVelocity(anyFloat(), anyFloat(), eq(false), eq(false));		
 	}
 	
 	@Test

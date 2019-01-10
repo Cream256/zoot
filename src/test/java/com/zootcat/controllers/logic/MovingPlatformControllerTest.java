@@ -3,12 +3,10 @@ package com.zootcat.controllers.logic;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -18,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.scene.ZootActor;
@@ -67,16 +64,9 @@ public class MovingPlatformControllerTest
 		ControllerAnnotations.setControllerParameter(ctrl, "range", RANGE);
 		ctrl.init(ctrlActor);
 	}
-	
+		
 	@Test
-	public void initTest()
-	{
-		ctrl.init(ctrlActor);
-		assertEquals(ctrlActor, ctrl.getControllerActor());
-	}
-	
-	@Test
-	public void onUpdateShouldEndPlatformMovementIfRangeIsExceededAndComebackIsSetToFalseTest()
+	public void shouldEndPlatformMovementIfRangeIsExceededAndComebackIsSetToFalseTest()
 	{
 		//given
 		ctrlActor.setPosition(RANGE + 1.0f, 0.0f);
@@ -86,11 +76,11 @@ public class MovingPlatformControllerTest
 		ctrl.onUpdate(1.0f, ctrlActor);
 		
 		//then
-		assertFalse(ctrl.isEnabled());
+		assertFalse(ctrl.isMoving());
 	}
 	
 	@Test
-	public void onUpdateShouldInvertDirectionIfComebackIsSetToTrueAndRangeIsExceededTest()
+	public void shouldInvertDirectionIfComebackIsSetToTrueAndRangeIsExceededTest()
 	{
 		//given
 		ctrlActor.setPosition(RANGE + 1.0f, 0.0f);
@@ -101,62 +91,21 @@ public class MovingPlatformControllerTest
 		ctrl.onUpdate(1.0f, ctrlActor);
 		
 		//then
-		assertTrue(ctrl.isEnabled());
+		assertTrue(ctrl.isMoving());
 		assertEquals(ZootDirection.Left, ctrl.getDirection());
 	}
 
 	@Test
-	public void onUpdateIfNotEnabledShouldZeroPlatformActorVelocityTest()
+	public void shouldZeroPlatformActorVelocityIfNotMoving()
 	{
-		ctrl.setEnabled(false);
+		ctrl.setMoving(false);
 		ctrl.onUpdate(1.0f, ctrlActor);
 		verify(ctrlActorBodyMock, times(1)).setVelocity(0.0f, 0.0f);
 		verifyNoMoreInteractions(ctrlActorBodyMock);
 	}
-	
+		
 	@Test
-	public void onUpdateIfNotEnabledShouldNotModifyConnectedActorsVelocityTest()
-	{		
-		//given
-		ctrl.setEnabled(false);
-		ctrl.onEnter(ctrlActor, actorOnPlatform1, mock(Contact.class));
-		ctrl.onEnter(ctrlActor, actorOnPlatform2, mock(Contact.class));
-		
-		//when
-		ctrl.onUpdate(1.0f, ctrlActor);
-		
-		//then
-		verifyZeroInteractions(actorOnPlatform1);
-		verifyZeroInteractions(actorOnPlatform2);
-	}
-	
-	@Test
-	public void onUpdateWithConnectedActorsTest()
-	{
-		//given		
-		ControllerAnnotations.setControllerParameter(ctrl, "direction", ZootDirection.Right);
-		ctrl.onEnter(ctrlActor, actorOnPlatform1, mock(Contact.class));
-		ctrl.onEnter(ctrlActor, actorOnPlatform2, mock(Contact.class));
-		
-		//when
-		ctrl.onUpdate(1.0f, ctrlActor);
-		
-		//then
-		verify(actorOnPlatform1BodyMock, times(1)).setVelocity(SPEED, 0.0f);
-		verify(actorOnPlatform2BodyMock, times(1)).setVelocity(SPEED, 0.0f);
-		
-		//when
-		ctrl.onLeave(ctrlActor, actorOnPlatform1, mock(Contact.class));
-		ctrl.onLeave(ctrlActor, actorOnPlatform2, mock(Contact.class));
-		ctrl.onUpdate(1.0f, ctrlActor);
-		
-		//then
-		verify(actorOnPlatform1BodyMock, times(1)).setVelocity(SPEED, 0.0f);
-		verify(actorOnPlatform2BodyMock, times(1)).setVelocity(SPEED, 0.0f);
-	}
-	
-	@Test
-	public void onUpdateShouldSetVelocityToGoRightTest()
+	public void shouldSetVelocityToGoRightTest()
 	{		
 		ControllerAnnotations.setControllerParameter(ctrl, "direction", ZootDirection.Right);		
 		ctrl.onUpdate(1.0f, ctrlActor);
@@ -165,7 +114,7 @@ public class MovingPlatformControllerTest
 	}
 	
 	@Test
-	public void onUpdateShouldSetVelocityToGoLeftTest()
+	public void shouldSetVelocityToGoLeftTest()
 	{
 		ControllerAnnotations.setControllerParameter(ctrl, "direction", ZootDirection.Left);
 		ctrl.onUpdate(1.0f, ctrlActor);
@@ -174,7 +123,7 @@ public class MovingPlatformControllerTest
 	}
 	
 	@Test
-	public void onUpdateShouldSetVelocityToGoUpTest()
+	public void shouldSetVelocityToGoUpTest()
 	{
 		ControllerAnnotations.setControllerParameter(ctrl, "direction", ZootDirection.Up);
 		ctrl.onUpdate(1.0f, ctrlActor);
@@ -183,7 +132,7 @@ public class MovingPlatformControllerTest
 	}
 	
 	@Test
-	public void onUpdateShouldSetVelocityToGoDownTest()
+	public void shouldSetVelocityToGoDownTest()
 	{
 		ControllerAnnotations.setControllerParameter(ctrl, "direction", ZootDirection.Down);
 		ctrl.onUpdate(1.0f, ctrlActor);
@@ -192,7 +141,7 @@ public class MovingPlatformControllerTest
 	}
 	
 	@Test
-	public void onUpdateShouldSetVelocityToUpLeftTest()
+	public void shouldSetVelocityToUpLeftTest()
 	{
 		ControllerAnnotations.setControllerParameter(ctrl, "direction", ZootDirection.UpLeft);
 		ctrl.onUpdate(1.0f, ctrlActor);
@@ -201,7 +150,7 @@ public class MovingPlatformControllerTest
 	}
 	
 	@Test
-	public void onUpdateShouldSetVelocityToDownRightTest()
+	public void shouldSetVelocityToDownRightTest()
 	{
 		ControllerAnnotations.setControllerParameter(ctrl, "direction", ZootDirection.DownRight);
 		ctrl.onUpdate(1.0f, ctrlActor);
@@ -210,13 +159,13 @@ public class MovingPlatformControllerTest
 	}
 	
 	@Test
-	public void setEnabledTest()
+	public void shouldSetMoving()
 	{
-		ctrl.setEnabled(false);
-		assertFalse(ctrl.isEnabled());
+		ctrl.setMoving(false);
+		assertFalse(ctrl.isMoving());
 		
-		ctrl.setEnabled(true);
-		assertTrue(ctrl.isEnabled());
+		ctrl.setMoving(true);
+		assertTrue(ctrl.isMoving());
 	}
 	
 	@Test

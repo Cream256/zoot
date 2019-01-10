@@ -1,5 +1,6 @@
 package com.zootcat.controllers.physics;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.utils.Array;
 import com.zootcat.scene.ZootActor;
@@ -27,17 +28,28 @@ public class StickyPlatformController extends OnCollideController
 	{
 		super.onUpdate(delta, actor);
 			
-		float platformVelocityX = actor.getSingleController(PhysicsBodyController.class).getVelocity().x;		
-		actors.forEach(actorOnPlatform -> 
-		{
-			PhysicsBodyController actorPhysicsCtrl = actorOnPlatform.tryGetSingleController(PhysicsBodyController.class);
-			if(actorPhysicsCtrl == null) return;
+		Vector2 platformVelocityRef = actor.getSingleController(PhysicsBodyController.class).getVelocity();		
+		actors.forEach(actorOnPlatform -> updateActorOnPlatform(actorOnPlatform, platformVelocityRef));
+	}
+	
+	private void updateActorOnPlatform(ZootActor actorOnPlatform, Vector2 platformVelocityRef)
+	{
+		PhysicsBodyController actorPhysicsCtrl = actorOnPlatform.tryGetSingleController(PhysicsBodyController.class);
+		if(actorPhysicsCtrl == null) return;
+
+		//set X velocity if actor is moving slower than the platform
+		Vector2 actorVelRef = actorPhysicsCtrl.getVelocity();
+		boolean actorJumping = actorVelRef.y >= VELOCITY_Y_JUMP_THRESHOLD; 			
+		boolean moveActorToRight = platformVelocityRef.x >= 0.0f && Math.abs(actorVelRef.x) < platformVelocityRef.x;
+		boolean moveActorToLeft = platformVelocityRef.x < 0.0f && Math.abs(actorVelRef.x) < Math.abs(platformVelocityRef.x);			
+		boolean setX = !actorJumping && (moveActorToRight || moveActorToLeft);
 			
-			//don't set the velocity if player is jumping
-			float actorVelY = actorPhysicsCtrl.getVelocity().y;
-			if(actorVelY >= VELOCITY_Y_JUMP_THRESHOLD) return;	
-						
-			actorPhysicsCtrl.setVelocity(platformVelocityX, 0.0f, true, false);
-		});		
+		//set the Y velocity if platform is moving downwards && player is not jumping
+		boolean platformMovingDown = platformVelocityRef.y < 0.0f;
+		boolean actorMovingDownSlowerThanPlatform = actorVelRef.y <= 0.0f || actorVelRef.y <= Math.abs(platformVelocityRef.y); 			
+		boolean setY = platformMovingDown && actorMovingDownSlowerThanPlatform;
+				
+		//set the velocity
+		actorPhysicsCtrl.setVelocity(platformVelocityRef.x, platformVelocityRef.y, setX, setY);
 	}
 }

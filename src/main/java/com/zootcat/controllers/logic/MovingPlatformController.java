@@ -1,24 +1,18 @@
 package com.zootcat.controllers.logic;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Contact;
+import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlParam;
-import com.zootcat.controllers.physics.OnCollideController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 
-//TODO remake this + tests
-//Being sticky should be moved to other controller
-public class MovingPlatformController extends OnCollideController
+public class MovingPlatformController extends ControllerAdapter
 {
 	@CtrlParam private float range = 0.0f;
 	@CtrlParam private float speed = 1.0f;
-	@CtrlParam private boolean enabled = true;
+	@CtrlParam private boolean moving = true;
 	@CtrlParam private boolean comeback = true;
 	@CtrlParam private ZootDirection direction = ZootDirection.Right;
 	@CtrlParam(global = true) private ZootScene scene;
@@ -28,13 +22,10 @@ public class MovingPlatformController extends OnCollideController
 	private float worldRange;
 	private float platformVx;
 	private float platformVy;
-	private Set<ZootActor> connectedActors = new HashSet<ZootActor>();
 	
 	@Override
 	public void init(ZootActor actor) 
-	{
-		super.init(actor);
-		
+	{		
 		start = new Vector2(actor.getX(), actor.getY());
 		current = start.cpy();
 		worldRange = range * scene.getUnitScale();
@@ -43,7 +34,7 @@ public class MovingPlatformController extends OnCollideController
 	@Override
 	public void onUpdate(float delta, ZootActor actor)
 	{
-		if(!enabled)
+		if(!moving)
 		{
 			actor.controllersAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(0.0f, 0.0f));
 			return;
@@ -54,25 +45,23 @@ public class MovingPlatformController extends OnCollideController
 		if(current.dst(start) >= worldRange) 
 		{
 			direction = direction.invert();
-			enabled = comeback;
+			moving = comeback;
 			start.set(current);
 		}
 		
 		platformVx = (direction.isHorizontal() ? speed : 0.0f) * direction.getHorizontalValue();
 		platformVy = (direction.isVertical() ? speed : 0.0f) * direction.getVerticalValue();		
 		actor.controllersAction(PhysicsBodyController.class, ctrl -> ctrl.setVelocity(platformVx, platformVy));
-		
-		updateConnectedActors();
 	}
 	
-	public void setEnabled(boolean value)
+	public void setMoving(boolean value)
 	{
-		enabled = value;
+		moving = value;
 	}
 	
-	public boolean isEnabled()
+	public boolean isMoving()
 	{
-		return enabled;
+		return moving;
 	}
 	
 	public void setComeback(boolean value)
@@ -88,38 +77,5 @@ public class MovingPlatformController extends OnCollideController
 	public ZootDirection getDirection()
 	{
 		return direction;
-	}
-	
-	@Override
-	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
-	{
-		connectedActors.remove(getControllerActor() == actorA ? actorB : actorA);
-	}
-	
-	private void updateConnectedActors()
-	{
-		for(ZootActor actor : connectedActors)
-		{
-			PhysicsBodyController bodyCtrl = actor.getSingleController(PhysicsBodyController.class);						
-			Vector2 actorVelocity = bodyCtrl.getVelocity();
-			
-			//horizontal velocity
-			if(platformVx >= 0.0f && Math.abs(actorVelocity.x) < platformVx) actorVelocity.x = Math.max(actorVelocity.x, platformVx);
-			else if(platformVx < 0.0f && Math.abs(actorVelocity.x) < Math.abs(platformVx)) actorVelocity.x = Math.min(actorVelocity.x, platformVx);		
-			
-			//vertical velocity
-			if(platformVy < 0.0f && (actorVelocity.y <= 0.0f || actorVelocity.y <= Math.abs(platformVy))) actorVelocity.y = platformVy;
-			
-			bodyCtrl.setVelocity(actorVelocity.x, actorVelocity.y);
-		}
-	}
-
-	@Override
-	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
-	{		
-		//if(collidedFromAbove)	//TODO
-		{
-			connectedActors.add(getControllerActor() == actorA ? actorB : actorA);
-		}
 	}
 }
