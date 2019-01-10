@@ -13,21 +13,21 @@ public class MovingPlatformTriggerController extends TriggerEventListener
 	@Override
 	public void triggerOn(ZootActor switchActor)
 	{
-		setMovingPlatformsEnabled(true);
+		setMovingPlatformsMoving(true);
 	}
 
 	@Override
 	public void triggerOff(ZootActor switchActor)
 	{
-		setMovingPlatformsEnabled(false);		
+		setMovingPlatformsMoving(false);		
 	}
 	
-	protected void setMovingPlatformsEnabled(boolean enabled)
+	protected void setMovingPlatformsMoving(boolean moving)
 	{
 		scene.getActors(actor -> actor.getName().equalsIgnoreCase(platformActorName))
 	 		 .forEach(actor -> actor.controllersAction(MovingPlatformController.class, ctrl ->
 	 		 {
-	 			 ctrl.setEnabled(enabled);
+	 			 ctrl.setMoving(moving);
 	 		 }));
 	}
 }

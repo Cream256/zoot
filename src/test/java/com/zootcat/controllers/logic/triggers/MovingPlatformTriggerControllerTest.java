@@ -42,21 +42,21 @@ public class MovingPlatformTriggerControllerTest
 	}
 	
 	@Test
-	public void shouldEnableMovingPlatformsWhenTriggeredOn()
+	public void shouldEnableMovingWhenTriggeredOn()
 	{
 		ctrl.triggerOn(ctrlActor);
-		verify(movingPlatformCtrl).setEnabled(true);
+		verify(movingPlatformCtrl).setMoving(true);
 	}
 	
 	@Test
-	public void shouldDisableMovingPlatformsWhenTriggeredOff()
+	public void shouldDisableMovingWhenTriggeredOff()
 	{
 		ctrl.triggerOff(ctrlActor);
-		verify(movingPlatformCtrl).setEnabled(false);
+		verify(movingPlatformCtrl).setMoving(false);
 	}
 	
 	@Test
-	public void shouldNotEnableWhenActorWithValidNameIsNotFound()
+	public void shouldNotMoveWhenActorWithValidNameIsNotFound()
 	{
 		//given
 		ZootActor bunny = new ZootActor();
@@ -68,6 +68,6 @@ public class MovingPlatformTriggerControllerTest
 		ctrl.triggerOn(ctrlActor);
 		
 		//then
-		verify(movingPlatformCtrl, times(0)).setEnabled(true);		
+		verify(movingPlatformCtrl, times(0)).setMoving(true);		
 	}
 }
