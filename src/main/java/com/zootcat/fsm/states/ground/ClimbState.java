@@ -32,6 +32,12 @@ public class ClimbState extends BasicState
 		actor.controllersAction(ClimbController.class, ctrl -> ctrl.grab());
 	}
 		
+	@Override	
+	public void onLeave(ZootActor actor, ZootEvent event)
+	{
+		actor.controllersAction(ClimbController.class, ctrl -> ctrl.letGo());
+	}
+	
 	@Override
 	public boolean handle(ZootEvent event)
 	{

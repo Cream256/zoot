@@ -119,4 +119,10 @@ public class ClimbStateTest extends ZootStateTestCase
 		assertEquals(ClimbState.ID, actor.getStateMachine().getCurrentState().getId());
 	}
 	
+	@Test
+	public void shouldFinishClimbingOnLeaveState()
+	{		
+		climbState.onLeave(actor, null);
+		verify(climbCtrlMock).letGo();
+	}
 }
