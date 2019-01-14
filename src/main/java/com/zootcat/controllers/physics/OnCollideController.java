@@ -1,7 +1,7 @@
 package com.zootcat.controllers.physics;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -44,7 +44,7 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	@CtrlParam protected boolean collidePerActor = false;
 	
 	protected Filter filter;
-	protected Set<ZootActor> collidingActors = new HashSet<ZootActor>();
+	protected Map<ZootActor, Integer> collidingActors = new HashMap<ZootActor, Integer>();
 		
 	public OnCollideController()
 	{
@@ -128,34 +128,41 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	public void onBeginContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{						
 		ZootActor otherActor = getOtherActor(actorA, actorB);
-		if(collides(actorA, actorB, contact) && beginCollisionCounts(otherActor))
+		if(collides(actorA, actorB, contact))
 		{
-			collidingActors.add(otherActor);
+			int collisionCount = collidingActors.getOrDefault(otherActor, 0) + 1;
+			collidingActors.put(otherActor, collisionCount);
+						
+			if(collidePerActor && collisionCount > 1) return;
+			
 			onEnter(actorA, actorB, contact);
 		}
 	}
-
-	protected boolean beginCollisionCounts(ZootActor otherActor)
-	{
-		return !collidePerActor || !collidingActors.contains(otherActor);
-	}
-	
+		
 	@Override
 	public void onEndContact(ZootActor actorA, ZootActor actorB, Contact contact)
 	{		
 		ZootActor otherActor = getOtherActor(actorA, actorB);
-		if(collides(actorA, actorB, contact) && endCollisionCounts(otherActor))
+		if(collides(actorA, actorB, contact))
 		{			
+			int collisionCount = Math.max(0, collidingActors.getOrDefault(otherActor, 0) - 1);
+			collidingActors.put(otherActor, collisionCount);
+						
+			if(collidePerActor && collisionCount != 0) return;
+						
 			onLeave(actorA, actorB, contact);
-			collidingActors.remove(otherActor);
 		}
 	}
 	
-	protected boolean endCollisionCounts(ZootActor otherActor)
-	{
-		return !collidePerActor || collidingActors.contains(otherActor);
+	protected boolean collides(ZootActor actorA, ZootActor actorB, Contact contact)
+	{				
+		Fixture otherFixture = getOtherFixture(actorA, actorB, contact);
+		
+		boolean collisionDetected = ZootDefaultContactFilter.shouldCollide(filter, otherFixture.getFilterData());
+		boolean sensorOk = collideWithSensors || !otherFixture.isSensor();
+		return collisionDetected && sensorOk;
 	}
-	
+		
 	@Override
 	public void onPreSolve(ZootActor actorA, ZootActor actorB, Contact contact, Manifold manifold)
 	{
@@ -171,13 +178,4 @@ public abstract class OnCollideController extends PhysicsCollisionController
 	public abstract void onEnter(ZootActor actorA, ZootActor actorB, Contact contact);
 	
 	public abstract void onLeave(ZootActor actorA, ZootActor actorB, Contact contact);
-			
-	private boolean collides(ZootActor actorA, ZootActor actorB, Contact contact)
-	{				
-		Fixture otherFixture = getOtherFixture(actorA, actorB, contact);
-		
-		boolean collisionDetected = ZootDefaultContactFilter.shouldCollide(filter, otherFixture.getFilterData());
-		boolean sensorOk = collideWithSensors || !otherFixture.isSensor();
-		return collisionDetected && sensorOk;
-	}
 }

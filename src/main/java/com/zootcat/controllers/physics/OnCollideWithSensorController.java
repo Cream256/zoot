@@ -90,18 +90,7 @@ public class OnCollideWithSensorController extends OnCollideController
 		
 		super.onRemove(actor);
 	}
-	
-	@Override
-	public void onBeginContact(ZootActor actorA, ZootActor actorB, Contact contact)
-	{						
-		ZootActor otherActor = getOtherActor(actorA, actorB);
-		if(collidedWithSensor(contact) && beginCollisionCounts(otherActor))
-		{
-			collidingActors.add(otherActor);
-			onEnter(actorA, actorB, contact);
-		}
-	}
-	
+		
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 	{	
@@ -109,18 +98,7 @@ public class OnCollideWithSensorController extends OnCollideController
 		collidedFixtures.add(otherFixture);
 		onEnterCollision(otherFixture);
 	}
-	
-	@Override
-	public void onEndContact(ZootActor actorA, ZootActor actorB, Contact contact)
-	{		
-		ZootActor otherActor = getOtherActor(actorA, actorB);
-		if(collidedWithSensor(contact) && endCollisionCounts(otherActor))
-		{			
-			onLeave(actorA, actorB, contact);
-			collidingActors.remove(otherActor);
-		}
-	}
-	
+		
 	@Override
 	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
 	{		
@@ -173,7 +151,8 @@ public class OnCollideWithSensorController extends OnCollideController
 		//noop, to be overriden by derived classes		
 	}
 	
-	private boolean collidedWithSensor(Contact contact)
+	@Override
+	protected boolean collides(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
 		return contact.getFixtureA() == sensor || contact.getFixtureB() == sensor;
 	}

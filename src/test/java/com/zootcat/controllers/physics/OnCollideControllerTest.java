@@ -133,11 +133,17 @@ public class OnCollideControllerTest
 		assertEquals("Collision with already colliding actor should not be matched twice", 1, enterCount);
 		
 		//when
+		ctrl.endContact(ctrlActor, otherActor, contact);
+		
+		//then
+		assertEquals("Collision should not end yet", 0, leaveCount);
+		
+		//when
 		when(contact.getFixtureB()).thenReturn(otherActorFixture);
 		ctrl.endContact(ctrlActor, otherActor, contact);
 		
 		//then
-		assertEquals("Collision should end", 1, leaveCount);
+		assertEquals("Collision should not end when all fixtures for actor are out of collision", 1, leaveCount);
 	}
 	
 	@Test

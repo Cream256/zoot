@@ -315,7 +315,7 @@ public class ZootActor extends Actor
     {
     	return getName();
     }
-
+    
 	public void setScene(ZootScene scene)
 	{
 		this.scene = scene;
