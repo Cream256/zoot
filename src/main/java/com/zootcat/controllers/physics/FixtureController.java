@@ -48,9 +48,9 @@ public class FixtureController extends ControllerAdapter
 	@CtrlParam protected String mask = "";
 	@CtrlParam(global = true) protected ZootScene scene;
 	
-	private Array<FixtureDef> fixtureDefs;
-	private Array<Fixture> fixtures = new Array<Fixture>(0);
-	private CollisionMask collisionMask = new CollisionMask();
+	protected Array<FixtureDef> fixtureDefs;
+	protected Array<Fixture> fixtures = new Array<Fixture>(0);
+	protected CollisionMask collisionMask = new CollisionMask();
 	
 	@Override
 	public void init(ZootActor actor)
@@ -127,10 +127,11 @@ public class FixtureController extends ControllerAdapter
 	@Override
 	public void onAdd(ZootActor actor)
 	{
+		PhysicsBodyController physicsBodyCtrl = actor.getSingleController(PhysicsBodyController.class);		
 		fixtures = new Array<Fixture>(fixtureDefs.size);
 		fixtureDefs.forEach(def -> 
 		{
-			Fixture newFixture = actor.getSingleController(PhysicsBodyController.class).addFixture(def, actor);
+			Fixture newFixture = physicsBodyCtrl.addFixture(def, actor);
 			fixtures.add(newFixture);
 		});
 	}

@@ -381,4 +381,19 @@ public class ZootAnimationTest
 	{
 		assertEquals("MyAnimation", animation.toString());
 	}
+	
+	@Test
+	public void shouldFinishAnimation()
+	{
+		//given
+		animation.start();
+		
+		//when
+		animation.finish();
+		
+		//then
+		assertTrue(animation.isFinished());
+		assertFalse(animation.isPlaying());
+		assertEquals(animation.getFrameCount() * animation.getFrameDuration(), animation.getAnimationTime(), 0.0f);
+	}
 }

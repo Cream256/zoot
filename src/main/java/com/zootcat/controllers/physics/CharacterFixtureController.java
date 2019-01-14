@@ -12,13 +12,7 @@ import com.zootcat.utils.ZootUtils;
 public class CharacterFixtureController extends FixtureController
 {	
 	@CtrlParam private boolean vertical = true;
-	
-	@Override
-	public void init(ZootActor actor)
-	{
-		super.init(actor);
-	}
-			
+				
 	@Override
 	protected Array<FixtureDef> createFixtureDefs(ZootActor actor)
 	{

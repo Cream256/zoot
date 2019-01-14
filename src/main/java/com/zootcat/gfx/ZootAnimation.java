@@ -126,6 +126,13 @@ public class ZootAnimation
 		start();
 	}
 	
+	public void finish()
+	{
+		playing = false;
+		repeatsDone = repeatsCount;
+		animationTime = getFrameCount() * getFrameDuration();
+	}
+	
 	public boolean isPlaying()
 	{
 		return playing;
