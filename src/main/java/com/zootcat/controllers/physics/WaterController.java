@@ -2,8 +2,8 @@ package com.zootcat.controllers.physics;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.leakedbits.codelabs.box2d.controllers.BuoyancyController;
 import com.zootcat.controllers.factory.CtrlParam;
+import com.zootcat.external.codelabs.BuoyancyController;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 

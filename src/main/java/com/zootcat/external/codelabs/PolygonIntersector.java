@@ -1,11 +1,10 @@
-package com.leakedbits.codelabs.utils;
+package com.zootcat.external.codelabs;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.leakedbits.codelabs.box2d.utils.PolygonProperties;
 
 public class PolygonIntersector {
 

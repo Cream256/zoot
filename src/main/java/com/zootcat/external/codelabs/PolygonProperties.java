@@ -1,4 +1,4 @@
-package com.leakedbits.codelabs.box2d.utils;
+package com.zootcat.external.codelabs;
 
 import com.badlogic.gdx.math.Vector2;
 

@@ -1,4 +1,4 @@
-package com.leakedbits.codelabs.box2d.controllers;
+package com.zootcat.external.codelabs;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,8 +10,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.leakedbits.codelabs.box2d.utils.PolygonProperties;
-import com.leakedbits.codelabs.utils.PolygonIntersector;
 
 public class BuoyancyController {
 
