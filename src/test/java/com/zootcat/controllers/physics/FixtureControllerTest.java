@@ -29,7 +29,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.zootcat.controllers.factory.ControllerAnnotations;
-import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.physics.ZootBodyShape;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
@@ -106,17 +105,7 @@ public class FixtureControllerTest
 		//when
 		assertEquals("SOLID", ctrl.getCollisionCategory());		
 	}
-	
-	@Test(expected = RuntimeZootException.class)
-	public void shouldThrowWhenBodyShapeIsNone()
-	{
-		//given
-		ControllerAnnotations.setControllerParameter(ctrl, "shape", ZootBodyShape.NONE);
 		
-		//when
-		ctrl.init(actor);
-	}
-	
 	@Test
 	public void shouldAddFixtureToBody()
 	{
