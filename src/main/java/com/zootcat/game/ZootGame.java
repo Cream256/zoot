@@ -6,6 +6,7 @@ import java.util.function.Function;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.physics.box2d.Box2D;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.controllers.factory.ControllerFactory;
 import com.zootcat.exceptions.RuntimeZootException;
@@ -34,6 +35,7 @@ public abstract class ZootGame extends Game
 	
 	public ZootGame()
 	{
+		Box2D.init();
 		assetManager = new ZootAssetManager();		
 		inputManager = new ZootInputManager();
 		graphicsFactory = new ZootGraphicsFactory();

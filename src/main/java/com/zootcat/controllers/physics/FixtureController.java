@@ -57,10 +57,19 @@ public class FixtureController extends ControllerAdapter
 	
 	protected Array<FixtureDef> createFixtureDefs(ZootActor actor) 
 	{				
-		FixtureDef fixtureDef = new ZootFixtureDefBuilder(scene).setDensity(density)
-				.setFriction(friction).setRestitution(restitution).setOffsetX(offsetX)
-				.setOffsetY(offsetY).setWidth(width).setHeight(height).setSensor(sensor)
-				.setShape(shape).setCategory(category).setMask(mask).build(actor);
+		FixtureDef fixtureDef = new ZootFixtureDefBuilder(scene)
+				.setDensity(density)
+				.setFriction(friction)
+				.setRestitution(restitution)
+				.setOffsetX(offsetX)
+				.setOffsetY(offsetY)
+				.setWidth(width)
+				.setHeight(height)
+				.setSensor(sensor)
+				.setShape(shape)
+				.setCategory(category)
+				.setMask(mask)
+				.build(actor);
 			
 		Array<FixtureDef> fixtureDefs = new Array<FixtureDef>(1);
 		fixtureDefs.add(fixtureDef);

@@ -10,6 +10,8 @@ import com.zootcat.gfx.ZootAnimationFile;
 import com.zootcat.gfx.ZootAnimationFileLoader;
 import com.zootcat.map.tiled.ZootTiledMap;
 import com.zootcat.map.tiled.ZootTiledMapLoader;
+import com.zootcat.tools.physicsbodyeditor.PhysicsBodyEditorModel;
+import com.zootcat.tools.physicsbodyeditor.PhysicsBodyEditorModelLoader;
 
 public class ZootAssetManager extends AssetManager
 {
@@ -25,10 +27,12 @@ public class ZootAssetManager extends AssetManager
 		assetRecognizer.setAssetType(".ogg", Music.class);
 		assetRecognizer.setAssetType(".mp3", Music.class);
 		assetRecognizer.setAssetType(".anm", ZootAnimationFile.class);
+		assetRecognizer.setAssetType(".json", PhysicsBodyEditorModel.class);
 		
 		setLoader(TiledMap.class, new TmxMapLoader());
 		setLoader(ZootTiledMap.class, new ZootTiledMapLoader(assetRecognizer));
 		setLoader(ZootAnimationFile.class, new ZootAnimationFileLoader(assetRecognizer));
+		setLoader(PhysicsBodyEditorModel.class, new PhysicsBodyEditorModelLoader());	//TODO add test
 	}
 	
 	public <T> T getOrLoad(String filename, Class<T> clazz)
