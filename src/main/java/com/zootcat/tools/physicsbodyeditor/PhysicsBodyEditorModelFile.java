@@ -14,6 +14,7 @@ import com.zootcat.tools.physicsbodyeditor.PhysicsBodyEditorModel.RigidBodyModel
  * @author Aurelien Ribon | http://www.aurelienribon.com
  * @author Cream
  */
+//TODO BETA refactor to use tags: https://github.com/Cream256/zoot/issues/6
 public class PhysicsBodyEditorModelFile
 {
 	private PhysicsBodyEditorModel model;

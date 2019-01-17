@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Disposable;
@@ -29,6 +30,7 @@ public class PhysicsBodyEditorModel implements Disposable
 		public final Vector2 origin = new Vector2();
 		public final List<PolygonModel> polygons = new ArrayList<PolygonModel>();
 		public final List<CircleModel> circles = new ArrayList<CircleModel>();
+		public final List<Fixture> attachedFixtures = new ArrayList<Fixture>();
 	}
 	
 	public static class PolygonModel {
@@ -45,34 +47,41 @@ public class PhysicsBodyEditorModel implements Disposable
 	private List<Vector2> vectorPool = new ArrayList<Vector2>();
 	private PolygonShape polygonShape = new PolygonShape();
 	private CircleShape circleShape = new CircleShape();
-	private Vector2 vec = new Vector2();	
+	private Vector2 vec = new Vector2();
 	
 	public void addRigidBodyModel(RigidBodyModel model)
 	{
 		rigidBodies.put(model.name, model);
 	}
 	
-	public void attachFixture(ZootActor actor, String name, FixtureDef fd, float scale) {
+	public RigidBodyModel getRigidBodyModel(String modelName)
+	{
+		return rigidBodies.get(modelName);
+	}
+		
+	public void attachFixture(ZootActor actor, String name, FixtureDef fd, float scaleX, float scaleY) {
 		PhysicsBodyController physicsBodyCtrl = actor.getSingleController(PhysicsBodyController.class);
 		
 		RigidBodyModel rbModel = rigidBodies.get(name);
 		if (rbModel == null) throw new RuntimeZootException("Name '" + name + "' was not found.");
+				
+		Vector2 origin = vec.set(rbModel.origin).scl(scaleX, scaleY);
 
-		Vector2 origin = vec.set(rbModel.origin).scl(scale);
-
+		rbModel.attachedFixtures.clear();
 		for (int i=0, n=rbModel.polygons.size(); i<n; i++) {
 			PolygonModel polygon = rbModel.polygons.get(i);
 			Vector2[] vertices = polygon.buffer;
 
 			for (int ii=0, nn=vertices.length; ii<nn; ii++) {
-				vertices[ii] = newVector().set(polygon.vertices.get(ii)).scl(scale);
+				vertices[ii] = newVector().set(polygon.vertices.get(ii)).scl(scaleX, scaleY);
 				vertices[ii].sub(origin);
 			}
 
 			polygonShape.set(vertices);
 			fd.shape = polygonShape;
 			
-			physicsBodyCtrl.addFixture(fd, actor);
+			Fixture newPolygonFixture = physicsBodyCtrl.addFixture(fd, actor);
+			rbModel.attachedFixtures.add(newPolygonFixture);
 			
 			for (int ii=0, nn=vertices.length; ii<nn; ii++) {
 				freeVector(vertices[ii]);
@@ -81,14 +90,15 @@ public class PhysicsBodyEditorModel implements Disposable
 
 		for (int i=0, n=rbModel.circles.size(); i<n; i++) {
 			CircleModel circle = rbModel.circles.get(i);
-			Vector2 center = newVector().set(circle.center).scl(scale);
-			float radius = circle.radius * scale;
+			Vector2 center = newVector().set(circle.center).scl(scaleX, scaleY);
+			float radius = circle.radius * scaleX;
 
 			circleShape.setPosition(center);
 			circleShape.setRadius(radius);
 			fd.shape = circleShape;
 			
-			physicsBodyCtrl.addFixture(fd, actor);
+			Fixture newCircleFixture = physicsBodyCtrl.addFixture(fd, actor);
+			rbModel.attachedFixtures.add(newCircleFixture);
 
 			freeVector(center);
 		}

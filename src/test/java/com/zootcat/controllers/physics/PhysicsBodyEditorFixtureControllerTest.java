@@ -2,8 +2,9 @@ package com.zootcat.controllers.physics;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyFloat;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,7 +26,8 @@ import com.zootcat.tools.physicsbodyeditor.PhysicsBodyEditorModel;
 
 public class PhysicsBodyEditorFixtureControllerTest
 {	
-	private static final float EXPECTED_FIXTURE_SCALE = 0.5f;
+	private static final float EXPECTED_FIXTURE_SCALE_X = 0.5f;
+	private static final float EXPECTED_FIXTURE_SCALE_Y = 1.5f;
 	private static final String EXPECTED_FIXTURE_NAME = "test01";
 	
 	@Mock private ZootScene scene;
@@ -58,7 +60,8 @@ public class PhysicsBodyEditorFixtureControllerTest
 		ctrl = new PhysicsBodyEditorFixtureController();
 		ControllerAnnotations.setControllerParameter(ctrl, "fileName", expectedFilePath);
 		ControllerAnnotations.setControllerParameter(ctrl, "fixtureName", EXPECTED_FIXTURE_NAME);
-		ControllerAnnotations.setControllerParameter(ctrl, "fixtureScale", EXPECTED_FIXTURE_SCALE);
+		ControllerAnnotations.setControllerParameter(ctrl, "fixtureScaleX", EXPECTED_FIXTURE_SCALE_X);
+		ControllerAnnotations.setControllerParameter(ctrl, "fixtureScaleY", EXPECTED_FIXTURE_SCALE_Y);
 		ControllerAnnotations.setControllerParameter(ctrl, "scene", scene);
 		ControllerAnnotations.setControllerParameter(ctrl, "assetManager", assetManager);
 	}
@@ -91,7 +94,7 @@ public class PhysicsBodyEditorFixtureControllerTest
 		ctrl.init(actor);
 		ctrl.onAdd(actor);
 		
-		verify(expectedFixtureModel).attachFixture(eq(actor), anyString(), any(), anyFloat());
+		verify(expectedFixtureModel).attachFixture(eq(actor), anyString(), any(), anyFloat(), anyFloat());
 	}
 	
 	@Test
@@ -100,7 +103,7 @@ public class PhysicsBodyEditorFixtureControllerTest
 		ctrl.init(actor);
 		ctrl.onAdd(actor);
 		
-		verify(expectedFixtureModel).attachFixture(any(), anyString(), any(), eq(EXPECTED_FIXTURE_SCALE));
+		verify(expectedFixtureModel).attachFixture(any(), anyString(), any(), eq(EXPECTED_FIXTURE_SCALE_X), eq(EXPECTED_FIXTURE_SCALE_Y));
 	}
 	
 	@Test
@@ -109,7 +112,7 @@ public class PhysicsBodyEditorFixtureControllerTest
 		ctrl.init(actor);
 		ctrl.onAdd(actor);
 		
-		verify(expectedFixtureModel).attachFixture(any(), eq(EXPECTED_FIXTURE_NAME), any(), anyFloat());		
+		verify(expectedFixtureModel).attachFixture(any(), eq(EXPECTED_FIXTURE_NAME), any(), anyFloat(), anyFloat());		
 	}
 	
 }

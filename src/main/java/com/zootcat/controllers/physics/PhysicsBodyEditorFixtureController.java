@@ -14,7 +14,8 @@ public class PhysicsBodyEditorFixtureController extends ControllerAdapter
 {
 	@CtrlParam(required = true) protected String fileName;
 	@CtrlParam(required = true) protected String fixtureName;
-	@CtrlParam(required = true) protected float fixtureScale;
+	@CtrlParam(required = true) protected float fixtureScaleX;
+	@CtrlParam(required = true) protected float fixtureScaleY;
 	@CtrlParam protected float density = 1.0f;
 	@CtrlParam protected float friction = 0.2f;
 	@CtrlParam protected float restitution = 0.0f;
@@ -28,18 +29,18 @@ public class PhysicsBodyEditorFixtureController extends ControllerAdapter
 	@CtrlParam(global = true) protected ZootScene scene;
 	@CtrlParam(global = true) protected ZootAssetManager assetManager;
 		
-	private PhysicsBodyEditorModel model;
+	protected PhysicsBodyEditorModel model;
 	
 	@Override
 	public void init(ZootActor actor)
 	{		
 		model = assetManager.get(fileName, PhysicsBodyEditorModel.class);
 	}
-	
+		
 	@Override
 	public void onAdd(ZootActor actor)
 	{
-		model.attachFixture(actor, fixtureName, createFixtureDef(actor), fixtureScale);
+		model.attachFixture(actor, fixtureName, createFixtureDef(actor), fixtureScaleX, fixtureScaleY);
 	}
 	
 	private FixtureDef createFixtureDef(ZootActor actor)
