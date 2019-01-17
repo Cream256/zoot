@@ -10,12 +10,11 @@ import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.tools.physicsbodyeditor.PhysicsBodyEditorModel;
 
-//TODO test
 public class PhysicsBodyEditorFixtureController extends ControllerAdapter
 {
-	@CtrlParam(required = true) private String fileName;
-	@CtrlParam(required = true) private String fixtureName;
-	@CtrlParam(required = true) private float  fixtureScale;
+	@CtrlParam(required = true) protected String fileName;
+	@CtrlParam(required = true) protected String fixtureName;
+	@CtrlParam(required = true) protected float fixtureScale;
 	@CtrlParam protected float density = 1.0f;
 	@CtrlParam protected float friction = 0.2f;
 	@CtrlParam protected float restitution = 0.0f;
@@ -26,8 +25,8 @@ public class PhysicsBodyEditorFixtureController extends ControllerAdapter
 	@CtrlParam protected boolean sensor = false;
 	@CtrlParam protected String category = "";
 	@CtrlParam protected String mask = "";
-	@CtrlParam(global = true) private ZootScene scene;
-	@CtrlParam(global = true) private ZootAssetManager assetManager;
+	@CtrlParam(global = true) protected ZootScene scene;
+	@CtrlParam(global = true) protected ZootAssetManager assetManager;
 		
 	private PhysicsBodyEditorModel model;
 	

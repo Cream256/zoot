@@ -32,7 +32,12 @@ public class ZootAssetManager extends AssetManager
 		setLoader(TiledMap.class, new TmxMapLoader());
 		setLoader(ZootTiledMap.class, new ZootTiledMapLoader(assetRecognizer));
 		setLoader(ZootAnimationFile.class, new ZootAnimationFileLoader(assetRecognizer));
-		setLoader(PhysicsBodyEditorModel.class, new PhysicsBodyEditorModelLoader());	//TODO add test
+		setLoader(PhysicsBodyEditorModel.class, new PhysicsBodyEditorModelLoader());
+	}
+	
+	public ZootAssetRecognizer getAssetRecognizer()
+	{
+		return assetRecognizer;
 	}
 	
 	public <T> T getOrLoad(String filename, Class<T> clazz)

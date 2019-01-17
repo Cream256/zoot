@@ -1,5 +1,6 @@
 package com.zootcat.assets;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -8,11 +9,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.backends.headless.HeadlessFiles;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.zootcat.gfx.ZootAnimationFile;
 import com.zootcat.map.tiled.ZootTiledMap;
 import com.zootcat.testing.ZootTestUtils;
+import com.zootcat.tools.physicsbodyeditor.PhysicsBodyEditorModel;
 
 public class ZootAssetManagerTest
 {
@@ -32,11 +37,28 @@ public class ZootAssetManagerTest
 	}
 	
 	@Test
-	public void zootSpecificLoadersShouldBePresentTest()
+	public void shouldHaveLoaders()
 	{
 		assertNotNull(assetManager.getLoader(TiledMap.class));
 		assertNotNull(assetManager.getLoader(ZootTiledMap.class));
 		assertNotNull(assetManager.getLoader(ZootAnimationFile.class));
+		assertNotNull(assetManager.getLoader(PhysicsBodyEditorModel.class));
+	}
+	
+	@Test
+	public void shouldRecognizeFileExtensions()
+	{
+		ZootAssetRecognizer assetRecognizer = assetManager.getAssetRecognizer(); 
+		
+		assertNotNull(assetRecognizer);
+		assertEquals(Texture.class, assetRecognizer.getAssetType("texture.png"));
+		assertEquals(Texture.class, assetRecognizer.getAssetType("texture.jpg"));
+		assertEquals(Texture.class, assetRecognizer.getAssetType("texture.bmp"));
+		assertEquals(Sound.class, assetRecognizer.getAssetType("sound.wav"));
+		assertEquals(Music.class, assetRecognizer.getAssetType("music.ogg"));
+		assertEquals(Music.class, assetRecognizer.getAssetType("music.mp3"));
+		assertEquals(ZootAnimationFile.class, assetRecognizer.getAssetType("animation.anm"));
+		assertEquals(PhysicsBodyEditorModel.class, assetRecognizer.getAssetType("fixtureModel.json"));
 	}
 	
 	@Test

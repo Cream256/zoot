@@ -19,7 +19,7 @@ public class TextDataFileTest
     public void setup()
     {
     	String textDataFilePath = ZootTestUtils.getResourcePath("textdata/TextDataFile.txt", this);
-    	testFile = new File(  textDataFilePath);
+    	testFile = new File(textDataFilePath);
     }
 	
 	@Test(expected=ZootException.class)
