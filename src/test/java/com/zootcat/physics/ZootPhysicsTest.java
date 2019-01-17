@@ -3,10 +3,10 @@ package com.zootcat.physics;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -82,7 +82,7 @@ public class ZootPhysicsTest
 	}
 	
 	@Test
-	public void shouldDisposeFixtureDefinitionShapeAfterFixtureCreation()
+	public void shouldNotDisposeFixtureDefinitionShapeAfterFixtureCreation()
 	{
 		//given
 		Body body = mock(Body.class);
@@ -95,8 +95,8 @@ public class ZootPhysicsTest
 		
 		//then
 		assertNotNull(physics.createFixture(body, fixtureDef));
-		assertNull(fixtureDef.shape);
-		verify(shape).dispose();
+		assertNotNull(fixtureDef.shape);
+		verify(shape, never()).dispose();
 	}
 	
 	@Test

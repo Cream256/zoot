@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.utils.Disposable;
+import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.exceptions.RuntimeZootException;
+import com.zootcat.scene.ZootActor;
 
 /**
  * Based on Physics Body Editor loader by Rasmus Praestholm (Cervator) <br/>
@@ -18,14 +20,8 @@ import com.zootcat.exceptions.RuntimeZootException;
  * @author Aurelien Ribon | http://www.aurelienribon.com
  * @author Cream
  */
-public class PhysicsBodyEditorModel
-{	
-	public final Map<String, RigidBodyModel> rigidBodies = new HashMap<String, RigidBodyModel>();	
-	public final List<Vector2> vectorPool = new ArrayList<Vector2>();
-	public final PolygonShape polygonShape = new PolygonShape();
-	public final CircleShape circleShape = new CircleShape();
-	public final Vector2 vec = new Vector2();	
-	
+public class PhysicsBodyEditorModel implements Disposable
+{		
 	public static class RigidBodyModel
 	{
 		public String name;
@@ -45,7 +41,20 @@ public class PhysicsBodyEditorModel
 		public float radius;
 	}	
 	
-	public void attachFixture(Body body, String name, FixtureDef fd, float scale) {
+	private Map<String, RigidBodyModel> rigidBodies = new HashMap<String, RigidBodyModel>();	
+	private List<Vector2> vectorPool = new ArrayList<Vector2>();
+	private PolygonShape polygonShape = new PolygonShape();
+	private CircleShape circleShape = new CircleShape();
+	private Vector2 vec = new Vector2();	
+	
+	public void addRigidBodyModel(RigidBodyModel model)
+	{
+		rigidBodies.put(model.name, model);
+	}
+	
+	public void attachFixture(ZootActor actor, String name, FixtureDef fd, float scale) {
+		PhysicsBodyController physicsBodyCtrl = actor.getSingleController(PhysicsBodyController.class);
+		
 		RigidBodyModel rbModel = rigidBodies.get(name);
 		if (rbModel == null) throw new RuntimeZootException("Name '" + name + "' was not found.");
 
@@ -62,8 +71,9 @@ public class PhysicsBodyEditorModel
 
 			polygonShape.set(vertices);
 			fd.shape = polygonShape;
-			body.createFixture(fd);
-
+			
+			physicsBodyCtrl.addFixture(fd, actor);
+			
 			for (int ii=0, nn=vertices.length; ii<nn; ii++) {
 				freeVector(vertices[ii]);
 			}
@@ -77,10 +87,25 @@ public class PhysicsBodyEditorModel
 			circleShape.setPosition(center);
 			circleShape.setRadius(radius);
 			fd.shape = circleShape;
-			body.createFixture(fd);
+			
+			physicsBodyCtrl.addFixture(fd, actor);
 
 			freeVector(center);
 		}
+	}
+	
+	@Override
+	public void dispose()
+	{
+		this.rigidBodies.clear();
+		this.rigidBodies = null;
+		this.circleShape.dispose();
+		this.circleShape = null;
+		this.polygonShape.dispose();
+		this.polygonShape = null;
+		this.vec = null;
+		this.vectorPool.clear();
+		this.vectorPool = null;
 	}
 	
 	/**

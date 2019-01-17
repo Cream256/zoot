@@ -69,14 +69,25 @@ public class ZootPhysics implements Disposable
 		world.destroyBody(body);
 	}
 		
+	/**
+	 * Creates a fixture and attaches it to a body.<br/>
+	 * Note - you need to dispose the fixture definition shape on your own.
+	 * @param body - body to attach fixture to
+	 * @param fixtureDef - fixture definition 
+	 * @return New fixture
+	 */
 	public Fixture createFixture(Body body, FixtureDef fixtureDef)
 	{
-		Fixture newFixture = body.createFixture(fixtureDef);
-		fixtureDef.shape.dispose();
-		fixtureDef.shape = null;
-		return newFixture;
+		return body.createFixture(fixtureDef);
 	}
 	
+	/**
+	 * Creates a list of fixtures and attaches them to a body.<br/>
+	 * Note - you need to dispose the fixture definition shapes on your own.
+	 * @param body - body to attach fixtures to
+	 * @param fixtureDef - list of fixture definitions 
+	 * @return List of new fixtures
+	 */
 	public List<Fixture> createFixtures(Body body, List<FixtureDef> fixtureDefs) 
 	{
 		List<Fixture> fixtures = new ArrayList<Fixture>();

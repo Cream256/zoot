@@ -39,8 +39,7 @@ public class PhysicsBodyEditorFixtureController extends ControllerAdapter
 	@Override
 	public void onAdd(ZootActor actor)
 	{
-		PhysicsBodyController physicsCtrl = actor.getSingleController(PhysicsBodyController.class);
-		model.attachFixture(physicsCtrl.getBody(), fixtureName, createFixtureDef(actor), fixtureScale);
+		model.attachFixture(actor, fixtureName, createFixtureDef(actor), fixtureScale);
 	}
 	
 	private FixtureDef createFixtureDef(ZootActor actor)

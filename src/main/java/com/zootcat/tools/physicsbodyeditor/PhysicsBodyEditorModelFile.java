@@ -35,7 +35,7 @@ public class PhysicsBodyEditorModelFile
 		JsonValue bodyElem = map.getChild("rigidBodies");
 		for (; bodyElem != null; bodyElem = bodyElem.next()) {
 			RigidBodyModel rbModel = readRigidBody(bodyElem);
-			model.rigidBodies.put(rbModel.name, rbModel);
+			model.addRigidBodyModel(rbModel);
 		}
 
 		return model;

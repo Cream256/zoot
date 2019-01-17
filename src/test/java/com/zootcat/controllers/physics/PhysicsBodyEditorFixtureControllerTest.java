@@ -86,12 +86,12 @@ public class PhysicsBodyEditorFixtureControllerTest
 	}
 	
 	@Test
-	public void shouldAttachLoadedModelToPhysicsBody()
+	public void shouldAttachLoadedModelToActorsPhysicsBody()
 	{
 		ctrl.init(actor);
 		ctrl.onAdd(actor);
 		
-		verify(expectedFixtureModel).attachFixture(eq(expectedBody), anyString(), any(), anyFloat());		
+		verify(expectedFixtureModel).attachFixture(eq(actor), anyString(), any(), anyFloat());
 	}
 	
 	@Test

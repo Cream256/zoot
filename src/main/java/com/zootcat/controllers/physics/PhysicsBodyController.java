@@ -125,7 +125,7 @@ public class PhysicsBodyController extends ControllerAdapter
 		
 	public Fixture addFixture(FixtureDef fixtureDef, ZootActor actor)
 	{
-		Fixture fixture = scene.getPhysics().createFixture(body, fixtureDef);
+		Fixture fixture = scene.getPhysics().createFixture(body, fixtureDef);		
 		fixture.setUserData(actor);
 		
 		fixtures.add(fixture);		

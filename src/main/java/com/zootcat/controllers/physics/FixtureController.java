@@ -47,6 +47,7 @@ public class FixtureController extends ControllerAdapter
 	protected Array<FixtureDef> fixtureDefs;
 	protected Array<Fixture> fixtures = new Array<Fixture>(0);
 	protected CollisionMask collisionMask = new CollisionMask();
+	protected boolean disposeShapesAutomatically = true;
 	
 	@Override
 	public void init(ZootActor actor)
@@ -85,6 +86,12 @@ public class FixtureController extends ControllerAdapter
 		{
 			Fixture newFixture = physicsBodyCtrl.addFixture(def, actor);
 			fixtures.add(newFixture);
+			
+			if(disposeShapesAutomatically)
+			{
+				def.shape.dispose();
+				def.shape = null;
+			}
 		});
 	}
 		
@@ -131,5 +138,10 @@ public class FixtureController extends ControllerAdapter
 	public String getCollisionCategory()
 	{
 		return category;
+	}
+	
+	public void setDisposeShapesAutomatically(boolean dispose)
+	{
+		disposeShapesAutomatically = dispose;
 	}
 }
