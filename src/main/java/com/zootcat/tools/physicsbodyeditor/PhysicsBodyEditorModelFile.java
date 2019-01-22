@@ -9,7 +9,7 @@ import com.zootcat.tools.physicsbodyeditor.PhysicsBodyEditorModel.PolygonModel;
 import com.zootcat.tools.physicsbodyeditor.PhysicsBodyEditorModel.RigidBodyModel;
 
 /**
- * Based on Physics Body Editor loader by Rasmus Praestholm (Cervator) <br/>
+ * Based on Physics Body Editor loader by Aurelien Ribon<br/>
  * @see <a href="https://github.com/MovingBlocks/box2d-editor/blob/develop/loader-libgdx/src/aurelienribon/bodyeditor/BodyEditorLoader.java">GitHub Link</a>
  * @author Aurelien Ribon | http://www.aurelienribon.com
  * @author Cream
