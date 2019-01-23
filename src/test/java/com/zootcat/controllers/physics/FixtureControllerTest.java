@@ -30,6 +30,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.physics.ZootBodyShape;
+import com.zootcat.physics.ZootFixtureDefBuilder.FixtureDimensions;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.testing.ZootActorStub;
@@ -220,7 +221,7 @@ public class FixtureControllerTest
 	}
 	
 	@Test
-	public void shouldCreateBoxShapeFixtureUsingWidthAndHeightPropertiesScaled()
+	public void shouldCreateBoxShapeFixtureUsingWidthAndHeightPropertiesScaledBySceneScale()
 	{
 		//given
 		final float expectedWidth = 256.0f;
@@ -229,6 +230,7 @@ public class FixtureControllerTest
 		Vector2 vertex2 = new Vector2();
 		Vector2 vertex3 = new Vector2();
 		Vector2 vertex4 = new Vector2();
+		ControllerAnnotations.setControllerParameter(ctrl, "dimensions", FixtureDimensions.Provided);
 		ControllerAnnotations.setControllerParameter(ctrl, "shape", ZootBodyShape.BOX);
 		ControllerAnnotations.setControllerParameter(ctrl, "width", expectedWidth);
 		ControllerAnnotations.setControllerParameter(ctrl, "height", expectedHeight);
@@ -281,6 +283,7 @@ public class FixtureControllerTest
 	{
 		//given
 		final float widthParam = 256.0f;
+		ControllerAnnotations.setControllerParameter(ctrl, "dimensions", FixtureDimensions.Provided);
 		ControllerAnnotations.setControllerParameter(ctrl, "shape", ZootBodyShape.CIRCLE);
 		ControllerAnnotations.setControllerParameter(ctrl, "width", widthParam);
 		

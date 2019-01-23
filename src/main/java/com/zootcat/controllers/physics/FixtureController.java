@@ -9,6 +9,7 @@ import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.physics.ZootBodyShape;
 import com.zootcat.physics.ZootFixtureDefBuilder;
+import com.zootcat.physics.ZootFixtureDefBuilder.FixtureDimensions;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.utils.CollisionMask;
@@ -38,6 +39,7 @@ public class FixtureController extends ControllerAdapter
 	@CtrlParam protected float offsetY = 0.0f;
 	@CtrlParam protected float width = 0.0f;
 	@CtrlParam protected float height = 0.0f;
+	@CtrlParam protected FixtureDimensions dimensions = FixtureDimensions.Actor;
 	@CtrlParam protected boolean sensor = false;
 	@CtrlParam protected ZootBodyShape shape = ZootBodyShape.BOX;
 	@CtrlParam protected String category = "";
@@ -70,6 +72,7 @@ public class FixtureController extends ControllerAdapter
 				.setShape(shape)
 				.setCategory(category)
 				.setMask(mask)
+				.setDimensions(dimensions)
 				.build(actor);
 			
 		Array<FixtureDef> fixtureDefs = new Array<FixtureDef>(1);

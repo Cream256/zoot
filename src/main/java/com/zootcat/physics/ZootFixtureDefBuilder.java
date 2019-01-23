@@ -12,6 +12,8 @@ import com.zootcat.utils.CollisionMask;
 
 public class ZootFixtureDefBuilder
 {
+	public enum FixtureDimensions { Provided, Actor, ActorScaled };
+	
 	private float density = 1.0f;
 	private float friction = 0.2f;
 	private float restitution = 0.0f;
@@ -21,10 +23,11 @@ public class ZootFixtureDefBuilder
 	private float height = 0.0f;
 	private boolean sensor = false;
 	private ZootBodyShape shape = ZootBodyShape.BOX;
+	private FixtureDimensions dimensions = FixtureDimensions.Provided;
 	private String category = "";
 	private String mask = "";
-	private ZootScene scene;	
-	
+	private ZootScene scene;
+		
 	public ZootFixtureDefBuilder(ZootScene scene)
 	{
 		this.scene = scene;
@@ -57,6 +60,7 @@ public class ZootFixtureDefBuilder
 		shape = ZootBodyShape.BOX;
 		category = "";
 		mask = "";		
+		dimensions = FixtureDimensions.Provided;
 		return this;
 	}
 	
@@ -180,7 +184,18 @@ public class ZootFixtureDefBuilder
 	{
 		return mask;
 	}
-		
+	
+	public ZootFixtureDefBuilder setDimensions(FixtureDimensions value)
+	{
+		dimensions = value;
+		return this;
+	}
+	
+	public FixtureDimensions getFixtureDimensions()
+	{
+		return dimensions;
+	}
+			
 	protected Shape createShape(ZootActor actor, ZootBodyShape shape)
 	{		
 		switch(shape)
@@ -213,12 +228,30 @@ public class ZootFixtureDefBuilder
 	
 	private float getFixtureWidth(ZootActor actor)
 	{
-		return width == 0.0f ? actor.getWidth() : width * scene.getUnitScale();
+		switch(dimensions)
+		{
+		case Actor:
+			return actor.getWidth();
+		case ActorScaled:
+			return actor.getWidth() * width;		
+		case Provided:
+		default:		
+			return width * scene.getUnitScale(); 		
+		}
 	}
 	
 	private float getFixtureHeight(ZootActor actor)
 	{
-		return height == 0.0f ? actor.getHeight() : height * scene.getUnitScale();
+		switch(dimensions)
+		{
+		case Actor:
+			return actor.getHeight();
+		case ActorScaled:
+			return actor.getHeight() * height;		
+		case Provided:
+		default:		
+			return height * scene.getUnitScale(); 		
+		}
 	}
 		
 	private void setupFilter(Filter filter)
