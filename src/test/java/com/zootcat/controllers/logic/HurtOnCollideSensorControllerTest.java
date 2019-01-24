@@ -19,7 +19,7 @@ import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.testing.ZootActorStub;
 
-public class HurtOnCollideControllerTest
+public class HurtOnCollideSensorControllerTest
 {
 	private static final int DAMAGE = 122;
 	private static final int ATTACKER_DAMAGE = 211;
@@ -29,7 +29,7 @@ public class HurtOnCollideControllerTest
 	@Mock private DamageController damageCtrl;
 	
 	private ZootActor controllerActor;		
-	private HurtOnCollideController ctrl = new HurtOnCollideController();
+	private HurtOnCollideSensorController ctrl = new HurtOnCollideSensorController();
 	private ZootActorEventCounterListener eventCounter = new ZootActorEventCounterListener();
 		
 	@Before
@@ -38,7 +38,7 @@ public class HurtOnCollideControllerTest
 		MockitoAnnotations.initMocks(this);		
 		controllerActor = new ZootActorStub();
 		
-		ctrl = new HurtOnCollideController();
+		ctrl = new HurtOnCollideSensorController();
 		ctrl.init(controllerActor);
 	}
 			

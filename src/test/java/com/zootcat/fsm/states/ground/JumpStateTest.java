@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import com.badlogic.gdx.math.Vector2;
-import com.zootcat.controllers.logic.ClimbController;
+import com.zootcat.controllers.logic.ClimbSensorController;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.HurtState;
 import com.zootcat.fsm.states.StunState;
@@ -27,7 +27,7 @@ import com.zootcat.testing.ZootStateTestCase;
 public class JumpStateTest extends ZootStateTestCase
 {
 	private JumpState jumpState;
-	@Mock private ClimbController climbCtrlMock;
+	@Mock private ClimbSensorController climbCtrlMock;
 	
 	@Before
 	public void setup()

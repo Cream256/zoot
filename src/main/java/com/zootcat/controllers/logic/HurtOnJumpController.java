@@ -4,7 +4,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.zootcat.controllers.physics.DetectFallController;
 import com.zootcat.scene.ZootActor;
 
-public class HurtOnJumpController extends HurtOnCollideController
+public class HurtOnJumpController extends HurtOnCollideSensorController
 {
 	@Override
 	public boolean canHurt(Fixture otherFixture)

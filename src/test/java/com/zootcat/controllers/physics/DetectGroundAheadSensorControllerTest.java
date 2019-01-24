@@ -29,14 +29,14 @@ import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.testing.ZootActorStub;
 
-public class DetectGroundAheadControllerTest
+public class DetectGroundAheadSensorControllerTest
 {
 	private static final float SENSOR_WIDTH = 10.0f;
 	private static final float SENSOR_HEIGHT = 5.0f;
 	
 	private PolygonShape shape;
 	private ZootActor ctrlActor;	
-	private DetectGroundAheadController ctrl;
+	private DetectGroundAheadSensorController ctrl;
 	private ZootActorEventCounterListener eventCounter;
 			
 	@Mock private ZootScene scene;
@@ -70,7 +70,7 @@ public class DetectGroundAheadControllerTest
 		ctrlActor.addController(directionCtrl);
 		ctrlActor.addListener(eventCounter);
 		
-		ctrl = new DetectGroundAheadController();
+		ctrl = new DetectGroundAheadSensorController();
 		ControllerAnnotations.setControllerParameter(ctrl, "scene", scene);
 	}
 	

@@ -13,7 +13,7 @@ import com.zootcat.fsm.events.ZootEvents;
  * @author Cream
  *
  */
-public class AttackOnCollideController extends OnCollideWithSensorController
+public class AttackOnCollideSensorController extends OnCollideWithSensorController
 {
 	@Override
 	public void onEnterCollision(Fixture fixture)

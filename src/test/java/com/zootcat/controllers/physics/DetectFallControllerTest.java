@@ -27,7 +27,7 @@ public class DetectFallControllerTest
 	private ZootActorEventCounterListener eventCounter;
 	private DetectFallController ctrl;
 	@Mock private Body bodyMock;
-	@Mock private DetectGroundController groundCtrlMock;
+	@Mock private DetectGroundSensorController groundCtrlMock;
 	@Mock private PhysicsBodyController physicsCtrlMock;
 	
 	@Before

@@ -20,7 +20,7 @@ import com.zootcat.scene.ZootActor;
  * @author Cream
  * @see OnCollideController
  */
-public class KnockbackOnTouchController extends OnCollideWithSensorController
+public class KnockbackOnTouchSensorController extends OnCollideWithSensorController
 {
 	@CtrlParam private float knockbackX = 1.0f;
 	@CtrlParam private float knockbackY = 1.0f;

@@ -11,16 +11,16 @@ import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 
-public class DieOnCollideControllerTest
+public class DieOnCollideSensorControllerTest
 {
 	private static final float TIME = 5.0f;
 		
-	private DieOnCollideController ctrl;
+	private DieOnCollideSensorController ctrl;
 		
 	@Before
 	public void setup()
 	{
-		ctrl = new DieOnCollideController();
+		ctrl = new DieOnCollideSensorController();
 	}
 				
 	@Test

@@ -7,7 +7,7 @@ import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 
-public class DetectObstacleController extends OnCollideWithSensorController
+public class DetectObstacleSensorController extends OnCollideWithSensorController
 {
 	private ZootDirection direction = ZootDirection.None;
 		

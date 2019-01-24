@@ -13,7 +13,7 @@ import com.zootcat.scene.ZootActor;
  * @author Cream
  *
  */
-public class DieOnCollideController extends OnCollideWithSensorController
+public class DieOnCollideSensorController extends OnCollideWithSensorController
 {	
 	@CtrlParam private float delay = 0.0f;
 	

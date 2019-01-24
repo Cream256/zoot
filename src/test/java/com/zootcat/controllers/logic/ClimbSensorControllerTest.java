@@ -30,7 +30,7 @@ import com.zootcat.scene.ZootScene;
 import com.zootcat.testing.ZootActorStub;
 import com.zootcat.utils.BitMaskConverter;
 
-public class ClimbControllerTest 
+public class ClimbSensorControllerTest 
 {
 	private static final float CTRL_ACTOR_WIDTH = 100.0f;
 	private static final float CTRL_ACTOR_HEIGHT = 50.0f;
@@ -45,7 +45,7 @@ public class ClimbControllerTest
 	@Mock private ContactImpulse contactImpulse;
 	@Mock private ClimbPropertiesController climbPropCtrl;
 		
-	private ClimbController ctrl;
+	private ClimbSensorController ctrl;
 	private ZootActor ctrlActor;
 	private ZootActor otherActor;
 	private ZootPhysics physics;
@@ -80,7 +80,7 @@ public class ClimbControllerTest
 		ctrlActor.addController(physicsCtrl);
 				
 		//tested controller
-		ctrl = new ClimbController();
+		ctrl = new ClimbSensorController();
 		ControllerAnnotations.setControllerParameter(ctrl, "scene", scene);
 		ControllerAnnotations.setControllerParameter(ctrl, "timeout", CLIMB_TIMEOUT);
 		ControllerAnnotations.setControllerParameter(ctrl, "treshold", TRESHOLD);

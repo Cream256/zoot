@@ -12,7 +12,7 @@ public class DetectFallController extends ControllerAdapter
 	@CtrlDebug private boolean falling;
 	@CtrlParam private float threshold = -0.5f;
 	
-	private DetectGroundController groundCtrl;	
+	private DetectGroundSensorController groundCtrl;	
 		
 	@Override
 	public void init(ZootActor actor)
@@ -23,7 +23,7 @@ public class DetectFallController extends ControllerAdapter
 	@Override
 	public void onAdd(ZootActor actor)
 	{
-		groundCtrl = actor.tryGetSingleController(DetectGroundController.class);
+		groundCtrl = actor.tryGetSingleController(DetectGroundSensorController.class);
 	}
 
 	@Override

@@ -21,7 +21,7 @@ import com.zootcat.scene.ZootActor;
  * @author Cream
  * @see OnCollideController
  */
-public class HurtOnCollideController extends OnCollideWithSensorController
+public class HurtOnCollideSensorController extends OnCollideWithSensorController
 {
 	@CtrlParam protected int damage = 1;
 	@CtrlParam protected boolean hurtOwner = false;

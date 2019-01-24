@@ -28,10 +28,11 @@ import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.physics.ZootPhysics;
+import com.zootcat.physics.ZootFixtureDefBuilder.FixtureDimensions;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
-public class DetectGroundControllerTest
+public class DetectGroundSensorControllerTest
 {		
 	private static final float ACTOR_WIDTH = 20.0f;
 	private static final float ACTOR_HEIGHT = 10.0f;
@@ -48,7 +49,7 @@ public class DetectGroundControllerTest
 	private PhysicsBodyController otherActorPhysicsCtrl;
 	private ZootPhysics physics;
 	private PhysicsBodyController physicsCtrl;
-	private DetectGroundController groundCtrl;
+	private DetectGroundSensorController groundCtrl;
 	private ZootActorEventCounterListener eventCounter;
 	
 	@Before
@@ -89,7 +90,7 @@ public class DetectGroundControllerTest
 		when(otherFixture.getFilterData()).thenReturn(new Filter());
 		
 		//create ground detector controller
-		groundCtrl = new DetectGroundController();
+		groundCtrl = new DetectGroundSensorController();
 		ControllerAnnotations.setControllerParameter(groundCtrl, "scene", scene);	
 	}
 	
@@ -149,7 +150,6 @@ public class DetectGroundControllerTest
 		final float customHeight = 256.0f;
 		ControllerAnnotations.setControllerParameter(groundCtrl, "sensorWidth", customWidth);
 		ControllerAnnotations.setControllerParameter(groundCtrl, "sensorHeight", customHeight);
-		ControllerAnnotations.setControllerParameter(groundCtrl, "useActorSize", false);
 		
 		//when
 		groundCtrl.init(ctrlActor);
@@ -171,7 +171,7 @@ public class DetectGroundControllerTest
 	public void shouldUseActorSizeWhenCreatingSensor()
 	{
 		//given
-		ControllerAnnotations.setControllerParameter(groundCtrl, "useActorSize", true);
+		ControllerAnnotations.setControllerParameter(groundCtrl, "dimensions", FixtureDimensions.Actor);
 		
 		//when
 		groundCtrl.init(ctrlActor);
@@ -187,15 +187,14 @@ public class DetectGroundControllerTest
 		fixtureShape.getVertex(1, vertex2);
 		fixtureShape.getVertex(2, vertex3);
 		assertEquals("Sensor should have actor width", ACTOR_WIDTH, Math.abs(vertex1.x - vertex2.x), 0.0f);
-		assertEquals("Sensor should have 10% of actor height", ACTOR_HEIGHT * DetectGroundController.SENSOR_HEIGHT_PERCENT, 
-					Math.abs(vertex1.y - vertex3.y), 0.0f);
+		assertEquals("Sensor should have actor height", ACTOR_HEIGHT, Math.abs(vertex1.y - vertex3.y), 0.0f);
 	}
 	
 	@Test
 	public void shouldSetSensorToProperPosition()
 	{
 		//given
-		ControllerAnnotations.setControllerParameter(groundCtrl, "useActorSize", true);
+		ControllerAnnotations.setControllerParameter(groundCtrl, "dimensions", FixtureDimensions.Actor);
 		
 		//when
 		groundCtrl.init(ctrlActor);

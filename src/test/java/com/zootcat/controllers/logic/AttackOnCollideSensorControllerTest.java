@@ -13,16 +13,16 @@ import com.zootcat.controllers.physics.OnCollideWithSensorController.SensorColli
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
 
-public class AttackOnCollideControllerTest
+public class AttackOnCollideSensorControllerTest
 {
 	private ZootActor ctrlActor;
-	private AttackOnCollideController ctrl;
+	private AttackOnCollideSensorController ctrl;
 			
 	@Before
 	public void setup()
 	{
 		ctrlActor = new ZootActor();		
-		ctrl = new AttackOnCollideController();
+		ctrl = new AttackOnCollideSensorController();
 		ctrl.init(ctrlActor);
 	}
 	

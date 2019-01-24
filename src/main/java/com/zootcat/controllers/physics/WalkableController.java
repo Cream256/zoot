@@ -39,7 +39,7 @@ public class WalkableController extends ControllerAdapter
 	@CtrlDebug private int timeout = 0;
 	
 	private PhysicsBodyController physicsCtrl;
-	private DetectGroundController groundCtrl;
+	private DetectGroundSensorController groundCtrl;
 	
 	@Override
 	public boolean isSingleton()
@@ -54,8 +54,8 @@ public class WalkableController extends ControllerAdapter
 		physicsCtrl = actor.getSingleController(PhysicsBodyController.class);
 		if(physicsCtrl == null) throw new ZootControllerNotFoundException(PhysicsBodyController.class.getSimpleName(), actor.getName());
 		
-		groundCtrl = actor.getSingleController(DetectGroundController.class);
-		if(groundCtrl == null) throw new ZootControllerNotFoundException(DetectGroundController.class.getSimpleName(), actor.getName());
+		groundCtrl = actor.getSingleController(DetectGroundSensorController.class);
+		if(groundCtrl == null) throw new ZootControllerNotFoundException(DetectGroundSensorController.class.getSimpleName(), actor.getName());
 	}
 
 	@Override

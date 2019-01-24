@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import com.zootcat.controllers.ControllerAdapter;
-import com.zootcat.controllers.logic.HurtOnCollideController;
+import com.zootcat.controllers.logic.HurtOnCollideSensorController;
 import com.zootcat.controllers.logic.HurtOnJumpController;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.controllers.recognizers.ZootClassControllerRecognizer;
@@ -27,13 +27,13 @@ public class ZootClassControllerRecognizerTest
 	@Test
 	public void shouldReturnFalseWhenComparingToBaseClass()
 	{
-		ZootClassControllerRecognizer.Instance.isControllerExact(new HurtOnJumpController(), HurtOnCollideController.class);
+		ZootClassControllerRecognizer.Instance.isControllerExact(new HurtOnJumpController(), HurtOnCollideSensorController.class);
 	}
 	
 	@Test
 	public void shouldReturnFalseWhenComparingToDerivedClass()
 	{
-		ZootClassControllerRecognizer.Instance.isControllerExact(new HurtOnCollideController(), HurtOnJumpController.class);
+		ZootClassControllerRecognizer.Instance.isControllerExact(new HurtOnCollideSensorController(), HurtOnJumpController.class);
 	}
 	
 	@Test

@@ -29,7 +29,7 @@ import com.zootcat.scene.ZootDirection;
  * @ctrlParam treshold - how close to the platform top actor must be in order to climb, in pixels
  * @author Cream
  */
-public class ClimbController extends OnCollideWithSensorController
+public class ClimbSensorController extends OnCollideWithSensorController
 {		
 	@CtrlParam protected float timeout = 1.0f;
 	@CtrlParam protected float maxVelocity = 1.0f;

@@ -3,7 +3,7 @@ package com.zootcat.fsm.states.ground;
 import java.util.Arrays;
 import java.util.List;
 
-import com.zootcat.controllers.logic.ClimbController;
+import com.zootcat.controllers.logic.ClimbSensorController;
 import com.zootcat.controllers.logic.DirectionController;
 import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.ZootState;
@@ -61,7 +61,7 @@ public class FallState extends BasicState
 			ZootDirection dir = ZootStateUtils.getDirectionFromEvent(event);
 			event.getTargetZootActor().controllersAction(WalkableController.class, ctrl -> ctrl.moveInAir(dir));
 			event.getTargetZootActor().controllersAction(DirectionController.class, ctrl -> ctrl.setDirection(dir));
-			event.getTargetZootActor().controllersAction(ClimbController.class, ctrl -> ctrl.setSensorPosition(dir));
+			event.getTargetZootActor().controllersAction(ClimbSensorController.class, ctrl -> ctrl.setSensorPosition(dir));
 		}
 		else if(event.getType() == ZootEventType.Hurt && ZootStateUtils.canHurtActor(event))
 		{

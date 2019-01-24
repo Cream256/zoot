@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.zootcat.controllers.logic.ClimbController;
+import com.zootcat.controllers.logic.ClimbSensorController;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.fsm.states.HurtState;
@@ -22,7 +22,7 @@ public class ClimbStateTest extends ZootStateTestCase
 {
 	private ClimbState climbState;
 	@Mock private ZootAnimation animationMock;
-	@Mock private ClimbController climbCtrlMock;
+	@Mock private ClimbSensorController climbCtrlMock;
 	
 	@Before
 	public void setup()

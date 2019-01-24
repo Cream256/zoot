@@ -34,7 +34,7 @@ public class WalkableControllerTest
 		
 	private ZootActor actor;
 	@Mock private PhysicsBodyController physicsCtrl;
-	@Mock private DetectGroundController groundCtrl;
+	@Mock private DetectGroundSensorController groundCtrl;
 	private WalkableController ctrl;
 	
 	@Before

@@ -23,7 +23,7 @@ import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.testing.ZootActorStub;
 
-public class DetectObstacleControllerTest
+public class DetectObstacleSensorControllerTest
 {
 	private static final float ACTOR_WIDTH = 50.0f;
 	private static final float ACTOR_HEIGHT = 50.0f;
@@ -38,7 +38,7 @@ public class DetectObstacleControllerTest
 	private ZootActor controllerActor;
 	private PhysicsBodyController physicsBodyCtrl;
 	private ZootActorEventCounterListener eventListener;
-	private DetectObstacleController detectObstacleCtrl;
+	private DetectObstacleSensorController detectObstacleCtrl;
 			
 	@Before
 	public void setup()
@@ -65,7 +65,7 @@ public class DetectObstacleControllerTest
 		controllerActor.addController(dirCtrl);		
 		
 		//create controller
-		detectObstacleCtrl = new DetectObstacleController();
+		detectObstacleCtrl = new DetectObstacleSensorController();
 		ControllerAnnotations.setControllerParameter(detectObstacleCtrl, "scene", scene);
 		detectObstacleCtrl.init(controllerActor);
 		detectObstacleCtrl.onAdd(controllerActor);

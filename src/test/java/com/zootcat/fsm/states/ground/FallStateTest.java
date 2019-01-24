@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.zootcat.controllers.logic.ClimbController;
+import com.zootcat.controllers.logic.ClimbSensorController;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.HurtState;
 import com.zootcat.fsm.states.ground.ClimbState;
@@ -22,7 +22,7 @@ public class FallStateTest extends ZootStateTestCase
 	private static final float JUMP_TIMEOUT = 1.0f;
 	
 	private FallState fallState;
-	@Mock private ClimbController climbCtrlMock;
+	@Mock private ClimbSensorController climbCtrlMock;
 	
 	@Before
 	public void setup()

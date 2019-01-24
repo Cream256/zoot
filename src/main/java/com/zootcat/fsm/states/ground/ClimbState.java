@@ -1,7 +1,7 @@
 package com.zootcat.fsm.states.ground;
 
 import com.zootcat.controllers.gfx.AnimatedSpriteController;
-import com.zootcat.controllers.logic.ClimbController;
+import com.zootcat.controllers.logic.ClimbSensorController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.states.BasicState;
@@ -29,13 +29,13 @@ public class ClimbState extends BasicState
 			String usedAnimation = event.getType() == ZootEventType.GrabSide ? CLIMB_SIDE_ANIMATION : CLIMB_ANIMATION; 			
 			ctrl.setAnimation(usedAnimation);
 		});
-		actor.controllersAction(ClimbController.class, ctrl -> ctrl.grab());
+		actor.controllersAction(ClimbSensorController.class, ctrl -> ctrl.grab());
 	}
 		
 	@Override	
 	public void onLeave(ZootActor actor, ZootEvent event)
 	{
-		actor.controllersAction(ClimbController.class, ctrl -> ctrl.letGo());
+		actor.controllersAction(ClimbSensorController.class, ctrl -> ctrl.letGo());
 	}
 	
 	@Override
@@ -51,7 +51,7 @@ public class ClimbState extends BasicState
 		
 		if(event.getType() == ZootEventType.Up)
 		{
-			actor.controllersAction(ClimbController.class, ctrl -> 
+			actor.controllersAction(ClimbSensorController.class, ctrl -> 
 			{
 				if(ctrl.climb()) 
 					changeState(event, IdleState.ID);
@@ -61,7 +61,7 @@ public class ClimbState extends BasicState
 		
 		if(event.getType() == ZootEventType.Down)
 		{			
-			actor.controllersAction(ClimbController.class, ctrl -> ctrl.letGo());			
+			actor.controllersAction(ClimbSensorController.class, ctrl -> ctrl.letGo());			
 			changeState(event, FallState.ID);
 			return true;
 		}

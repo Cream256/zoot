@@ -17,14 +17,14 @@ import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.logic.LifeController;
 import com.zootcat.scene.ZootActor;
 
-public class KnockbackOnTouchControllerTest
+public class KnockbackOnTouchSensorControllerTest
 {
 	@Mock private ZootActor ctrlActor;
 	@Mock private PhysicsBodyController otherActorPhysicsBodyCtrl;
 	@Mock private PhysicsBodyController ctrlActorPhysicsBodyCtrl;
 	
 	private ZootActor otherActor;	
-	private KnockbackOnTouchController ctrl;
+	private KnockbackOnTouchSensorController ctrl;
 	
 	@Before
 	public void setup()
@@ -36,7 +36,7 @@ public class KnockbackOnTouchControllerTest
 		
 		when(ctrlActor.getSingleController(PhysicsBodyController.class)).thenReturn(ctrlActorPhysicsBodyCtrl);
 				
-		ctrl = new KnockbackOnTouchController();
+		ctrl = new KnockbackOnTouchSensorController();
 		ctrl.init(ctrlActor);
 	}
 	

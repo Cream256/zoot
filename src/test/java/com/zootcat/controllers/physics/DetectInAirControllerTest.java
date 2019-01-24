@@ -22,7 +22,7 @@ import com.zootcat.testing.ZootActorStub;
 public class DetectInAirControllerTest
 {
 	@Mock private ZootActor actor;
-	@Mock private DetectGroundController groundCtrl;	
+	@Mock private DetectGroundSensorController groundCtrl;	
 	private DetectInAirController ctrl;
 		
 	@Before
@@ -48,7 +48,7 @@ public class DetectInAirControllerTest
 	@Test
 	public void shouldNotThrowIfGroundControllerWasAssignedToActor()
 	{
-		when(actor.getSingleController(DetectGroundController.class)).thenReturn(groundCtrl);
+		when(actor.getSingleController(DetectGroundSensorController.class)).thenReturn(groundCtrl);
 		ctrl.onAdd(actor);
 		//ok
 	}

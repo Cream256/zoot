@@ -17,7 +17,7 @@ import com.zootcat.scene.ZootDirection;
  * 
  * @author Cream
  */
-public class DetectGroundAheadController extends OnCollideWithSensorController
+public class DetectGroundAheadSensorController extends OnCollideWithSensorController
 {
 	public static final float SENSOR_HEIGHT_PERCENT = 0.2f;
 	

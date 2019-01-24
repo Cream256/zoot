@@ -10,7 +10,7 @@ import com.zootcat.scene.ZootActor;
 public class DetectInAirController extends ControllerAdapter
 {
 	@CtrlDebug private boolean inAir;	
-	private DetectGroundController groundCtrl;	
+	private DetectGroundSensorController groundCtrl;	
 		
 	@Override
 	public void init(ZootActor actor)
@@ -21,8 +21,8 @@ public class DetectInAirController extends ControllerAdapter
 	@Override
 	public void onAdd(ZootActor actor)
 	{
-		groundCtrl = actor.getSingleController(DetectGroundController.class);
-		if(groundCtrl == null) throw new ZootControllerNotFoundException(DetectGroundController.class.getSimpleName(), actor.getName());
+		groundCtrl = actor.getSingleController(DetectGroundSensorController.class);
+		if(groundCtrl == null) throw new ZootControllerNotFoundException(DetectGroundSensorController.class.getSimpleName(), actor.getName());
 	}
 
 	@Override

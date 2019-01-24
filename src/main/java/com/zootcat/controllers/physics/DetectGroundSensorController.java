@@ -16,10 +16,8 @@ import com.zootcat.scene.ZootActor;
  * @author Cream
  *
  */
-public class DetectGroundController extends OnCollideWithSensorController	 
-{
-	public static final float SENSOR_HEIGHT_PERCENT = 0.2f;
-		
+public class DetectGroundSensorController extends OnCollideWithSensorController	 
+{		
 	@CtrlDebug private boolean isOnGround = false;
 			
 	@Override
