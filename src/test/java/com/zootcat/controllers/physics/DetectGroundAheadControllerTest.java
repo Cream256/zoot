@@ -23,6 +23,7 @@ import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.controllers.logic.DirectionController;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.fsm.events.ZootEventType;
+import com.zootcat.physics.ZootFixtureDefBuilder.FixtureDimensions;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
@@ -30,8 +31,6 @@ import com.zootcat.testing.ZootActorStub;
 
 public class DetectGroundAheadControllerTest
 {
-	private static final float ACTOR_WIDTH = 20.0f;
-	private static final float ACTOR_HEIGHT = 10.0f;
 	private static final float SENSOR_WIDTH = 10.0f;
 	private static final float SENSOR_HEIGHT = 5.0f;
 	
@@ -82,7 +81,7 @@ public class DetectGroundAheadControllerTest
 		final float actorWidth = 10.0f;
 		
 		//when
-		ctrlActor.setWidth(actorWidth);
+		ctrlActor.setSize(actorWidth, 1.0f);
 		when(directionCtrl.getDirection()).thenReturn(ZootDirection.Right);
 				
 		ctrl.init(ctrlActor);
@@ -130,28 +129,12 @@ public class DetectGroundAheadControllerTest
 		assertEquals(1, eventCounter.getCount());
 		assertEquals(ZootEventType.NoGroundAhead, eventCounter.getLastZootEvent().getType());
 	}
-	
-	@Test
-	public void shouldUseActorSizeWhenCreatingSensor()
-	{
-		//given
-		ControllerAnnotations.setControllerParameter(ctrl, "useActorSize", true);
 		
-		//when
-		ctrlActor.setSize(ACTOR_WIDTH, ACTOR_HEIGHT);		
-		ctrl.init(ctrlActor);
-		ctrl.onAdd(ctrlActor);
-		
-		//then
-		assertEquals("Should use actor width", ACTOR_WIDTH, ctrl.sensorWidth, 0.0f);
-		assertEquals("Should use actor height", ACTOR_HEIGHT * DetectGroundAheadController.SENSOR_HEIGHT_PERCENT, ctrl.sensorHeight, 0.0f);
-	}
-	
 	@Test
 	public void shouldUseProvidedSizeWhenCreatingSensor()
 	{
 		//given
-		ControllerAnnotations.setControllerParameter(ctrl, "useActorSize", false);
+		ControllerAnnotations.setControllerParameter(ctrl, "dimensions", FixtureDimensions.Provided);
 		ControllerAnnotations.setControllerParameter(ctrl, "sensorWidth", SENSOR_WIDTH);
 		ControllerAnnotations.setControllerParameter(ctrl, "sensorHeight", SENSOR_HEIGHT);
 				
@@ -173,6 +156,8 @@ public class DetectGroundAheadControllerTest
 		Fixture otherActorFixture = mock(Fixture.class);
 				
 		//when
+		when(otherActor.getWidth()).thenReturn(1.0f);
+		when(otherActor.getHeight()).thenReturn(1.0f);
 		when(contact.getFixtureA()).thenReturn(fixture);
 		when(contact.getFixtureB()).thenReturn(otherActorFixture);
 		when(otherActorFixture.isSensor()).thenReturn(true);

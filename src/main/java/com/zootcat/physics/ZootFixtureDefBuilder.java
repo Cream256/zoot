@@ -14,18 +14,18 @@ public class ZootFixtureDefBuilder
 {
 	public enum FixtureDimensions { Provided, Actor, ActorScaled };
 	
-	private float density = 1.0f;
-	private float friction = 0.2f;
-	private float restitution = 0.0f;
-	private float offsetX = 0.0f;
-	private float offsetY = 0.0f;
-	private float width = 0.0f;
-	private float height = 0.0f;
-	private boolean sensor = false;
-	private ZootBodyShape shape = ZootBodyShape.BOX;
-	private FixtureDimensions dimensions = FixtureDimensions.Provided;
-	private String category = "";
-	private String mask = "";
+	private float density;
+	private float friction;
+	private float restitution;
+	private float offsetX;
+	private float offsetY;
+	private float width;
+	private float height;
+	private boolean sensor;
+	private ZootBodyShape shape;
+	private FixtureDimensions dimensions;
+	private String category;
+	private String mask;
 	private ZootScene scene;
 		
 	public ZootFixtureDefBuilder(ZootScene scene)
@@ -36,6 +36,7 @@ public class ZootFixtureDefBuilder
 	
 	public FixtureDef build(ZootActor actor) 
 	{
+		validate(actor);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.density = density;
 		fixtureDef.friction = friction;
@@ -47,6 +48,21 @@ public class ZootFixtureDefBuilder
 		return fixtureDef;
 	}
 	
+	private void validate(ZootActor actor)
+	{
+		if(shape == ZootBodyShape.NONE) return;
+		if(shape == ZootBodyShape.UNKNOWN) throw new RuntimeZootException("Cannot create unknown shape for " + actor.getName());
+		
+		float providedArea = width * height;
+		if(dimensions == FixtureDimensions.Provided && providedArea <= 0.0f) throw new RuntimeZootException("Provided fixture area for " + actor.getName() + " must be > 0");
+				
+		float actorArea = actor.getWidth() * actor.getHeight();
+		if(dimensions == FixtureDimensions.Actor && actorArea <= 0.0f) throw new RuntimeZootException("Actor area for " + actor.getName() + " must be > 0");
+		
+		float scaledActorArea = (actor.getWidth() * width) * (actor.getHeight() * height);
+		if(dimensions == FixtureDimensions.ActorScaled && scaledActorArea <= 0.0f) throw new RuntimeZootException("Scaled actor area for " + actor.getName() + " must be > 0");
+	}
+	
 	public ZootFixtureDefBuilder reset()
 	{
 		density = 1.0f;
@@ -54,8 +70,8 @@ public class ZootFixtureDefBuilder
 		restitution = 0.0f;
 		offsetX = 0.0f;
 		offsetY = 0.0f;
-		width = 0.0f;
-		height = 0.0f;
+		width = 1.0f;
+		height = 1.0f;
 		sensor = false;
 		shape = ZootBodyShape.BOX;
 		category = "";
@@ -204,8 +220,8 @@ public class ZootFixtureDefBuilder
 			return ZootShapeFactory.createBox(
 					getFixtureWidth(actor), 
 					getFixtureHeight(actor), 
-					offsetX * scene.getUnitScale(), 
-					offsetY * scene.getUnitScale());
+					getFixtureX(actor),
+					getFixtureY(actor));
 			
 		case CIRCLE:
 			return ZootShapeFactory.createCircle(getFixtureWidth(actor));
@@ -252,6 +268,28 @@ public class ZootFixtureDefBuilder
 		default:		
 			return height * scene.getUnitScale(); 		
 		}
+	}
+	
+	private float getFixtureX(ZootActor actor)
+	{
+		switch(dimensions)
+		{
+		case ActorScaled:
+			return actor.getWidth() * offsetX;			
+		default:
+			return offsetX * scene.getUnitScale();			
+		}		
+	}
+	
+	private float getFixtureY(ZootActor actor)
+	{
+		switch(dimensions)
+		{
+		case ActorScaled:
+			return actor.getHeight() * offsetY;			
+		default:
+			return offsetY * scene.getUnitScale();			
+		}	
 	}
 		
 	private void setupFilter(Filter filter)

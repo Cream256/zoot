@@ -135,29 +135,28 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 			return;
 		}
 		
-		TextureRegion frame = currentAnimation.getKeyFrame();		
-		sprite.setTexture(frame.getTexture());
-		sprite.setRegion(frame);
+		TextureRegion currentFrame = currentAnimation.getKeyFrame();		
+		sprite.setTexture(currentFrame.getTexture());
+		sprite.setRegion(currentFrame);
 		sprite.setColor(actor.getColor());
-		//sprite.setAlpha(actor.getOpacity());
 		
 		ZootAnimationOffset offset = currentAnimation.getKeyFrameOffset();		
 		boolean leftOffset = actor.controllersAllMatch(DirectionController.class, c -> c.getDirection() == ZootDirection.Left);			
 		Vector2 directionOffset = leftOffset ? offset.left : offset.right;
-				
+						
+		ZootDirection direction = getDirection(actor);		
+		sprite.setFlip(direction == ZootDirection.Left, false);
+		
 		float sceneUnitScale = scene.getUnitScale();
 		float x = actor.getX() + directionOffset.x * sceneUnitScale + getOffsetX();
 		float y = actor.getY() + directionOffset.y * sceneUnitScale + getOffsetY();
 		
-		ZootDirection direction = getDirection(actor);		
-		sprite.setFlip(direction == ZootDirection.Left, false);
-				
 		if(useActorSize)
 		{
 			if(keepAspectRatio)
 			{
-				float frameScaleX = currentAnimation.getKeyFrame().getRegionWidth() / firstAnimationWidth;
-				float frameScaleY = currentAnimation.getKeyFrame().getRegionHeight() / firstAnimationHeight;								
+				float frameScaleX = currentFrame.getRegionWidth() / firstAnimationWidth;
+				float frameScaleY = currentFrame.getRegionHeight() / firstAnimationHeight;								
 				float frameWidth = actor.getWidth() * frameScaleX;
 				float frameHeight = actor.getHeight() * frameScaleY;				
 				sprite.setBounds(x, y, frameWidth, frameHeight);
@@ -169,7 +168,7 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 		}
 		else
 		{
-			sprite.setBounds(x, y, frame.getRegionWidth() * sceneUnitScale, frame.getRegionHeight() * sceneUnitScale);
+			sprite.setBounds(x, y, currentFrame.getRegionWidth() * sceneUnitScale, currentFrame.getRegionHeight() * sceneUnitScale);
 		}
 		
 		sprite.setOriginCenter();

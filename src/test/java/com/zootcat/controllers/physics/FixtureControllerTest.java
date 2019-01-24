@@ -65,6 +65,7 @@ public class FixtureControllerTest
 		
 		actor = new ZootActorStub();
 		actor.addController(physicsBodyCtrl);
+		actor.setSize(1.0f, 1.0f);
 				
 		ctrl = new FixtureController();
 		ControllerAnnotations.setControllerParameter(ctrl, "scene", scene);
@@ -286,6 +287,7 @@ public class FixtureControllerTest
 		ControllerAnnotations.setControllerParameter(ctrl, "dimensions", FixtureDimensions.Provided);
 		ControllerAnnotations.setControllerParameter(ctrl, "shape", ZootBodyShape.CIRCLE);
 		ControllerAnnotations.setControllerParameter(ctrl, "width", widthParam);
+		ControllerAnnotations.setControllerParameter(ctrl, "height", 1.0f);
 		
 		//when
 		actor.setSize(ACTOR_WIDTH, ACTOR_HEIGHT);

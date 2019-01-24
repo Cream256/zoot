@@ -6,7 +6,9 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -15,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
+import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.physics.ZootFixtureDefBuilder.FixtureDimensions;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
@@ -23,6 +26,7 @@ import com.zootcat.utils.BitMaskConverter;
 public class ZootFixtureDefBuilderTest
 {
 	@Mock private ZootScene scene;
+	@Rule public ExpectedException expectedEx = ExpectedException.none();
 	private ZootActor actor;
 	private ZootFixtureDefBuilder builder;
 	
@@ -41,24 +45,14 @@ public class ZootFixtureDefBuilderTest
 		when(scene.getUnitScale()).thenReturn(1.0f);
 		
 		actor = new ZootActor();
+		actor.setSize(1.0f, 1.0f);
 		builder = new ZootFixtureDefBuilder(scene);		
 	}
 	
 	@Test
 	public void shouldBeCreatedWithDefaultValues()
 	{
-		assertEquals(1.0f, builder.getDensity(), 0.0f);
-		assertEquals(0.2f, builder.getFriction(), 0.0f);
-		assertEquals(0.0f, builder.getRestitution(), 0.0f);
-		assertEquals(0.0f, builder.getWidth(), 0.0f);
-		assertEquals(0.0f, builder.getHeight(), 0.0f);
-		assertEquals(0.0f, builder.getOffsetX(), 0.0f);
-		assertEquals(0.0f, builder.getOffsetY(), 0.0f);
-		assertEquals(false, builder.getSensor());
-		assertEquals(ZootBodyShape.BOX, builder.getShape());		
-		assertEquals("", builder.getCategory());
-		assertEquals("", builder.getMask());
-		assertEquals(FixtureDimensions.Provided, builder.getFixtureDimensions());
+		assertDefaultBuilderParams();
 	}
 	
 	@Test
@@ -178,13 +172,17 @@ public class ZootFixtureDefBuilderTest
 	{
 		builder.setDensity(0.5f).setFriction(2.0f).setRestitution(3.0f).setWidth(4.0f).setHeight(5.0f)
 			   .setOffsetX(6.0f).setOffsetY(7.0f).setSensor(true).setCategory("ABC").setMask("QWE").setShape(ZootBodyShape.CIRCLE)
-			   .setDimensions(FixtureDimensions.ActorScaled).build(actor);
-		
+			   .setDimensions(FixtureDimensions.Actor).build(actor);
+		assertDefaultBuilderParams();		
+	}
+	
+	private void assertDefaultBuilderParams()
+	{
 		assertEquals(1.0f, builder.getDensity(), 0.0f);
 		assertEquals(0.2f, builder.getFriction(), 0.0f);
 		assertEquals(0.0f, builder.getRestitution(), 0.0f);
-		assertEquals(0.0f, builder.getWidth(), 0.0f);
-		assertEquals(0.0f, builder.getHeight(), 0.0f);
+		assertEquals(1.0f, builder.getWidth(), 0.0f);
+		assertEquals(1.0f, builder.getHeight(), 0.0f);
 		assertEquals(0.0f, builder.getOffsetX(), 0.0f);
 		assertEquals(0.0f, builder.getOffsetY(), 0.0f);
 		assertEquals(false, builder.getSensor());
@@ -269,8 +267,10 @@ public class ZootFixtureDefBuilderTest
 	public void shouldBuildBoxShapeFromScaledActorSize()
 	{
 		//given
+		final float actorX = 100.0f;
+		final float actorY = 200.0f;
 		final float actorWidth = 10.0f;
-		final float actorHeight = 20.0f;
+		final float actorHeight = 20.0f;		
 		final float scaleX = 0.5f;
 		final float scaleY = 2.0f;		
 		final float scaledActorWidth = actorWidth * scaleX;
@@ -278,8 +278,7 @@ public class ZootFixtureDefBuilderTest
 		Vector2 vertex = new Vector2();
 				
 		//when
-		actor.setWidth(actorWidth);
-		actor.setHeight(actorHeight);		
+		actor.setBounds(actorX, actorY, actorWidth, actorHeight);		
 		FixtureDef def = builder
 				.setWidth(scaleX)
 				.setHeight(scaleY)
@@ -315,5 +314,79 @@ public class ZootFixtureDefBuilderTest
 		
 		//then
 		assertEquals(null, def.shape);
+	}
+		
+	@Test
+	public void shouldThrowIfProvidedWidthIsInvalid()
+	{
+		expectedEx.expect(RuntimeZootException.class);
+		expectedEx.expectMessage("Provided fixture area for Unnamed Actor must be > 0");
+		
+		builder.setDimensions(FixtureDimensions.Provided).setWidth(0.0f).setHeight(1.0f).build(actor);		
+	}
+	
+	@Test
+	public void shouldThrowIfProvidedHeightIsInvalid()
+	{
+		expectedEx.expect(RuntimeZootException.class);
+		expectedEx.expectMessage("Provided fixture area for Unnamed Actor must be > 0");
+		
+		builder.setDimensions(FixtureDimensions.Provided).setWidth(1.0f).setHeight(0.0f).build(actor);		
+	}
+	
+	@Test
+	public void shouldThrowIfWidthAfterScaleIsLowerThanZero()
+	{
+		expectedEx.expect(RuntimeZootException.class);
+		expectedEx.expectMessage("Scaled actor area for Unnamed Actor must be > 0");
+		
+		builder.setDimensions(FixtureDimensions.ActorScaled).setWidth(0.0f).setHeight(1.0f).build(actor);
+	}
+	
+	@Test
+	public void shouldThrowIfHeightAfterScaleIsLowerThanZero()
+	{
+		expectedEx.expect(RuntimeZootException.class);
+		expectedEx.expectMessage("Scaled actor area for Unnamed Actor must be > 0");
+		
+		builder.setDimensions(FixtureDimensions.ActorScaled).setWidth(1.0f).setHeight(0.0f).build(actor);
+	}
+	
+	@Test
+	public void shouldThrowIfActorHeightIsZero()
+	{
+		expectedEx.expect(RuntimeZootException.class);
+		expectedEx.expectMessage("Actor area for Unnamed Actor must be > 0");
+		
+		actor.setSize(1.0f, 0.0f);
+		builder.setDimensions(FixtureDimensions.Actor).build(actor);
+	}
+	
+	@Test
+	public void shouldThrowIfActorWidthIsZero()
+	{
+		expectedEx.expect(RuntimeZootException.class);
+		expectedEx.expectMessage("Actor area for Unnamed Actor must be > 0");
+		
+		actor.setSize(0.0f, 1.0f);
+		builder.setDimensions(FixtureDimensions.Actor).build(actor);
+	}
+	
+	@Test
+	public void shouldThrowIfCreatingUnknownShape()
+	{
+		expectedEx.expect(RuntimeZootException.class);
+		expectedEx.expectMessage("Cannot create unknown shape for Unnamed Actor");
+		
+		builder.setShape(ZootBodyShape.UNKNOWN).build(actor);
+	}
+	
+	@Test
+	public void shouldNotThrowIfWidthOrHeightIsZeroButShapeIsNone()
+	{
+		builder.setDimensions(FixtureDimensions.Provided).setWidth(0.0f).setHeight(0.0f).setShape(ZootBodyShape.NONE).build(actor);
+		builder.setDimensions(FixtureDimensions.Actor).setWidth(0.0f).setHeight(0.0f).setShape(ZootBodyShape.NONE).build(actor);
+		builder.setDimensions(FixtureDimensions.ActorScaled).setWidth(0.0f).setHeight(0.0f).setShape(ZootBodyShape.NONE).build(actor);
+		//ok
 	}
 }

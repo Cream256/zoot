@@ -12,10 +12,11 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.zootcat.controllers.factory.CtrlParam;
+import com.zootcat.physics.ZootBodyShape;
+import com.zootcat.physics.ZootFixtureDefBuilder;
+import com.zootcat.physics.ZootFixtureDefBuilder.FixtureDimensions;
 import com.zootcat.physics.ZootPhysicsUtils;
-import com.zootcat.physics.ZootShapeFactory;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
 
@@ -41,8 +42,7 @@ public class OnCollideWithSensorController extends OnCollideController
 	@CtrlParam protected float sensorHeight = 1.0f;
 	@CtrlParam protected float sensorX = 0.0f;
 	@CtrlParam protected float sensorY = 0.0f;
-	@CtrlParam protected boolean useActorSize = false;
-	@CtrlParam protected boolean useScaledSize = false;
+	@CtrlParam protected FixtureDimensions dimensions = FixtureDimensions.Provided;
 	@CtrlParam(global = true) protected ZootScene scene;
 	
 	public enum SensorCollisionResult { ProcessNext, StopProcessing };
@@ -67,15 +67,8 @@ public class OnCollideWithSensorController extends OnCollideController
 	@Override
 	public void onAdd(ZootActor actor)
 	{
-		super.onAdd(actor);
-		
-		//create sensor
-		Shape sensorShape = createSensorShape(actor);
-		FixtureDef sensorFixtureDef = createSensorFixtureDef(actor, sensorShape);		
-		sensor = actor.getSingleController(PhysicsBodyController.class).addFixture(sensorFixtureDef, actor);
-
-		//cleanup
-		//sensorShape.dispose();	// TODO this causes tests to crash
+		super.onAdd(actor);		
+		sensor = actor.getSingleController(PhysicsBodyController.class).addFixture(createSensorFixtureDef(actor), actor);
 		collidedFixtures.clear();
 	}
 	
@@ -215,32 +208,19 @@ public class OnCollideWithSensorController extends OnCollideController
 		return scene;
 	}
 					
-	private FixtureDef createSensorFixtureDef(ZootActor actor, Shape sensorShape)
+	private FixtureDef createSensorFixtureDef(ZootActor actor)
 	{
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = sensorShape;
-		fixtureDef.isSensor = true;
-		fixtureDef.filter.categoryBits = getFilter().categoryBits;
-		fixtureDef.filter.maskBits = getFilter().maskBits;
-		fixtureDef.filter.groupIndex = getFilter().groupIndex;
+		FixtureDef fixtureDef = new ZootFixtureDefBuilder(scene)
+				.setOffsetX(sensorX)
+				.setOffsetY(sensorY)
+				.setWidth(sensorWidth)
+				.setHeight(sensorHeight)				
+				.setSensor(true)
+				.setShape(ZootBodyShape.BOX)
+				.setCategory(category)
+				.setMask(mask)
+				.setDimensions(dimensions)				
+				.build(actor);
 		return fixtureDef;
-	}
-
-	private Shape createSensorShape(ZootActor actor)
-	{
-		if(useScaledSize)
-		{
-			float width = actor.getWidth() * sensorWidth;
-			float height = actor.getHeight() * sensorHeight;
-			float x = actor.getWidth() * sensorX;
-			float y = actor.getHeight() * sensorY;
-			return ZootShapeFactory.createBox(width, height, x, y);
-		}
-		
-		float width = useActorSize ? actor.getWidth() : sensorWidth * scene.getUnitScale();
-		float height = useActorSize ? actor.getHeight() : sensorHeight * scene.getUnitScale();
-		float x = sensorX * scene.getUnitScale();
-		float y = sensorY * scene.getUnitScale();		
-		return ZootShapeFactory.createBox(width, height, x, y);		
 	}
 }

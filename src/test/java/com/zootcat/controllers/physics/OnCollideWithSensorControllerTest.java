@@ -29,6 +29,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.math.ZootBoundingBoxFactory;
+import com.zootcat.physics.ZootFixtureDefBuilder.FixtureDimensions;
 import com.zootcat.physics.ZootPhysics;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
@@ -157,7 +158,7 @@ public class OnCollideWithSensorControllerTest
 		final float posScaleX = 0.5f;
 		final float posScaleY = 0.5f;
 		
-		ControllerAnnotations.setControllerParameter(ctrl, "useScaledSize", true);
+		ControllerAnnotations.setControllerParameter(ctrl, "dimensions", FixtureDimensions.ActorScaled);
 		ControllerAnnotations.setControllerParameter(ctrl, "sensorX", posScaleX);
 		ControllerAnnotations.setControllerParameter(ctrl, "sensorY", posScaleY);
 		ControllerAnnotations.setControllerParameter(ctrl, "sensorWidth", scaleX);
@@ -199,7 +200,7 @@ public class OnCollideWithSensorControllerTest
 		//given
 		final float expectedWidth = 128.0f;
 		final float expectedHeight = 256.0f;
-		ControllerAnnotations.setControllerParameter(ctrl, "useActorSize", true);
+		ControllerAnnotations.setControllerParameter(ctrl, "dimensions", FixtureDimensions.Actor);
 		ctrlActor.setSize(expectedWidth, expectedHeight);
 		
 		//when
