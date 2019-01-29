@@ -3,7 +3,7 @@ package com.zootcat.controllers.logic;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 
-public class CollectForLifeController extends CollectOnCollideController
+public class CollectForLifeController extends CollectOnCollideSensorController
 {
 	@CtrlParam private int life = 1;
 	@CtrlParam private int maxLife = 0;

@@ -3,6 +3,7 @@ package com.zootcat.controllers.logic;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,18 +11,21 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 
-public class CollectOnCollideControllerTest
+public class CollectOnCollideSensorControllerTest
 {
 	@Mock private Contact contact;
 	@Mock private ZootActor collector;
+	@Mock private Fixture collectorFixture;
 	@Mock private ZootActor collectible;
-	private CollectOnCollideController collectingCtrl;
-	private CollectOnCollideController notCollectingCtrl;
+	@Mock private Fixture collectibleFixture;
+	private CollectOnCollideSensorController collectingCtrl;
+	private CollectOnCollideSensorController notCollectingCtrl;
 	private boolean onCollectCalled;
 	
 	@Before
@@ -29,7 +33,7 @@ public class CollectOnCollideControllerTest
 	{
 		MockitoAnnotations.initMocks(this);	
 		onCollectCalled = false;
-		collectingCtrl = new CollectOnCollideController()
+		collectingCtrl = new CollectOnCollideSensorController()
 		{
 			@Override
 			public boolean onCollect(ZootActor collectible, ZootActor collector)
@@ -38,7 +42,7 @@ public class CollectOnCollideControllerTest
 				return true;
 			}
 		};
-		notCollectingCtrl = new CollectOnCollideController() 
+		notCollectingCtrl = new CollectOnCollideSensorController() 
 		{
 			@Override
 			public boolean onCollect(ZootActor collectible, ZootActor collector)
@@ -47,6 +51,11 @@ public class CollectOnCollideControllerTest
 				return false;
 			}
 		};
+		
+		when(contact.getFixtureA()).thenReturn(collectorFixture);
+		when(contact.getFixtureB()).thenReturn(collectibleFixture);
+		when(collectorFixture.getUserData()).thenReturn(collector);
+		when(collectibleFixture.getUserData()).thenReturn(collectible);
 	}
 	
 	@Test
@@ -90,13 +99,6 @@ public class CollectOnCollideControllerTest
 		assertTrue("onCollect should be called", onCollectCalled);
 	}
 	
-	@Test
-	public void shouldDoNothingOnLeave()
-	{
-		collectingCtrl.onLeave(collector, collectible, contact);
-		verifyZeroInteractions(collector, collectible, contact);
-	}
-
 	@Test
 	public void shuoldDoNothingOnCollect()
 	{

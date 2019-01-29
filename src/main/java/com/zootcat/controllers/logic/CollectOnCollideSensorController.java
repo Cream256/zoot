@@ -1,28 +1,21 @@
 package com.zootcat.controllers.logic;
 
-import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.zootcat.controllers.physics.OnCollideController;
+import com.zootcat.controllers.physics.OnCollideWithSensorController;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
 
-public abstract class CollectOnCollideController extends OnCollideController
+public abstract class CollectOnCollideSensorController extends OnCollideWithSensorController
 {
-	@Override
-	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
+	public void onEnterCollision(Fixture fixture)
 	{
-		if(onCollect(getControllerActor(), getOtherActor(actorA, actorB)))
+		if(onCollect(getControllerActor(), (ZootActor)fixture.getUserData()))
 		{
 			ZootEvents.fireAndFree(getControllerActor(), ZootEventType.Dead);
 			getControllerActor().addAction(Actions.removeActor());
 		}
-	}
-
-	@Override
-	public void onLeave(ZootActor actorA, ZootActor actorB, Contact contact)
-	{
-		//noop		
 	}
 	
 	/**
@@ -32,5 +25,5 @@ public abstract class CollectOnCollideController extends OnCollideController
 	 * @param collector - collector actor (like player, npc)
 	 * @return true if collection was successful, false otherwise
 	 */
-	public abstract boolean onCollect(ZootActor collectible, ZootActor collector);
+	public abstract boolean onCollect(ZootActor collectible, ZootActor collector);	
 }
