@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.zootcat.controllers.physics.OnCollideWithSensorController.SensorCollisionResult;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.scene.ZootActor;
 
@@ -59,7 +60,7 @@ public class CollectOnCollideSensorControllerTest
 	}
 	
 	@Test
-	public void shouldRemoveCollectibleOnCollection()
+	public void shouldRemoveCollectibleOnFirstCollision()
 	{
 		//given
 		collector = new ZootActor();
@@ -74,10 +75,46 @@ public class CollectOnCollideSensorControllerTest
 		
 		//then
 		assertEquals("Dead event should be send", 1, counter.getCount());		
-		assertTrue("Remove action should be added", collectible.getActions().size > 0);
+		assertTrue("Remove action should be added", collectible.getActions().size == 1);
 		assertTrue("Remove action should be present", ClassReflection.isInstance(RemoveActorAction.class, collectible.getActions().get(0)));
 		assertTrue("onCollect should be called", onCollectCalled);
+		
+		//when
+		collectingCtrl.onEnter(collectible, collector, contact);
+		
+		//then
+		assertEquals("Dead event should be send only once", 1, counter.getCount());
+		assertTrue("Remove action should be added only once", collectible.getActions().size == 1);
 	}
+	
+	@Test
+	public void shouldRemoveCollectibleWhileColliding()
+	{
+		//given
+		collector = new ZootActor();
+		collectible = new ZootActor();
+		
+		ZootActorEventCounterListener counter = new ZootActorEventCounterListener();
+		collectible.addListener(counter);
+			
+		//when		
+		collectingCtrl.init(collectible);
+		SensorCollisionResult collisionResult = collectingCtrl.onCollision(collectorFixture);
+		
+		//then
+		assertEquals(SensorCollisionResult.StopProcessing, collisionResult);
+		assertEquals("Dead event should be send", 1, counter.getCount());		
+		assertTrue("Remove action should be added", collectible.getActions().size == 1);
+		assertTrue("Remove action should be present", ClassReflection.isInstance(RemoveActorAction.class, collectible.getActions().get(0)));
+		assertTrue("onCollect should be called", onCollectCalled);
+		
+		//when
+		collectingCtrl.onCollision(collectorFixture);
+		
+		//then
+		assertEquals("Dead event should be send only once", 1, counter.getCount());
+		assertTrue("Remove action should be added only once", collectible.getActions().size == 1);
+	}	
 	
 	@Test
 	public void shouldNotRemoveCollectibleOnCollection()

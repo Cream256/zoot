@@ -9,13 +9,33 @@ import com.zootcat.scene.ZootActor;
 
 public abstract class CollectOnCollideSensorController extends OnCollideWithSensorController
 {
+	private boolean collected = false;
+	
+	@Override
 	public void onEnterCollision(Fixture fixture)
 	{
-		if(onCollect(getControllerActor(), (ZootActor)fixture.getUserData()))
+		if(!collected && onCollect(getControllerActor(), (ZootActor)fixture.getUserData()))
 		{
-			ZootEvents.fireAndFree(getControllerActor(), ZootEventType.Dead);
-			getControllerActor().addAction(Actions.removeActor());
+			removeCollectible(getControllerActor());
 		}
+	}
+	
+	@Override
+	public SensorCollisionResult onCollision(Fixture fixture)
+	{
+		if(!collected && onCollect(getControllerActor(), (ZootActor)fixture.getUserData()))
+		{
+			removeCollectible(getControllerActor());
+			return SensorCollisionResult.StopProcessing;
+		}		
+		return collected ? SensorCollisionResult.StopProcessing : SensorCollisionResult.ProcessNext;
+	}
+	
+	private void removeCollectible(ZootActor collectible)
+	{
+		ZootEvents.fireAndFree(collectible, ZootEventType.Dead);
+		collectible.addAction(Actions.removeActor());
+		collected = true;
 	}
 	
 	/**
