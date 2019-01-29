@@ -11,113 +11,157 @@ import com.zootcat.exceptions.RuntimeZootException;
 
 public class ZootBindableInputProcessorTest 
 {
-	private int upEvents;
-	private int downEvents;	
+	private int keyUpEvents;
+	private int keyDownEvents;	
+	private int touchUpEvents;
+	private int touchDownEvents;	
 	ZootBindableInputProcessor processor;
 	
 	@Before
 	public void setup()
 	{
-		upEvents = 0;
-		downEvents = 0;
+		keyUpEvents = 0;
+		keyDownEvents = 0;
+		touchUpEvents = 0;
+		touchDownEvents = 0;
 		processor = new ZootBindableInputProcessor();
 	}
 	
 	@Test
-	public void hasDownBindingTest()
+	public void hasKeyDownBindingTest()
 	{
 		//then
-		assertFalse(processor.hasDownBinding(0));
-		assertFalse(processor.hasDownBinding(1));
+		assertFalse(processor.hasKeyDownBinding(0));
+		assertFalse(processor.hasKeyDownBinding(1));
 		
 		//when
-		processor.bindDown(0, () -> true);
+		processor.bindKeyDown(0, () -> true);
 		
 		//then
-		assertTrue(processor.hasDownBinding(0));
-		assertFalse(processor.hasDownBinding(1));
+		assertTrue(processor.hasKeyDownBinding(0));
+		assertFalse(processor.hasKeyDownBinding(1));
 	}
 	
 	@Test
-	public void hasUpBindingTest()
+	public void hasKeyUpBindingTest()
 	{		
 		//then
-		assertFalse(processor.hasUpBinding(0));
-		assertFalse(processor.hasUpBinding(1));
+		assertFalse(processor.hasKeyUpBinding(0));
+		assertFalse(processor.hasKeyUpBinding(1));
 		
 		//when
-		processor.bindUp(0, () -> true);
+		processor.bindKeyUp(0, () -> true);
 		
 		//then
-		assertTrue(processor.hasUpBinding(0));
-		assertFalse(processor.hasUpBinding(1));
+		assertTrue(processor.hasKeyUpBinding(0));
+		assertFalse(processor.hasKeyUpBinding(1));
 	}
 	
 	@Test
 	public void processorShouldProperlyHandleAllCommandMethodsTest()
 	{		
 		//when
-		processor.bindUp(0, () -> { ++upEvents; return true; } );
-		processor.bindDown(0, () -> { ++downEvents; return true; } );		
+		processor.bindKeyUp(0, () -> { ++keyUpEvents; return true; } );
+		processor.bindKeyDown(0, () -> { ++keyDownEvents; return true; } );		
+		processor.bindTouchUp(1, (sx, sy, p) -> { ++touchUpEvents; return true; });
+		processor.bindTouchDown(1, (sx, sy, p) -> { ++touchDownEvents; return true; });
 		
 		//then
-		assertEquals("Down event should not execute right after binding", 0, downEvents);
-		assertEquals("Up event should not execute right after binding", 0, upEvents);
+		assertEquals("Down key event should not execute right after binding", 0, keyDownEvents);
+		assertEquals("Up key event should not execute right after binding", 0, keyUpEvents);
+		assertEquals("Down touch event should not execute right after binding", 0, touchDownEvents);
+		assertEquals("Up touch event should not execute right after binding", 0, touchUpEvents);
 		
 		//when
 		processor.keyDown(0);
+		processor.touchDown(0, 0, 0, 1);
 		
 		//then
-		assertEquals(1, downEvents);
-		assertEquals(0, upEvents);
+		assertEquals(1, keyDownEvents);
+		assertEquals(0, keyUpEvents);
+		assertEquals(1, touchDownEvents);
+		assertEquals(0, touchUpEvents);
 		
 		//when
 		processor.keyUp(0);
+		processor.touchUp(0, 0, 0, 1);
 		
 		//then
-		assertEquals(1, downEvents);
-		assertEquals(1, upEvents);
+		assertEquals(1, keyDownEvents);
+		assertEquals(1, keyUpEvents);
+		assertEquals(1, touchDownEvents);
+		assertEquals(1, touchUpEvents);
 		
 		//when
-		processor.keyDown(1);
-		processor.keyUp(1);
+		processor.keyDown(2);
+		processor.keyUp(2);
+		processor.touchDown(0, 0, 0, 2);
+		processor.touchUp(0, 0, 0, 2);
 		
 		//then nothing changes
-		assertEquals(1, downEvents);
-		assertEquals(1, upEvents);
+		assertEquals(1, keyDownEvents);
+		assertEquals(1, keyUpEvents);
+		assertEquals(1, touchDownEvents);
+		assertEquals(1, touchUpEvents);
 	}
 	
 	@Test(expected = RuntimeZootException.class)
-	public void bindDownShouldThrowIfKeycodeAlreadyBindedTest()
+	public void bindKeyDownShouldThrowIfKeycodeAlreadyBindedTest()
 	{		
 		//when
-		processor.bindDown(0, () -> true);
+		processor.bindKeyDown(0, () -> true);
 		
 		//then
-		assertTrue(processor.hasDownBinding(0));
+		assertTrue(processor.hasKeyDownBinding(0));
 		
 		//when
-		processor.bindDown(0, () -> true);
+		processor.bindKeyDown(0, () -> true);
 	}
 	
 	@Test(expected = RuntimeZootException.class)
-	public void bindUpShouldThrowIfKeycodeAlreadyBindedTest()
+	public void bindKeyUpShouldThrowIfKeycodeAlreadyBindedTest()
 	{		
 		//when
-		processor.bindUp(0, () -> true);
+		processor.bindKeyUp(0, () -> true);
 		
 		//then
-		assertTrue(processor.hasUpBinding(0));
+		assertTrue(processor.hasKeyUpBinding(0));
 		
 		//when
-		processor.bindUp(0, () -> true);
+		processor.bindKeyUp(0, () -> true);
+	}
+	
+	@Test(expected = RuntimeZootException.class)
+	public void bindtouchUpShouldThrowIfButtoncodeAlreadyBindedTest()
+	{		
+		//when
+		processor.bindTouchUp(0, (sx, sy, p) -> true);
+		
+		//then
+		assertTrue(processor.hasTouchUpBinding(0));
+		
+		//when
+		processor.bindTouchUp(0, (sx, sy, p) -> true);
+	}
+	
+	@Test(expected = RuntimeZootException.class)
+	public void bindtouchDownShouldThrowIfButtoncodeAlreadyBindedTest()
+	{		
+		//when
+		processor.bindTouchDown(0, (sx, sy, p) -> true);
+		
+		//then
+		assertTrue(processor.hasTouchDownBinding(0));
+		
+		//when
+		processor.bindTouchDown(0, (sx, sy, p) -> true);
 	}
 	
 	@Test
 	public void bindDownCommandTest()
 	{	
 		//when
-		processor.bindDown(0, () -> true);
+		processor.bindKeyDown(0, () -> true);
 		
 		//then
 		assertTrue(processor.keyDown(0));
@@ -129,12 +173,42 @@ public class ZootBindableInputProcessorTest
 	public void bindUpCommandTest()
 	{		
 		//when
-		processor.bindUp(0, () -> true);
+		processor.bindKeyUp(0, () -> true);
 		
 		//then
 		assertTrue(processor.keyUp(0));
 		assertFalse(processor.keyDown(0));
 		assertFalse(processor.keyTyped('0'));
+	}
+	
+	@Test
+	public void hasTouchDownBindingTest()
+	{
+		//then
+		assertFalse(processor.hasTouchDownBinding(0));
+		assertFalse(processor.hasTouchDownBinding(1));
+		
+		//when
+		processor.bindTouchDown(0, (sx, sy, p) -> true);
+		
+		//then
+		assertTrue(processor.hasTouchDownBinding(0));
+		assertFalse(processor.hasTouchDownBinding(1));
+	}
+	
+	@Test
+	public void hasTouchUpBindingTest()
+	{		
+		//then
+		assertFalse(processor.hasTouchUpBinding(0));
+		assertFalse(processor.hasTouchUpBinding(1));
+		
+		//when
+		processor.bindTouchUp(0, (sx, sy, p) -> true);
+		
+		//then
+		assertTrue(processor.hasTouchUpBinding(0));
+		assertFalse(processor.hasTouchUpBinding(1));
 	}
 	
 }

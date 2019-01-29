@@ -9,15 +9,17 @@ import com.zootcat.exceptions.RuntimeZootException;
 
 public class ZootBindableInputProcessor extends InputAdapter
 {
-	private Map<Integer, Supplier<Boolean>> bindingsUp = new HashMap<Integer, Supplier<Boolean>>();
-	private Map<Integer, Supplier<Boolean>> bindingsDown = new HashMap<Integer, Supplier<Boolean>>();
-		
+	private Map<Integer, Supplier<Boolean>> keyUpBindings = new HashMap<Integer, Supplier<Boolean>>();
+	private Map<Integer, Supplier<Boolean>> keyDownBindings = new HashMap<Integer, Supplier<Boolean>>();
+	private Map<Integer, ZootBindableTouchCommand> touchUpBindings = new HashMap<Integer, ZootBindableTouchCommand>();
+	private Map<Integer, ZootBindableTouchCommand> touchDownBindings = new HashMap<Integer, ZootBindableTouchCommand>();
+	
 	@Override
 	public boolean keyDown (int keycode) 
 	{
-		if(bindingsDown.containsKey(keycode))
+		if(keyDownBindings.containsKey(keycode))
 		{
-			return bindingsDown.get(keycode).get();
+			return keyDownBindings.get(keycode).get();
 		}		
 		return false;
 	}
@@ -25,41 +27,86 @@ public class ZootBindableInputProcessor extends InputAdapter
 	@Override
 	public boolean keyUp (int keycode) 
 	{		
-		if(bindingsUp.containsKey(keycode))
+		if(keyUpBindings.containsKey(keycode))
 		{
-			return bindingsUp.get(keycode).get();
+			return keyUpBindings.get(keycode).get();
 		}
 		return false;
 	}
-				
-	public void bindDown(int keycode, Supplier<Boolean> command)
+					
+	public void bindKeyDown(int keycode, Supplier<Boolean> command)
 	{
-		validateNewBinding(keycode, true);
-		bindingsDown.put(keycode, command);
+		validateNewKeyBinding(keycode, true);
+		keyDownBindings.put(keycode, command);
 	}
 	
-	public void bindUp(int keycode, Supplier<Boolean> command)
+	public void bindKeyUp(int keycode, Supplier<Boolean> command)
 	{
-		validateNewBinding(keycode, false);
-		bindingsUp.put(keycode, command);
+		validateNewKeyBinding(keycode, false);
+		keyUpBindings.put(keycode, command);
+	}
+
+	private void validateNewKeyBinding(int keyCode, boolean validateDownBinding)
+	{
+		boolean hasBinding = validateDownBinding ? hasKeyDownBinding(keyCode) : hasKeyUpBinding(keyCode);
+		if(hasBinding) throw new RuntimeZootException("Key binding already present for key code " + keyCode);
 	}
 	
-	public boolean hasDownBinding(int keycode)
+	public boolean hasKeyDownBinding(int keycode)
 	{
-		return bindingsDown.containsKey(keycode);
+		return keyDownBindings.containsKey(keycode);
 	}
 	
-	public boolean hasUpBinding(int keycode)
+	public boolean hasKeyUpBinding(int keycode)
 	{
-		return bindingsUp.containsKey(keycode);
+		return keyUpBindings.containsKey(keycode);
 	}
 	
-	private void validateNewBinding(int keycode, boolean validateDownBinding)
+	@Override
+	public boolean touchDown (int screenX, int screenY, int pointer, int button) 
 	{
-		boolean hasBinding = validateDownBinding ? hasDownBinding(keycode) : hasUpBinding(keycode);
-		if(hasBinding)
+		if(touchDownBindings.containsKey(button))
 		{
-			throw new RuntimeZootException("Binding already present for keycode " + keycode);
+			return touchDownBindings.get(button).apply(screenX, screenY, pointer);
 		}
+		return false;
+	}
+
+	@Override
+	public boolean touchUp (int screenX, int screenY, int pointer, int button) 
+	{
+		if(touchUpBindings.containsKey(button))
+		{
+			return touchUpBindings.get(button).apply(screenX, screenY, pointer);
+		}
+		return false;
+	}
+	
+	public void bindTouchDown(int buttonCode, ZootBindableTouchCommand command)
+	{
+		validateNewTouchBinding(buttonCode, true);
+		touchDownBindings.put(buttonCode, command);
+	}
+	
+	public void bindTouchUp(int buttonCode, ZootBindableTouchCommand command)
+	{
+		validateNewTouchBinding(buttonCode, false);
+		touchUpBindings.put(buttonCode, command);
+	}
+	
+	private void validateNewTouchBinding(int buttonCode, boolean validateDownBinding)
+	{
+		boolean hasBinding = validateDownBinding ? hasTouchDownBinding(buttonCode) : hasTouchUpBinding(buttonCode);
+		if(hasBinding) throw new RuntimeZootException("Mouse binding already present for button code " + buttonCode);
+	}
+	
+	public boolean hasTouchDownBinding(int buttonCode)
+	{
+		return touchDownBindings.containsKey(buttonCode);
+	}
+	
+	public boolean hasTouchUpBinding(int buttonCode)
+	{
+		return touchUpBindings.containsKey(buttonCode);
 	}
 }

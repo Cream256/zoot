@@ -60,9 +60,9 @@ public class ZootDialogScreen extends ZootScreenAdapter
 		
 		//input
 		ZootBindableInputProcessor inputProcessor = new ZootBindableInputProcessor();
-		inputProcessor.bindUp(Keys.ENTER, () -> advanceDialog());
-		inputProcessor.bindUp(Keys.SPACE, () -> advanceDialog());
-		inputProcessor.bindUp(Keys.ESCAPE, () -> quitDialog());
+		inputProcessor.bindKeyUp(Keys.ENTER, () -> advanceDialog());
+		inputProcessor.bindKeyUp(Keys.SPACE, () -> advanceDialog());
+		inputProcessor.bindKeyUp(Keys.ESCAPE, () -> quitDialog());
 		game.getInputManager().addProcessor(inputProcessor);
 		
 		//on show action
