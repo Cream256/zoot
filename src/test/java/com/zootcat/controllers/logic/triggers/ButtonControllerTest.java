@@ -35,6 +35,7 @@ public class ButtonControllerTest
 	@Test
 	public void shouldActivateOnlyOnFirstContact()
 	{
+		ctrl.onAdd(ctrlActor);
 		ctrl.onEnter(ctrlActor, otherActor, contact);
 		assertEquals(1, triggerCounter.onCount);
 		
@@ -48,6 +49,7 @@ public class ButtonControllerTest
 	@Test
 	public void shouldDeactiveWhenAllContactsAreGone()
 	{
+		ctrl.onAdd(ctrlActor);
 		ctrl.onEnter(ctrlActor, otherActor, contact);
 		ctrl.onEnter(ctrlActor, otherActor, contact);
 		ctrl.onEnter(ctrlActor, otherActor, contact);

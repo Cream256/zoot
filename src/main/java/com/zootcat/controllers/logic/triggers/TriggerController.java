@@ -3,8 +3,10 @@ package com.zootcat.controllers.logic.triggers;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.controllers.physics.OnCollideController;
+import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEvents;
+import com.zootcat.logic.Trigger;
 import com.zootcat.scene.ZootActor;
 
 /**
@@ -26,33 +28,33 @@ import com.zootcat.scene.ZootActor;
 public class TriggerController extends OnCollideController
 {
 	@CtrlParam private boolean active = false;
-		
-	private boolean firstTriggerDone;
-	private boolean firstTriggerState;
 	
+	private Trigger trigger;		
+	private boolean triggerInitialized;
+		
 	@Override
 	public void onAdd(ZootActor actor) 
 	{
 		super.onAdd(actor);
-		firstTriggerDone = false;
-		firstTriggerState = active;
+		triggerInitialized = false;
+		trigger = new Trigger((isOn) -> sendTriggerEvent(isOn), active);
 	}
 	
 	@Override
 	public void onUpdate(float delta, ZootActor actor)
 	{
 		super.onUpdate(delta, actor);
-		if(!firstTriggerDone)
+		if(!triggerInitialized)
 		{
-			trigger(firstTriggerState);
-			firstTriggerDone = true;
+			trigger.initialize();
+			triggerInitialized = true;
 		}
 	}
 	
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
-		switchState();
+		trigger.switchState();
 	}
 
 	@Override
@@ -63,21 +65,20 @@ public class TriggerController extends OnCollideController
 	
 	public boolean isActive()
 	{
-		return active;
+		return trigger.isActive();
 	}
 	
 	public void setActive(boolean isActive)
 	{
-		if(active != isActive) trigger(isActive);		
-		active = isActive;		
+		trigger.setActive(isActive);		
 	}
 	
 	public void switchState()
 	{
-		setActive(!active);
+		trigger.switchState();
 	}
 	
-	private void trigger(boolean active)
+	private void sendTriggerEvent(boolean active)
 	{
 		ZootEvents.fireAndFree(getControllerActor(), active ? ZootEventType.TriggerOn : ZootEventType.TriggerOff, getControllerActor());
 	}

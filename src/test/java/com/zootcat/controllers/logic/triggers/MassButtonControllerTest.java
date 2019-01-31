@@ -38,6 +38,7 @@ public class MassButtonControllerTest
 		massBtnCtrl = new MassButtonController();
 		ControllerAnnotations.setControllerParameter(massBtnCtrl, "requiredMass", REQUIRED_MASS);
 		massBtnCtrl.init(controllerActor);
+		massBtnCtrl.onAdd(controllerActor);
 		
 		when(otherActor.getSingleController(PhysicsBodyController.class)).thenReturn(physicsBodyCtrl);
 	}

@@ -91,6 +91,7 @@ public class TriggerControllerTest
 	public void shouldTriggerIfStateWasChanged()
 	{
 		//given
+		ctrl.onAdd(ctrlActor);
 		assertFalse(ctrl.isActive());
 		
 		//when
@@ -112,6 +113,7 @@ public class TriggerControllerTest
 	public void shouldNotTriggerIfStateWasNotChanged()
 	{
 		//given
+		ctrl.onAdd(ctrlActor);
 		assertFalse(ctrl.isActive());
 		
 		//when
@@ -125,6 +127,7 @@ public class TriggerControllerTest
 	public void shouldAlwaysTriggerWhenSwitchingState()
 	{
 		//given
+		ctrl.onAdd(ctrlActor);
 		assertFalse(ctrl.isActive());
 		
 		//when
@@ -145,6 +148,7 @@ public class TriggerControllerTest
 	public void shouldSwitchStatesEachTimeWhenCollisionHappens()
 	{
 		//given
+		ctrl.onAdd(ctrlActor);
 		assertFalse(ctrl.isActive());
 		
 		//when

@@ -39,6 +39,7 @@ public class TimedButtonControllerTest
 	@Test
 	public void shouldEmitTriggerOnEventOnPress()
 	{
+		ctrl.onAdd(ctrlActor);
 		ctrl.onEnter(ctrlActor, otherActor, contact);
 		assertEquals(1, triggerCounter.onCount);
 	}
@@ -46,6 +47,7 @@ public class TimedButtonControllerTest
 	@Test
 	public void shouldNotEmitTriggerOffEventOnUnpress()
 	{
+		ctrl.onAdd(ctrlActor);
 		ctrl.onEnter(ctrlActor, otherActor, contact);
 		ctrl.onLeave(ctrlActor, otherActor, contact);
 		
@@ -56,6 +58,7 @@ public class TimedButtonControllerTest
 	public void shouldEmitTriggerOffEventAfterRevertTimeHasPassed()
 	{
 		//initial state
+		ctrl.onAdd(ctrlActor);
 		ctrl.onUpdate(0.0f, ctrlActor);
 		triggerCounter.offCount = 0;
 		
