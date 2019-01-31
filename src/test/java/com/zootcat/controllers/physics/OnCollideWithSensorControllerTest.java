@@ -133,7 +133,7 @@ public class OnCollideWithSensorControllerTest
 	}
 	
 	@Test
-	public void shouldCreateSensor()
+	public void shouldCreateSensorWithValidParameters()
 	{
 		//when
 		ctrl.init(ctrlActor);
@@ -143,8 +143,9 @@ public class OnCollideWithSensorControllerTest
 		//then
 		assertNotNull("Sensor not created", sensor);
 		assertTrue("Should be a sensor", sensor.isSensor());
+		assertEquals("Should have zero density", 0.0f, sensor.getDensity(), 0.0f);
 		assertEquals("Should point to controller actor", ctrlActor, sensor.getUserData());
-		assertEquals("Should point to controller actor", ctrlActor, sensor.getBody().getUserData());
+		assertEquals("Should point to controller actor", ctrlActor, sensor.getBody().getUserData());		
 	}
 	
 	@Test

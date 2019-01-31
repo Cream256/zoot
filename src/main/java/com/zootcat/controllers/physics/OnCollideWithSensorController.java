@@ -211,6 +211,7 @@ public class OnCollideWithSensorController extends OnCollideController
 	private FixtureDef createSensorFixtureDef(ZootActor actor)
 	{
 		FixtureDef fixtureDef = new ZootFixtureDefBuilder(scene)
+				.setDensity(0.0f)
 				.setOffsetX(sensorX)
 				.setOffsetY(sensorY)
 				.setWidth(sensorWidth)
