@@ -27,6 +27,10 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 	@CtrlParam(required = true) private String file;
 	@CtrlParam private boolean useActorSize = true;
 	@CtrlParam private boolean keepAspectRatio = false;
+	@CtrlParam private boolean centerX = false;
+	@CtrlParam private boolean centerY = false;
+	@CtrlParam private float scaleX = 1.0f;
+	@CtrlParam private float scaleY = 1.0f;
 	@CtrlParam private String startingAnimation = "Idle";
 	@CtrlParam(global = true) private ZootScene scene;
 	@CtrlParam(global = true) private AssetManager assetManager;
@@ -148,8 +152,8 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 		sprite.setFlip(direction == ZootDirection.Left, false);
 		
 		float sceneUnitScale = scene.getUnitScale();
-		float x = actor.getX() + directionOffset.x * sceneUnitScale + getOffsetX();
-		float y = actor.getY() + directionOffset.y * sceneUnitScale + getOffsetY();
+		float frameWidth = currentFrame.getRegionWidth() * sceneUnitScale;
+		float frameHeight = currentFrame.getRegionHeight() * sceneUnitScale;
 		
 		if(useActorSize)
 		{
@@ -157,20 +161,30 @@ public class AnimatedSpriteController extends RenderControllerAdapter
 			{
 				float frameScaleX = currentFrame.getRegionWidth() / firstAnimationWidth;
 				float frameScaleY = currentFrame.getRegionHeight() / firstAnimationHeight;								
-				float frameWidth = actor.getWidth() * frameScaleX;
-				float frameHeight = actor.getHeight() * frameScaleY;				
-				sprite.setBounds(x, y, frameWidth, frameHeight);
+				frameWidth = actor.getWidth() * frameScaleX;
+				frameHeight = actor.getHeight() * frameScaleY;				
 			}
 			else
 			{
-				sprite.setBounds(x, y, actor.getWidth(), actor.getHeight());	
+				frameWidth = actor.getWidth();
+				frameHeight = actor.getHeight();	
 			}
 		}
-		else
-		{
-			sprite.setBounds(x, y, currentFrame.getRegionWidth() * sceneUnitScale, currentFrame.getRegionHeight() * sceneUnitScale);
-		}
+		frameWidth *= scaleX;
+		frameHeight *= scaleY;
 		
+		float frameX = actor.getX() + directionOffset.x * sceneUnitScale + getOffsetX();
+		float frameY = actor.getY() + directionOffset.y * sceneUnitScale + getOffsetY();
+		if(centerX)
+		{		
+			frameX = frameX - (frameWidth * 0.5f) + (actor.getWidth() * 0.5f);			
+		}
+		if(centerY)
+		{
+			frameY = frameY - (frameHeight * 0.5f) + (actor.getHeight() * 0.5f);
+		}
+				
+		sprite.setBounds(frameX, frameY, frameWidth, frameHeight);		
 		sprite.setOriginCenter();
 		sprite.setRotation(actor.getRotation());
 	}
