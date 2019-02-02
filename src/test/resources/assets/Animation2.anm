@@ -1,0 +1,50 @@
+#This is a comment and it should be skipped
+
+:SpriteSheets
+	default=Animation.png
+:~SpriteSheets
+
+:Animation
+	type = Idle
+	frameWidth = 32
+	frameHeight = 64
+	firstFrameX = 1
+	firstFrameY = 2
+	frames = 10
+	loop = true
+	pingpong = true
+	speed = 100
+	rightOffsetX = 0
+	leftOffsetX = 0
+	repeat = 123
+:~Animation
+
+:Animation
+	type = Startup
+	frameWidth = 32
+	frameHeight = 64
+	firstFrameX = 1
+	firstFrameY = 2
+	frames = 10
+	loop = true
+	pingpong = true
+	speed = 100
+	rightOffsetX = 4
+	leftOffsetX = 5
+	repeat = 123
+:~Animation
+
+:Animation
+	type = Funky
+	frameWidth = 48
+	frameHeight = 92
+	firstFrameX = 1
+	firstFrameY = 2
+	frames = 10
+	loop = true
+	pingpong = true
+	speed = 100
+	rightOffsetX = 4
+	leftOffsetX = 5
+	repeat = 123
+:~Animation

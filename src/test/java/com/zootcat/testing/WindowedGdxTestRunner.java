@@ -25,13 +25,15 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 public class WindowedGdxTestRunner extends BlockJUnit4ClassRunner implements ApplicationListener 
 {
+	private LwjglApplication application;
 	private Map<FrameworkMethod, RunNotifier> invokeInRender = new HashMap<FrameworkMethod, RunNotifier>();
-
+		
 	public WindowedGdxTestRunner(Class<?> klass) throws InitializationError 
 	{
 		super(klass);
@@ -41,7 +43,7 @@ public class WindowedGdxTestRunner extends BlockJUnit4ClassRunner implements App
 		config.height = 240;		
 		config.x = 0;
 		config.y = 0;
-		new LwjglApplication(this, config);
+		application = new LwjglApplication(this, config);
 	}
 
 	@Override
@@ -92,11 +94,24 @@ public class WindowedGdxTestRunner extends BlockJUnit4ClassRunner implements App
 	{
 		synchronized (invokeInRender) 
 		{
+			//reset GDX static fields, since they can be reset by other tests
+			resetGdxStaticFields();
+			
 			// add for invoking in render phase, where gl context is available
 			invokeInRender.put(method, notifier);
 		}
 		// wait until that test was invoked
 		waitUntilInvokedInRenderMethod();
+	}
+
+	private void resetGdxStaticFields()
+	{
+		Gdx.app = application;
+		Gdx.audio = application.getAudio();
+		Gdx.files = application.getFiles();
+		Gdx.graphics = application.getGraphics();
+		Gdx.input = application.getInput();
+		Gdx.net = application.getNet();		
 	}
 
 	private void waitUntilInvokedInRenderMethod() 
