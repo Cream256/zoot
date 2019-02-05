@@ -91,4 +91,24 @@ public class TriggerOnEventControllerTest
 		assertEquals("Should be triggered as not active", ZootEventType.TriggerOff, ((ZootEvent)eventCounter.getLastEvent()).getType());
 	}
 	
+	@Test
+	public void shouldSetActive()
+	{
+		//given
+		triggerCtrl.onAdd(ctrlActor);
+		
+		//when
+		triggerCtrl.setActive(true);
+		
+		//then
+		assertEquals("Should send event", 1, eventCounter.getCount());
+		assertEquals("Should be triggered as active", ZootEventType.TriggerOn, ((ZootEvent)eventCounter.getLastEvent()).getType());
+		
+		//when
+		triggerCtrl.setActive(false);
+		
+		//then
+		assertEquals("Should send event", 2, eventCounter.getCount());
+		assertEquals("Should be triggered as not active", ZootEventType.TriggerOff, ((ZootEvent)eventCounter.getLastEvent()).getType());
+	}
 }

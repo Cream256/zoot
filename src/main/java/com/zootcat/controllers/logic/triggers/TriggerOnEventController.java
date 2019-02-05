@@ -47,6 +47,11 @@ public class TriggerOnEventController extends OnZootEventController
 		return true;
 	}
 	
+	public void setActive(boolean active)
+	{
+		trigger.setActive(active);
+	}
+	
 	private void sendTriggerEvent(boolean active, ZootActor actor)
 	{
 		ZootEvents.fireAndFree(actor, active ? ZootEventType.TriggerOn : ZootEventType.TriggerOff, actor);

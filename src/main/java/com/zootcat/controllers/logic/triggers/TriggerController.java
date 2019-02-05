@@ -83,4 +83,10 @@ public class TriggerController extends OnCollideController
 	{
 		ZootEvents.fireAndFree(getControllerActor(), active ? ZootEventType.TriggerOn : ZootEventType.TriggerOff, getControllerActor());
 	}
+	
+	@Override
+	public boolean isSingleton()
+	{
+		return true;
+	}
 }

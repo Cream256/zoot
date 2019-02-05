@@ -2,6 +2,7 @@ package com.zootcat.controllers.logic.triggers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
@@ -10,7 +11,6 @@ import org.junit.Test;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.zootcat.controllers.factory.ControllerAnnotations;
-import com.zootcat.controllers.logic.triggers.TriggerController;
 import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
@@ -166,4 +166,9 @@ public class TriggerControllerTest
 		assertEquals("Should be triggered as not active", ZootEventType.TriggerOff, ((ZootEvent)eventCounter.getLastEvent()).getType());
 	}
 	
+	@Test
+	public void shouldBeSingleton()
+	{
+		assertTrue(ctrl.isSingleton());
+	}
 }
