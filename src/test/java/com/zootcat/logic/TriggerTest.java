@@ -122,4 +122,43 @@ public class TriggerTest
 		assertEquals("Should not be triggered as active", 1, triggerOnCount);
 		assertEquals("Should be triggered as not active", 1, triggerOffCount);
 	}
+	
+	@Test
+	public void shouldAllowToRevertByDefault()
+	{
+		//given
+		Trigger trigger = new Trigger(triggerAction, false);
+		
+		//when
+		trigger.switchState();
+		
+		//then
+		assertEquals("Should trigger on", 1, triggerOnCount);
+				
+		//when
+		trigger.switchState();
+		
+		//then
+		assertEquals("Should revert to off", 1, triggerOffCount);
+	}
+	
+	@Test
+	public void shouldNotAllowToRevert()
+	{
+		//given
+		Trigger trigger = new Trigger(triggerAction, false, false);
+		
+		//when
+		trigger.switchState();
+		
+		//then
+		assertEquals("Should trigger on", 1, triggerOnCount);
+				
+		//when
+		trigger.switchState();
+		
+		//then
+		assertEquals("Should not trigger on more than once", 1, triggerOnCount);
+		assertEquals("Should not trigger off", 0, triggerOffCount);
+	}
 }

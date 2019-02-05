@@ -14,6 +14,7 @@ import com.zootcat.scene.ZootActor;
 public class TriggerOnEventController extends OnZootEventController
 {
 	@CtrlParam private boolean active = false;
+	@CtrlParam private boolean canRevert = true;
 	
 	private Trigger trigger;
 	private boolean triggerInitialized;
@@ -28,7 +29,7 @@ public class TriggerOnEventController extends OnZootEventController
 	{
 		super.onAdd(actor);	
 		triggerInitialized = false;
-		trigger = new Trigger((on) -> sendTriggerEvent(on, actor), active);
+		trigger = new Trigger((on) -> sendTriggerEvent(on, actor), active, canRevert);
 	}
 		
 	@Override

@@ -28,6 +28,7 @@ import com.zootcat.scene.ZootActor;
 public class TriggerController extends OnCollideController
 {
 	@CtrlParam private boolean active = false;
+	@CtrlParam private boolean canRevert = true;
 	
 	private Trigger trigger;		
 	private boolean triggerInitialized;
@@ -37,7 +38,7 @@ public class TriggerController extends OnCollideController
 	{
 		super.onAdd(actor);
 		triggerInitialized = false;
-		trigger = new Trigger((isOn) -> sendTriggerEvent(isOn), active);
+		trigger = new Trigger((isOn) -> sendTriggerEvent(isOn), active, canRevert);
 	}
 	
 	@Override
@@ -54,7 +55,7 @@ public class TriggerController extends OnCollideController
 	@Override
 	public void onEnter(ZootActor actorA, ZootActor actorB, Contact contact)
 	{
-		trigger.switchState();
+		switchState();
 	}
 
 	@Override

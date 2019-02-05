@@ -5,24 +5,34 @@ import java.util.function.Consumer;
 public class Trigger
 {
 	private boolean active;	
-	private boolean firstTriggerState;
+	private boolean canRevert;
+	private boolean firstTriggerDone;
+	private boolean firstTriggerState;	
 	private Consumer<Boolean> triggerAction;
 	
 	public Trigger(Consumer<Boolean> triggerAction)
 	{
-		this(triggerAction, false);
+		this(triggerAction, false, true);
 	}
 	
 	public Trigger(Consumer<Boolean> triggerAction, boolean active)
 	{
+		this(triggerAction, active, true);
+	}
+	
+	public Trigger(Consumer<Boolean> triggerAction, boolean active, boolean canRevert)
+	{
 		this.active = active;
-		this.firstTriggerState = active;
+		this.firstTriggerDone = false;
+		this.firstTriggerState = active;		
 		this.triggerAction = triggerAction;
+		this.canRevert = canRevert;		
 	}
 	
 	public void initialize()
 	{
 		trigger(firstTriggerState);
+		firstTriggerDone = false;
 	}
 	
 	public boolean isActive()
@@ -37,6 +47,8 @@ public class Trigger
 	
 	public void setActive(boolean isActive)
 	{
+		if(firstTriggerDone && !canRevert) return;
+		
 		if(active != isActive) trigger(isActive);		
 		active = isActive;	
 	}
@@ -44,5 +56,6 @@ public class Trigger
 	private void trigger(boolean active)
 	{
 		triggerAction.accept(active);
+		firstTriggerDone = true;
 	}
 }
