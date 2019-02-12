@@ -122,6 +122,16 @@ public class PhysicsBodyController extends ControllerAdapter
 	{
 		body.setAngularVelocity(omega);
 	}
+	
+	public void setLinearDamping(float damping)
+	{
+		body.setLinearDamping(damping);
+	}
+	
+	public float getLinearDamping()
+	{
+		return body.getLinearDamping();
+	}
 		
 	public Fixture addFixture(FixtureDef fixtureDef, ZootActor actor)
 	{

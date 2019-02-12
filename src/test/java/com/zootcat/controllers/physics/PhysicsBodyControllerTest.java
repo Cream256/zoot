@@ -393,6 +393,20 @@ public class PhysicsBodyControllerTest
 	}
 	
 	@Test
+	public void shouldSetLinearDamping()
+	{
+		physicsBodyCtrl.setLinearDamping(1.23f);
+		verify(body).setLinearDamping(1.23f);		
+	}
+	
+	@Test
+	public void shouldGetLinearDampingFromBody()
+	{
+		when(body.getLinearDamping()).thenReturn(2.56f);
+		assertEquals(2.56f, physicsBodyCtrl.getLinearDamping(), 0.0f);		
+	}
+	
+	@Test
 	public void shouldBeSingleton()
 	{
 		assertTrue(physicsBodyCtrl.isSingleton());
