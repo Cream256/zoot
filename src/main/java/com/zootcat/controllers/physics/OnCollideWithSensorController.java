@@ -62,6 +62,7 @@ public class OnCollideWithSensorController extends OnCollideController
 		this.sensorY = sensorY;
 		this.sensorWidth = sensorWidth;
 		this.sensorHeight = sensorHeight;
+		this.dimensions = FixtureDimensions.Provided;
 	}
 	
 	@Override

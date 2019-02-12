@@ -133,6 +133,16 @@ public class PhysicsBodyController extends ControllerAdapter
 		return body.getLinearDamping();
 	}
 		
+	public void setAwake(boolean awake)
+	{
+		body.setAwake(awake);
+	}
+	
+	public boolean isSleepingAllowed()
+	{
+		return body.isSleepingAllowed();
+	}
+	
 	public Fixture addFixture(FixtureDef fixtureDef, ZootActor actor)
 	{
 		Fixture fixture = scene.getPhysics().createFixture(body, fixtureDef);		

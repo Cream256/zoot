@@ -407,6 +407,26 @@ public class PhysicsBodyControllerTest
 	}
 	
 	@Test
+	public void shouldSetAwake()
+	{
+		physicsBodyCtrl.setAwake(true);
+		verify(body).setAwake(true);
+		
+		physicsBodyCtrl.setAwake(false);
+		verify(body).setAwake(false);
+	}
+	
+	@Test
+	public void shouldGetIsSleepingAllowedFromBody()
+	{
+		when(body.isSleepingAllowed()).thenReturn(true);
+		assertTrue(physicsBodyCtrl.isSleepingAllowed());
+		
+		when(body.isSleepingAllowed()).thenReturn(false);
+		assertFalse(physicsBodyCtrl.isSleepingAllowed());
+	}
+	
+	@Test
 	public void shouldBeSingleton()
 	{
 		assertTrue(physicsBodyCtrl.isSingleton());
