@@ -2,7 +2,7 @@ package com.zootcat.camera;
 
 import com.zootcat.scene.ZootActor;
 
-public class ZootPositionLockingStrategy implements ZootCameraScrollingStrategy
+public class ZootPositionLockingScrollingStrategy implements ZootCameraScrollingStrategy
 {
 	@Override
 	public void scrollCamera(ZootCamera camera, float delta)

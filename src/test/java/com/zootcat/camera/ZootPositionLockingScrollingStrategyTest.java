@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.zootcat.scene.ZootActor;
 
-public class ZootPositionLockingStrategyTest
+public class ZootPositionLockingScrollingStrategyTest
 {
 	@Test
 	public void shouldSetCameraPositionAtTheCenterOfTheActor()
@@ -26,7 +26,7 @@ public class ZootPositionLockingStrategyTest
 		when(camera.getTarget()).thenReturn(actor);
 		
 		//when
-		ZootPositionLockingStrategy strategy = new ZootPositionLockingStrategy();
+		ZootPositionLockingScrollingStrategy strategy = new ZootPositionLockingScrollingStrategy();
 		strategy.scrollCamera(camera, 1.0f);
 		
 		//then
@@ -46,7 +46,7 @@ public class ZootPositionLockingStrategyTest
 	{
 		//given
 		ZootCamera camera = mock(ZootCamera.class);				
-		ZootPositionLockingStrategy strategy = new ZootPositionLockingStrategy();
+		ZootPositionLockingScrollingStrategy strategy = new ZootPositionLockingScrollingStrategy();
 		
 		//when
 		when(camera.getTarget()).thenReturn(null);
