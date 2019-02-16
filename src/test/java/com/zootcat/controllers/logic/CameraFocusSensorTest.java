@@ -1,10 +1,14 @@
 package com.zootcat.controllers.logic;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +36,7 @@ public class CameraFocusSensorTest
 	@Captor private ArgumentCaptor<ZootCameraScrollingStrategy> scrollingStrategyCaptor;
 	@Mock private ZootCameraScrollingStrategy previousScrollingStrategy;
 	private CameraFocusSensor cameraFocusSensor;
-	private boolean acceptFixture;
+	private boolean acceptFixtureResult;
 	
 	@Before
 	public void setup()
@@ -43,8 +47,9 @@ public class CameraFocusSensorTest
 		when(scene.getFirstActor(any())).thenReturn(actor);
 		when(camera.getScrollingStrategy()).thenReturn(previousScrollingStrategy);
 		
-		acceptFixture = true;
-		cameraFocusSensor = new CameraFocusSensor(fix -> acceptFixture);
+		acceptFixtureResult = true;
+		cameraFocusSensor = new CameraFocusSensor();
+		cameraFocusSensor.setFixtureAcceptFunc(fix -> acceptFixtureResult);
 		ControllerAnnotations.setControllerParameter(cameraFocusSensor, "focusedActorName", FOCUSED_ACTOR_NAME);
 		ControllerAnnotations.setControllerParameter(cameraFocusSensor, "scene", scene);
 	}
@@ -56,13 +61,10 @@ public class CameraFocusSensorTest
 	}
 	
 	@Test
-	public void shouldAcceptAllFixturesWhenUsingDefaultCtor()
+	public void shouldSetFixtureAcceptFunction()
 	{
 		//given
-		acceptFixture = false;
-		cameraFocusSensor = new CameraFocusSensor();
-		ControllerAnnotations.setControllerParameter(cameraFocusSensor, "focusedActorName", FOCUSED_ACTOR_NAME);
-		ControllerAnnotations.setControllerParameter(cameraFocusSensor, "scene", scene);
+		cameraFocusSensor.setFixtureAcceptFunc(fix -> false);
 		
 		//when
 		cameraFocusSensor.preUpdate(1.0f, mock(ZootActor.class));
@@ -70,7 +72,7 @@ public class CameraFocusSensorTest
 		cameraFocusSensor.postUpdate(1.0f, mock(ZootActor.class));
 		
 		//then
-		assertTrue(cameraFocusSensor.isFocused());		
+		assertFalse(cameraFocusSensor.isFocused());		
 	}
 	
 	@Test
@@ -119,7 +121,7 @@ public class CameraFocusSensorTest
 	public void shouldNotFocusIfFixtureIsNotAccepted()
 	{
 		//given
-		acceptFixture = false;
+		acceptFixtureResult = false;
 		
 		//when
 		cameraFocusSensor.preUpdate(1.0f, mock(ZootActor.class));
@@ -140,7 +142,7 @@ public class CameraFocusSensorTest
 		cameraFocusSensor.postUpdate(1.0f, mock(ZootActor.class));
 		
 		//when
-		acceptFixture = false;
+		acceptFixtureResult = false;
 		cameraFocusSensor.preUpdate(1.0f, mock(ZootActor.class));
 		cameraFocusSensor.onCollision(mock(Fixture.class));
 		cameraFocusSensor.postUpdate(1.0f, mock(ZootActor.class));

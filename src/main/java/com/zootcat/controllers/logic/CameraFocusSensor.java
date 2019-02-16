@@ -17,16 +17,11 @@ public class CameraFocusSensor extends OnCollideWithSensorController
 	private int acceptedCollisions = 0;
 	private boolean focused = false;
 	private ZootCameraScrollingStrategy previousScrollingStrategy = null;
-	private Function<Fixture, Boolean> acceptFixture;		
-	
-	public CameraFocusSensor()
+	private Function<Fixture, Boolean> acceptFixture = fix -> true;		
+		
+	public void setFixtureAcceptFunc(Function<Fixture, Boolean> acceptFixtureFunc)
 	{
-		this(fix -> true);
-	}
-	
-	public CameraFocusSensor(Function<Fixture, Boolean> acceptFixtureFunc)
-	{
-		this.acceptFixture = acceptFixtureFunc;
+		acceptFixture = acceptFixtureFunc;
 	}
 	
 	@Override
