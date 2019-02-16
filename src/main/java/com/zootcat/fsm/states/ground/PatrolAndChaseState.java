@@ -14,10 +14,12 @@ import com.zootcat.scene.ZootDirection;
 public class PatrolAndChaseState extends PatrolState
 {
 	public static final int ID = PatrolState.ID;
+	public static final float AFTER_CHASE_COOLDOWN = 1.0f;
 	
 	private int lookRange = 0;	
 	private String chasedActorType = "";
 	private ZootActor chasedActor;
+	private float afterChaseCooldown = 0.0f;
 	private OnCollideWithSensorController chaseSensorCtrl;
 	private Array<ZootActor> actorsInChaseRange = new Array<ZootActor>();
 		
@@ -61,7 +63,7 @@ public class PatrolAndChaseState extends PatrolState
 	public void onUpdate(ZootActor actor, float delta)
 	{		
 		updateCooldown(delta);
-		
+				
 		chasedActor = getChasedActor(actor);
 		if(chasedActor != null)
 		{
@@ -74,9 +76,17 @@ public class PatrolAndChaseState extends PatrolState
 				actor.controllersAction(WalkableController.class, ctrl -> ctrl.run(moveDirection));			
 				setActorAnimationIfNotSet(actor, "Run");	
 			}
+			afterChaseCooldown = AFTER_CHASE_COOLDOWN;
 			return;
 		}
-		
+		else if(afterChaseCooldown > 0.0f)
+		{
+			afterChaseCooldown = Math.max(0.0f, afterChaseCooldown - delta);
+			actor.controllersAction(WalkableController.class, ctrl -> ctrl.run(moveDirection));			
+			setActorAnimationIfNotSet(actor, "Run");
+			return;
+		}
+				
 		setActorAnimationIfNotSet(actor, "Walk");
 		if(outOfPatrolRange(actor) && canTurnAround())
 		{			
