@@ -31,7 +31,7 @@ public class ZootCameraTest
 	}
 	
 	@Test
-	public void updateOnNullStrategyShouldNotThrowTest()
+	public void shouldNotThrowIfNullStrategyWasSet()
 	{
 		camera.setScrollingStrategy(null);
 		camera.update(1.0f, true);
@@ -52,7 +52,7 @@ public class ZootCameraTest
 	}
 	
 	@Test
-	public void updateShouldUseScrollingStrategyTest()
+	public void shouldUseScrollingStrategyOnUpdate()
 	{
 		//given
 		ZootCameraScrollingStrategy strategy = mock(ZootCameraScrollingStrategy.class);
@@ -66,7 +66,7 @@ public class ZootCameraTest
 	}
 	
 	@Test
-	public void setZoomTest()
+	public void shouldSetZoom()
 	{
 		camera.setZoom(0.0f);
 		assertEquals(0.0f, camera.getZoom(), 0.0f);
@@ -79,19 +79,13 @@ public class ZootCameraTest
 	}
 	
 	@Test
-	public void zoomTest()
+	public void shouldHaveDefaultZoom()
 	{
 		assertEquals(1.0f, camera.getZoom(), 0.0f);
-		
-		camera.zoom(0.5f);
-		assertEquals(1.5f, camera.getZoom(), 0.0f);
-		
-		camera.zoom(-1.0f);
-		assertEquals(0.5f, camera.getZoom(), 0.0f);
 	}
 	
 	@Test
-	public void setTargetTest()
+	public void shouldSetTarget()
 	{
 		camera.setTarget(null);
 		assertNull(camera.getTarget());
@@ -102,7 +96,7 @@ public class ZootCameraTest
 	}
 	
 	@Test
-	public void setEdgeSnappingTest()
+	public void shouldSetEdgeSnapping()
 	{
 		camera.setEdgeSnapping(false);
 		assertFalse(camera.isEdgeSnapping());
@@ -112,7 +106,7 @@ public class ZootCameraTest
 	}
 	
 	@Test
-	public void setPositionTest()
+	public void shouldSetPosition()
 	{
 		camera.setPosition(0.0f, 0.0f);
 		assertEquals(0.0f, camera.getPosition().x, 0.0f);
@@ -131,7 +125,7 @@ public class ZootCameraTest
 	}
 	
 	@Test
-	public void setPositionShouldSnapToWorldEdgesTest()
+	public void shouldSnapPositionToWorldEdges()
 	{
 		//given
 		camera.setViewportSize(0.0f, 0.0f);
@@ -148,7 +142,7 @@ public class ZootCameraTest
 	}
 	
 	@Test
-	public void setViewportSizeTest()
+	public void shouldSetViewportSize()
 	{
 		camera.setViewportSize(1.0f, 2.0f);
 		assertEquals(1.0f, camera.getViewportWidth(), 0.0f);

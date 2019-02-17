@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -103,6 +104,7 @@ public class ZootActionsTest
 		ZootEnableInputProcessorControllerAction action = ZootActions.enableInputProcessorController(actor, false);
 		assertEquals(actor, action.getTargetZootActor());
 		assertFalse(action.getControllerEnabled());
+		assertNotNull(action.getPool());
 	}
 	
 	@Test
@@ -111,7 +113,8 @@ public class ZootActionsTest
 		ZootGame game = mock(ZootGame.class);
 		ZootEnableInputAction action = ZootActions.enableInput(game, false);
 		assertEquals(game, action.getGame());
-		assertFalse(action.isInputEnabled());		
+		assertFalse(action.isInputEnabled());
+		assertNotNull(action.getPool());
 	}
 	
 	@Test
@@ -121,6 +124,7 @@ public class ZootActionsTest
 		ZootCameraFocusAction action = ZootActions.cameraFocus(camera, actor);
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(camera, action.getCamera());
+		assertNotNull(action.getPool());
 	}
 	
 	@Test
@@ -130,7 +134,8 @@ public class ZootActionsTest
 		ZootCameraScrollingStrategy strategy = mock(ZootCameraScrollingStrategy.class);
 		ZootCameraScrollingStrategyAction action = ZootActions.cameraStrategy(camera, strategy);
 		assertEquals(camera, action.getCamera());
-		assertEquals(strategy, action.getStrategy());		
+		assertEquals(strategy, action.getStrategy());	
+		assertNotNull(action.getPool());
 	}
 	
 	@Test
@@ -140,6 +145,7 @@ public class ZootActionsTest
 		ZootFireEventAction action = ZootActions.fireEvent(actor, event);
 		assertEquals(actor, action.getTargetZootActor());
 		assertEquals(event, action.getEvent());
+		assertNotNull(action.getPool());
 	}
 	
 	@Test
@@ -149,6 +155,7 @@ public class ZootActionsTest
 		ZootLambdaAction action = ZootActions.lambda(lambda);
 		assertTrue(action.act(1.0f));
 		assertEquals(lambda, action.getLambda());
+		assertNotNull(action.getPool());
 	}
 	
 	@Test
@@ -157,6 +164,7 @@ public class ZootActionsTest
 		Supplier<Boolean> lambda = () -> true;		
 		ZootLambdaAction action = ZootActions.lambda(lambda);
 		assertTrue(action.act(1.0f));
+		assertNotNull(action.getPool());
 	}
 	
 	@Test
@@ -167,6 +175,7 @@ public class ZootActionsTest
 		ZootLoadLevelAction action = ZootActions.loadLevel(game, levelPath);
 		assertEquals(game, action.getZootGame());
 		assertEquals(levelPath, action.getLevelPath());
+		assertNotNull(action.getPool());
 	}
 	
 	@Test
@@ -185,6 +194,7 @@ public class ZootActionsTest
 		assertEquals(game, action.getZootGame());
 		assertEquals(onShowAction, action.getOnShowAction());
 		assertEquals(onHideAction, action.getOnHideAction());
+		assertNotNull(action.getPool());
 	}
 	
 	@Test
@@ -202,5 +212,24 @@ public class ZootActionsTest
 		assertEquals(varyHorizontal, action.getVaryHorizontal());
 		assertEquals(owner, action.getAttackActor());
 		assertEquals(target, action.getKnockbackActor());
+		assertNotNull(action.getPool());
+	}
+	
+	@Test
+	public void shouldCreateZoomAction()
+	{
+		final float desiredZoom = 2.56f;
+		final float duration = 5.12f;
+		final float startingZoom = 0.1f;		
+		final ZootCamera camera = mock(ZootCamera.class);
+		when(camera.getZoom()).thenReturn(startingZoom);
+		
+		ZootZoomCameraAction action = ZootActions.zoom(camera, desiredZoom, duration);
+		assertEquals(camera, action.getCamera());
+		assertEquals(desiredZoom, action.getDesiredZoom(), 0.0f);
+		assertEquals(startingZoom, action.getStartingZoom(), 0.0f);
+		assertEquals(duration, action.getDuration(), 0.0f);
+		assertEquals(0.0f, action.getTimePassed(), 0.0f);
+		assertNotNull(action.getPool());
 	}
 }

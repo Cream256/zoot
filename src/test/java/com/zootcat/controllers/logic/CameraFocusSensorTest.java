@@ -28,7 +28,7 @@ import com.zootcat.scene.ZootScene;
 
 public class CameraFocusSensorTest
 {
-	private final static String FOCUSED_ACTOR_NAME = "CameraAttractor";
+	private static final String FOCUSED_ACTOR_NAME = "CameraAttractor";
 	
 	@Mock private ZootScene scene;
 	@Mock private ZootActor actor;
@@ -46,6 +46,7 @@ public class CameraFocusSensorTest
 		when(scene.getCamera()).thenReturn(camera);
 		when(scene.getFirstActor(any())).thenReturn(actor);
 		when(camera.getScrollingStrategy()).thenReturn(previousScrollingStrategy);
+		when(camera.getZoom()).thenReturn(0.0f);
 		
 		acceptFixtureResult = true;
 		cameraFocusSensor = new CameraFocusSensor();
@@ -85,6 +86,60 @@ public class CameraFocusSensorTest
 		
 		//then
 		assertTrue(cameraFocusSensor.isFocused());
+	}
+	
+	@Test
+	public void shouldZoomOnFocus()
+	{
+		//given
+		final float desiredZoomOnFocus = 2.0f;
+		ControllerAnnotations.setControllerParameter(cameraFocusSensor, "zoom", desiredZoomOnFocus);
+		
+		//when
+		cameraFocusSensor.preUpdate(0.5f, mock(ZootActor.class));
+		cameraFocusSensor.onCollision(mock(Fixture.class));
+		cameraFocusSensor.postUpdate(0.5f, mock(ZootActor.class));
+		
+		//then
+		verify(camera).setZoom(desiredZoomOnFocus / 2.0f);
+		
+		//when
+		cameraFocusSensor.preUpdate(0.5f, mock(ZootActor.class));
+		cameraFocusSensor.onCollision(mock(Fixture.class));
+		cameraFocusSensor.postUpdate(0.5f, mock(ZootActor.class));
+		
+		//then
+		verify(camera).setZoom(desiredZoomOnFocus);
+	}
+	
+	@Test
+	public void shouldZoomOnDefocus()
+	{
+		//given
+		final float desiredZoomOnFocus = 2.0f;
+		ControllerAnnotations.setControllerParameter(cameraFocusSensor, "zoom", desiredZoomOnFocus);
+		
+		//when
+		cameraFocusSensor.preUpdate(1.0f, mock(ZootActor.class));
+		cameraFocusSensor.onCollision(mock(Fixture.class));
+		cameraFocusSensor.postUpdate(1.0f, mock(ZootActor.class));
+		
+		//then
+		verify(camera).setZoom(desiredZoomOnFocus);
+		
+		//when
+		cameraFocusSensor.preUpdate(0.5f, mock(ZootActor.class));
+		cameraFocusSensor.postUpdate(0.5f, mock(ZootActor.class));
+		
+		//then
+		verify(camera).setZoom(1.0f);
+		
+		//when
+		cameraFocusSensor.preUpdate(0.5f, mock(ZootActor.class));
+		cameraFocusSensor.postUpdate(0.5f, mock(ZootActor.class));
+		
+		//then
+		verify(camera).setZoom(0.0f);
 	}
 	
 	@Test

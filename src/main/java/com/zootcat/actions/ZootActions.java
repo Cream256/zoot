@@ -115,13 +115,15 @@ public class ZootActions
 	
 	public static ZootLambdaAction lambda(Function<Float, Boolean> lambda)
 	{
-		ZootLambdaAction lambdaAction = new ZootLambdaAction(lambda);
+		ZootLambdaAction lambdaAction = zootAction(ZootLambdaAction.class);
+		lambdaAction.setLambda(lambda);
 		return lambdaAction;
 	}
 	
 	public static ZootLambdaAction lambda(Supplier<Boolean> lambda)
 	{
-		ZootLambdaAction lambdaAction = new ZootLambdaAction(unused -> lambda.get());
+		ZootLambdaAction lambdaAction = zootAction(ZootLambdaAction.class); 				
+		lambdaAction.setLambda(unused -> lambda.get());
 		return lambdaAction;
 	}
 	
@@ -153,5 +155,16 @@ public class ZootActions
 		knockbackAction.setKnockbackActor(target);		
 		knockbackAction.setAttackActor(owner);
 		return knockbackAction;
+	}
+	
+	public static ZootZoomCameraAction zoom(ZootCamera camera, float desiredZoom, float duration)
+	{
+		ZootZoomCameraAction zoomCamera = zootAction(ZootZoomCameraAction.class);
+		zoomCamera.setCamera(camera);
+		zoomCamera.setDesiredZoom(desiredZoom);
+		zoomCamera.setDuration(duration);
+		zoomCamera.setStartingZoom(camera.getZoom());
+		zoomCamera.restart();
+		return zoomCamera;		
 	}
 }

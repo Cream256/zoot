@@ -12,7 +12,7 @@ public class ZootCamera extends OrthographicCamera
 	private ZootActor target;
 	private float worldWidth;
 	private float worldHeight;
-	private boolean clipToLevel = false;
+	private boolean clipToLevel = false;	
 	private ZootCameraScrollingStrategy scrollingStrategy = ZootNullScrollingStrategy.Instance;
 	
 	public ZootCamera(float worldWidth, float worldHeight)
@@ -55,10 +55,10 @@ public class ZootCamera extends OrthographicCamera
 	{
 		return zoom;
 	}
-	
+		
 	public void update(float delta, boolean updateFrustum)
 	{
-		scrollingStrategy.scrollCamera(this, delta);
+		scrollingStrategy.scrollCamera(this, delta);				
 		super.update(updateFrustum);
 	}
 		

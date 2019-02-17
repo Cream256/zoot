@@ -39,4 +39,18 @@ public class ZootLambdaActionTest
 		assertEquals(lambda, action.getLambda());	
 		assertTrue(lambda.apply(0.0f));
 	}
+	
+	@Test
+	public void shouldSetLambda()
+	{
+		//given
+		Function<Float, Boolean> lambda = (delta) -> true;
+		ZootLambdaAction action = new ZootLambdaAction();
+		
+		//when
+		action.setLambda(lambda);
+		
+		//then
+		assertEquals(lambda, action.getLambda());
+	}
 }

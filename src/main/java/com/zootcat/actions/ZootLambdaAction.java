@@ -6,6 +6,11 @@ public class ZootLambdaAction extends ZootAction
 {
 	private Function<Float, Boolean> lambda;
 	
+	public ZootLambdaAction()
+	{
+		this.lambda = null;
+	}
+	
 	public ZootLambdaAction(Function<Float, Boolean> lambda)
 	{
 		this.lambda = lambda;
@@ -20,5 +25,10 @@ public class ZootLambdaAction extends ZootAction
 	public Function<Float, Boolean> getLambda()
 	{
 		return lambda;
+	}
+	
+	public void setLambda(Function<Float, Boolean> lambda)
+	{
+		this.lambda = lambda;
 	}
 }
