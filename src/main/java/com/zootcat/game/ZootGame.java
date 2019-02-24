@@ -126,19 +126,8 @@ public abstract class ZootGame extends Game
     	loadingScreen.onFinishLoading((game) -> 
     	{
     		ZootTiledMap tiledMap = getAssetManager().get(levelFile, ZootTiledMap.class);
-    		
-    		//TODO create a sceneSupplier?
     		Viewport viewport = new StretchViewport(viewportWidth, viewportHeight);    		
     		ZootTiledScene scene = new ZootTiledScene(tiledMap, getAssetManager(), getControllerFactory(), viewport);
-    		
-    		/*ZootTiledScene scene = new ZootTiledScene(
-    				tiledMap, 
-    				getAssetManager(), 
-    				getControllerFactory(), 
-    				game.getViewportWidth(), 
-    				game.getViewportHeight(), 
-    				game.getUnitPerTile());
-    				*/
     		game.setScreen(createSceneScreen(scene));
     	});
     	

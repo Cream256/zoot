@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.map.tiled.ZootTiledMap;
-import com.zootcat.map.tiled.ZootTiledSceneActorFactory;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootSceneActorSpawner;
 

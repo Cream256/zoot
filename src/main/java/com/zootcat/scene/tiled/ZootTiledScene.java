@@ -12,7 +12,6 @@ import com.zootcat.hud.ZootHud;
 import com.zootcat.map.tiled.ZootTiledMap;
 import com.zootcat.map.tiled.ZootTiledMapRender;
 import com.zootcat.map.tiled.ZootTiledMapRenderConfig;
-import com.zootcat.map.tiled.ZootTiledSceneActorFactory;
 import com.zootcat.map.tiled.ZootTiledWorldScaleCalculator;
 import com.zootcat.map.tiled.optimizer.ZootLayerOptimizer;
 import com.zootcat.map.tiled.optimizer.ZootLayerRegion;
@@ -25,8 +24,7 @@ public class ZootTiledScene extends ZootStageScene
 {
 	private ZootTiledMap map;	
 	private AssetManager assetManager;
-	private float unitScale;	
-	//private ZootTiledSceneActorSpawner spawner;
+	private float unitScale;
 		
 	public ZootTiledScene(ZootTiledMap map, AssetManager assetManager, ControllerFactory controllerFactory, Viewport viewport)
 	{						
@@ -77,7 +75,7 @@ public class ZootTiledScene extends ZootStageScene
 		actors.forEach(actor -> addActor(actor));
 		
     	//actor spawner for spawning actors after scene have been created
-    	//spawner = new ZootTiledSceneActorSpawner(map, actorFactory);
+    	setActorSpawner(new ZootTiledSceneActorSpawner(map, actorFactory));
 		
 		//debug render
 		Box2DDebugRenderer debugRender = new Box2DDebugRenderer();
@@ -114,12 +112,4 @@ public class ZootTiledScene extends ZootStageScene
 	{
 		return map;
 	}
-
-	/*
-	@Override
-	public ZootSceneActorSpawner getActorSpawner()
-	{
-		return spawner;
-	}
-	*/
 }

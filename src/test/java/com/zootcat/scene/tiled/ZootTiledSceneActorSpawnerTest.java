@@ -17,7 +17,6 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.map.tiled.ZootTiledMap;
-import com.zootcat.map.tiled.ZootTiledSceneActorFactory;
 import com.zootcat.scene.ZootActor;
 
 public class ZootTiledSceneActorSpawnerTest

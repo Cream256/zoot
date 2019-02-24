@@ -232,7 +232,6 @@ public class ZootFixtureDefBuilder
 			return ZootShapeFactory.createSlope(getFixtureWidth(actor), getFixtureHeight(actor), shape == ZootBodyShape.SLOPE_LEFT);
 			
 		case POLYGON:
-			//TODO remove cast
 			PolygonMapObject polygonObj = (PolygonMapObject) ((ZootTiledScene)scene).getTiledMap().getObjectById(actor.getId());
 			return ZootShapeFactory.createPolygon(polygonObj.getPolygon(), actor.getX(), actor.getY(), scene.getUnitScale());
 

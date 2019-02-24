@@ -1,4 +1,4 @@
-package com.zootcat.map.tiled;
+package com.zootcat.scene.tiled;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,11 +15,11 @@ import com.zootcat.controllers.Controller;
 import com.zootcat.controllers.ZootControllerOrderComparator;
 import com.zootcat.controllers.factory.ControllerFactory;
 import com.zootcat.exceptions.RuntimeZootException;
+import com.zootcat.map.tiled.ZootTiledMapCell;
 import com.zootcat.map.tiled.optimizer.ZootLayerRegion;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.tiled.ZootTiledScene;
 
-public class ZootTiledSceneActorFactory //TODO move to com.zootcat.scene.tiled
+public class ZootTiledSceneActorFactory
 {
 	public static final String DEFAULT_NAME = "";
 	private static final String SCENE_GLOBAL_PARAM = "scene";

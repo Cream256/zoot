@@ -1,4 +1,4 @@
-package com.zootcat.map.tiled;
+package com.zootcat.scene.tiled;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -31,10 +31,13 @@ import com.zootcat.controllers.factory.mocks.Mock2Controller;
 import com.zootcat.controllers.factory.mocks.SimpleController;
 import com.zootcat.controllers.factory.mocks.inner.Mock3Controller;
 import com.zootcat.exceptions.RuntimeZootException;
+import com.zootcat.map.tiled.ZootTiledMap;
+import com.zootcat.map.tiled.ZootTiledMapCell;
 import com.zootcat.map.tiled.optimizer.ZootLayerRegion;
 import com.zootcat.physics.ZootPhysics;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.tiled.ZootTiledScene;
+import com.zootcat.scene.tiled.ZootTiledSceneActorFactory;
 
 public class ZootTiledSceneActorFactoryTest
 {	

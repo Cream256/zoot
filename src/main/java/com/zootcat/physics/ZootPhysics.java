@@ -111,7 +111,7 @@ public class ZootPhysics implements Disposable
 		world = null;
 	}
 
-	public World getWorld() //TODO remove?
+	public World getWorld()
 	{
 		return world;
 	}
