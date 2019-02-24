@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
+import com.zootcat.utils.ZootDirection;
 
 public class FlyableControllerTest
 {

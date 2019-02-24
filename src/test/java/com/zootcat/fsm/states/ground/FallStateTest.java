@@ -14,8 +14,8 @@ import com.zootcat.fsm.states.ground.ClimbState;
 import com.zootcat.fsm.states.ground.FallState;
 import com.zootcat.fsm.states.ground.JumpForwardState;
 import com.zootcat.fsm.states.ground.JumpState;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootStateTestCase;
+import com.zootcat.utils.ZootDirection;
 
 public class FallStateTest extends ZootStateTestCase
 {

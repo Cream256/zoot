@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.zootcat.scene.ZootDirection;
+import com.zootcat.utils.ZootDirection;
 
 public class DirectionControllerTest
 {

@@ -15,8 +15,8 @@ import com.zootcat.fsm.states.StunState;
 import com.zootcat.fsm.states.ground.AttackState;
 import com.zootcat.fsm.states.ground.IdleState;
 import com.zootcat.fsm.states.ground.TurnState;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootStateTestCase;
+import com.zootcat.utils.ZootDirection;
 
 public class FlyStateTest extends ZootStateTestCase
 {

@@ -16,7 +16,7 @@ import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.game.ZootGame;
 import com.zootcat.input.ZootBindableInputProcessor;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
+import com.zootcat.utils.ZootDirection;
 
 /**
  * ZootDialogScreen - screen for displaying a dialog. The dialog is overlayed on top

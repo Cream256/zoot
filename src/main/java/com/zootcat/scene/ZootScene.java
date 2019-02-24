@@ -14,12 +14,8 @@ import com.zootcat.gfx.ZootRender;
 import com.zootcat.hud.ZootHud;
 import com.zootcat.physics.ZootPhysics;
 
-//TODO clean this up + extract ZootDefaultScene from ZootTiledScene
 public interface ZootScene extends Disposable
 {
-	//ZootSceneActorSpawner getActorSpawner();	//nie pasuje tutaj
-	//ZootActor spawn(String tilesetName, int tileId, final Vector2 position, final Vector2 velocity);
-	//ZootMap getMap();	//TODO tego nie powinno tu byc
 	void update(float delta);
 	void render(float delta);
 	void resize(int width, int height);
@@ -36,6 +32,7 @@ public interface ZootScene extends Disposable
 	ZootPhysics getPhysics();	
 	InputProcessor getInputProcessor();
 	Box2DDebugRenderer getDebugRender();
+	ZootSceneActorSpawner getActorSpawner();
 	
 	void setHud(ZootHud hud);
 	void setDebugMode(boolean debug);
@@ -46,6 +43,7 @@ public interface ZootScene extends Disposable
 	void setInputProcessor(InputProcessor inputProcessor);	
 	void setFocusedActor(ZootActor actor);
 	void setDebugRender(Box2DDebugRenderer debugRender);
+	void setActorSpawner(ZootSceneActorSpawner spawner);
 	
 	void addAction(Action action);
 	void addListener(EventListener listener);
@@ -55,5 +53,5 @@ public interface ZootScene extends Disposable
 	void removeActor(ZootActor actor);	
 	List<ZootActor> getActors();
 	List<ZootActor> getActors(Predicate<ZootActor> filter);
-	ZootActor getFirstActor(Predicate<ZootActor> filter);
+	ZootActor getFirstActor(Predicate<ZootActor> filter);	
 }

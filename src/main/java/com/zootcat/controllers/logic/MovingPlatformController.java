@@ -5,8 +5,8 @@ import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.controllers.physics.PhysicsBodyController;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.utils.ZootDirection;
 
 public class MovingPlatformController extends ControllerAdapter
 {

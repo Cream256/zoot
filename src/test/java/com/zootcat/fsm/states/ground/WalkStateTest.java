@@ -19,8 +19,8 @@ import com.zootcat.fsm.states.ground.JumpState;
 import com.zootcat.fsm.states.ground.RunState;
 import com.zootcat.fsm.states.ground.TurnState;
 import com.zootcat.fsm.states.ground.WalkState;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootStateTestCase;
+import com.zootcat.utils.ZootDirection;
 
 public class WalkStateTest extends ZootStateTestCase
 {

@@ -5,7 +5,7 @@ import com.zootcat.controllers.factory.CtrlDebug;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.exceptions.ZootControllerNotFoundException;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
+import com.zootcat.utils.ZootDirection;
 import com.zootcat.utils.ZootUtils;
 
 /**

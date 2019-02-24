@@ -36,9 +36,9 @@ import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.game.ZootGame;
 import com.zootcat.gfx.ZootGraphicsFactory;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.testing.ZootTestUtils;
+import com.zootcat.utils.ZootDirection;
 
 public class AnimatedSpriteControllerTest
 {

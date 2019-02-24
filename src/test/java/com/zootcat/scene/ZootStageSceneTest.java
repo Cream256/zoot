@@ -49,6 +49,7 @@ public class ZootStageSceneTest
 	@Mock private Action action;
 	@Mock private ZootCamera camera;
 	@Mock private Box2DDebugRenderer debugRender;
+	@Mock private ZootSceneActorSpawner spawner;
 	private World world;
 	private ZootStageScene scene;
 		
@@ -81,6 +82,7 @@ public class ZootStageSceneTest
 		assertNull(scene.getViewport());		
 		assertNull(scene.getCamera());
 		assertNull(scene.getDebugRender());
+		assertNull(scene.getActorSpawner());
 	}
 
 	@Test
@@ -259,6 +261,13 @@ public class ZootStageSceneTest
 	{
 		scene.setCamera(null);
 		//then ok
+	}
+	
+	@Test
+	public void shouldSetActorSpawner()
+	{
+		scene.setActorSpawner(spawner);
+		assertEquals(spawner, scene.getActorSpawner());
 	}
 	
 	@Test

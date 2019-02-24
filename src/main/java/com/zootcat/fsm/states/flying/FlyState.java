@@ -12,7 +12,7 @@ import com.zootcat.fsm.states.ground.AttackState;
 import com.zootcat.fsm.states.ground.TurnState;
 import com.zootcat.fsm.states.ground.WalkState;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
+import com.zootcat.utils.ZootDirection;
 
 public class FlyState extends BasicState
 {

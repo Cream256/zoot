@@ -1,10 +1,12 @@
-package com.zootcat.scene;
+package com.zootcat.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import com.zootcat.utils.ZootDirection;
 
 public class ZootDirectionTest
 {	

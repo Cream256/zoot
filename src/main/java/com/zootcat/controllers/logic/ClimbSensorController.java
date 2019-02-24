@@ -19,7 +19,7 @@ import com.zootcat.math.ZootBoundingBoxFactory;
 import com.zootcat.physics.ZootDefaultContactFilter;
 import com.zootcat.physics.ZootPhysicsUtils;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
+import com.zootcat.utils.ZootDirection;
 
 /**
  * Climb Controller - used to enable actor to climb on platforms and ledges.

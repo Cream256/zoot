@@ -13,8 +13,8 @@ import com.zootcat.fsm.states.HurtState;
 import com.zootcat.fsm.states.ground.CrouchState;
 import com.zootcat.fsm.states.ground.DownState;
 import com.zootcat.fsm.states.ground.FallState;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootStateTestCase;
+import com.zootcat.utils.ZootDirection;
 
 public class DownStateTest extends ZootStateTestCase
 {

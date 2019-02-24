@@ -20,8 +20,8 @@ import com.zootcat.gfx.ZootAnimation;
 import com.zootcat.gfx.ZootAnimationFile;
 import com.zootcat.gfx.ZootAnimationOffset;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.utils.ZootDirection;
 
 public class AnimatedSpriteController extends RenderControllerAdapter 
 {

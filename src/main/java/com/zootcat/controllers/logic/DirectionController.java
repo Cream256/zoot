@@ -2,7 +2,7 @@ package com.zootcat.controllers.logic;
 
 import com.zootcat.controllers.ControllerAdapter;
 import com.zootcat.controllers.factory.CtrlParam;
-import com.zootcat.scene.ZootDirection;
+import com.zootcat.utils.ZootDirection;
 
 public class DirectionController extends ControllerAdapter
 {

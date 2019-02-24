@@ -75,7 +75,6 @@ public class ZootTiledSceneActorFactoryTest
 		when(sceneMock.getAssetManager()).thenReturn(mock(AssetManager.class));
 		when(sceneMock.getTiledMap()).thenReturn(mapMock);
 		ctrlFactory = new ControllerFactory();
-		when(sceneMock.getControllerFactory()).thenReturn(ctrlFactory);
 		
 		//mock tile and inner cell
 		tileProperties = new MapProperties();
@@ -89,7 +88,7 @@ public class ZootTiledSceneActorFactoryTest
 		when(innerCell.getTile().getProperties()).thenReturn(tileProperties);
 		
 		//create factory
-		factory = new ZootTiledSceneActorFactory(sceneMock);
+		factory = new ZootTiledSceneActorFactory(sceneMock, ctrlFactory);
 	}
 			
 	@Test(expected = RuntimeZootException.class)

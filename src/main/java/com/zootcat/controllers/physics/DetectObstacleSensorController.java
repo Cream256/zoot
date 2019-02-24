@@ -5,7 +5,7 @@ import com.zootcat.controllers.logic.DirectionController;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
+import com.zootcat.utils.ZootDirection;
 
 public class DetectObstacleSensorController extends OnCollideWithSensorController
 {

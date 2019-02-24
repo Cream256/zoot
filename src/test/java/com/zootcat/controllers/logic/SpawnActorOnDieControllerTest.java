@@ -31,7 +31,7 @@ public class SpawnActorOnDieControllerTest
 		MockitoAnnotations.initMocks(this);
 		
 		when(physicsBodyCtrl.getCenterPositionRef()).thenReturn(Vector2.Zero);
-		//when(scene.getActorSpawner()).thenReturn(spawner);	//TODO
+		when(scene.getActorSpawner()).thenReturn(spawner);
 		when(actor.getScene()).thenReturn(scene);
 		when(actor.getSingleController(PhysicsBodyController.class)).thenReturn(physicsBodyCtrl);
 		

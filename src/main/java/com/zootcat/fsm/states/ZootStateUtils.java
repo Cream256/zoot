@@ -10,7 +10,7 @@ import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEventTypeEnum;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
+import com.zootcat.utils.ZootDirection;
 
 public class ZootStateUtils
 {

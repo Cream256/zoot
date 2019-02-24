@@ -3,7 +3,7 @@ package com.zootcat.fsm.states.ground;
 import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
+import com.zootcat.utils.ZootDirection;
 
 public class RunState extends WalkState
 {	

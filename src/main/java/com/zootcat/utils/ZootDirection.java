@@ -1,4 +1,4 @@
-package com.zootcat.scene;
+package com.zootcat.utils;
 
 import com.badlogic.gdx.math.MathUtils;
 

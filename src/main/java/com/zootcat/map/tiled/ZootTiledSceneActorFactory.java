@@ -29,11 +29,11 @@ public class ZootTiledSceneActorFactory //TODO move to com.zootcat.scene.tiled
 	private ZootTiledScene scene;
 	private ControllerFactory controllerFactory;		
 			
-	public ZootTiledSceneActorFactory(ZootTiledScene scene)
+	public ZootTiledSceneActorFactory(ZootTiledScene scene, ControllerFactory controllerFactory)
 	{
 		this.scene = scene;
 		this.scale = scene.getUnitScale();
-		this.controllerFactory = scene.getControllerFactory();
+		this.controllerFactory = controllerFactory;
 		this.controllerFactory.addGlobalParameter(SCENE_GLOBAL_PARAM, scene);
 		this.controllerFactory.addGlobalParameter(ASSET_MANAGER_GLOBAL_PARAM, scene.getAssetManager());
 	}

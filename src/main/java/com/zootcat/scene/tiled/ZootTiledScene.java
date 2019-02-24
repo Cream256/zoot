@@ -25,21 +25,19 @@ public class ZootTiledScene extends ZootStageScene
 {
 	private ZootTiledMap map;	
 	private AssetManager assetManager;
-	private ControllerFactory ctrlFactory;	
 	private float unitScale;	
 	//private ZootTiledSceneActorSpawner spawner;
 		
-	public ZootTiledScene(ZootTiledMap map, AssetManager assetManager, ControllerFactory factory, Viewport viewport)
+	public ZootTiledScene(ZootTiledMap map, AssetManager assetManager, ControllerFactory controllerFactory, Viewport viewport)
 	{						
 		super(viewport);
 		this.map = map;
-		this.ctrlFactory = factory;
 		this.assetManager = assetManager;
 		this.unitScale = ZootTiledWorldScaleCalculator.calculate(map.getPhysicsUnitPerTile(), map.getTileWidth());
-    	createScene();
+    	createScene(controllerFactory);
 	}
 	
-	private void createScene()
+	private void createScene(ControllerFactory controllerFactory)
 	{
 		//hud
 		setHud(new ZootHud());
@@ -65,7 +63,7 @@ public class ZootTiledScene extends ZootStageScene
 		getViewport().setCamera(camera);				
 		
 		//actor factory
-    	ZootTiledSceneActorFactory actorFactory = new ZootTiledSceneActorFactory(this);
+    	ZootTiledSceneActorFactory actorFactory = new ZootTiledSceneActorFactory(this, controllerFactory);
     	
 		//cell actors
     	TiledMapTileLayer collisionLayer = map.getLayer(ZootTiledMap.COLLISION_LAYER_NAME);
@@ -81,6 +79,7 @@ public class ZootTiledScene extends ZootStageScene
     	//actor spawner for spawning actors after scene have been created
     	//spawner = new ZootTiledSceneActorSpawner(map, actorFactory);
 		
+		//debug render
 		Box2DDebugRenderer debugRender = new Box2DDebugRenderer();
 		debugRender.setDrawAABBs(false);
 		debugRender.setDrawBodies(true);
@@ -88,12 +87,7 @@ public class ZootTiledScene extends ZootStageScene
 		debugRender.setDrawJoints(true);
 		setDebugRender(debugRender);
 	}
-		
-	public ZootTiledMap getTiledMap()
-	{
-		return map;
-	}
-	
+			
 	@Override
 	public void dispose() 
 	{		
@@ -110,15 +104,15 @@ public class ZootTiledScene extends ZootStageScene
 	{
 		return unitScale;
 	}
-			
-	public ControllerFactory getControllerFactory()
-	{
-		return ctrlFactory;
-	}
-	
+				
 	public AssetManager getAssetManager()
 	{
 		return assetManager;
+	}
+	
+	public ZootTiledMap getTiledMap()
+	{
+		return map;
 	}
 
 	/*

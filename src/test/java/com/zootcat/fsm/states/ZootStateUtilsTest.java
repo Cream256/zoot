@@ -13,8 +13,8 @@ import com.zootcat.controllers.physics.WalkableController;
 import com.zootcat.fsm.events.ZootEvent;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootActorStub;
+import com.zootcat.utils.ZootDirection;
 
 public class ZootStateUtilsTest
 {

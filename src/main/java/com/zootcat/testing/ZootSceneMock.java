@@ -16,6 +16,7 @@ import com.zootcat.hud.ZootHud;
 import com.zootcat.physics.ZootPhysics;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.scene.ZootSceneActorSpawner;
 
 public class ZootSceneMock implements ZootScene 
 {
@@ -211,6 +212,18 @@ public class ZootSceneMock implements ZootScene
 
 	@Override
 	public void setDebugRender(Box2DDebugRenderer debugRender)
+	{
+		//noop
+	}
+
+	@Override
+	public ZootSceneActorSpawner getActorSpawner()
+	{
+		return null;
+	}
+
+	@Override
+	public void setActorSpawner(ZootSceneActorSpawner spawner)
 	{
 		//noop
 	}

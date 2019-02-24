@@ -27,6 +27,7 @@ public class ZootStageScene implements ZootScene
 	private ZootPhysics physics;
 	private ZootRender render;
 	private InputProcessor inputProcessor;
+	private ZootSceneActorSpawner actorSpawner;
 	
 	private Stage stage = null;
 	private float timeAccumulator = 0.0f;
@@ -305,5 +306,17 @@ public class ZootStageScene implements ZootScene
 	public Stage getStage()
 	{
 		return stage;
+	}
+
+	@Override
+	public ZootSceneActorSpawner getActorSpawner()
+	{
+		return actorSpawner;
+	}
+
+	@Override
+	public void setActorSpawner(ZootSceneActorSpawner spawner)
+	{
+		this.actorSpawner = spawner;
 	}
 }

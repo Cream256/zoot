@@ -10,7 +10,7 @@ import com.zootcat.fsm.states.HurtState;
 import com.zootcat.fsm.states.StunState;
 import com.zootcat.fsm.states.ZootStateUtils;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
+import com.zootcat.utils.ZootDirection;
 
 public class TurnState extends AnimationBasedState
 {

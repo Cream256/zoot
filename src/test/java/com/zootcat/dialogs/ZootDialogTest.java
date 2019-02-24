@@ -15,8 +15,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.exceptions.ZootException;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootTestUtils;
+import com.zootcat.utils.ZootDirection;
 
 public class ZootDialogTest
 {

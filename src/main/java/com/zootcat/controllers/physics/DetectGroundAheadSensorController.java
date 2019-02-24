@@ -9,7 +9,7 @@ import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.fsm.events.ZootEvents;
 import com.zootcat.math.ZootBoundingBoxFactory;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
+import com.zootcat.utils.ZootDirection;
 
 /**
  * DetectGround controller - Creates a sensor, that is detecting if

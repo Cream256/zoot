@@ -6,9 +6,9 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Texture;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.exceptions.ZootException;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.textdata.TextDataFile;
 import com.zootcat.textdata.TextDataSection;
+import com.zootcat.utils.ZootDirection;
 import com.zootcat.utils.ZootUtils;
 
 public class ZootDialog 

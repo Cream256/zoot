@@ -25,9 +25,9 @@ import com.zootcat.fsm.events.ZootActorEventCounterListener;
 import com.zootcat.fsm.events.ZootEventType;
 import com.zootcat.physics.ZootFixtureDefBuilder.FixtureDimensions;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.testing.ZootActorStub;
+import com.zootcat.utils.ZootDirection;
 
 public class DetectGroundAheadSensorControllerTest
 {

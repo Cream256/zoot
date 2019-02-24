@@ -25,10 +25,10 @@ import com.zootcat.fsm.states.ground.IdleState;
 import com.zootcat.physics.ZootPhysics;
 import com.zootcat.physics.ZootShapeFactory;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.scene.ZootScene;
 import com.zootcat.testing.ZootActorStub;
 import com.zootcat.utils.BitMaskConverter;
+import com.zootcat.utils.ZootDirection;
 
 public class ClimbSensorControllerTest 
 {

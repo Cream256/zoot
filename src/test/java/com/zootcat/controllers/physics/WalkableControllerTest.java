@@ -19,8 +19,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.zootcat.controllers.factory.ControllerAnnotations;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.scene.ZootActor;
-import com.zootcat.scene.ZootDirection;
 import com.zootcat.testing.ZootActorStub;
+import com.zootcat.utils.ZootDirection;
 
 public class WalkableControllerTest
 {
