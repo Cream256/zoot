@@ -3,7 +3,6 @@ package com.zootcat.map.tiled;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
@@ -14,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.zootcat.camera.ZootCamera;
 import com.zootcat.gfx.ZootRender;
 
 public class ZootTiledMapRender extends OrthogonalTiledMapRenderer implements ZootRender 
@@ -43,7 +43,7 @@ public class ZootTiledMapRender extends OrthogonalTiledMapRenderer implements Zo
 	}
 
 	@Override
-	public void setView(OrthographicCamera camera) 
+	public void setView(ZootCamera camera) 
 	{
 		super.setView(camera);
 	}

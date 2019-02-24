@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -164,48 +165,53 @@ public class ZootSceneMock implements ZootScene
 	public void addAction(Action action)
 	{
 		//noop
-		
 	}
 
 	@Override
 	public void setViewport(Viewport viewport)
 	{
 		//noop
-		
 	}
 
 	@Override
 	public void setPhysics(ZootPhysics physics)
 	{
 		//noop
-		
 	}
 
 	@Override
 	public void setRender(ZootRender render)
 	{
 		//noop
-		
 	}
 
 	@Override
 	public void setInputProcessor(InputProcessor inputProcessor)
 	{
 		//noop
-		
 	}
 
 	@Override
 	public void setHud(ZootHud hud)
 	{
 		//noop
-		
 	}
 
 	@Override
 	public void setCamera(ZootCamera camera)
 	{
+		//noop	
+	}
+
+	@Override
+	public Box2DDebugRenderer getDebugRender()
+	{
+		return null;
+	}
+
+	@Override
+	public void setDebugRender(Box2DDebugRenderer debugRender)
+	{
 		//noop
-		
 	}
 }

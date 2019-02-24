@@ -16,7 +16,6 @@ import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
-//TODO make an interface and extract ZootBox2DPhysics
 public class ZootPhysics implements Disposable
 {
 	public static final Vector2 DEFAULT_GRAVITY = new Vector2(0.0f, -9.80f);

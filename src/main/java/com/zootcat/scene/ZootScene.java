@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.utils.Disposable;
@@ -34,6 +35,7 @@ public interface ZootScene extends Disposable
 	ZootRender getRender();
 	ZootPhysics getPhysics();	
 	InputProcessor getInputProcessor();
+	Box2DDebugRenderer getDebugRender();
 	
 	void setHud(ZootHud hud);
 	void setDebugMode(boolean debug);
@@ -43,6 +45,7 @@ public interface ZootScene extends Disposable
 	void setPhysics(ZootPhysics physics);
 	void setInputProcessor(InputProcessor inputProcessor);	
 	void setFocusedActor(ZootActor actor);
+	void setDebugRender(Box2DDebugRenderer debugRender);
 	
 	void addAction(Action action);
 	void addListener(EventListener listener);

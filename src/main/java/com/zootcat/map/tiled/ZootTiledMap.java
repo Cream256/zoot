@@ -26,7 +26,7 @@ public class ZootTiledMap implements ZootMap
 	public static final String TILE_HEIGHT_PROPERTY = "tileheight";
 	public static final String MAP_WIDTH_PROPERTY = "width";
 	public static final String MAP_HEIGHT_PROPERTY = "height";
-	public static final String UNIT_PER_TILE_PROPERTY = "unitPerTile";	
+	public static final String PHYSICS_UNIT_PER_TILE_PROPERTY = "physicsUnitPerTile";	
 	
 	private TiledMap tiledMap;
 	
@@ -63,9 +63,9 @@ public class ZootTiledMap implements ZootMap
 		return tiledMap.getProperties().get("height", Integer.class);
 	}
 	
-	public float getUnitPerTile()
+	public float getPhysicsUnitPerTile()
 	{
-		return Float.valueOf(tiledMap.getProperties().get(UNIT_PER_TILE_PROPERTY, "1.0f", String.class));
+		return Float.valueOf(tiledMap.getProperties().get(PHYSICS_UNIT_PER_TILE_PROPERTY, "1.0f", String.class));
 	}
 	
 	@Override

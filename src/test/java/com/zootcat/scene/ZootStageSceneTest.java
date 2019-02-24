@@ -4,8 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,6 +20,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -42,6 +48,8 @@ public class ZootStageSceneTest
 	@Mock private EventListener eventListener;
 	@Mock private Action action;
 	@Mock private ZootCamera camera;
+	@Mock private Box2DDebugRenderer debugRender;
+	private World world;
 	private ZootStageScene scene;
 		
 	@Before
@@ -49,6 +57,9 @@ public class ZootStageSceneTest
 	{
 		MockitoAnnotations.initMocks(this);
 		when(stage.getRoot()).thenReturn(stageRoot);
+		
+		world = new World(new Vector2(), true);
+		when(physics.getWorld()).thenReturn(world);
 		
 		scene = new ZootStageScene(stage);
 	}
@@ -69,15 +80,82 @@ public class ZootStageSceneTest
 		assertNull(scene.getHud());
 		assertNull(scene.getViewport());		
 		assertNull(scene.getCamera());
+		assertNull(scene.getDebugRender());
 	}
 
 	@Test
-	public void shouldActOnStage()
-	{
-		scene.update(1.0f);
-		verify(stage).act(1.0f);
+	public void shouldUpdateSceneWithFixedTimeStep()
+	{		
+		//given
+		final float expectedDelta = ZootStageScene.FIXED_TIME_STEP;
+		scene.setPhysics(physics);
+		scene.setCamera(camera);
+		scene.setHud(hud);
+		
+		//when
+		scene.update(expectedDelta);
+		
+		//then
+		verify(stage).act(expectedDelta);
+		verify(physics).step(expectedDelta);
+		verify(camera).update(expectedDelta, true);
+		verify(hud).update(expectedDelta);
 	}
 	
+	@Test
+	public void shouldUpdateSceneWithFixedTimeStepProperAmountOfTimes()
+	{
+		//given
+		final int expectedUpdateCount = 3;
+		final float expectedDelta = ZootStageScene.FIXED_TIME_STEP;		
+		scene.setPhysics(physics);
+		scene.setCamera(camera);
+		scene.setHud(hud);
+		
+		//when
+		scene.update(expectedDelta * expectedUpdateCount);
+		
+		//then
+		verify(stage, times(expectedUpdateCount)).act(expectedDelta);
+		verify(physics, times(expectedUpdateCount)).step(expectedDelta);
+		verify(camera).update(expectedDelta * expectedUpdateCount, true);
+		verify(hud).update(expectedDelta * expectedUpdateCount);
+	}
+	
+	@Test
+	public void shouldUpdateSceneOnlyUpToMaximumAllowedDelta()
+	{
+		//given
+		final float expectedDelta = ZootStageScene.FIXED_TIME_STEP;		
+		final int expectedUpdateCount = 15;
+		scene.setPhysics(physics);
+		scene.setCamera(camera);
+		scene.setHud(hud);
+		
+		//when
+		scene.update(1.0f);
+		
+		//then
+		verify(stage, times(expectedUpdateCount)).act(expectedDelta);
+		verify(physics, times(expectedUpdateCount)).step(expectedDelta);
+		verify(camera).update(1.0f, true);
+		verify(hud).update(1.0f);		
+	}
+	
+	@Test
+	public void shouldNotThrowOnSceneUpdateIfNotAllSystemsAreSet()
+	{
+		//given
+		scene.setPhysics(null);
+		scene.setCamera(null);
+		scene.setHud(null);
+		
+		//when
+		scene.update(1.0f);
+		
+		//then ok		
+	}
+		
 	@Test
 	public void shouldDrawStageIfNoRendererIsSet()
 	{
@@ -89,10 +167,45 @@ public class ZootStageSceneTest
 	@Test
 	public void shouldUseRenderIfSet()
 	{
+		//given
 		scene.setRender(render);
+		scene.setCamera(camera);
+		
+		//when
 		scene.render(1.0f);
+		
+		//then
+		verify(render).setView(camera);
 		verify(render).render(1.0f);
-		verify(stage, never()).draw();		
+	}
+	
+	@Test
+	public void shouldRenderHudIfSet()
+	{
+		//given
+		scene.setHud(hud);
+		
+		//when
+		scene.render(1.0f);
+		
+		//then
+		verify(hud).render();	
+	}
+	
+	@Test
+	public void shouldUseDebugRenderIfDebugModeIsSet()
+	{
+		//given
+		scene.setDebugRender(debugRender);
+		scene.setPhysics(physics);
+		scene.setCamera(camera);
+		
+		//when
+		scene.setDebugMode(true);
+		scene.render(1.0f);
+		
+		//then
+		verify(debugRender).render(eq(world), any());	
 	}
 	
 	@Test
@@ -103,6 +216,13 @@ public class ZootStageSceneTest
 		
 		scene.setDebugMode(false);
 		assertFalse(scene.isDebugMode());		
+	}
+	
+	@Test
+	public void shouldSetDebugRender()
+	{
+		scene.setDebugRender(debugRender);
+		assertEquals(debugRender, scene.getDebugRender());		
 	}
 	
 	@Test
@@ -132,6 +252,13 @@ public class ZootStageSceneTest
 		scene.setCamera(camera);
 		assertEquals(camera, scene.getCamera());
 		verify(camera).setScene(scene);
+	}
+	
+	@Test
+	public void shouldNotThrowWhenSettingNullCamera()
+	{
+		scene.setCamera(null);
+		//then ok
 	}
 	
 	@Test
@@ -228,6 +355,14 @@ public class ZootStageSceneTest
 		scene.setRender(render);
 		scene.dispose();
 		verify(render).dispose();		
+	}
+	
+	@Test
+	public void shouldDisposeDebugRender()
+	{
+		scene.setDebugRender(debugRender);
+		scene.dispose();
+		verify(debugRender).dispose();		
 	}
 	
 	@Test

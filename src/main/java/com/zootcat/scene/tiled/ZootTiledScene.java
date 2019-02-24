@@ -3,7 +3,6 @@ package com.zootcat.scene.tiled;
 import java.util.List;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -24,26 +23,19 @@ import com.zootcat.scene.ZootStageScene;
 
 public class ZootTiledScene extends ZootStageScene
 {
-	private static final float FIXED_TIME_STEP = 1.0f / 60.0f;
-	private static final float MIN_TIME_STEP = 1.0f / 4.0f;
-		
 	private ZootTiledMap map;	
 	private AssetManager assetManager;
-	private ControllerFactory ctrlFactory;
+	private ControllerFactory ctrlFactory;	
+	private float unitScale;	
 	//private ZootTiledSceneActorSpawner spawner;
-	
-	private float unitScale;
-	private float timeAccumulator = 0.0f;	
-	
-	private Box2DDebugRenderer debugRender;
-	
+		
 	public ZootTiledScene(ZootTiledMap map, AssetManager assetManager, ControllerFactory factory, Viewport viewport)
 	{						
 		super(viewport);
 		this.map = map;
 		this.ctrlFactory = factory;
 		this.assetManager = assetManager;
-		this.unitScale = ZootTiledWorldScaleCalculator.calculate(map.getUnitPerTile(), map.getTileWidth());
+		this.unitScale = ZootTiledWorldScaleCalculator.calculate(map.getPhysicsUnitPerTile(), map.getTileWidth());
     	createScene();
 	}
 	
@@ -55,19 +47,22 @@ public class ZootTiledScene extends ZootStageScene
 		//physics
 		setPhysics(new ZootPhysics());
     	
-		//render
+		//tiled map render
     	ZootTiledMapRenderConfig renderConfig = new ZootTiledMapRenderConfig();
 		renderConfig.renderRectangleObjects = false;
 		renderConfig.renderTextureObjects = false;	
 		renderConfig.unitScale = unitScale;
 		setRender(new ZootTiledMapRender(map, renderConfig));
 				
-		//stage
-		ZootCamera camera = new ZootCamera(map.getMapWidth() * map.getUnitPerTile(), map.getMapHeight() * map.getUnitPerTile());
-		camera.setViewportSize(getViewport().getWorldWidth(), getViewport().getWorldHeight());
+		//camera
+		float physicalWorldWidth = map.getMapWidth() * map.getPhysicsUnitPerTile();
+		float physicalWorldHeight = map.getMapHeight() * map.getPhysicsUnitPerTile();		
+		ZootCamera camera = new ZootCamera(physicalWorldWidth, physicalWorldHeight);				
 		setCamera(camera);
-				
-		getViewport().setCamera(camera);
+		
+		//viewport
+		camera.setViewportSize(getViewport().getWorldWidth(), getViewport().getWorldHeight());
+		getViewport().setCamera(camera);				
 		
 		//actor factory
     	ZootTiledSceneActorFactory actorFactory = new ZootTiledSceneActorFactory(this);
@@ -86,8 +81,12 @@ public class ZootTiledScene extends ZootStageScene
     	//actor spawner for spawning actors after scene have been created
     	//spawner = new ZootTiledSceneActorSpawner(map, actorFactory);
 		
-		//debug
-		debugRender = new Box2DDebugRenderer();
+		Box2DDebugRenderer debugRender = new Box2DDebugRenderer();
+		debugRender.setDrawAABBs(false);
+		debugRender.setDrawBodies(true);
+		debugRender.setDrawInactiveBodies(true);
+		debugRender.setDrawJoints(true);
+		setDebugRender(debugRender);
 	}
 		
 	public ZootTiledMap getTiledMap()
@@ -95,39 +94,6 @@ public class ZootTiledScene extends ZootStageScene
 		return map;
 	}
 	
-	@Override
-	public void update(float delta)
-	{		
-		timeAccumulator += Math.min(MIN_TIME_STEP, delta);       
-		while(timeAccumulator >= FIXED_TIME_STEP)
-		{
-			getStage().act(FIXED_TIME_STEP);
-			getPhysics().step(FIXED_TIME_STEP);
-			timeAccumulator -= FIXED_TIME_STEP;
-		}
-		getCamera().update(delta, true);
-		getHud().update(delta);
-	}
-	
-	@Override
-	public void render(float delta)
-	{			
-		getRender().setView((OrthographicCamera)getCamera());
-		getRender().render(delta);
-		getStage().draw();
-		
-		if(isDebugMode())
-		{
-			debugRender.setDrawAABBs(false);
-			debugRender.setDrawBodies(true);
-			debugRender.setDrawInactiveBodies(true);
-			debugRender.setDrawJoints(true);
-			debugRender.render(getPhysics().getWorld(), getCamera().combined);
-		}
-		
-		getHud().render();
-	}
-
 	@Override
 	public void dispose() 
 	{		
@@ -138,7 +104,6 @@ public class ZootTiledScene extends ZootStageScene
 		}
 		super.dispose();
 	}
-
 	
 	@Override
 	public float getUnitScale()

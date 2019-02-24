@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,13 +19,20 @@ import com.zootcat.physics.ZootPhysics;
 
 public class ZootStageScene implements ZootScene 
 {
-	private boolean isDebugMode = false;	
-	private ZootRender render = null;
-	private ZootPhysics physics = null;	
-	private InputProcessor inputProcessor = null;
-	private ZootHud hud = null;
-	private Stage stage = null;
+	public static final float FIXED_TIME_STEP = 1.0f / 60.0f;
+	public static final float MIN_TIME_STEP = 1.0f / 4.0f;
+		
+	private ZootHud hud;
 	private ZootCamera camera;
+	private ZootPhysics physics;
+	private ZootRender render;
+	private InputProcessor inputProcessor;
+	
+	private Stage stage = null;
+	private float timeAccumulator = 0.0f;
+	
+	private boolean isDebugMode = false;
+	private Box2DDebugRenderer debugRender = null;
 	
 	public ZootStageScene(Stage stage)
 	{
@@ -40,15 +48,34 @@ public class ZootStageScene implements ZootScene
 		
 	@Override
 	public void update(float delta)
-	{
-		stage.act(delta);
+	{		
+		timeAccumulator += Math.min(MIN_TIME_STEP, delta);       
+		while(timeAccumulator >= FIXED_TIME_STEP)
+		{
+			stage.act(FIXED_TIME_STEP);			
+			
+			if(physics != null) physics.step(FIXED_TIME_STEP);
+			
+			timeAccumulator -= FIXED_TIME_STEP;
+		}
+		
+		if(camera != null) camera.update(delta, true);
+		if(hud != null) hud.update(delta);
 	}
-	
+		
 	@Override
 	public void render(float delta)
 	{	
-		if(render != null) render.render(delta);
-		else stage.draw();
+		if(render != null)
+		{
+			render.setView(camera);
+			render.render(delta);	
+		}
+		
+		stage.draw();
+		
+		if(isDebugMode) debugRender.render(physics.getWorld(), camera.combined);
+		if(hud != null) hud.render();
 	}
 	
 	@Override
@@ -61,6 +88,18 @@ public class ZootStageScene implements ZootScene
 	public void setDebugMode(boolean debug)
 	{
 		isDebugMode = debug;
+	}
+	
+	@Override
+	public void setDebugRender(Box2DDebugRenderer render)
+	{
+		debugRender = render;
+	}
+	
+	@Override
+	public Box2DDebugRenderer getDebugRender()
+	{
+		return debugRender;
 	}
 	
 	@Override
@@ -120,8 +159,8 @@ public class ZootStageScene implements ZootScene
 	@Override
 	public void setCamera(ZootCamera camera)
 	{
-		this.camera = camera;
-		camera.setScene(this);
+		this.camera = camera;		
+		if(camera != null) camera.setScene(this);
 	}
 	
 	@Override
@@ -248,6 +287,12 @@ public class ZootStageScene implements ZootScene
 		{
 			hud.dispose();
 			hud = null;
+		}
+		
+		if(debugRender != null)
+		{
+			debugRender.dispose();
+			debugRender = null;
 		}
 	}
 	
