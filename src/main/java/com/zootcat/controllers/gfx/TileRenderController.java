@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.scene.tiled.ZootTiledScene;
 
 public class TileRenderController extends RenderControllerAdapter
 {
@@ -18,7 +19,7 @@ public class TileRenderController extends RenderControllerAdapter
 	@Override
 	public void init(ZootActor actor)
 	{
-		TiledMapTile tile = scene.getMap().getTilesets().getTile(actor.getGid());
+		TiledMapTile tile = ((ZootTiledScene)scene).getTiledMap().getTilesets().getTile(actor.getGid());
 		textureRegion = tile != null ? tile.getTextureRegion() : null;
 		sprite = textureRegion != null ? new Sprite(textureRegion) : null;
 	}

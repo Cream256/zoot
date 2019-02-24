@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.zootcat.camera.ZootCamera;
 import com.zootcat.gfx.ZootRender;
 import com.zootcat.hud.ZootHud;
 import com.zootcat.physics.ZootPhysics;
@@ -23,11 +24,18 @@ public class ZootStageScene implements ZootScene
 	private InputProcessor inputProcessor = null;
 	private ZootHud hud = null;
 	private Stage stage = null;
+	private ZootCamera camera;
 	
 	public ZootStageScene(Stage stage)
 	{
 		this.stage = stage;
-		//stage = new Stage(viewport);	//TODO verify if not needed, or move elsewhere
+		this.inputProcessor = stage;
+	}
+	
+	public ZootStageScene(Viewport viewport)
+	{
+		stage = new Stage(viewport);
+		inputProcessor = stage;
 	}
 		
 	@Override
@@ -101,6 +109,19 @@ public class ZootStageScene implements ZootScene
 	public void setHud(ZootHud hud)
 	{
 		this.hud = hud;
+	}
+	
+	@Override
+	public ZootCamera getCamera()
+	{
+		return camera;
+	}
+	
+	@Override
+	public void setCamera(ZootCamera camera)
+	{
+		this.camera = camera;
+		camera.setScene(this);
 	}
 	
 	@Override
@@ -211,6 +232,12 @@ public class ZootStageScene implements ZootScene
 			stage = null;
 		}
 				
+		if(render != null)
+		{
+			render.dispose();
+			render = null;
+		}
+		
 		if(physics != null)
 		{
 			physics.dispose();

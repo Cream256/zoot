@@ -12,11 +12,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zootcat.camera.ZootCamera;
 import com.zootcat.gfx.ZootRender;
 import com.zootcat.hud.ZootHud;
-import com.zootcat.map.ZootMap;
 import com.zootcat.physics.ZootPhysics;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
-import com.zootcat.scene.ZootSceneActorSpawner;
 
 public class ZootSceneMock implements ZootScene 
 {
@@ -95,12 +93,6 @@ public class ZootSceneMock implements ZootScene
 	}
 
 	@Override
-	public ZootMap getMap() 
-	{
-		return null;
-	}
-
-	@Override
 	public InputProcessor getInputProcessor() 
 	{
 		return null;
@@ -155,14 +147,65 @@ public class ZootSceneMock implements ZootScene
 	}
 
 	@Override
-	public ZootSceneActorSpawner getActorSpawner() 
+	public float getWidth()
 	{
-		return null;
+		//noop
+		return 0;
 	}
 
 	@Override
-	public void addRootAction(Action action)
+	public float getHeight()
 	{
 		//noop
+		return 0;
+	}
+
+	@Override
+	public void addAction(Action action)
+	{
+		//noop
+		
+	}
+
+	@Override
+	public void setViewport(Viewport viewport)
+	{
+		//noop
+		
+	}
+
+	@Override
+	public void setPhysics(ZootPhysics physics)
+	{
+		//noop
+		
+	}
+
+	@Override
+	public void setRender(ZootRender render)
+	{
+		//noop
+		
+	}
+
+	@Override
+	public void setInputProcessor(InputProcessor inputProcessor)
+	{
+		//noop
+		
+	}
+
+	@Override
+	public void setHud(ZootHud hud)
+	{
+		//noop
+		
+	}
+
+	@Override
+	public void setCamera(ZootCamera camera)
+	{
+		//noop
+		
 	}
 }

@@ -7,6 +7,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zootcat.assets.ZootAssetManager;
 import com.zootcat.controllers.factory.ControllerFactory;
 import com.zootcat.exceptions.RuntimeZootException;
@@ -124,13 +126,19 @@ public abstract class ZootGame extends Game
     	loadingScreen.onFinishLoading((game) -> 
     	{
     		ZootTiledMap tiledMap = getAssetManager().get(levelFile, ZootTiledMap.class);
-    		ZootTiledScene scene = new ZootTiledScene(
+    		
+    		//TODO create a sceneSupplier?
+    		Viewport viewport = new StretchViewport(viewportWidth, viewportHeight);    		
+    		ZootTiledScene scene = new ZootTiledScene(tiledMap, getAssetManager(), getControllerFactory(), viewport);
+    		
+    		/*ZootTiledScene scene = new ZootTiledScene(
     				tiledMap, 
     				getAssetManager(), 
     				getControllerFactory(), 
     				game.getViewportWidth(), 
     				game.getViewportHeight(), 
     				game.getUnitPerTile());
+    				*/
     		game.setScreen(createSceneScreen(scene));
     	});
     	

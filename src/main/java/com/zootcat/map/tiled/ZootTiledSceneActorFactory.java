@@ -19,7 +19,7 @@ import com.zootcat.map.tiled.optimizer.ZootLayerRegion;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.tiled.ZootTiledScene;
 
-public class ZootTiledSceneActorFactory 
+public class ZootTiledSceneActorFactory //TODO move to com.zootcat.scene.tiled
 {
 	public static final String DEFAULT_NAME = "";
 	private static final String SCENE_GLOBAL_PARAM = "scene";
@@ -64,7 +64,7 @@ public class ZootTiledSceneActorFactory
 		
 		//id
 		int sceneMaxActorId = scene.getActors().stream().mapToInt(actor -> actor.getId()).max().orElse(0);
-		int mapMaxObjectId = scene.getMap().getAllObjects().stream().mapToInt(mo -> mo.getProperties().get("id", 0, Integer.class)).max().orElse(0);
+		int mapMaxObjectId = scene.getTiledMap().getAllObjects().stream().mapToInt(mo -> mo.getProperties().get("id", 0, Integer.class)).max().orElse(0);
 		int tileActorId = Math.max(sceneMaxActorId, mapMaxObjectId) + 1;
 		tileActor.setId(tileActorId);
 

@@ -73,7 +73,7 @@ public class ZootTiledSceneActorFactoryTest
 		when(sceneMock.getPhysics()).thenReturn(physicsMock);
 		when(sceneMock.getUnitScale()).thenReturn(1.0f);
 		when(sceneMock.getAssetManager()).thenReturn(mock(AssetManager.class));
-		when(sceneMock.getMap()).thenReturn(mapMock);
+		when(sceneMock.getTiledMap()).thenReturn(mapMock);
 		ctrlFactory = new ControllerFactory();
 		when(sceneMock.getControllerFactory()).thenReturn(ctrlFactory);
 		

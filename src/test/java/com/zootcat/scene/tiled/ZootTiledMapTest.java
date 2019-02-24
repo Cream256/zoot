@@ -99,6 +99,20 @@ public class ZootTiledMapTest
 	}
 	
 	@Test
+	public void shouldReturnUnitPerTile()
+	{
+		tiledMapProperties.put(ZootTiledMap.UNIT_PER_TILE_PROPERTY, 1.23f);
+		assertEquals(1.23f, map.getUnitPerTile(), 0.0f);
+	}
+	
+	@Test
+	public void shouldReturnDefaultUnitPerTileIfItWasNotDefined()
+	{
+		tiledMapProperties.remove(ZootTiledMap.UNIT_PER_TILE_PROPERTY);
+		assertEquals(1.00f, map.getUnitPerTile(), 0.0f);
+	}
+	
+	@Test
 	public void getTilesetsTest()
 	{
 		assertEquals(tilesets, map.getTilesets());

@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.scene.ZootActor;
 import com.zootcat.scene.ZootScene;
+import com.zootcat.scene.tiled.ZootTiledScene;
 import com.zootcat.utils.BitMaskConverter;
 import com.zootcat.utils.CollisionMask;
 
@@ -231,7 +232,8 @@ public class ZootFixtureDefBuilder
 			return ZootShapeFactory.createSlope(getFixtureWidth(actor), getFixtureHeight(actor), shape == ZootBodyShape.SLOPE_LEFT);
 			
 		case POLYGON:
-			PolygonMapObject polygonObj = (PolygonMapObject) scene.getMap().getObjectById(actor.getId());
+			//TODO remove cast
+			PolygonMapObject polygonObj = (PolygonMapObject) ((ZootTiledScene)scene).getTiledMap().getObjectById(actor.getId());
 			return ZootShapeFactory.createPolygon(polygonObj.getPolygon(), actor.getX(), actor.getY(), scene.getUnitScale());
 
 		case NONE:

@@ -21,6 +21,8 @@ public class SpawnActorOnDieController extends OnDieEventController
 	@Override
 	protected boolean onDie(ZootActor actor, ZootEvent event)
 	{
+		
+		/*
 		ZootSceneActorSpawner spawner = actor.getScene().getActorSpawner();		
 		Vector2 position = actor.getSingleController(PhysicsBodyController.class).getCenterPositionRef().cpy();		
 		
@@ -34,5 +36,7 @@ public class SpawnActorOnDieController extends OnDieEventController
 		}
 		
 		return true;
+		*/
+		return true;	//TODO
 	}
 }

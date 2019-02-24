@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.zootcat.camera.ZootCamera;
 import com.zootcat.gfx.ZootRender;
 import com.zootcat.hud.ZootHud;
 import com.zootcat.physics.ZootPhysics;
@@ -40,6 +41,7 @@ public class ZootStageSceneTest
 	@Mock private ZootActor actor;
 	@Mock private EventListener eventListener;
 	@Mock private Action action;
+	@Mock private ZootCamera camera;
 	private ZootStageScene scene;
 		
 	@Before
@@ -56,16 +58,17 @@ public class ZootStageSceneTest
 	{
 		assertEquals(stage, scene.getStage());
 	}
-	
+		
 	@Test
 	public void shouldConstructWithDefaultValues()
 	{
 		assertEquals(1.0f, scene.getUnitScale(), 0.0f);
+		assertEquals(scene.getStage(), scene.getInputProcessor());
 		assertNull(scene.getPhysics());
 		assertNull(scene.getRender());
-		assertNull(scene.getInputProcessor());
 		assertNull(scene.getHud());
 		assertNull(scene.getViewport());		
+		assertNull(scene.getCamera());
 	}
 
 	@Test
@@ -120,7 +123,15 @@ public class ZootStageSceneTest
 	public void shouldSetInputProcessor()
 	{
 		scene.setInputProcessor(inputProcessor);
-		assertEquals(inputProcessor, scene.getInputProcessor());
+		assertEquals(inputProcessor, scene.getInputProcessor());	
+	}
+	
+	@Test
+	public void shouldSetCamera()
+	{
+		scene.setCamera(camera);
+		assertEquals(camera, scene.getCamera());
+		verify(camera).setScene(scene);
 	}
 	
 	@Test
@@ -212,10 +223,19 @@ public class ZootStageSceneTest
 	}
 	
 	@Test
-	public void shouldNotThrowOnDisposeIfHudOrPhysicsAreNotSet()
+	public void shouldDisposeRender()
+	{
+		scene.setRender(render);
+		scene.dispose();
+		verify(render).dispose();		
+	}
+	
+	@Test
+	public void shouldNotThrowOnDisposeIfHudPhysicsRenderAreNotSet()
 	{
 		scene.setHud(null);
 		scene.setPhysics(null);
+		scene.setRender(null);
 		scene.dispose();
 		//ok
 	}
