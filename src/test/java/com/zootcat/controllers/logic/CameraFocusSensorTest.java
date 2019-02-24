@@ -43,7 +43,7 @@ public class CameraFocusSensorTest
 	{
 		MockitoAnnotations.initMocks(this);
 		when(scene.getUnitScale()).thenReturn(1.0f);
-		when(scene.getCamera()).thenReturn(camera);
+		when(scene.getActiveCamera()).thenReturn(camera);
 		when(scene.getFirstActor(any())).thenReturn(actor);
 		when(camera.getScrollingStrategy()).thenReturn(previousScrollingStrategy);
 		when(camera.getZoom()).thenReturn(0.0f);

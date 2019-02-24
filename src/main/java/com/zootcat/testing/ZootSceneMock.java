@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zootcat.camera.ZootCamera;
+import com.zootcat.camera.ZootCameraRegistry;
 import com.zootcat.gfx.ZootRender;
 import com.zootcat.hud.ZootHud;
 import com.zootcat.physics.ZootPhysics;
@@ -77,7 +78,7 @@ public class ZootSceneMock implements ZootScene
 	}
 
 	@Override
-	public ZootCamera getCamera() 
+	public ZootCamera getActiveCamera() 
 	{
 		return null;
 	}
@@ -199,7 +200,7 @@ public class ZootSceneMock implements ZootScene
 	}
 
 	@Override
-	public void setCamera(ZootCamera camera)
+	public void setActiveCamera(ZootCamera camera)
 	{
 		//noop	
 	}
@@ -226,5 +227,11 @@ public class ZootSceneMock implements ZootScene
 	public void setActorSpawner(ZootSceneActorSpawner spawner)
 	{
 		//noop
+	}
+
+	@Override
+	public ZootCameraRegistry getCameraRegistry()
+	{
+		return null;
 	}
 }

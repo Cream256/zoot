@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zootcat.camera.ZootCamera;
+import com.zootcat.camera.ZootCameraRegistry;
 import com.zootcat.gfx.ZootRender;
 import com.zootcat.hud.ZootHud;
 import com.zootcat.physics.ZootPhysics;
@@ -23,11 +24,12 @@ public class ZootStageScene implements ZootScene
 	public static final float MIN_TIME_STEP = 1.0f / 4.0f;
 		
 	private ZootHud hud;
-	private ZootCamera camera;
+	private ZootCamera activeCamera;
 	private ZootPhysics physics;
 	private ZootRender render;
 	private InputProcessor inputProcessor;
 	private ZootSceneActorSpawner actorSpawner;
+	private ZootCameraRegistry cameraRegistry;
 	
 	private Stage stage = null;
 	private float timeAccumulator = 0.0f;
@@ -39,12 +41,14 @@ public class ZootStageScene implements ZootScene
 	{
 		this.stage = stage;
 		this.inputProcessor = stage;
+		this.cameraRegistry = new ZootCameraRegistry();
 	}
 	
 	public ZootStageScene(Viewport viewport)
 	{
 		stage = new Stage(viewport);
 		inputProcessor = stage;
+		cameraRegistry = new ZootCameraRegistry();
 	}
 		
 	@Override
@@ -60,7 +64,7 @@ public class ZootStageScene implements ZootScene
 			timeAccumulator -= FIXED_TIME_STEP;
 		}
 		
-		if(camera != null) camera.update(delta, true);
+		if(activeCamera != null) activeCamera.update(delta, true);
 		if(hud != null) hud.update(delta);
 	}
 		
@@ -69,13 +73,13 @@ public class ZootStageScene implements ZootScene
 	{	
 		if(render != null)
 		{
-			render.setView(camera);
+			render.setView(activeCamera);
 			render.render(delta);	
 		}
 		
 		stage.draw();
 		
-		if(isDebugMode) debugRender.render(physics.getWorld(), camera.combined);
+		if(isDebugMode) debugRender.render(physics.getWorld(), activeCamera.combined);
 		if(hud != null) hud.render();
 	}
 	
@@ -152,15 +156,15 @@ public class ZootStageScene implements ZootScene
 	}
 	
 	@Override
-	public ZootCamera getCamera()
+	public ZootCamera getActiveCamera()
 	{
-		return camera;
+		return activeCamera;
 	}
 	
 	@Override
-	public void setCamera(ZootCamera camera)
+	public void setActiveCamera(ZootCamera camera)
 	{
-		this.camera = camera;		
+		this.activeCamera = camera;		
 		if(camera != null) camera.setScene(this);
 	}
 	
@@ -318,5 +322,11 @@ public class ZootStageScene implements ZootScene
 	public void setActorSpawner(ZootSceneActorSpawner spawner)
 	{
 		this.actorSpawner = spawner;
+	}
+
+	@Override
+	public ZootCameraRegistry getCameraRegistry()
+	{
+		return cameraRegistry;
 	}
 }

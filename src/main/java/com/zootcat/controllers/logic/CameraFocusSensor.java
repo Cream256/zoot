@@ -64,7 +64,7 @@ public class CameraFocusSensor extends OnCollideWithSensorController
 	
 	private void defocus()
 	{
-		ZootCamera camera = scene.getCamera();		
+		ZootCamera camera = scene.getActiveCamera();		
 		
 		camera.setScrollingStrategy(previousScrollingStrategy);
 				
@@ -82,7 +82,7 @@ public class CameraFocusSensor extends OnCollideWithSensorController
 		if(actorToFocus == null) throw new RuntimeZootException("Actor to focus not found: " + focusedActorName);
 				
 		//set the scrolling strategy
-		ZootCamera camera = scene.getCamera();
+		ZootCamera camera = scene.getActiveCamera();
 		previousScrollingStrategy = camera.getScrollingStrategy();		
 		camera.setScrollingStrategy(new ZootScrollToScrollingStrategy(actorToFocus, DURATION));
 				

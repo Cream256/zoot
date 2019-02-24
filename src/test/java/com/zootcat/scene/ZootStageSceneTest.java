@@ -2,6 +2,7 @@ package com.zootcat.scene;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -76,11 +77,12 @@ public class ZootStageSceneTest
 	{
 		assertEquals(1.0f, scene.getUnitScale(), 0.0f);
 		assertEquals(scene.getStage(), scene.getInputProcessor());
+		assertNotNull(scene.getCameraRegistry());
 		assertNull(scene.getPhysics());
 		assertNull(scene.getRender());
 		assertNull(scene.getHud());
 		assertNull(scene.getViewport());		
-		assertNull(scene.getCamera());
+		assertNull(scene.getActiveCamera());
 		assertNull(scene.getDebugRender());
 		assertNull(scene.getActorSpawner());
 	}
@@ -91,7 +93,7 @@ public class ZootStageSceneTest
 		//given
 		final float expectedDelta = ZootStageScene.FIXED_TIME_STEP;
 		scene.setPhysics(physics);
-		scene.setCamera(camera);
+		scene.setActiveCamera(camera);
 		scene.setHud(hud);
 		
 		//when
@@ -111,7 +113,7 @@ public class ZootStageSceneTest
 		final int expectedUpdateCount = 3;
 		final float expectedDelta = ZootStageScene.FIXED_TIME_STEP;		
 		scene.setPhysics(physics);
-		scene.setCamera(camera);
+		scene.setActiveCamera(camera);
 		scene.setHud(hud);
 		
 		//when
@@ -131,7 +133,7 @@ public class ZootStageSceneTest
 		final float expectedDelta = ZootStageScene.FIXED_TIME_STEP;		
 		final int expectedUpdateCount = 15;
 		scene.setPhysics(physics);
-		scene.setCamera(camera);
+		scene.setActiveCamera(camera);
 		scene.setHud(hud);
 		
 		//when
@@ -149,7 +151,7 @@ public class ZootStageSceneTest
 	{
 		//given
 		scene.setPhysics(null);
-		scene.setCamera(null);
+		scene.setActiveCamera(null);
 		scene.setHud(null);
 		
 		//when
@@ -171,7 +173,7 @@ public class ZootStageSceneTest
 	{
 		//given
 		scene.setRender(render);
-		scene.setCamera(camera);
+		scene.setActiveCamera(camera);
 		
 		//when
 		scene.render(1.0f);
@@ -200,7 +202,7 @@ public class ZootStageSceneTest
 		//given
 		scene.setDebugRender(debugRender);
 		scene.setPhysics(physics);
-		scene.setCamera(camera);
+		scene.setActiveCamera(camera);
 		
 		//when
 		scene.setDebugMode(true);
@@ -251,15 +253,15 @@ public class ZootStageSceneTest
 	@Test
 	public void shouldSetCamera()
 	{
-		scene.setCamera(camera);
-		assertEquals(camera, scene.getCamera());
+		scene.setActiveCamera(camera);
+		assertEquals(camera, scene.getActiveCamera());
 		verify(camera).setScene(scene);
 	}
 	
 	@Test
 	public void shouldNotThrowWhenSettingNullCamera()
 	{
-		scene.setCamera(null);
+		scene.setActiveCamera(null);
 		//then ok
 	}
 	
@@ -333,6 +335,12 @@ public class ZootStageSceneTest
 	{
 		scene.removeListener(eventListener);
 		verify(stage).removeListener(eventListener);
+	}
+	
+	@Test
+	public void shouldReturnCameraRegistry()
+	{
+		assertNotNull(scene.getCameraRegistry());
 	}
 	
 	@Test

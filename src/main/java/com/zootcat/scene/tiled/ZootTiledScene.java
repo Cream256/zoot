@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zootcat.camera.ZootCamera;
+import com.zootcat.camera.ZootCameraRegistry;
 import com.zootcat.controllers.factory.ControllerFactory;
 import com.zootcat.hud.ZootHud;
 import com.zootcat.map.tiled.ZootTiledMap;
@@ -54,7 +55,8 @@ public class ZootTiledScene extends ZootStageScene
 		float physicalWorldWidth = map.getMapWidth() * map.getPhysicsUnitPerTile();
 		float physicalWorldHeight = map.getMapHeight() * map.getPhysicsUnitPerTile();		
 		ZootCamera camera = new ZootCamera(physicalWorldWidth, physicalWorldHeight);				
-		setCamera(camera);
+		setActiveCamera(camera);
+		getCameraRegistry().registerCamera(ZootCameraRegistry.DEFAULT_CAMERA_NAME, camera);
 		
 		//viewport
 		camera.setViewportSize(getViewport().getWorldWidth(), getViewport().getWorldHeight());
