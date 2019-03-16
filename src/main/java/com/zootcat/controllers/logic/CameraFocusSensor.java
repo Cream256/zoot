@@ -5,7 +5,7 @@ import java.util.function.Function;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.zootcat.actions.ZootZoomCameraAction;
 import com.zootcat.camera.ZootCamera;
-import com.zootcat.camera.ZootCameraScrollingStrategy;
+import com.zootcat.camera.ZootCameraRegistry;
 import com.zootcat.camera.ZootScrollToScrollingStrategy;
 import com.zootcat.controllers.factory.CtrlParam;
 import com.zootcat.controllers.physics.OnCollideWithSensorController;
@@ -13,15 +13,15 @@ import com.zootcat.exceptions.RuntimeZootException;
 import com.zootcat.scene.ZootActor;
 
 public class CameraFocusSensor extends OnCollideWithSensorController
-{
+{	
 	private static final float DURATION = 1.0f;
 	
 	@CtrlParam(required = true) private String focusedActorName;
 	@CtrlParam private float zoom = 1.0f;
 	
+	private ZootCamera focusCamera;
 	private int acceptedCollisions = 0;
-	private boolean focused = false;
-	private ZootCameraScrollingStrategy previousScrollingStrategy = null;	
+	private boolean focused = false;	
 	private Function<Fixture, Boolean> acceptFixture = fix -> true;
 	
 	private boolean zoomingOnFocus = false;
@@ -51,7 +51,7 @@ public class CameraFocusSensor extends OnCollideWithSensorController
 		{
 			focus();
 		}
-		
+				
 		if(zoomingOnFocus)
 		{
 			zoomingOnFocus = !zoomOnFocus.act(delta);
@@ -64,11 +64,9 @@ public class CameraFocusSensor extends OnCollideWithSensorController
 	
 	private void defocus()
 	{
-		ZootCamera camera = scene.getActiveCamera();		
-		
-		camera.setScrollingStrategy(previousScrollingStrategy);
-				
-		previousScrollingStrategy = null;
+		ZootCamera defaultCamera = scene.getCameraRegistry().getCamera(ZootCameraRegistry.DEFAULT_CAMERA_NAME);
+		defaultCamera.setPosition(focusCamera.getPosition().x, focusCamera.getPosition().y);
+		scene.setActiveCamera(defaultCamera);
 		
 		zoomingOnFocus = false;
 		zoomingOnDefocus = true;
@@ -80,28 +78,43 @@ public class CameraFocusSensor extends OnCollideWithSensorController
 		//fetch actor to focus on
 		ZootActor actorToFocus = scene.getFirstActor(act -> act.getName().equalsIgnoreCase(focusedActorName));
 		if(actorToFocus == null) throw new RuntimeZootException("Actor to focus not found: " + focusedActorName);
-				
-		//set the scrolling strategy
-		ZootCamera camera = scene.getActiveCamera();
-		previousScrollingStrategy = camera.getScrollingStrategy();		
-		camera.setScrollingStrategy(new ZootScrollToScrollingStrategy(actorToFocus, DURATION));
-				
+		
+		//create focus camera
+		if(focusCamera == null)
+		{
+			focusCamera = new ZootCamera(scene.getWidth() / scene.getUnitScale(), scene.getHeight() / scene.getUnitScale());
+			focusCamera.setScene(scene);
+			focusCamera.setScrollingStrategy(new ZootScrollToScrollingStrategy(actorToFocus, DURATION));
+		}	
+		
+		ZootCamera defaultCamera = scene.getCameraRegistry().getCamera(ZootCameraRegistry.DEFAULT_CAMERA_NAME);
+		focusCamera.getScrollingStrategy().reset();
+		focusCamera.setTarget(defaultCamera.getTarget());
+		focusCamera.setEdgeSnapping(defaultCamera.isEdgeSnapping());
+		focusCamera.setPosition(defaultCamera.getPosition().x, defaultCamera.getPosition().y);
+		focusCamera.setViewportSize(defaultCamera.getViewportWidth(), defaultCamera.getViewportHeight());
+		focusCamera.setZoom(defaultCamera.getZoom());
+		focusCamera.setPosition(defaultCamera.getPosition().x, defaultCamera.getPosition().y);
+		
+		//assign camera
+		scene.setActiveCamera(focusCamera);
+						
 		//prepare zoom actions
-		zoomOnFocus.setCamera(camera);
+		zoomOnFocus.setCamera(focusCamera);
 		zoomOnFocus.setDesiredZoom(zoom);		
-		zoomOnFocus.setStartingZoom(camera.getZoom());
+		zoomOnFocus.setStartingZoom(focusCamera.getZoom());
 		zoomOnFocus.setDuration(DURATION);
 		zoomOnFocus.restart();
 		
-		zoomOnDefocus.setCamera(camera);
+		zoomOnDefocus.setCamera(defaultCamera);
 		zoomOnDefocus.setStartingZoom(zoom);
-		zoomOnDefocus.setDesiredZoom(camera.getZoom());
+		zoomOnDefocus.setDesiredZoom(defaultCamera.getZoom());
 		zoomOnDefocus.setDuration(DURATION);
 		zoomOnDefocus.restart();
 				
 		//set flags
 		zoomingOnFocus = true;
-		zoomingOnDefocus = false;
+		zoomingOnDefocus = false;		
 		focused = true;
 	}
 	

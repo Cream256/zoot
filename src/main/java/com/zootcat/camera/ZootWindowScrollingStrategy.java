@@ -87,4 +87,10 @@ public class ZootWindowScrollingStrategy implements ZootCameraScrollingStrategy
 		float newY = MathUtils.lerp(cameraPositionRef.y, lookAtY, lerpProgress);		
 		camera.setPosition(newX, newY);
 	}
+
+	@Override
+	public void reset()
+	{
+		//noop
+	}
 }

@@ -3,7 +3,7 @@ package com.zootcat.camera;
 import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
@@ -54,5 +54,19 @@ public class ZootPositionLockingScrollingStrategyTest
 		
 		//then
 		verify(camera, never()).setPosition(anyFloat(), anyFloat());
+	}
+	
+	@Test
+	public void shouldNotInteractWithCameraOnReset()
+	{
+		//given
+		ZootCamera camera = mock(ZootCamera.class);				
+		ZootPositionLockingScrollingStrategy strategy = new ZootPositionLockingScrollingStrategy();
+		
+		//when
+		strategy.reset();
+		
+		//then
+		verifyZeroInteractions(camera);
 	}
 }

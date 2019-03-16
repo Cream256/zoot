@@ -92,6 +92,7 @@ public class ZootStageSceneTest
 	{		
 		//given
 		final float expectedDelta = ZootStageScene.FIXED_TIME_STEP;
+		when(stage.getViewport()).thenReturn(viewport);
 		scene.setPhysics(physics);
 		scene.setActiveCamera(camera);
 		scene.setHud(hud);
@@ -112,6 +113,7 @@ public class ZootStageSceneTest
 		//given
 		final int expectedUpdateCount = 3;
 		final float expectedDelta = ZootStageScene.FIXED_TIME_STEP;		
+		when(stage.getViewport()).thenReturn(viewport);
 		scene.setPhysics(physics);
 		scene.setActiveCamera(camera);
 		scene.setHud(hud);
@@ -132,6 +134,7 @@ public class ZootStageSceneTest
 		//given
 		final float expectedDelta = ZootStageScene.FIXED_TIME_STEP;		
 		final int expectedUpdateCount = 15;
+		when(stage.getViewport()).thenReturn(viewport);
 		scene.setPhysics(physics);
 		scene.setActiveCamera(camera);
 		scene.setHud(hud);
@@ -145,21 +148,7 @@ public class ZootStageSceneTest
 		verify(camera).update(1.0f, true);
 		verify(hud).update(1.0f);		
 	}
-	
-	@Test
-	public void shouldNotThrowOnSceneUpdateIfNotAllSystemsAreSet()
-	{
-		//given
-		scene.setPhysics(null);
-		scene.setActiveCamera(null);
-		scene.setHud(null);
-		
-		//when
-		scene.update(1.0f);
-		
-		//then ok		
-	}
-		
+			
 	@Test
 	public void shouldDrawStageIfNoRendererIsSet()
 	{
@@ -171,8 +160,9 @@ public class ZootStageSceneTest
 	@Test
 	public void shouldUseRenderIfSet()
 	{
-		//given
-		scene.setRender(render);
+		//given		
+		when(stage.getViewport()).thenReturn(viewport);
+		scene.setRender(render);		
 		scene.setActiveCamera(camera);
 		
 		//when
@@ -200,6 +190,7 @@ public class ZootStageSceneTest
 	public void shouldUseDebugRenderIfDebugModeIsSet()
 	{
 		//given
+		when(stage.getViewport()).thenReturn(viewport);
 		scene.setDebugRender(debugRender);
 		scene.setPhysics(physics);
 		scene.setActiveCamera(camera);
@@ -251,20 +242,20 @@ public class ZootStageSceneTest
 	}
 	
 	@Test
-	public void shouldSetCamera()
+	public void shouldSetActiveCamera()
 	{
+		//given
+		when(stage.getViewport()).thenReturn(viewport);
+		
+		//when
 		scene.setActiveCamera(camera);
+		
+		//then		
 		assertEquals(camera, scene.getActiveCamera());
-		verify(camera).setScene(scene);
+		verify(viewport).setCamera(camera);
+		verify(camera).setScene(scene);		
 	}
-	
-	@Test
-	public void shouldNotThrowWhenSettingNullCamera()
-	{
-		scene.setActiveCamera(null);
-		//then ok
-	}
-	
+		
 	@Test
 	public void shouldSetActorSpawner()
 	{

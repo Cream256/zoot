@@ -64,7 +64,7 @@ public class ZootStageScene implements ZootScene
 			timeAccumulator -= FIXED_TIME_STEP;
 		}
 		
-		if(activeCamera != null) activeCamera.update(delta, true);
+		activeCamera.update(delta, true);
 		if(hud != null) hud.update(delta);
 	}
 		
@@ -164,8 +164,9 @@ public class ZootStageScene implements ZootScene
 	@Override
 	public void setActiveCamera(ZootCamera camera)
 	{
-		this.activeCamera = camera;		
-		if(camera != null) camera.setScene(this);
+		activeCamera = camera;
+		activeCamera.setScene(this);		
+		getViewport().setCamera(camera);		
 	}
 	
 	@Override

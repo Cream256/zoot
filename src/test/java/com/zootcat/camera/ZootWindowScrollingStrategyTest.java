@@ -1,9 +1,11 @@
 package com.zootcat.camera;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -203,5 +205,15 @@ public class ZootWindowScrollingStrategyTest
 		
 		strategy.setScrollingSpeed(-5.0f);
 		assertEquals(-5.0f, strategy.getScrollingSpeed(), 0.0f);
+	}
+	
+	@Test
+	public void shouldNotInteractWithCameraOnReset()
+	{		
+		//when
+		strategy.reset();
+		
+		//then
+		verifyZeroInteractions(camera);
 	}
 }

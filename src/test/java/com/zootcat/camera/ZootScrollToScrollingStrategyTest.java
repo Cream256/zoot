@@ -74,4 +74,29 @@ public class ZootScrollToScrollingStrategyTest
 		verify(camera).setPosition(expectedX, expectedY);
 	}
 	
+	@Test
+	public void shouldScrollAgainAfterReset()
+	{
+		//given
+		float expectedX = 100.0f;
+		float expectedY = 200.0f;
+		float expectedDuration = 2.0f;
+		
+		ZootScrollToScrollingStrategy strategy = new ZootScrollToScrollingStrategy(expectedX, expectedY, expectedDuration);
+		strategy.scrollCamera(camera, expectedDuration);
+		
+		//when		
+		strategy.reset();
+		strategy.scrollCamera(camera, 0.0f);
+		
+		//then
+		verify(camera).setPosition(0.0f, 0.0f);
+		
+		//when
+		strategy.scrollCamera(camera, expectedDuration / 2);
+		strategy.scrollCamera(camera, expectedDuration / 2);
+		
+		//then
+		verify(camera).setPosition(expectedX, expectedY);		
+	}
 }

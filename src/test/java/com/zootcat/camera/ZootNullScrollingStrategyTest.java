@@ -8,7 +8,7 @@ import org.junit.Test;
 public class ZootNullScrollingStrategyTest
 {
 	@Test
-	public void scrollCameraTest()
+	public void shouldNotInteractWithCameraOnScroll()
 	{
 		//given
 		ZootCamera camera = mock(ZootCamera.class);
@@ -19,5 +19,19 @@ public class ZootNullScrollingStrategyTest
 		
 		//then
 		verifyZeroInteractions(camera);
+	}
+	
+	@Test
+	public void shouldNotInteractWithCameraOnReset()
+	{
+		//given
+		ZootCamera camera = mock(ZootCamera.class);
+		ZootNullScrollingStrategy strategy = ZootNullScrollingStrategy.Instance;
+		
+		//when
+		strategy.reset();
+		
+		//then
+		verifyZeroInteractions(camera);		
 	}
 }

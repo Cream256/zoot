@@ -44,4 +44,10 @@ public class ZootScrollToScrollingStrategy implements ZootCameraScrollingStrateg
 		float newY = MathUtils.lerp(startY, endY, lerpProgress);		
 		camera.setPosition(newX, newY);
 	}
+
+	@Override
+	public void reset()
+	{
+		startSet = false;
+	}
 }

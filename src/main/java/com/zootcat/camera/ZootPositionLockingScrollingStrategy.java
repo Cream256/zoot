@@ -17,4 +17,10 @@ public class ZootPositionLockingScrollingStrategy implements ZootCameraScrolling
 		float y = target.getY() + target.getHeight() * 0.5f;		
 		camera.setPosition(x, y);
 	}
+
+	@Override
+	public void reset()
+	{
+		//noop
+	}
 }

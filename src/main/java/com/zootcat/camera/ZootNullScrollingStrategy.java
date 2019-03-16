@@ -14,4 +14,10 @@ public class ZootNullScrollingStrategy implements ZootCameraScrollingStrategy
 	{
 		//noop
 	}
+
+	@Override
+	public void reset()
+	{
+		//noop
+	}
 }
