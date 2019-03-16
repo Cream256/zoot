@@ -2,7 +2,6 @@ package com.zootcat.scene;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -77,7 +76,6 @@ public class ZootStageSceneTest
 	{
 		assertEquals(1.0f, scene.getUnitScale(), 0.0f);
 		assertEquals(scene.getStage(), scene.getInputProcessor());
-		assertNotNull(scene.getCameraRegistry());
 		assertNull(scene.getPhysics());
 		assertNull(scene.getRender());
 		assertNull(scene.getHud());
@@ -326,12 +324,6 @@ public class ZootStageSceneTest
 	{
 		scene.removeListener(eventListener);
 		verify(stage).removeListener(eventListener);
-	}
-	
-	@Test
-	public void shouldReturnCameraRegistry()
-	{
-		assertNotNull(scene.getCameraRegistry());
 	}
 	
 	@Test

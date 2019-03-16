@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zootcat.camera.ZootCamera;
-import com.zootcat.camera.ZootCameraRegistry;
 import com.zootcat.gfx.ZootRender;
 import com.zootcat.hud.ZootHud;
 import com.zootcat.physics.ZootPhysics;
@@ -29,7 +28,6 @@ public class ZootStageScene implements ZootScene
 	private ZootRender render;
 	private InputProcessor inputProcessor;
 	private ZootSceneActorSpawner actorSpawner;
-	private ZootCameraRegistry cameraRegistry;
 	
 	private Stage stage = null;
 	private float timeAccumulator = 0.0f;
@@ -41,14 +39,12 @@ public class ZootStageScene implements ZootScene
 	{
 		this.stage = stage;
 		this.inputProcessor = stage;
-		this.cameraRegistry = new ZootCameraRegistry();
 	}
 	
 	public ZootStageScene(Viewport viewport)
 	{
 		stage = new Stage(viewport);
 		inputProcessor = stage;
-		cameraRegistry = new ZootCameraRegistry();
 	}
 		
 	@Override
@@ -323,11 +319,5 @@ public class ZootStageScene implements ZootScene
 	public void setActorSpawner(ZootSceneActorSpawner spawner)
 	{
 		this.actorSpawner = spawner;
-	}
-
-	@Override
-	public ZootCameraRegistry getCameraRegistry()
-	{
-		return cameraRegistry;
 	}
 }

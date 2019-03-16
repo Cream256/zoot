@@ -161,4 +161,11 @@ public class ZootCameraTest
 		//then
 		assertEquals(scene, camera.getScene());
 	}
+	
+	@Test
+	public void shouldReturnWorldSize()
+	{
+		assertEquals(WORLD_WIDTH, camera.getWorldWidth(), 0.0f);
+		assertEquals(WORLD_HEIGHT, camera.getWorldHeight(), 0.0f);
+	}
 }

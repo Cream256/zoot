@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zootcat.camera.ZootCamera;
-import com.zootcat.camera.ZootCameraRegistry;
 import com.zootcat.gfx.ZootRender;
 import com.zootcat.hud.ZootHud;
 import com.zootcat.physics.ZootPhysics;
@@ -34,7 +33,6 @@ public interface ZootScene extends Disposable
 	InputProcessor getInputProcessor();
 	Box2DDebugRenderer getDebugRender();
 	ZootSceneActorSpawner getActorSpawner();
-	ZootCameraRegistry getCameraRegistry();
 	
 	void setHud(ZootHud hud);
 	void setDebugMode(boolean debug);

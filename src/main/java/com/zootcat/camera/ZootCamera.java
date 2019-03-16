@@ -98,6 +98,16 @@ public class ZootCamera extends OrthographicCamera
 		return viewportHeight;
 	}
 	
+	public float getWorldWidth()
+	{
+		return worldWidth;
+	}
+	
+	public float getWorldHeight()
+	{
+		return worldHeight;
+	}
+	
 	public void setPosition(float x, float y)
 	{
 		position.x = x;
